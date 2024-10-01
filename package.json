@@ -2,7 +2,7 @@
   "name": "@kobalte/solidbase",
   "version": "0.0.1",
   "description": "Your Solid knowledgebase",
-  "main": "index.js",
+  "module": "true",
   "scripts": {
     "check": "biome check",
     "format": "biome check --write && prettier . --write",

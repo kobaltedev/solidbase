@@ -31,6 +31,30 @@ importers:
         specifier: ^5.6.2
         version: 5.6.2
 
+  docs:
+    dependencies:
+      '@kobalte/solidbase':
+        specifier: workspace:*
+        version: link:..
+      '@solidjs/router':
+        specifier: ^0.14.7
+        version: 0.14.7(solid-js@1.9.1)
+      '@solidjs/start':
+        specifier: ^1.0.8
+        version: 1.0.8(solid-js@1.9.1)(vinxi@0.4.3(@types/node@22.7.4)(ioredis@5.4.1)(terser@5.34.1))(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))
+      '@vinxi/plugin-mdx':
+        specifier: ^3.7.2
+        version: 3.7.2(@mdx-js/mdx@2.3.0)
+      solid-js:
+        specifier: ^1.9.1
+        version: 1.9.1
+      solid-mdx:
+        specifier: ^0.0.7
+        version: 0.0.7(solid-js@1.9.1)(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))
+      vinxi:
+        specifier: ^0.4.3
+        version: 0.4.3(@types/node@22.7.4)(ioredis@5.4.1)(terser@5.34.1)
+
 packages:
 
   '@alloc/quick-lru@5.2.0':
@@ -933,6 +957,11 @@ packages:
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
+
+  '@solidjs/router@0.14.7':
+    resolution: {integrity: sha512-agLf8AUz5XnW6+F64a4Iq+QQQobI5zGHQ/gUYd/WHSwcbnFpavbsiwRLob3YhWMXVX3sQyn4ekUN+uchMCRupw==}
+    peerDependencies:
+      solid-js: ^1.8.6
 
   '@solidjs/start@1.0.8':
     resolution: {integrity: sha512-5JfIa305L898GkUxVDtxqujLYqCjuekJvXDl9uysZmPqtfFMcDmJyfnfkmoIOgGRyswKcyEWySYru8ZRYCIBuw==}
@@ -3912,6 +3941,10 @@ snapshots:
   '@sinclair/typebox@0.27.8': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
+
+  '@solidjs/router@0.14.7(solid-js@1.9.1)':
+    dependencies:
+      solid-js: 1.9.1
 
   '@solidjs/start@1.0.8(solid-js@1.9.1)(vinxi@0.4.3(@types/node@22.7.4)(ioredis@5.4.1)(terser@5.34.1))(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))':
     dependencies:

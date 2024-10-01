@@ -5,15 +5,17 @@ import mdx from "@vinxi/plugin-mdx";
 export type SolidBaseConfig = {};
 
 export function withSolidBase(
-  startConfig: SolidStartInlineConfig,
-  solidBaseConfig: SolidBaseConfig,
+  startConfig?: SolidStartInlineConfig,
+  solidBaseConfig?: SolidBaseConfig,
 ) {
-  startConfig.extensions = [
-    ...new Set((startConfig.extensions ?? []).concat(["ts", "tsx"])),
+  const config = startConfig ?? {};
+
+  config.extensions = [
+    ...new Set((config.extensions ?? []).concat(["md", "mdx"])),
   ];
 
-  const vite = startConfig.vite;
-  startConfig.vite = (options) => {
+  const vite = config.vite;
+  config.vite = (options) => {
     const viteConfig = typeof vite === "function" ? vite(options) : vite ?? {};
 
     viteConfig.plugins ??= [];
@@ -28,5 +30,5 @@ export function withSolidBase(
     return viteConfig;
   };
 
-  return startConfig;
+  return config;
 }
