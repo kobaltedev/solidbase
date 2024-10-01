@@ -1,0 +1,16 @@
+{
+  "name": "@kobalte/solidbase",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "jer3m01 <jer3m01@jer3m01.com>",
+  "contributors": [
+    "dev-rb <43100342+dev-rb@users.noreply.github.com>",
+    "Brendan Allan <brendonovich@outlook.com>"
+  ],
+  "license": "MIT"
+}
