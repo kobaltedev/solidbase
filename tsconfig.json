@@ -17,10 +17,9 @@
     "strict": true,
     "sourceMap": true,
     "lib": ["dom", "esnext"],
-    "types": ["solid-js"],
+    "types": ["solid-js", "vite"],
     "outDir": "./dist"
   },
   "include": ["src/**/*"],
-  "files": ["./src/virtual.d.ts"],
   "exclude": ["node_modules", "docs"]
 }
