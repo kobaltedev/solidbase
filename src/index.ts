@@ -10,7 +10,7 @@ export function withSolidBase(
 ) {
 	const config = startConfig ?? {};
 
-	process.env["PORT"] ??= 4000;
+	process.env.PORT ??= "4000";
 
 	config.extensions = [
 		...new Set((config.extensions ?? []).concat(["md", "mdx"])),

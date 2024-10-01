@@ -1,11 +1,10 @@
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { createSignal } from "solid-js";
 import "./app.css";
 
 export default function App() {
 	return (
-		<Router>
+		<Router root={(props) => <Suspense>{props.children}</Suspense>}>
 			<FileRoutes />
 		</Router>
 	);
