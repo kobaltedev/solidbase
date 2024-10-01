@@ -15,7 +15,8 @@
 			"a11y": {
 				"noAutofocus": "off",
 				"noNoninteractiveTabindex": "off",
-				"noNoninteractiveElementToInteractiveRole": "off"
+				"noNoninteractiveElementToInteractiveRole": "off",
+				"noSvgWithoutTitle": "off"
 			},
 			"suspicious": {
 				"noEmptyInterface": "off",

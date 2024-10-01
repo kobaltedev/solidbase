@@ -44,6 +44,8 @@
   },
   "packageManager": "pnpm@8.14.0",
   "dependencies": {
+    "@kobalte/core": "^0.13.6",
+    "@solid-primitives/clipboard": "^1.5.10",
     "@vinxi/plugin-mdx": "^3.7.2",
     "solid-mdx": "^0.0.7"
   }

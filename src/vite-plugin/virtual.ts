@@ -19,11 +19,23 @@ export async function loadVirtual(
 
 	let template = "";
 
-	if (componentNames.includes("Mdx")) {
+	if (componentNames.includes("mdx-components")) {
 		template += `
-			export * as overrideMdxComponents from "${join(componentsPath, "Mdx")}";
+			export * as overrideMdxComponents from "${join(componentsPath, "mdx-components")}";
 		`;
 	}
+
+	const components = componentNames.filter(
+		(name) => name[0] === name[0].toUpperCase(),
+	);
+
+	template += `
+		${components.map((name) => `import ${name} from "${join(componentsPath, name)}"`).join("\n")}
+
+		export const solidBaseComponents = {
+			${components.join(",\n")}
+		};
+	`;
 
 	return template;
 }
