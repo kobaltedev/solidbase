@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"newLine": "LF",
+		"allowJs": false,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": false,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"sourceMap": true,
+		"lib": [
+			"dom",
+			"esnext",
+		],
+		"types": [
+			"solid-js",
+		]
+	},
+	"exclude": [
+		"node_modules"
+	]
+}

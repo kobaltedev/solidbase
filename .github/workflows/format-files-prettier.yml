@@ -1,0 +1,33 @@
+name: Format Files
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**.md"
+      - "**.mdx"
+      - "**.yml"
+      - "**.yaml"
+      - "**.toml"
+      - "**.html"
+      - "**.css"
+  push:
+    branches:
+      - main
+
+jobs:
+  prettier:
+    name: "Prettier"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Prettier
+        uses: creyD/prettier_action@v4.3
+        with:
+          dry: true
+          prettier_options: . --check
+          prettier_version: 4.0.0-alpha.8

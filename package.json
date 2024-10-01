@@ -1,16 +1,35 @@
 {
   "name": "@kobalte/solidbase",
   "version": "0.0.1",
-  "description": "",
+  "description": "Your Solid knowledgebase",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check": "biome check",
+    "format": "biome check --write && prettier . --write",
+    "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
+  "keywords": [
+    "solid",
+    "solidjs",
+    "solidstart",
+    "documentation"
+  ],
   "author": "jer3m01 <jer3m01@jer3m01.com>",
   "contributors": [
     "dev-rb <43100342+dev-rb@users.noreply.github.com>",
     "Brendan Allan <brendonovich@outlook.com>"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.2",
+    "prettier": "4.0.0-alpha.8",
+    "typescript": "^5.6.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "solid-js": "^1.9.1"
+  },
+  "packageManager": "pnpm@8.14.0"
 }
