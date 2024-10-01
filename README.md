@@ -1,5 +1,5 @@
 <div align="center">
-  ![SolidBase](.github/solidbase.png)
+  <a href="https://github.com/kobaltedev/solidbase" target="_blank"><img width="400" src="https://raw.githubusercontent.com/kobaltedev/solidbase/refs/heads/main/.github/solidbase.png" alt="SolidBase"></a>
 </div>
 
 <h1 align="center">SolidBase</h1>
