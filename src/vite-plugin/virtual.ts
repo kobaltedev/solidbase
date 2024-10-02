@@ -39,3 +39,13 @@ export async function loadVirtual(
 
 	return template;
 }
+
+export function transformMdxModule(code: string, id: string) {
+	return `
+		${code}
+		if (typeof window !== "undefined" && typeof frontmatter !== "undefined") {
+			window.$$SolidBase_frontmatter_hmr ??= {};
+			window.$$SolidBase_frontmatter_hmr["${id.split("?")[0]}"] = frontmatter;
+		}
+	`;
+}

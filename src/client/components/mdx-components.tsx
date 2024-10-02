@@ -85,3 +85,23 @@ export function table(props: ComponentProps<"table">) {
 		</div>
 	);
 }
+
+export function blockquote(props: ComponentProps<"blockquote">) {
+	return <blockquote {...props} style={{ color: "green" }} />;
+}
+
+export function p(props: ComponentProps<"p">) {
+	return <p {...props} style={{ color: "green" }} />;
+}
+
+export function li(props: ComponentProps<"li">) {
+	return <li {...props} style={{ color: "green" }} />;
+}
+
+export function ul(props: ComponentProps<"ul">) {
+	return <ul {...props} style={{ background: "lime" }} />;
+}
+
+export function ol(props: ComponentProps<"ol">) {
+	return <ol {...props} style={{ background: "aquamarine" }} />;
+}

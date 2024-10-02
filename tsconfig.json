@@ -17,7 +17,7 @@
     "strict": true,
     "sourceMap": true,
     "lib": ["dom", "esnext"],
-    "types": ["solid-js", "vite", "vinxi/types/client"],
+    "types": ["solid-js", "vite", "vinxi/types/client", "vite/client"],
     "outDir": "./dist"
   },
   "include": ["src/**/*"],
