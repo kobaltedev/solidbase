@@ -1,5 +1,6 @@
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { PluginOption } from "vite";
+
 import type { SolidBaseConfig } from "../config";
 import { loadVirtual } from "./virtual";
 

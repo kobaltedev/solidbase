@@ -32,34 +32,42 @@ export function useSolidBaseContext() {
 	return context;
 }
 
-export function SolidBase(props: ParentProps) {
+export function SolidBaseProvider(props: ParentProps) {
 	return (
-		<MDXProvider
-			components={{
-				...mdxComponents,
-				...overrideMdxComponents,
-			}}
-		>
-			<SolidBaseContext.Provider
-				value={{
-					components: {
-						Header,
-						...solidBaseComponents,
-					},
+		<MetaProvider>
+			<MDXProvider
+				components={{
+					...mdxComponents,
+					...overrideMdxComponents,
 				}}
 			>
-				{props.children}
-			</SolidBaseContext.Provider>
-		</MDXProvider>
+				<SolidBaseContext.Provider
+					value={{
+						components: {
+							Header,
+							...solidBaseComponents,
+						},
+					}}
+				>
+					{props.children}
+				</SolidBaseContext.Provider>
+			</MDXProvider>
+		</MetaProvider>
 	);
 }
+
+import { MetaProvider, Title } from "@solidjs/meta";
+import { useCurrentFrontmatter } from "./frontmatter";
 
 export function SolidBaseLayout(props: ParentProps) {
 	const { Header } = useSolidBaseContext().components;
 
+	const frontmatter = useCurrentFrontmatter();
+
 	return (
 		<>
 			<Header>inside header</Header>
+			<Title>{frontmatter()?.title ?? ""}</Title>
 
 			{props.children}
 		</>

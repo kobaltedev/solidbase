@@ -2,9 +2,11 @@ import type {
 	SolidStartInlineConfig,
 	ViteCustomizableConfig,
 } from "@solidjs/start/config";
-
 // @ts-expect-error
 import mdx from "@vinxi/plugin-mdx";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+
 import solidBaseVitePlugin from "./vite-plugin";
 
 export type SolidBaseConfig = {
@@ -39,6 +41,7 @@ export function withSolidBase(
 				jsx: true,
 				jsxImportSource: "solid-js",
 				providerImportSource: "solid-mdx",
+				remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
 			}),
 		);
 
