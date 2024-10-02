@@ -128,7 +128,11 @@ export function SolidBaseApp(props: SolidBaseAppProps) {
 				root={(rootProps) => (
 					<Show
 						when={props.root}
-						fallback={<AppRoot {...rootProps} layout={props.layout} />}
+						fallback={
+							<Suspense>
+								<AppRoot {...rootProps} layout={props.layout} />
+							</Suspense>
+						}
 					>
 						{props.root?.(rootProps)}
 					</Show>
