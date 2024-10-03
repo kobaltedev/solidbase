@@ -1,6 +1,18 @@
 import { Button } from "@kobalte/core/button";
 import { writeClipboard } from "@solid-primitives/clipboard";
-import { type ComponentProps, Show, createSignal, splitProps } from "solid-js";
+import {
+	type ComponentProps,
+	Switch,
+	createSignal,
+	splitProps,
+	createContext,
+	Match,
+	Setter,
+	Accessor,
+	useContext,
+    JSX,
+    For
+} from "solid-js";
 import { CheckIcon, CopyIcon } from "./icons";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -57,12 +69,52 @@ export function table(props: ComponentProps<"table">) {
 	);
 }
 
+type AlertTypes = 'TIP'| 'NOTE'| 'IMPORTANT'| 'WARNING'| 'CAUTION';
+interface QuoteContextValue {
+	type: Accessor<AlertTypes | undefined>;
+	setType: Setter<AlertTypes | undefined>;
+}
+const QuoteContext = createContext<QuoteContextValue>();
+
 export function blockquote(props: ComponentProps<"blockquote">) {
-	return <blockquote {...props} style={{ color: "green" }} />;
+	const [type, setType] = createSignal<AlertTypes>();
+
+	return <QuoteContext.Provider value={{type, setType}}> why template2 is not a function?
+		<Switch fallback={<blockquote {...props} style={{ background: "aquamarine" }} />}>
+			<Match when={type() === "TIP"}>
+				<blockquote {...props} style={{ background: "blue" }}/>
+			</Match>
+			<Match when={type() === "NOTE"}>
+				<blockquote {...props} style={{ background: "gray" }}/>
+			</Match>
+			<Match when={type() === "IMPORTANT"}>
+				<blockquote {...props} style={{ background: "purple" }}/>
+			</Match>
+			<Match when={type() === "WARNING"}>
+				<blockquote {...props} style={{ background: "orange" }}/>
+			</Match>
+			<Match when={type() === "CAUTION"}>
+				<blockquote {...props} style={{ background: "red" }}/>
+			</Match>
+		</Switch>
+	</QuoteContext.Provider>;
 }
 
 export function p(props: ComponentProps<"p">) {
-	return <p {...props} style={{ color: "green" }} />;
+	const quoteContext = useContext(QuoteContext);
+	if (quoteContext !== undefined && typeof props.children === "string") {
+		for (const marker of ["[!TIP]", "[!NOTE]", "[!IMPORTANT]", "[!WARNING]", "[!CAUTION]"]) {
+			if (!(props.children as string).includes(marker)) continue;
+
+			quoteContext.setType(marker.slice(2, -1) as AlertTypes);
+
+			return <p {...props} style={{color: "white"}}>
+				{props.children.replace(marker + "\n", "")}
+			</p>;
+		}
+	}
+
+	return <p {...props} style={{color: "green"}}/>;
 }
 
 export function li(props: ComponentProps<"li">) {
