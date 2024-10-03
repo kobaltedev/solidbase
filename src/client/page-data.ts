@@ -1,15 +1,15 @@
 import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
 import { createContext, createResource, useContext } from "solid-js";
 
-interface TOC {
+export interface TableOfContentData {
 	title: string;
 	url: string;
-	children: Array<TOC>;
+	children: Array<TableOfContentData>;
 }
 
 interface CurrentPageData {
 	frontmatter: Record<string, any>;
-	toc?: TOC;
+	toc?: TableOfContentData;
 }
 
 const defaultPageData: CurrentPageData = {
