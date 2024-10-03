@@ -1,4 +1,4 @@
-import { RouteMatch, useCurrentMatches } from "@solidjs/router";
+import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
 import { createResource } from "solid-js";
 
 export function useCurrentFrontmatter() {

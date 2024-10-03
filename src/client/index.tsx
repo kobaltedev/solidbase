@@ -1,7 +1,8 @@
+import { FileRoutes } from "@solidjs/start/router";
 import {
-	Component,
-	ComponentProps,
-	JSX,
+	type Component,
+	type ComponentProps,
+	type JSX,
 	type ParentComponent,
 	type ParentProps,
 	Show,
@@ -11,7 +12,6 @@ import {
 	useContext,
 } from "solid-js";
 import { MDXProvider } from "solid-mdx";
-import { FileRoutes } from "@solidjs/start/router";
 
 // @ts-ignore
 import { overrideMdxComponents, solidBaseComponents } from "virtual:solidbase";
@@ -64,8 +64,9 @@ export function SolidBaseProvider(props: ParentProps) {
 }
 
 import { MetaProvider, Title } from "@solidjs/meta";
+import { type BaseRouterProps, Router } from "@solidjs/router";
 import { useCurrentFrontmatter } from "./frontmatter";
-import { BaseRouterProps, Router } from "@solidjs/router";
+import { Dynamic } from "solid-js/web";
 
 export function SolidBaseLayout(props: ParentProps) {
 	const { Header } = useSolidBaseContext().components;
@@ -92,10 +93,13 @@ function AppRoot(props: AppRootProps) {
 	return (
 		<Show
 			when={!props.layout}
-			fallback={props.layout?.({
-				frontmatter: frontmatter(),
-				children: resolved(),
-			})}
+			fallback={
+				<Dynamic
+					component={props.layout}
+					frontmatter={frontmatter()}
+					children={resolved()}
+				/>
+			}
 		>
 			<SolidBaseLayout>
 				<Suspense>{resolved()}</Suspense>
@@ -130,7 +134,13 @@ export function SolidBaseApp(props: SolidBaseAppProps) {
 						when={props.root}
 						fallback={
 							<Suspense>
-								<AppRoot {...rootProps} layout={props.layout} />
+								<AppRoot
+									data={rootProps.data}
+									location={rootProps.location}
+									params={rootProps.params}
+									children={rootProps.children}
+									layout={props.layout}
+								/>
 							</Suspense>
 						}
 					>
