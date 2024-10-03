@@ -27,13 +27,17 @@ export function h6(props: ComponentProps<"h6">) {
 	return <h4 {...props} style={{ color: "green" }} />;
 }
 
-export function a(props: ComponentProps<"a">) {
+export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 	const outbound = () => (props.href ?? "").includes("://");
+	const autoHeading = () => props["data-auto-heading"] === "";
 
 	return (
 		<a
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
+			style={{
+				color: autoHeading() ? "inherit" : undefined,
+			}}
 			{...props}
 		/>
 	);
@@ -41,39 +45,6 @@ export function a(props: ComponentProps<"a">) {
 
 export function code(props: ComponentProps<"code">) {
 	return <code class={""} {...props} />;
-}
-
-export function pre(props: ComponentProps<"pre">) {
-	let domRef: HTMLPreElement | undefined;
-
-	const [local, others] = splitProps(props, ["children"]);
-
-	const [isCopied, setIsCopied] = createSignal(false);
-
-	const reset = () => {
-		setTimeout(() => setIsCopied(false), 200);
-	};
-
-	const copyToClipboard = () => {
-		setIsCopied(true);
-		void writeClipboard(domRef?.querySelector("code")?.innerText.trim() ?? "");
-		setTimeout(() => setIsCopied(false), 2000);
-	};
-
-	return (
-		<pre ref={domRef} onMouseLeave={reset} {...others}>
-			<Button
-				aria-label={isCopied() ? "Copied!" : "Copy to clipboard"}
-				onClick={copyToClipboard}
-				class={""}
-			>
-				<Show when={isCopied()} fallback={<CopyIcon class="" />}>
-					<CheckIcon class="" />
-				</Show>
-			</Button>
-			{local.children}
-		</pre>
-	);
 }
 
 export function table(props: ComponentProps<"table">) {
@@ -102,6 +73,9 @@ export function ul(props: ComponentProps<"ul">) {
 	return <ul {...props} style={{ background: "lime" }} />;
 }
 
-export function ol(props: ComponentProps<"ol">) {
+export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
+	if (props["data-toc"] === "")
+		return <ol {...props} style={{ background: "darkseagreen" }} />;
+
 	return <ol {...props} style={{ background: "aquamarine" }} />;
 }
