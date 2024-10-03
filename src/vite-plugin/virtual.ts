@@ -43,9 +43,16 @@ export async function loadVirtual(
 export function transformMdxModule(code: string, id: string) {
 	return `
 		${code}
-		if (typeof window !== "undefined" && typeof frontmatter !== "undefined") {
-			window.$$SolidBase_frontmatter_hmr ??= {};
-			window.$$SolidBase_frontmatter_hmr["${id.split("?")[0]}"] = frontmatter;
+		const data = {
+			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},
+			toc: JSON.parse($$SolidBase_TOC),
+		};
+
+		if (typeof window !== "undefined") {
+			window.$$SolidBase_page_data ??= {};
+			window.$$SolidBase_page_data["${id.split("?")[0]}"] = data;
 		}
+
+		export const $$SolidBase_page_data = data;
 	`;
 }

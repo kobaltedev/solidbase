@@ -6,14 +6,12 @@ import "./app.css";
 export default function App() {
 	return (
 		<SolidBaseApp
-		// layout={(props) => {
-		//   return (
-		//     <>
-		//       <Title>I am the captain now</Title>
-		//       {props.children}
-		//     </>
-		//   );
-		// }}
+		//					root={(props) => (
+		//						<>
+		//							<Title>I am the captain now</Title>
+		//							{props.children}
+		//						</>
+		//					)} // broken
 		/>
 	);
 }
