@@ -1,32 +1,32 @@
+import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
+import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import type {
-  SolidStartInlineConfig,
-  ViteCustomizableConfig,
+	SolidStartInlineConfig,
+	ViteCustomizableConfig,
 } from "@solidjs/start/config";
 // @ts-expect-error
 import mdx from "@vinxi/plugin-mdx";
-import remarkFrontmatter from "remark-frontmatter";
-import remarkMdxFrontmatter from "remark-mdx-frontmatter";
-import remarkGfm from "remark-gfm";
-import rehypeExpressiveCode, {
-	ExpressiveCodeTheme,
-} from "rehype-expressive-code";
-import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
-import rehypeSlug from 'rehype-slug'
 import rehypeAutoLinkHeadings from "rehype-autolink-headings";
+import rehypeExpressiveCode, {
+	type ExpressiveCodeTheme,
+} from "rehype-expressive-code";
+import rehypeSlug from "rehype-slug";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkGfm from "remark-gfm";
+import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
+import { remarkTOC } from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
-import {remarkTOC} from "./remark-plugins";
 
 export type SolidBaseConfig = {
-  title?: string;
-  description?: string;
-  componentsFolder?: string;
+	title?: string;
+	description?: string;
+	componentsFolder?: string;
 };
 
 export function withSolidBase(
-  startConfig?: SolidStartInlineConfig,
-  solidBaseConfig?: SolidBaseConfig,
+	startConfig?: SolidStartInlineConfig,
+	solidBaseConfig?: SolidBaseConfig,
 ) {
 	const config = startConfig ?? {};
 	const baseConfig = solidBaseConfig ?? {};
@@ -69,14 +69,14 @@ export function withSolidBase(
 								`[data-theme="${theme.name.split("-")[1]}"]`,
 							plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
 							defaultProps: {
-				        showLineNumbers: false,
-				      },
+								showLineNumbers: false,
+							},
 						},
 					],
 				],
 				remarkPlugins: [
 					remarkFrontmatter,
-				 	remarkMdxFrontmatter,
+					remarkMdxFrontmatter,
 					remarkGfm,
 					remarkTOC,
 				],

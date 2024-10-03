@@ -27,7 +27,7 @@ export function h6(props: ComponentProps<"h6">) {
 	return <h4 {...props} style={{ color: "green" }} />;
 }
 
-export function a(props: ComponentProps<"a"> & {"data-auto-heading"?: ""}) {
+export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 	const outbound = () => (props.href ?? "").includes("://");
 	const autoHeading = () => props["data-auto-heading"] === "";
 
@@ -73,8 +73,9 @@ export function ul(props: ComponentProps<"ul">) {
 	return <ul {...props} style={{ background: "lime" }} />;
 }
 
-export function ol(props: ComponentProps<"ol"> & {"data-toc"?: ""}) {
-	if (props["data-toc"] === "") return <ol {...props} style={{ background: "darkseagreen" }} />
+export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
+	if (props["data-toc"] === "")
+		return <ol {...props} style={{ background: "darkseagreen" }} />;
 
 	return <ol {...props} style={{ background: "aquamarine" }} />;
 }
