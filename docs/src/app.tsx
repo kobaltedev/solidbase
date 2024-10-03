@@ -1,22 +1,19 @@
-import { SolidBaseLayout, SolidBaseProvider } from "@kobalte/solidbase/client";
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
-import { Suspense } from "solid-js";
+import { SolidBaseApp } from "@kobalte/solidbase/client";
+import { Title } from "@solidjs/meta";
+
+import "./app.css";
 
 export default function App() {
-	return (
-		<SolidBaseProvider>
-			<Router
-				root={(props) => {
-					return (
-						<SolidBaseLayout>
-							<Suspense>{props.children}</Suspense>
-						</SolidBaseLayout>
-					);
-				}}
-			>
-				<FileRoutes />
-			</Router>
-		</SolidBaseProvider>
-	);
+  return (
+    <SolidBaseApp
+    // layout={(props) => {
+    //   return (
+    //     <>
+    //       <Title>I am the captain now</Title>
+    //       {props.children}
+    //     </>
+    //   );
+    // }}
+    />
+  );
 }

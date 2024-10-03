@@ -1,6 +1,6 @@
 import type {
-	SolidStartInlineConfig,
-	ViteCustomizableConfig,
+  SolidStartInlineConfig,
+  ViteCustomizableConfig,
 } from "@solidjs/start/config";
 // @ts-expect-error
 import mdx from "@vinxi/plugin-mdx";
@@ -19,14 +19,14 @@ import solidBaseVitePlugin from "./vite-plugin";
 import {remarkTOC} from "./remark-plugins";
 
 export type SolidBaseConfig = {
-	title?: string;
-	description?: string;
-	componentsFolder?: string;
+  title?: string;
+  description?: string;
+  componentsFolder?: string;
 };
 
 export function withSolidBase(
-	startConfig?: SolidStartInlineConfig,
-	solidBaseConfig?: SolidBaseConfig,
+  startConfig?: SolidStartInlineConfig,
+  solidBaseConfig?: SolidBaseConfig,
 ) {
 	const config = startConfig ?? {};
 	const baseConfig = solidBaseConfig ?? {};
