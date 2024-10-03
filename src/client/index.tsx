@@ -2,6 +2,7 @@ import {
 	type ParentComponent,
 	type ParentProps,
 	createContext,
+	onMount,
 	useContext,
 } from "solid-js";
 import { MDXProvider } from "solid-mdx";
@@ -63,6 +64,10 @@ export function SolidBaseLayout(props: ParentProps) {
 	const { Header } = useSolidBaseContext().components;
 
 	const frontmatter = useCurrentFrontmatter();
+
+	onMount(() => {
+		document.documentElement.setAttribute("data-theme", "dark")
+	})
 
 	return (
 		<>

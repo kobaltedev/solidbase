@@ -6,8 +6,17 @@ import type {
 import mdx from "@vinxi/plugin-mdx";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
+import remarkGfm from "remark-gfm";
+import rehypeExpressiveCode, {
+	ExpressiveCodeTheme,
+} from "rehype-expressive-code";
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections'
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 
 import solidBaseVitePlugin from "./vite-plugin";
+import {remarkTOC} from "./remark-plugins";
 
 export type SolidBaseConfig = {
 	title?: string;
@@ -41,7 +50,36 @@ export function withSolidBase(
 				jsx: true,
 				jsxImportSource: "solid-js",
 				providerImportSource: "solid-mdx",
-				remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+				rehypePlugins: [
+					rehypeSlug,
+					[
+						rehypeAutoLinkHeadings,
+						{
+							behavior: "wrap",
+							properties: {
+								"data-auto-heading": "",
+							},
+						},
+					],
+					[
+						rehypeExpressiveCode,
+						{
+							themes: ["github-dark", "github-light"],
+							themeCSSSelector: (theme: ExpressiveCodeTheme) =>
+								`[data-theme="${theme.name.split("-")[1]}"]`,
+							plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
+							defaultProps: {
+				        showLineNumbers: false,
+				      },
+						},
+					],
+				],
+				remarkPlugins: [
+					remarkFrontmatter,
+				 	remarkMdxFrontmatter,
+					remarkGfm,
+					remarkTOC,
+				],
 			}),
 		);
 
