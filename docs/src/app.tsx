@@ -4,14 +4,14 @@ import { Title } from "@solidjs/meta";
 import "./app.css";
 
 export default function App() {
-	return (
-		<SolidBaseApp
-		//					root={(props) => (
-		//						<>
-		//							<Title>I am the captain now</Title>
-		//							{props.children}
-		//						</>
-		//					)} // broken
-		/>
-	);
+  return (
+    <SolidBaseApp
+      root={(props) => (
+        <>
+          {props.children}
+          <Title>I am the captain now</Title>
+        </>
+      )}
+    />
+  );
 }
