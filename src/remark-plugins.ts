@@ -123,7 +123,7 @@ export function remarkGithubAlertsToDirectives() {
 
       const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
       if (!text) return;
-      const matches = text.match(/^\[!(\w+)\]\n/);
+      const matches = text.match(/^\[!(\w+)\]/);
       if (!matches) return;
       const key = matches[1];
       if (!key) return;
@@ -149,7 +149,6 @@ export function remarkCustomContainers() {
         node.type === "leafDirective" ||
         node.type === "textDirective"
       ) {
-        console.log(JSON.stringify(node, null, 4));
         if (!customContainers.has(node.name)) return;
         const maybeLabel = node.children[0];
         const hasLabel = maybeLabel.data?.directiveLabel;
