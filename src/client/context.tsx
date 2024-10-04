@@ -30,14 +30,24 @@ export function useSolidBaseContext() {
 	return context;
 }
 
+function renameCustomMdxComponents(components: Record<string, any>) {
+	for (const name of Object.keys(components)) {
+		if (name[0].toUpperCase() === name[0]) {
+			components[`$$SolidBase_${name}`] = components[name];
+			components[name] = undefined;
+		}
+	}
+	return components;
+}
+
 export function SolidBaseProvider(props: ParentProps) {
 	return (
 		<MetaProvider>
 			<MDXProvider
-				components={{
+				components={renameCustomMdxComponents({
 					...mdxComponents,
 					...overrideMdxComponents,
-				}}
+				})}
 			>
 				<SolidBaseContext.Provider
 					value={{

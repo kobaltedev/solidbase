@@ -1,5 +1,9 @@
+import { h } from "hastscript";
+// @ts-expect-error
+import type { Root } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
+import { visit } from "unist-util-visit";
 
 interface ParagraphNode {
 	type: "paragraph";
@@ -92,6 +96,86 @@ export function remarkTOC() {
 					],
 				},
 			},
+		});
+	};
+}
+
+const customContainers = new Set([
+	"info",
+	"tip",
+	"important",
+	"warning",
+	"danger",
+	"details",
+]);
+
+const githubAlertsAsDirectives = {
+	NOTE: "info",
+	TIP: "tip",
+	IMPORTANT: "important",
+	WARNING: "warning",
+	CAUTION: "danger",
+};
+
+export function remarkGithubAlertsToDirectives() {
+	return (tree: Root) => {
+		visit(tree, (node) => {
+			if (node.type !== "blockquote") return;
+
+			const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
+			if (!text) return;
+			const matches = text.match(/^\[!(\w+)\]/);
+			if (!matches) return;
+			const key = matches[1];
+			if (!key) return;
+			const directive =
+				githubAlertsAsDirectives[key as keyof typeof githubAlertsAsDirectives];
+
+			node.children[0].children[0].value = text.slice(matches[0].length);
+
+			Object.assign(node, {
+				type: "containerDirective",
+				name: directive,
+				children: node.children,
+			});
+		});
+	};
+}
+
+export function remarkCustomContainers() {
+	return (tree: Root) => {
+		visit(tree, (node) => {
+			if (
+				node.type === "containerDirective" ||
+				node.type === "leafDirective" ||
+				node.type === "textDirective"
+			) {
+				if (!customContainers.has(node.name)) return;
+				const maybeLabel = node.children[0];
+				const hasLabel = maybeLabel.data?.directiveLabel;
+
+				let labelText = undefined;
+
+				if (hasLabel) {
+					const maybeLabelElement = maybeLabel.children[0];
+					if (maybeLabelElement.type === "text") {
+						labelText = maybeLabelElement.value;
+						(node.children as any[]).shift();
+					}
+				}
+
+				const data = node.data || (node.data = {});
+
+				const attributes = node.attributes || {};
+				attributes.type = node.name;
+				attributes.title = labelText;
+
+				data.hName = "$$SolidBase_CustomContainer";
+				data.hProperties = h(
+					"$$SolidBase_CustomContainer",
+					attributes,
+				).properties;
+			}
 		});
 	};
 }

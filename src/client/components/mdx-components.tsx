@@ -1,7 +1,4 @@
-import { Button } from "@kobalte/core/button";
-import { writeClipboard } from "@solid-primitives/clipboard";
-import { type ComponentProps, Show, createSignal, splitProps } from "solid-js";
-import { CheckIcon, CopyIcon } from "./icons";
+import { type ComponentProps, type ParentProps, splitProps } from "solid-js";
 
 export function h1(props: ComponentProps<"h1">) {
 	return <h1 {...props} style={{ color: "green" }} />;
@@ -58,7 +55,7 @@ export function table(props: ComponentProps<"table">) {
 }
 
 export function blockquote(props: ComponentProps<"blockquote">) {
-	return <blockquote {...props} style={{ color: "green" }} />;
+	return <blockquote {...props} style={{ background: "aquamarine" }} />;
 }
 
 export function p(props: ComponentProps<"p">) {
@@ -78,4 +75,35 @@ export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
 		return <ol {...props} style={{ background: "darkseagreen" }} />;
 
 	return <ol {...props} style={{ background: "aquamarine" }} />;
+}
+
+const customContainerColors = {
+	info: "lightgray",
+	tip: "lightgreen",
+	important: "violet",
+	warning: "lightyellow",
+	danger: "lightcoral",
+	details: "lightgray",
+};
+
+export function CustomContainer(
+	props: {
+		type: "info" | "tip" | "important" | "warning" | "danger" | "details";
+		title?: string;
+	} & ParentProps,
+) {
+	return (
+		<div
+			data-custom-container={props.type}
+			style={{
+				"background-color": customContainerColors[props.type],
+				padding: "0.5rem",
+			}}
+		>
+			<span style={{ "text-transform": "uppercase" }}>
+				{props.title ?? props.type}
+			</span>
+			{props.children}
+		</div>
+	);
 }

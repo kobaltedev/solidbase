@@ -11,11 +11,16 @@ import rehypeExpressiveCode, {
 	type ExpressiveCodeTheme,
 } from "rehype-expressive-code";
 import rehypeSlug from "rehype-slug";
+import remarkDirective from "remark-directive";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 
-import { remarkTOC } from "./remark-plugins";
+import {
+	remarkCustomContainers,
+	remarkGithubAlertsToDirectives,
+	remarkTOC,
+} from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
 
 export type SolidBaseConfig = {
@@ -77,8 +82,11 @@ export function withSolidBase(
 				remarkPlugins: [
 					remarkFrontmatter,
 					remarkMdxFrontmatter,
+					remarkGithubAlertsToDirectives,
+					remarkDirective,
 					remarkGfm,
 					remarkTOC,
+					remarkCustomContainers,
 				],
 			}),
 		);
