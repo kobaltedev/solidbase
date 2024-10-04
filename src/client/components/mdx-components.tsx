@@ -94,12 +94,12 @@ export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
 }
 
 const customContainerColors = {
-  info: "#f0f0f0",
-  tip: "#f0fff0",
-  important: "#fff0ff",
-  warning: "#fff8f0",
-  danger: "#fff0f0",
-  details: "#f0f0ff",
+  info: "lightgray",
+  tip: "lightgreen",
+  important: "violet",
+  warning: "lightyellow",
+  danger: "lightcoral",
+  details: "lightgray",
 };
 
 export function CustomContainer(
@@ -113,6 +113,7 @@ export function CustomContainer(
       data-custom-container={props.type}
       style={{
         "background-color": customContainerColors[props.type],
+        "background-opacity": 0.5,
         padding: "0.5rem",
       }}
     >
