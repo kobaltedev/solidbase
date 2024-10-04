@@ -1,20 +1,4 @@
-import { Button } from "@kobalte/core/button";
-import { writeClipboard } from "@solid-primitives/clipboard";
-import {
-  type ComponentProps,
-  Switch,
-  createSignal,
-  splitProps,
-  createContext,
-  Match,
-  Setter,
-  Accessor,
-  useContext,
-  JSX,
-  For,
-  ParentProps,
-} from "solid-js";
-import { CheckIcon, CopyIcon } from "./icons";
+import { type ComponentProps, splitProps, type ParentProps } from "solid-js";
 
 export function h1(props: ComponentProps<"h1">) {
   return <h1 {...props} style={{ color: "green" }} />;
@@ -113,7 +97,6 @@ export function CustomContainer(
       data-custom-container={props.type}
       style={{
         "background-color": customContainerColors[props.type],
-        "background-opacity": 0.5,
         padding: "0.5rem",
       }}
     >

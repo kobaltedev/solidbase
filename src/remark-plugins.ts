@@ -108,6 +108,39 @@ const customContainers = new Set([
   "details",
 ]);
 
+const githubAlertsAsDirectives = {
+  NOTE: "info",
+  TIP: "tip",
+  IMPORTANT: "important",
+  WARNING: "warning",
+  CAUTION: "danger",
+};
+
+export function remarkGithubAlertsToDirectives() {
+  return (tree: Root) => {
+    visit(tree, (node) => {
+      if (node.type !== "blockquote") return;
+
+      const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
+      if (!text) return;
+      const matches = text.match(/^\[!(\w+)\]\n/);
+      if (!matches) return;
+      const key = matches[1];
+      if (!key) return;
+      const directive =
+        githubAlertsAsDirectives[key as keyof typeof githubAlertsAsDirectives];
+
+      node.children[0].children[0].value = text.slice(matches[0].length);
+
+      Object.assign(node, {
+        type: "containerDirective",
+        name: directive,
+        children: node.children,
+      });
+    });
+  };
+}
+
 export function remarkCustomContainers() {
   return (tree: Root) => {
     visit(tree, (node) => {
@@ -116,6 +149,7 @@ export function remarkCustomContainers() {
         node.type === "leafDirective" ||
         node.type === "textDirective"
       ) {
+        console.log(JSON.stringify(node, null, 4));
         if (!customContainers.has(node.name)) return;
         const maybeLabel = node.children[0];
         const hasLabel = maybeLabel.data?.directiveLabel;

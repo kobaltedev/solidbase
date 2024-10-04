@@ -16,7 +16,11 @@ import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkDirective from "remark-directive";
 
-import { remarkCustomContainers, remarkTOC } from "./remark-plugins";
+import {
+  remarkCustomContainers,
+  remarkGithubAlertsToDirectives,
+  remarkTOC,
+} from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
 
 export type SolidBaseConfig = {
@@ -78,6 +82,7 @@ export function withSolidBase(
         remarkPlugins: [
           remarkFrontmatter,
           remarkMdxFrontmatter,
+          remarkGithubAlertsToDirectives,
           remarkDirective,
           remarkGfm,
           remarkTOC,
