@@ -12,6 +12,7 @@ import {
   useContext,
   JSX,
   For,
+  ParentProps,
 } from "solid-js";
 import { CheckIcon, CopyIcon } from "./icons";
 
@@ -90,4 +91,35 @@ export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
     return <ol {...props} style={{ background: "darkseagreen" }} />;
 
   return <ol {...props} style={{ background: "aquamarine" }} />;
+}
+
+const customContainerColors = {
+  info: "#f0f0f0",
+  tip: "#f0fff0",
+  important: "#fff0ff",
+  warning: "#fff8f0",
+  danger: "#fff0f0",
+  details: "#f0f0ff",
+};
+
+export function CustomContainer(
+  props: {
+    type: "info" | "tip" | "important" | "warning" | "danger" | "details";
+    title?: string;
+  } & ParentProps,
+) {
+  return (
+    <div
+      data-custom-container={props.type}
+      style={{
+        "background-color": customContainerColors[props.type],
+        padding: "0.5rem",
+      }}
+    >
+      <span style={{ "text-transform": "uppercase" }}>
+        {props.title ?? props.type}
+      </span>
+      {props.children}
+    </div>
+  );
 }

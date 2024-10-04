@@ -56,15 +56,19 @@
     "@vinxi/plugin-mdx": "^3.7.2",
     "estree-util-value-to-estree": "^3.1.2",
     "gray-matter": "^4.0.3",
+    "hastscript": "^9.0.0",
+    "mdast": "^3.0.0",
     "mdast-util-find-and-replace": "^3.0.1",
     "mdast-util-toc": "^7.1.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.37.0",
     "rehype-slug": "^6.0.0",
+    "remark-directive": "^3.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^3.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
     "solid-mdx": "^0.0.7",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0"
   }
 }
