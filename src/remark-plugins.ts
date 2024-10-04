@@ -169,8 +169,11 @@ export function remarkCustomContainers() {
         attributes.type = node.name;
         attributes.title = labelText;
 
-        data.hName = "$$CustomContainer";
-        data.hProperties = h("$$CustomContainer", attributes).properties;
+        data.hName = "$$SolidBase_CustomContainer";
+        data.hProperties = h(
+          "$$SolidBase_CustomContainer",
+          attributes,
+        ).properties;
       }
     });
   };
