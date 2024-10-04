@@ -9,59 +9,59 @@ import TableOfContent from "./components/TableOfContent";
 import * as mdxComponents from "./components/mdx-components";
 
 export interface SolidBaseContextValue {
-  components: {
-    Header: typeof Header;
-    TableOfContent: typeof TableOfContent;
-    Layout: typeof Layout;
-  };
+	components: {
+		Header: typeof Header;
+		TableOfContent: typeof TableOfContent;
+		Layout: typeof Layout;
+	};
 }
 
 const SolidBaseContext = createContext<SolidBaseContextValue>();
 
 export function useSolidBaseContext() {
-  const context = useContext(SolidBaseContext);
+	const context = useContext(SolidBaseContext);
 
-  if (context === undefined) {
-    throw new Error(
-      "[SolidBase]: `useSolidBaseContext` must be used within a `SolidBase` component",
-    );
-  }
+	if (context === undefined) {
+		throw new Error(
+			"[SolidBase]: `useSolidBaseContext` must be used within a `SolidBase` component",
+		);
+	}
 
-  return context;
+	return context;
 }
 
 function renameCustomMdxComponents(components: Record<string, any>) {
-  for (const name of Object.keys(components)) {
-    if (name[0].toUpperCase() === name[0]) {
-      components[`$$SolidBase_${name}`] = components[name];
-      components[name] = undefined;
-    }
-  }
-  return components;
+	for (const name of Object.keys(components)) {
+		if (name[0].toUpperCase() === name[0]) {
+			components[`$$SolidBase_${name}`] = components[name];
+			components[name] = undefined;
+		}
+	}
+	return components;
 }
 
 export function SolidBaseProvider(props: ParentProps) {
-  return (
-    <MetaProvider>
-      <MDXProvider
-        components={renameCustomMdxComponents({
-          ...mdxComponents,
-          ...overrideMdxComponents,
-        })}
-      >
-        <SolidBaseContext.Provider
-          value={{
-            components: {
-              Header,
-              TableOfContent,
-              Layout,
-              ...solidBaseComponents,
-            },
-          }}
-        >
-          {props.children}
-        </SolidBaseContext.Provider>
-      </MDXProvider>
-    </MetaProvider>
-  );
+	return (
+		<MetaProvider>
+			<MDXProvider
+				components={renameCustomMdxComponents({
+					...mdxComponents,
+					...overrideMdxComponents,
+				})}
+			>
+				<SolidBaseContext.Provider
+					value={{
+						components: {
+							Header,
+							TableOfContent,
+							Layout,
+							...solidBaseComponents,
+						},
+					}}
+				>
+					{props.children}
+				</SolidBaseContext.Provider>
+			</MDXProvider>
+		</MetaProvider>
+	);
 }
