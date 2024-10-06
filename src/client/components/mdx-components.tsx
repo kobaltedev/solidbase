@@ -1,19 +1,20 @@
 import { type ComponentProps, type ParentProps, splitProps } from "solid-js";
+import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
-	return <h1 {...props} style={{ color: "green" }} />;
+	return <h1 class={styles.h1} {...props} />;
 }
 
 export function h2(props: ComponentProps<"h2">) {
-	return <h2 {...props} style={{ color: "green" }} />;
+	return <h2 class={styles.h2} {...props} />;
 }
 
 export function h3(props: ComponentProps<"h3">) {
-	return <h3 {...props} style={{ color: "green" }} />;
+	return <h3 class={styles.h3} {...props} />;
 }
 
 export function h4(props: ComponentProps<"h4">) {
-	return <h4 {...props} style={{ color: "green" }} />;
+	return <h4 class={styles.h4} {...props} />;
 }
 
 export function h5(props: ComponentProps<"h5">) {
