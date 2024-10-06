@@ -68,7 +68,7 @@
     "remark-directive": "^3.0.0",
     "remark-expressive-code": "^0.37.0",
     "remark-frontmatter": "^5.0.0",
-    "remark-gfm": "^3.0.0",
+    "remark-gfm": "^4.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
     "solid-mdx": "^0.0.7",
     "unified": "^11.0.5",
