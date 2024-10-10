@@ -1,8 +1,52 @@
 @import "./reset.css";
 @import "./variables.css";
 
+@font-face {
+	font-family: Lexend;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./fonts/Lexend.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./fonts/Inter.woff2") format("woff2");
+}
+@font-face {
+	font-family: InterVariable;
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./fonts/Inter-Italic.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "JetBrains Mono";
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./fonts/JetBrainsMono.woff2") format("woff2");
+}
+@font-face {
+	font-family: "JetBrains Mono";
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./fonts/JetBrainsMono-Italic.woff2") format("woff2");
+}
+
 html {
 	background: var(--background-color);
+	font-optical-sizing: auto;
+	font-family: Inter, Segoe UI, Roboto, sans-serif;
+}
+
+code {
+	font-family: "JetBrains Mono", Menlo, Consolas, monospace !important;
 }
 
 h1,
@@ -11,5 +55,9 @@ h3,
 h4,
 h5,
 h6 {
+	font-family: Lexend, Segoe UI, Roboto, sans-serif;
+}
+
+article *[id] {
 	scroll-margin-top: 2rem;
 }

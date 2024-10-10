@@ -18,11 +18,11 @@ export function h4(props: ComponentProps<"h4">) {
 }
 
 export function h5(props: ComponentProps<"h5">) {
-	return <h4 {...props} />;
+	return <h5 class={styles.h5} {...props} />;
 }
 
 export function h6(props: ComponentProps<"h6">) {
-	return <h4 {...props} />;
+	return <h6 class={styles.h6} {...props} />;
 }
 
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
@@ -33,16 +33,14 @@ export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 		<a
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
-			style={{
-				color: autoHeading() ? "inherit" : undefined,
-			}}
+			class={autoHeading() ? styles["a-auto"] : styles.a}
 			{...props}
 		/>
 	);
 }
 
 export function code(props: ComponentProps<"code">) {
-	return <code {...props} />;
+	return <code class={styles.code} {...props} />;
 }
 
 export function table(props: ComponentProps<"table">) {

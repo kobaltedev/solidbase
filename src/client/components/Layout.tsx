@@ -62,7 +62,11 @@ export default function Layout(props: ParentProps) {
 
 					<article
 						id="solidbase-doc"
-						style={{ "max-width": "52rem", width: "100%" }}
+						style={{
+							"max-width": "52rem",
+							width: "100%",
+							"margin-top": "2rem",
+						}}
 					>
 						{props.children}
 

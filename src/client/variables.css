@@ -1,7 +1,15 @@
 html {
-	--background-color: #ffffff;
+	--background-color: #fff;
+	--heading-color: #18181b;
+	--link-underline-color: #7dd3fc;
+	--active-text-color: #075985;
+	--highligh-background-color: #e0f2fe;
 }
 
 html[data-theme="dark"] {
 	--background-color: #18181b;
+	--heading-color: #fff;
+	--link-underline-color: #075985;
+	--active-text-color: #7dd3fc;
+	--highligh-background-color: #0c4a6e;
 }
