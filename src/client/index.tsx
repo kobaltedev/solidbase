@@ -4,8 +4,8 @@ import {
 	Router,
 } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { type JSX, Show, Suspense, children, onMount } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import { type JSX, Show, Suspense, children } from "solid-js";
+import {Dynamic} from "solid-js/web";
 import { SolidBaseProvider, useSolidBaseContext } from "./context";
 
 interface SolidBaseAppProps {
@@ -16,10 +16,6 @@ interface SolidBaseAppProps {
 export function SolidBaseApp(props: SolidBaseAppProps) {
 	const resolved = children(() => {
 		return props.children as unknown as JSX.Element;
-	});
-
-	onMount(() => {
-		document.documentElement.setAttribute("data-theme", "dark");
 	});
 
 	return (
@@ -50,3 +46,6 @@ function Layout(rootProps: RouteSectionProps) {
 		</Suspense>
 	);
 }
+
+
+export { getTheme, setTheme } from "./theme";

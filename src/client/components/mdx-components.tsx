@@ -18,11 +18,11 @@ export function h4(props: ComponentProps<"h4">) {
 }
 
 export function h5(props: ComponentProps<"h5">) {
-	return <h4 {...props} style={{ color: "green" }} />;
+	return <h4 {...props} />;
 }
 
 export function h6(props: ComponentProps<"h6">) {
-	return <h4 {...props} style={{ color: "green" }} />;
+	return <h4 {...props} />;
 }
 
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
@@ -42,7 +42,7 @@ export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 }
 
 export function code(props: ComponentProps<"code">) {
-	return <code class={""} {...props} />;
+	return <code {...props} />;
 }
 
 export function table(props: ComponentProps<"table">) {

@@ -1,13 +1,26 @@
 import { Title } from "@solidjs/meta";
 
-import type { ParentProps } from "solid-js";
+import { ParentProps, createEffect, onMount } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
+import {getTheme, setTheme} from "../theme";
 
 export default function Layout(props: ParentProps) {
 	const { Header, TableOfContent } = useSolidBaseContext().components;
 
 	const pageData = useCurrentPageData();
+
+	onMount(() => {
+				window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',({ matches }) => {
+	  const match = matches ? "dark" : "light";
+		if (getTheme() !== match) setTheme(match);
+	})
+		});
+
+	createEffect(() => {
+		document.documentElement.setAttribute('data-theme', getTheme() ?? "light");
+		document.cookie = `theme=${getTheme()}; max-age=31536000; path=/`;
+	})
 
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
@@ -20,7 +33,8 @@ export default function Layout(props: ParentProps) {
 			>
 				<Title>{pageData().frontmatter?.title ?? ""}</Title>
 
-				<Header>{JSON.stringify(pageData())}</Header>
+				<Header/>
+
 				<div
 					style={{
 						"flex-direction": "row",
