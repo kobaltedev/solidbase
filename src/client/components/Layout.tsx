@@ -4,6 +4,7 @@ import { ParentProps, createEffect, onMount } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
 import {getTheme, setTheme} from "../theme";
+import styles from "./Layout.module.css";
 
 export default function Layout(props: ParentProps) {
 	const { Header, TableOfContent } = useSolidBaseContext().components;

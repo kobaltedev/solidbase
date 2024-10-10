@@ -1,0 +1,7 @@
+html {
+  --background-color: #ffffff;
+}
+
+html[data-theme="dark"] {
+  --background-color: #18181b;
+}

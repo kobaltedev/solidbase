@@ -1,0 +1,6 @@
+@import "./reset.css";
+@import "./variables.css";
+
+html {
+  background: var(--background-color);
+}
