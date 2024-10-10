@@ -23,7 +23,6 @@ export default function solidBaseVitePlugin(
 				}
 			},
 			async load(id) {
-				// console.log("vite load", id);
 				if (id === resolvedVirtualModuleId) {
 					return loadVirtual(startConfig, solidBaseConfig);
 				}
@@ -33,13 +32,11 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:post",
 			enforce: "post",
 			transform(code, id) {
-				// console.log("vite transform", id);
-
 				if (
 					id.startsWith(dirname(fileURLToPath(import.meta.url))) &&
 					id.includes(".mdx")
 				)
-					return transformMdxModule(code, id);
+					return transformMdxModule(code, id, startConfig, solidBaseConfig);
 			},
 		},
 	];

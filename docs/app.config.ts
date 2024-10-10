@@ -14,6 +14,8 @@ export default defineConfig(
 		{
 			title: "SolidBase",
 			description: "Solid Start Powered Static Site Generator",
+			editPath:
+				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
 		},
 	),
 );

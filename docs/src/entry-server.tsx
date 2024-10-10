@@ -1,6 +1,6 @@
+import { getTheme } from "@kobalte/solidbase/client";
 // @refresh reload
 import { StartServer, createHandler } from "@solidjs/start/server";
-import {getTheme} from "@kobalte/solidbase/client";
 
 export default createHandler(() => (
 	<StartServer

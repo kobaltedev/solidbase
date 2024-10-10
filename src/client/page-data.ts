@@ -10,6 +10,7 @@ export interface TableOfContentData {
 interface CurrentPageData {
 	frontmatter: Record<string, any>;
 	toc?: TableOfContentData;
+	editLink?: string;
 }
 
 const defaultPageData: CurrentPageData = {

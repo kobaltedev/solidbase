@@ -1,9 +1,9 @@
 import { Title } from "@solidjs/meta";
 
-import { ParentProps, createEffect, onMount } from "solid-js";
+import { type ParentProps, Show, createEffect, onMount } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
-import {getTheme, setTheme} from "../theme";
+import { getTheme, setTheme } from "../theme";
 import styles from "./Layout.module.css";
 
 export default function Layout(props: ParentProps) {
@@ -12,16 +12,18 @@ export default function Layout(props: ParentProps) {
 	const pageData = useCurrentPageData();
 
 	onMount(() => {
-				window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',({ matches }) => {
-	  const match = matches ? "dark" : "light";
-		if (getTheme() !== match) setTheme(match);
-	})
-		});
+		window
+			.matchMedia("(prefers-color-scheme: dark)")
+			.addEventListener("change", ({ matches }) => {
+				const match = matches ? "dark" : "light";
+				if (getTheme() !== match) setTheme(match);
+			});
+	});
 
 	createEffect(() => {
-		document.documentElement.setAttribute('data-theme', getTheme() ?? "light");
+		document.documentElement.setAttribute("data-theme", getTheme() ?? "light");
 		document.cookie = `theme=${getTheme()}; max-age=31536000; path=/`;
-	})
+	});
 
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
@@ -34,7 +36,7 @@ export default function Layout(props: ParentProps) {
 			>
 				<Title>{pageData().frontmatter?.title ?? ""}</Title>
 
-				<Header/>
+				<Header />
 
 				<div
 					style={{
@@ -63,6 +65,18 @@ export default function Layout(props: ParentProps) {
 						style={{ "max-width": "52rem", width: "100%" }}
 					>
 						{props.children}
+
+						<hr />
+
+						<Show when={pageData().editLink}>
+							<a
+								target="_blank"
+								rel="noreferrer noopener"
+								href={pageData().editLink}
+							>
+								Edit this page on GitHub
+							</a>
+						</Show>
 					</article>
 
 					<aside

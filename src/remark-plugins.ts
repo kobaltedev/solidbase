@@ -1,6 +1,4 @@
 import { h } from "hastscript";
-// @ts-expect-error
-import type { Root } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
 import { visit } from "unist-util-visit";
@@ -118,7 +116,7 @@ const githubAlertsAsDirectives = {
 };
 
 export function remarkGithubAlertsToDirectives() {
-	return (tree: Root) => {
+	return (tree: any) => {
 		visit(tree, (node) => {
 			if (node.type !== "blockquote") return;
 
@@ -143,7 +141,7 @@ export function remarkGithubAlertsToDirectives() {
 }
 
 export function remarkCustomContainers() {
-	return (tree: Root) => {
+	return (tree: any) => {
 		visit(tree, (node) => {
 			if (
 				node.type === "containerDirective" ||

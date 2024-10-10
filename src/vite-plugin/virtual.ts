@@ -40,17 +40,40 @@ export async function loadVirtual(
 	return template;
 }
 
-export function transformMdxModule(code: string, id: string) {
+export function transformMdxModule(
+	code: string,
+	id: string,
+	startConfig: SolidStartInlineConfig,
+	solidBaseConfig: SolidBaseConfig,
+) {
+	const rootPath = join(
+		dirname(fileURLToPath(import.meta.url)),
+		startConfig?.appRoot ?? "./src",
+		"routes",
+	);
+
+	const modulePath = id.split("?")[0];
+
+	let modulePathLink: string | undefined;
+	if (solidBaseConfig.editPath) {
+		const path = modulePath.slice(rootPath.length).replace(/^\//, "");
+
+		if (typeof solidBaseConfig.editPath === "string")
+			modulePathLink = solidBaseConfig.editPath.replace(/:path/g, path);
+		else modulePathLink = solidBaseConfig.editPath(path);
+	}
+
 	return `
 		${code}
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},
 			toc: JSON.parse($$SolidBase_TOC),
+			editLink: "${modulePathLink}",
 		};
 
 		if (typeof window !== "undefined") {
 			window.$$SolidBase_page_data ??= {};
-			window.$$SolidBase_page_data["${id.split("?")[0]}"] = data;
+			window.$$SolidBase_page_data["${modulePath}"] = data;
 		}
 
 		export const $$SolidBase_page_data = data;
