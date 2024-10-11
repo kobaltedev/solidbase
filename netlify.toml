@@ -1,0 +1,5 @@
+[build]
+  publish = "docs/dist/"
+
+[functions]
+  directory = "docs/.netlify/functions-internal/"
