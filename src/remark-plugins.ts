@@ -100,20 +100,14 @@ export function remarkTOC() {
 
 const customContainers = new Set([
 	"info",
+	"note",
 	"tip",
 	"important",
 	"warning",
 	"danger",
+	"caution",
 	"details",
 ]);
-
-const githubAlertsAsDirectives = {
-	NOTE: "info",
-	TIP: "tip",
-	IMPORTANT: "important",
-	WARNING: "warning",
-	CAUTION: "danger",
-};
 
 export function remarkGithubAlertsToDirectives() {
 	return (tree: any) => {
@@ -122,12 +116,11 @@ export function remarkGithubAlertsToDirectives() {
 
 			const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
 			if (!text) return;
-			const matches = text.match(/^\[!(\w+)\]/);
+			const matches = text.match(/^\[!(\w+)]/);
 			if (!matches) return;
 			const key = matches[1];
 			if (!key) return;
-			const directive =
-				githubAlertsAsDirectives[key as keyof typeof githubAlertsAsDirectives];
+			const directive = key.toLowerCase();
 
 			node.children[0].children[0].value = text.slice(matches[0].length);
 

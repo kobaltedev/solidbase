@@ -40,13 +40,17 @@
 }
 
 html {
+	--font-headings: Lexend, Segoe UI, Roboto, sans-serif;
+	--font-text: Inter, Segoe UI, Roboto, sans-serif;
+	--font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+
 	background: var(--background-color);
 	font-optical-sizing: auto;
-	font-family: Inter, Segoe UI, Roboto, sans-serif;
+	font-family: var(--font-text);
 }
 
 code {
-	font-family: "JetBrains Mono", Menlo, Consolas, monospace !important;
+	font-family: var(--font-mono) !important;
 }
 
 h1,
@@ -55,9 +59,23 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: Lexend, Segoe UI, Roboto, sans-serif;
+	font-family: var(--font-headings);
 }
 
 article *[id] {
 	scroll-margin-top: 2rem;
+}
+
+.expressive-code.expressive-code figure {
+	--code-background: var(--code-background-color);
+	box-shadow: none;
+	border-radius: .375rem;
+
+	& pre {
+		border: none;
+	}
+
+	& .copy {
+		margin-top: .2rem;
+	}
 }

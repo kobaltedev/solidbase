@@ -5,6 +5,7 @@ import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
 import { getTheme, setTheme } from "../theme";
 import styles from "./Layout.module.css";
+import Link from "./Link";
 
 export default function Layout(props: ParentProps) {
 	const { Header, TableOfContent } = useSolidBaseContext().components;
@@ -73,13 +74,7 @@ export default function Layout(props: ParentProps) {
 						<hr />
 
 						<Show when={pageData().editLink}>
-							<a
-								target="_blank"
-								rel="noreferrer noopener"
-								href={pageData().editLink}
-							>
-								Edit this page on GitHub
-							</a>
+							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
 						</Show>
 					</article>
 

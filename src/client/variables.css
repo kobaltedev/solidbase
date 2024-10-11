@@ -1,15 +1,63 @@
 html {
-	--background-color: #fff;
-	--heading-color: #18181b;
-	--link-underline-color: #7dd3fc;
-	--active-text-color: #075985;
-	--highligh-background-color: #e0f2fe;
+	--button-cursor: pointer;
+	--background-color: hsl(0, 0%, 100%);
+	--heading-color: hsl(240, 6%, 10%);
+	--text-color: hsl(240, 5%, 26%);
+	--link-underline-color: hsl(199, 95%, 74%);
+	--active-text-color: hsl(201, 90%, 27%);
+	--highligh-background-color: hsl(204, 94%, 94%);
+	--decoration-color: hsl(240, 5%, 54%);
+
+	--code-background-color: hsl(0, 0%, 98%);
+
+	--info-background-color: hsl(214, 100%, 97%);
+	--info-text-color: hsl(226, 71%, 40%);
+
+	--tip-background-color: hsl(138, 76%, 97%);
+	--tip-text-color: hsl(143, 64%, 24%);
+
+	--important-background-color: hsl(250, 100%, 98%);
+	--important-text-color: hsl(263, 69%, 42%);
+
+	--warning-background-color: hsl(48, 100%, 96%);
+	--warning-text-color: hsl(23, 61%, 38%);
+
+	--danger-background-color: hsl(0, 86%, 97%);
+	--danger-text-color: hsl(0, 70%, 35%);
 }
 
 html[data-theme="dark"] {
-	--background-color: #18181b;
-	--heading-color: #fff;
-	--link-underline-color: #075985;
-	--active-text-color: #7dd3fc;
-	--highligh-background-color: #0c4a6e;
+	--background-color: hsl(240, 6%, 10%);
+	--heading-color: hsl(0, 0%, 100%);
+	--text-color: hsl(240, 5%, 85%);
+	--link-underline-color: hsl(201, 90%, 27%);
+	--active-text-color: hsl(199, 95%, 74%);
+	--highligh-background-color: hsl(202, 80%, 24%);
+
+	--code-background-color: hsl(240, 4%, 16%);
+
+	--info-background-color: hsl(225, 41%, 17%);
+	--info-text-color: hsl(213, 94%, 68%);
+
+	--tip-background-color: hsl(149, 36%, 14%);
+	--tip-text-color: hsl(142, 52%, 51%);
+
+	--important-background-color: hsl(263, 44%, 17%);
+	--important-text-color: hsl(255, 92%, 76%);
+
+	--warning-background-color: hsl(13, 26%, 13%);
+	--warning-text-color: hsl(43, 74%, 50%);
+
+	--danger-background-color: hsl(356, 38%, 16%);
+	--danger-text-color: hsl(0, 91%, 71%);
 }
+
+/*
+const customContainerColors = {
+	info: "blue",
+	tip: "lightgreen",
+	important: "violet",
+	warning: "lightyellow",
+	danger: "lightcoral",
+	details: "lightgray",    text-amber-800 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/20
+};*/

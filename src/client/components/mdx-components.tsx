@@ -54,54 +54,54 @@ export function table(props: ComponentProps<"table">) {
 }
 
 export function blockquote(props: ComponentProps<"blockquote">) {
-	return <blockquote {...props} style={{ background: "aquamarine" }} />;
+	return <blockquote class={styles.blockquote} {...props} />;
 }
 
 export function p(props: ComponentProps<"p">) {
-	return <p {...props} style={{ color: "green" }} />;
+	return <p class={styles.p} {...props} />;
 }
 
 export function li(props: ComponentProps<"li">) {
-	return <li {...props} style={{ color: "green" }} />;
+	return <li class={styles.li} {...props} />;
 }
 
 export function ul(props: ComponentProps<"ul">) {
-	return <ul {...props} style={{ background: "lime" }} />;
+	return <ul class={styles.ul} {...props} />;
 }
 
 export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
-	if (props["data-toc"] === "")
-		return <ol {...props} style={{ background: "darkseagreen" }} />;
-
-	return <ol {...props} style={{ background: "aquamarine" }} />;
+	return <ol class={styles.ol} {...props} />;
 }
-
-const customContainerColors = {
-	info: "lightgray",
-	tip: "lightgreen",
-	important: "violet",
-	warning: "lightyellow",
-	danger: "lightcoral",
-	details: "lightgray",
-};
 
 export function CustomContainer(
 	props: {
-		type: "info" | "tip" | "important" | "warning" | "danger" | "details";
+		type:
+			| "info"
+			| "note"
+			| "tip"
+			| "important"
+			| "warning"
+			| "danger"
+			| "caution"
+			| "details";
 		title?: string;
 	} & ParentProps,
 ) {
+	if (props.type === "details") {
+		return (
+			<details
+				class={styles["custom-container"]}
+				data-custom-container="details"
+			>
+				<summary>{props.title ?? props.type}</summary>
+				{props.children}
+			</details>
+		);
+	}
+
 	return (
-		<div
-			data-custom-container={props.type}
-			style={{
-				"background-color": customContainerColors[props.type],
-				padding: "0.5rem",
-			}}
-		>
-			<span style={{ "text-transform": "uppercase" }}>
-				{props.title ?? props.type}
-			</span>
+		<div class={styles["custom-container"]} data-custom-container={props.type}>
+			<span>{props.title ?? props.type}</span>
 			{props.children}
 		</div>
 	);
