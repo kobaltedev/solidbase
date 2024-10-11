@@ -7,6 +7,7 @@ import { FileRoutes } from "@solidjs/start/router";
 import { type JSX, Show, Suspense, children } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { SolidBaseProvider, useSolidBaseContext } from "./context";
+
 import "./index.css";
 
 interface SolidBaseAppProps {

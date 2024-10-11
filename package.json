@@ -4,8 +4,8 @@
   "description": "Your Solid knowledgebase",
   "module": "true",
   "scripts": {
-    "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
+    "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
     "format": "biome check --write && prettier . --write",
     "typecheck": "tsc --noEmit"

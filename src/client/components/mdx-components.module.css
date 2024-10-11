@@ -56,6 +56,7 @@
 }
 
 .a {
+	display: inline-block;
 	color: var(--heading-color);
 	text-decoration: none;
 	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
@@ -66,7 +67,6 @@
 }
 
 .a:hover[target="_blank"] {
-	display: inline-block;
 	transform: translateY(-2px);
 	transition: transform linear .05s;
 }
@@ -157,7 +157,15 @@
 		}
 	}
 
-	& > .p:last-child {
+	& > .p:first-child,
+	& > .ul:first-child,
+	& > .ol:first-child {
+		margin-top: 0;
+	}
+
+	& > .p:last-child,
+	& > .ul:last-child,
+	& > .ol:last-child {
 		margin-bottom: 0;
 	}
 

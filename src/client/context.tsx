@@ -46,7 +46,7 @@ export function SolidBaseProvider(props: ParentProps) {
 			<MDXProvider
 				components={renameCustomMdxComponents({
 					...mdxComponents,
-					...overrideMdxComponents,
+					...(overrideMdxComponents ?? {}),
 				})}
 			>
 				<SolidBaseContext.Provider

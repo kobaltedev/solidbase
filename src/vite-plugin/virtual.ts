@@ -13,15 +13,29 @@ export async function loadVirtual(
 		startConfig?.appRoot ?? "./src",
 		solidBaseConfig?.componentsFolder ?? "solidbase-components",
 	);
+	let template = "";
+
+	const partialConfig = (
+		["title", "description", "titleTemplate"] as Array<keyof SolidBaseConfig>
+	)
+		.filter((key) => key in solidBaseConfig)
+		// biome-ignore lint/style/noCommaOperator: cursed stuff
+		.reduce((obj2: any, key) => ((obj2[key] = solidBaseConfig[key]), obj2), {});
+
+	template += `
+		export const solidBaseConfig = ${JSON.stringify(partialConfig)};
+	`;
 
 	const componentFiles = await readdir(componentsPath).catch(() => []);
 	const componentNames = componentFiles.map((file) => parse(file).name);
 
-	let template = "";
-
 	if (componentNames.includes("mdx-components")) {
 		template += `
 			export * as overrideMdxComponents from "${join(componentsPath, "mdx-components")}";
+		`;
+	} else {
+		template += `
+			export const overrideMdxComponents = {};
 		`;
 	}
 

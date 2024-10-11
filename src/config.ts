@@ -28,6 +28,7 @@ import solidBaseVitePlugin from "./vite-plugin";
 export type SolidBaseConfig = {
 	title?: string;
 	description?: string;
+	titleTemplate?: string;
 	componentsFolder?: string;
 	editPath?: string | ((path: string) => string);
 };

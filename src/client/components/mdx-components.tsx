@@ -1,4 +1,9 @@
-import { type ComponentProps, type ParentProps, splitProps } from "solid-js";
+import {
+	type ComponentProps,
+	type ParentProps,
+	Show,
+	splitProps,
+} from "solid-js";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -101,7 +106,9 @@ export function CustomContainer(
 
 	return (
 		<div class={styles["custom-container"]} data-custom-container={props.type}>
-			<span>{props.title ?? props.type}</span>
+			<Show when={props.title !== "_"}>
+				<span>{props.title ?? props.type}</span>
+			</Show>
 			{props.children}
 		</div>
 	);

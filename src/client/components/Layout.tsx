@@ -7,6 +7,8 @@ import { getTheme, setTheme } from "../theme";
 import styles from "./Layout.module.css";
 import Link from "./Link";
 
+import { solidBaseConfig } from "virtual:solidbase";
+
 export default function Layout(props: ParentProps) {
 	const { Header, TableOfContent } = useSolidBaseContext().components;
 
@@ -35,7 +37,19 @@ export default function Layout(props: ParentProps) {
 					"flex-direction": "column",
 				}}
 			>
-				<Title>{pageData().frontmatter?.title ?? ""}</Title>
+				<Show
+					when={pageData().frontmatter?.title}
+					fallback={<Title>{solidBaseConfig.title}</Title>}
+				>
+					{(title) => (
+						<Title>
+							{(solidBaseConfig.titleTemplate ?? ":title").replace(
+								":title",
+								title,
+							)}
+						</Title>
+					)}
+				</Show>
 
 				<Header />
 
