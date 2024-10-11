@@ -48,4 +48,20 @@ function Layout(rootProps: RouteSectionProps) {
 	);
 }
 
+export function SolidBaseServerScript() {
+	return (
+		<script>
+			{`
+				function getThemeCookie() {
+					if (!document.cookie) return undefined;
+					const match = document.cookie.match(new RegExp(\`\\\\W?theme=(?<theme>\\\\w+)\`));
+					return match?.groups?.theme;
+				}
+
+				document.documentElement.setAttribute("data-theme", getThemeCookie() ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+			`}
+		</script>
+	);
+}
+
 export { getTheme, setTheme } from "./theme";
