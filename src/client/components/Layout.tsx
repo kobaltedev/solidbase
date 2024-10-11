@@ -41,14 +41,12 @@ export default function Layout(props: ParentProps) {
 					when={pageData().frontmatter?.title}
 					fallback={<Title>{solidBaseConfig.title}</Title>}
 				>
-					{(title) => (
-						<Title>
-							{(solidBaseConfig.titleTemplate ?? ":title").replace(
-								":title",
-								title,
-							)}
-						</Title>
-					)}
+					<Title>
+						{(solidBaseConfig.titleTemplate ?? ":title").replace(
+							":title",
+							pageData().frontmatter?.title,
+						)}
+					</Title>
 				</Show>
 
 				<Header />

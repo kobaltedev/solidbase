@@ -56,19 +56,14 @@
 }
 
 .a {
-	display: inline-block;
 	color: var(--heading-color);
 	text-decoration: none;
 	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
 }
 
-.a:hover {
+.a:hover,
+.a:active {
 	box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
-}
-
-.a:hover[target="_blank"] {
-	transform: translateY(-2px);
-	transition: transform linear .05s;
 }
 
 .a-auto {

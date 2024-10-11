@@ -4,12 +4,7 @@
 	box-shadow: var(--decoration-color) 0 -2px 0 0 inset;
 }
 
-.link:hover {
+.link:hover,
+.link:active {
 	box-shadow: var(--decoration-color) 0 -6px 0 0 inset;
-}
-
-.link:hover[target="_blank"] {
-	display: inline-block;
-	transform: translateY(-2px);
-	transition: transform linear .05s;
 }
