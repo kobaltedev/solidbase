@@ -29,3 +29,18 @@
 	padding: 1rem;
 	border-right: 1px solid var(--decoration-color);
 }
+
+@media screen and (max-width: 1000px) {
+	.layout {
+		grid-template-columns: 1fr;
+	}
+
+	.sidenav {
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100dvh;
+		transform: translateX(-100%);
+		transition: transform .3s ease-in-out;
+	}
+}

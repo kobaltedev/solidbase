@@ -1,15 +1,29 @@
 .article {
-	width: 100%;
-	margin: 2rem 0;
+	margin: 2rem;
 	display: flex;
 }
 
 .content {
-	max-width: 52rem;
+	max-width: min(calc(100dvw - 2.5rem), 52rem);
 	flex: 1;
 	margin: 0 auto;
 }
 
 .aside {
 	padding: 0 1rem 1rem;
+}
+
+@media screen and (max-width: 1000px) {
+	.article {
+		margin: 2rem 1.25rem;
+	}
+
+	.aside {
+		position: fixed;
+		top: 0;
+		right: 0;
+		height: 100dvh;
+		transform: translateX(100%);
+		transition: transform .3s ease-in-out;
+	}
 }
