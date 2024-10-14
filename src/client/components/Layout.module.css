@@ -1,0 +1,31 @@
+.layout {
+	min-height: 100dvh;
+	width: 100dvw;
+	overflow-x: hidden;
+	display: grid;
+	grid-template-columns: minmax(12rem, auto) 1fr;
+}
+
+.skipnav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: black;
+	color: white;
+	border-bottom-right-radius: .375rem;
+	padding: .5rem .75rem;
+	transform: translateY(-100%);
+	transition: transform .3s ease-in-out;
+	z-index: 2147483647;
+
+	&:focus-within {
+		transform: translateY(0);
+	}
+}
+
+.sidenav {
+	display: flex;
+	flex-direction: row;
+	padding: 1rem;
+	border-right: 1px solid var(--decoration-color);
+}

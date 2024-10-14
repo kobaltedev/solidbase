@@ -51,6 +51,8 @@
     "@kobalte/core": "^0.13.7",
     "@mdx-js/mdx": "^3.0.1",
     "@solid-primitives/clipboard": "^1.5.10",
+    "@solid-primitives/event-listener": "^2.3.3",
+    "@solid-primitives/keyboard": "^1.2.8",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.14.7",
     "@vinxi/plugin-mdx": "^3.7.2",

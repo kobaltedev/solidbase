@@ -10,7 +10,7 @@ import Link from "./Link";
 import { solidBaseConfig } from "virtual:solidbase";
 
 export default function Layout(props: ParentProps) {
-	const { Header, TableOfContent } = useSolidBaseContext().components;
+	const { Header, Article } = useSolidBaseContext().components;
 
 	const pageData = useCurrentPageData();
 
@@ -30,72 +30,43 @@ export default function Layout(props: ParentProps) {
 
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
-			<div
-				style={{
-					"min-height": "100vh",
-					display: "flex",
-					"flex-direction": "column",
-				}}
-			>
-				<Show
-					when={pageData().frontmatter?.title}
-					fallback={<Title>{solidBaseConfig.title}</Title>}
-				>
-					<Title>
-						{(solidBaseConfig.titleTemplate ?? ":title").replace(
-							":title",
-							pageData().frontmatter?.title,
-						)}
-					</Title>
-				</Show>
+			<div class={styles.skipnav}>
+				<Link href="#main-content">Skip to main content</Link>
+			</div>
 
+			<Show
+				when={pageData().frontmatter?.title}
+				fallback={<Title>{solidBaseConfig.title}</Title>}
+			>
+				<Title>
+					{(solidBaseConfig.titleTemplate ?? ":title").replace(
+						":title",
+						pageData().frontmatter?.title,
+					)}
+				</Title>
+			</Show>
+
+			<div class={styles.layout}>
 				<Header />
 
-				<div
+				<aside
+					class={styles.sidenav}
 					style={{
-						"flex-direction": "row",
+						"min-width": "12rem",
+						flex: "1",
 						display: "flex",
-						gap: "2rem",
-						flex: 1,
+						"flex-direction": "row",
+						padding: "1rem",
+						"border-right": "1px solid gray",
 					}}
 				>
-					<aside
-						style={{
-							"min-width": "12rem",
-							flex: "1",
-							display: "flex",
-							"flex-direction": "row",
-							padding: "1rem",
-							"border-right": "1px solid gray",
-						}}
-					>
-						<div style={{ flex: "1" }} />
-						<div style={{ "margin-left": "auto", height: "100%" }}>Sidebar</div>
-					</aside>
+					<div style={{ flex: "1" }} />
+					<div style={{ "margin-left": "auto", height: "100%" }}>Sidebar</div>
+				</aside>
 
-					<article
-						id="solidbase-doc"
-						style={{
-							"max-width": "52rem",
-							width: "100%",
-							"margin-top": "2rem",
-						}}
-					>
-						{props.children}
-
-						<hr />
-
-						<Show when={pageData().editLink}>
-							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
-						</Show>
-					</article>
-
-					<aside
-						style={{ "min-width": "12rem", flex: "1", "padding-top": "2rem" }}
-					>
-						<TableOfContent />
-					</aside>
-				</div>
+				<main id="main-content">
+					<Article>{props.children}</Article>
+				</main>
 			</div>
 		</CurrentPageDataContext.Provider>
 	);

@@ -3,6 +3,7 @@ import { overrideMdxComponents, solidBaseComponents } from "virtual:solidbase";
 import { MetaProvider } from "@solidjs/meta";
 import { type ParentProps, createContext, useContext } from "solid-js";
 import { MDXProvider } from "solid-mdx";
+import Article from "./components/Article";
 import Header from "./components/Header";
 import Layout from "./components/Layout";
 import TableOfContent from "./components/TableOfContent";
@@ -13,6 +14,7 @@ export interface SolidBaseContextValue {
 		Header: typeof Header;
 		TableOfContent: typeof TableOfContent;
 		Layout: typeof Layout;
+		Article: typeof Article;
 	};
 }
 
@@ -55,6 +57,7 @@ export function SolidBaseProvider(props: ParentProps) {
 							Header,
 							TableOfContent,
 							Layout,
+							Article,
 							...solidBaseComponents,
 						},
 					}}

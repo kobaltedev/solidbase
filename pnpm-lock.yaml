@@ -23,6 +23,12 @@ importers:
       '@solid-primitives/clipboard':
         specifier: ^1.5.10
         version: 1.5.10(solid-js@1.9.1)
+      '@solid-primitives/event-listener':
+        specifier: ^2.3.3
+        version: 2.3.3(solid-js@1.9.1)
+      '@solid-primitives/keyboard':
+        specifier: ^1.2.8
+        version: 1.2.8(solid-js@1.9.1)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.1)
@@ -1131,6 +1137,11 @@ packages:
 
   '@solid-primitives/event-listener@2.3.3':
     resolution: {integrity: sha512-DAJbl+F0wrFW2xmcV8dKMBhk9QLVLuBSW+TR4JmIfTaObxd13PuL7nqaXnaYKDWOYa6otB00qcCUIGbuIhSUgQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/keyboard@1.2.8':
+    resolution: {integrity: sha512-pJtcbkjozS6L1xvTht9rPpyPpX55nAkfBzbFWdf3y0Suwh6qClTibvvObzKOf7uzQ+8aZRDH4LsoGmbTKXtJjQ==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -4557,6 +4568,13 @@ snapshots:
 
   '@solid-primitives/event-listener@2.3.3(solid-js@1.9.1)':
     dependencies:
+      '@solid-primitives/utils': 6.2.3(solid-js@1.9.1)
+      solid-js: 1.9.1
+
+  '@solid-primitives/keyboard@1.2.8(solid-js@1.9.1)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.3.3(solid-js@1.9.1)
+      '@solid-primitives/rootless': 1.4.5(solid-js@1.9.1)
       '@solid-primitives/utils': 6.2.3(solid-js@1.9.1)
       solid-js: 1.9.1
 

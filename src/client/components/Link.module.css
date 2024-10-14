@@ -2,9 +2,10 @@
 	color: var(--text-color);
 	text-decoration: none;
 	box-shadow: var(--decoration-color) 0 -2px 0 0 inset;
+	outline: none;
 }
 
 .link:hover,
-.link:active {
+.link:focus {
 	box-shadow: var(--decoration-color) 0 -6px 0 0 inset;
 }

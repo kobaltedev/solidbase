@@ -69,7 +69,8 @@ article *[id] {
 .expressive-code.expressive-code figure {
 	--code-background: var(--code-background-color);
 	box-shadow: none;
-	border-radius: .375rem;
+	border-radius: var(--border-radius);
+	cursor: text;
 
 	& pre {
 		border: none;

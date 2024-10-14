@@ -1,0 +1,15 @@
+.article {
+	width: 100%;
+	margin: 2rem 0;
+	display: flex;
+}
+
+.content {
+	max-width: 52rem;
+	flex: 1;
+	margin: 0 auto;
+}
+
+.aside {
+	padding: 0 1rem 1rem;
+}

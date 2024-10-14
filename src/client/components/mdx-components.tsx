@@ -74,7 +74,7 @@ export function ul(props: ComponentProps<"ul">) {
 	return <ul class={styles.ul} {...props} />;
 }
 
-export function ol(props: ComponentProps<"ol"> & { "data-toc"?: "" }) {
+export function ol(props: ComponentProps<"ol">) {
 	return <ol class={styles.ol} {...props} />;
 }
 

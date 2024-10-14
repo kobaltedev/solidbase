@@ -126,7 +126,7 @@ a[data-footnote-ref] {
 	color: var(--active-text-color);
 	background: var(--highligh-background-color);
 	padding: .2em .4em;
-	border-radius: .25rem;
+	border-radius: var(--border-radius);
 	overflow-wrap: break-word;
 }
 
@@ -137,7 +137,7 @@ a[data-footnote-ref] {
 
 .custom-container {
 	padding: 1em 1.25em;
-	border-radius: .375rem;
+	border-radius: var(--border-radius);
 	margin: 1.25em 0;
 
 	& > span:first-child {

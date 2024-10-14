@@ -11,6 +11,7 @@
 	border-bottom: 2px solid #e4e4e7;
 	transition: background;
 	transition-duration: 500ms;
+	grid-column-start: span 2;
 }
 
 .logo_container {
