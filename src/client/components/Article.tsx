@@ -9,7 +9,7 @@ import Link from "./Link";
 export default function Article(props: ParentProps) {
 	const { TableOfContent } = useSolidBaseContext().components;
 
-	const [articleRef, setArticleRef] = createSignal<HTMLElement>();
+	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
 	const [clickedCodeElement, setClickedCodeElement] =
 		createSignal<HTMLElement>();
@@ -31,12 +31,13 @@ export default function Article(props: ParentProps) {
 						"div.expressive-code",
 					) ?? clickedCodeElement()!;
 
-				if (window.getSelection()?.anchorNode === articleRef()) {
+				if (window.getSelection()?.anchorNode === contentRef()) {
 					return; // Code already selected, select all (default) instead.
 				}
 
 				const range = document.createRange();
 				range.selectNode(targetNode);
+				window.getSelection()?.removeAllRanges();
 				window.getSelection()?.addRange(range);
 				event?.preventDefault();
 			}
@@ -59,8 +60,8 @@ export default function Article(props: ParentProps) {
 		<>
 			<WindowEventListener onClick={onClick} />
 
-			<article ref={setArticleRef} class={styles.article}>
-				<div class={styles.content}>
+			<article class={styles.article}>
+				<div ref={setContentRef} class={styles.content}>
 					{props.children}
 
 					<hr />
