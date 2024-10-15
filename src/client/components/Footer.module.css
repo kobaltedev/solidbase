@@ -1,0 +1,49 @@
+.footer {
+	margin: 2rem 0;
+	padding: 2rem 0;
+	border-top: 1px solid
+		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	display: flex;
+	justify-content: space-between;
+
+	& > div {
+		display: flex;
+		flex-direction: column;
+		color: var(--text-color);
+		gap: 1rem;
+
+		& > span {
+			font-family: var(--font-headings);
+			color: var(--heading-color);
+			font-size: 1.25em;
+		}
+
+		&:nth-child(1) > span {
+			font-size: 1.5em;
+		}
+
+		&:nth-child(2) {
+			align-items: flex-end;
+		}
+	}
+}
+
+.socials {
+	display: flex;
+	gap: .75rem;
+
+	& > a {
+		text-decoration: none;
+		overflow-y: clip;
+
+		& > img {
+			height: 1.25rem;
+			filter: drop-shadow(0 1000px 0 var(--text-color));
+			transform: translateY(-1000px);
+		}
+
+		&:hover > img {
+			filter: drop-shadow(0 1000px 0 var(--heading-color));
+		}
+	}
+}

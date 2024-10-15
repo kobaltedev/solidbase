@@ -48,6 +48,10 @@ export function code(props: ComponentProps<"code">) {
 	return <code class={styles.code} {...props} />;
 }
 
+export function hr(props: ComponentProps<"hr">) {
+	return <hr class={styles.hr} {...props} />;
+}
+
 export function table(props: ComponentProps<"table">) {
 	const [local, others] = splitProps(props, ["class"]);
 

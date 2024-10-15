@@ -17,6 +17,10 @@ export default defineConfig(
 			titleTemplate: ":title – SolidBase",
 			editPath:
 				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
+			socialLinks: {
+				github: "https://github.com/kobaltedev/solidbase",
+				discord: "https://discord.com/invite/solidjs",
+			},
 		},
 	),
 );

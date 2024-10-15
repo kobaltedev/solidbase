@@ -4,8 +4,11 @@ import { MetaProvider } from "@solidjs/meta";
 import { type ParentProps, createContext, useContext } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 import Article from "./components/Article";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
+import LastUpdated from "./components/LastUpdated";
 import Layout from "./components/Layout";
+import Link from "./components/Link";
 import TableOfContent from "./components/TableOfContent";
 import * as mdxComponents from "./components/mdx-components";
 
@@ -15,6 +18,9 @@ export interface SolidBaseContextValue {
 		TableOfContent: typeof TableOfContent;
 		Layout: typeof Layout;
 		Article: typeof Article;
+		Link: typeof Link;
+		LastUpdated: typeof LastUpdated;
+		Footer: typeof Footer;
 	};
 }
 
@@ -24,6 +30,8 @@ export function useSolidBaseContext() {
 	const context = useContext(SolidBaseContext);
 
 	if (context === undefined) {
+		console.log(import.meta.env.SOLIDBASE_DEV, import.meta.env);
+		if (import.meta.env.SOLIDBASE_DEV) location.reload();
 		throw new Error(
 			"[SolidBase]: `useSolidBaseContext` must be used within a `SolidBase` component",
 		);
@@ -58,6 +66,9 @@ export function SolidBaseProvider(props: ParentProps) {
 							TableOfContent,
 							Layout,
 							Article,
+							Link,
+							LastUpdated,
+							Footer,
 							...solidBaseComponents,
 						},
 					}}

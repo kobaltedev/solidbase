@@ -3,6 +3,7 @@ import { dirname, join, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { SolidBaseConfig } from "../config";
+import { getGitTimestamp } from "../git";
 
 export async function loadVirtual(
 	startConfig: SolidStartInlineConfig,
@@ -16,7 +17,15 @@ export async function loadVirtual(
 	let template = "";
 
 	const partialConfig = (
-		["title", "description", "titleTemplate"] as Array<keyof SolidBaseConfig>
+		[
+			"title",
+			"description",
+			"titleTemplate",
+			"lastUpdated",
+			"footer",
+			"logo",
+			"socialLinks",
+		] as Array<keyof SolidBaseConfig>
 	)
 		.filter((key) => key in solidBaseConfig)
 		// biome-ignore lint/style/noCommaOperator: cursed stuff
@@ -54,7 +63,7 @@ export async function loadVirtual(
 	return template;
 }
 
-export function transformMdxModule(
+export async function transformMdxModule(
 	code: string,
 	id: string,
 	startConfig: SolidStartInlineConfig,
@@ -68,7 +77,7 @@ export function transformMdxModule(
 
 	const modulePath = id.split("?")[0];
 
-	let modulePathLink: string | undefined;
+	let modulePathLink = "";
 	if (solidBaseConfig.editPath) {
 		const path = modulePath.slice(rootPath.length).replace(/^\//, "");
 
@@ -77,12 +86,18 @@ export function transformMdxModule(
 		else modulePathLink = solidBaseConfig.editPath(path);
 	}
 
+	let lastUpdated = 0;
+	if (solidBaseConfig.lastUpdated) {
+		lastUpdated = await getGitTimestamp(modulePath);
+	}
+
 	return `
 		${code}
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},
 			toc: JSON.parse($$SolidBase_TOC),
 			editLink: "${modulePathLink}",
+			lastUpdated: ${lastUpdated},
 		};
 
 		if (typeof window !== "undefined") {

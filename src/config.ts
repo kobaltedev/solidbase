@@ -28,9 +28,15 @@ import solidBaseVitePlugin from "./vite-plugin";
 export type SolidBaseConfig = {
 	title?: string;
 	description?: string;
+	logo?: string;
 	titleTemplate?: string;
 	componentsFolder?: string;
 	editPath?: string | ((path: string) => string);
+	lastUpdated?: Intl.DateTimeFormatOptions | false;
+	footer?: boolean;
+	socialLinks?:
+		| Record<Exclude<SocialLink["type"], "custom">, string>
+		| Record<string, Omit<SocialLink, "type">>;
 };
 
 export function withSolidBase(
@@ -39,6 +45,11 @@ export function withSolidBase(
 ) {
 	const config = startConfig ?? {};
 	const baseConfig = solidBaseConfig ?? {};
+
+	baseConfig.title ??= "SolidBase";
+	baseConfig.description ??= "Solid Start Powered Static Site Generator";
+	baseConfig.lastUpdated ??= { dateStyle: "short", timeStyle: "short" };
+	baseConfig.footer ??= true;
 
 	process.env.PORT ??= "4000";
 

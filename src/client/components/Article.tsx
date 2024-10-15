@@ -1,13 +1,15 @@
+import { solidBaseConfig } from "virtual:solidbase";
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
-import { JSX, type ParentProps, Show, createSignal } from "solid-js";
+import { isAppleDevice } from "@solid-primitives/platform";
+import { type ParentProps, Show, createSignal } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { useCurrentPageData } from "../page-data";
 import styles from "./Article.module.css";
-import Link from "./Link";
 
 export default function Article(props: ParentProps) {
-	const { TableOfContent } = useSolidBaseContext().components;
+	const { TableOfContent, Link, LastUpdated, Footer } =
+		useSolidBaseContext().components;
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -17,7 +19,7 @@ export default function Article(props: ParentProps) {
 	const pageData = useCurrentPageData();
 
 	createShortcut(
-		["Control", "A"],
+		[isAppleDevice ? "Meta" : "Control", "A"],
 		(event) => {
 			// Only handle when code last clicked and no focus or copy button focused
 			if (
@@ -64,10 +66,35 @@ export default function Article(props: ParentProps) {
 				<div ref={setContentRef} class={styles.content}>
 					{props.children}
 
-					<hr />
+					<div class={styles.info}>
+						<Show when={pageData().editLink}>
+							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
+						</Show>
 
-					<Show when={pageData().editLink}>
-						<Link href={pageData().editLink}>Edit this page on GitHub</Link>
+						<Show when={pageData().lastUpdated}>
+							<LastUpdated />
+						</Show>
+					</div>
+
+					<Show when={pageData().lastUpdated || pageData().lastUpdated}>
+						<div class={styles.related}>
+							<Show when={pageData().lastUpdated} fallback={<div />}>
+								<a class={styles.prev} href={"/"}>
+									<span>Previous</span>
+									TITLE
+								</a>
+							</Show>
+							<Show when={pageData().lastUpdated}>
+								<a class={styles.next} href={"/"}>
+									<span>Next</span>
+									TITLE
+								</a>
+							</Show>
+						</div>
+					</Show>
+
+					<Show when={solidBaseConfig.footer}>
+						<Footer />
 					</Show>
 				</div>
 

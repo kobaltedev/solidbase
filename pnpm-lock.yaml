@@ -29,6 +29,9 @@ importers:
       '@solid-primitives/keyboard':
         specifier: ^1.2.8
         version: 1.2.8(solid-js@1.9.1)
+      '@solid-primitives/platform':
+        specifier: ^0.1.2
+        version: 0.1.2(solid-js@1.9.1)
       '@solidjs/meta':
         specifier: ^0.29.4
         version: 0.29.4(solid-js@1.9.1)
@@ -38,6 +41,9 @@ importers:
       '@vinxi/plugin-mdx':
         specifier: ^3.7.2
         version: 3.7.2(@mdx-js/mdx@3.0.1)
+      cross-spawn:
+        specifier: ^7.0.3
+        version: 7.0.3
       estree-util-value-to-estree:
         specifier: ^3.1.2
         version: 3.1.2
@@ -96,6 +102,9 @@ importers:
       '@solidjs/start':
         specifier: ^1.0.8
         version: 1.0.8(solid-js@1.9.1)(vinxi@0.4.3(@types/node@22.7.4)(ioredis@5.4.1)(terser@5.34.1))(vite@5.4.8(@types/node@22.7.4)(terser@5.34.1))
+      '@types/cross-spawn':
+        specifier: ^6.0.6
+        version: 6.0.6
       prettier:
         specifier: 4.0.0-alpha.8
         version: 4.0.0-alpha.8
@@ -1160,6 +1169,11 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/platform@0.1.2':
+    resolution: {integrity: sha512-sSxcZfuUrtxcwV0vdjmGnZQcflACzMfLriVeIIWXKp8hzaS3Or3tO6EFQkTd3L8T5dTq+kTtLvPscXIpL0Wzdg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/props@3.1.11':
     resolution: {integrity: sha512-jZAKWwvDRHjiydIumDgMj68qviIbowQ1ci7nkEAgzgvanNkhKSQV8iPgR2jMk1uv7S2ZqXYHslVQTgJel/TEyg==}
     peerDependencies:
@@ -1228,6 +1242,9 @@ packages:
 
   '@types/braces@3.0.4':
     resolution: {integrity: sha512-0WR3b8eaISjEW7RpZnclONaLFDf7buaowRHdqLp4vLj54AsSAYWfh3DRbfiYJY9XDxMgx1B4sE1Afw2PGpuHOA==}
+
+  '@types/cross-spawn@6.0.6':
+    resolution: {integrity: sha512-fXRhhUkG4H3TQk5dBhQ7m/JDdSNHKwR2BBia62lhwEIq9xGiQKLxd6LymNhn47SjXhsUEPmxi+PKw2OkW4LLjA==}
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
@@ -4595,6 +4612,10 @@ snapshots:
       '@solid-primitives/utils': 6.2.3(solid-js@1.9.1)
       solid-js: 1.9.1
 
+  '@solid-primitives/platform@0.1.2(solid-js@1.9.1)':
+    dependencies:
+      solid-js: 1.9.1
+
   '@solid-primitives/props@3.1.11(solid-js@1.9.1)':
     dependencies:
       '@solid-primitives/utils': 6.2.3(solid-js@1.9.1)
@@ -4696,6 +4717,10 @@ snapshots:
       '@babel/types': 7.25.7
 
   '@types/braces@3.0.4': {}
+
+  '@types/cross-spawn@6.0.6':
+    dependencies:
+      '@types/node': 22.7.4
 
   '@types/debug@4.1.12':
     dependencies:

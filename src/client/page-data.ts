@@ -11,6 +11,7 @@ interface CurrentPageData {
 	frontmatter: Record<string, any>;
 	toc?: TableOfContentData;
 	editLink?: string;
+	lastUpdated?: number;
 }
 
 const defaultPageData: CurrentPageData = {

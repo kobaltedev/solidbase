@@ -1,7 +1,7 @@
 {
   "name": "@kobalte/solidbase",
   "version": "0.0.1",
-  "description": "Your Solid knowledgebase",
+  "description": "Solid Start Powered Static Site Generator",
   "module": "true",
   "scripts": {
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",
     "@solidjs/start": "^1.0.8",
+    "@types/cross-spawn": "^6.0.6",
     "prettier": "4.0.0-alpha.8",
     "solid-js": "^1.9.1",
     "typescript": "^5.6.2",
@@ -53,9 +54,11 @@
     "@solid-primitives/clipboard": "^1.5.10",
     "@solid-primitives/event-listener": "^2.3.3",
     "@solid-primitives/keyboard": "^1.2.8",
+    "@solid-primitives/platform": "^0.1.2",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.14.7",
     "@vinxi/plugin-mdx": "^3.7.2",
+    "cross-spawn": "^7.0.3",
     "estree-util-value-to-estree": "^3.1.2",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",

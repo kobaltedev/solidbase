@@ -27,3 +27,43 @@
 		transition: transform .3s ease-in-out;
 	}
 }
+
+.info {
+	font-size: .9em;
+	margin: 4rem 0 1rem;
+	display: flex;
+	justify-content: space-between;
+}
+
+.related {
+	margin: 2rem 0;
+	font-size: .9em;
+	padding: 2rem 0 0;
+	border-top: 1px solid
+		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	display: flex;
+	justify-content: space-between;
+}
+
+.prev,
+.next {
+	color: var(--text-color);
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	font-size: 2em;
+
+	& > span {
+		font-family: var(--font-headings);
+		color: var(--heading-color);
+		font-size: .5em;
+	}
+
+	&:hover {
+		color: var(--heading-color);
+	}
+}
+
+.next {
+	align-items: flex-end;
+}

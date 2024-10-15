@@ -50,28 +50,22 @@ h2[id="footnote-label"] {
 	line-height: 1.3;
 }
 
+.a,
 a[data-footnote-backref],
 a[data-footnote-ref] {
-	font-size: .8em;
-	color: var(--heading-color);
-	text-decoration: none;
-	box-shadow: var(--decoration-color) 0 -2px 0 0 inset;
-
-	&:hover,
-	&:active {
-		box-shadow: var(--decoration-color) 0 -6px 0 0 inset;
-	}
-}
-
-.a {
 	color: var(--heading-color);
 	text-decoration: none;
 	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
+
+	&:hover,
+	&:active {
+		box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
+	}
 }
 
-.a:hover,
-.a:active {
-	box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
+a[data-footnote-backref],
+a[data-footnote-ref] {
+	font-size: .8em;
 }
 
 .a-auto {
@@ -95,6 +89,13 @@ a[data-footnote-ref] {
 	& + .ol {
 		margin-top: 0;
 	}
+}
+
+.hr {
+	margin: 2rem 0;
+	border-top: 1px solid
+		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	color: transparent;
 }
 
 .ul {
