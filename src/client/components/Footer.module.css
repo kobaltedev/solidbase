@@ -35,6 +35,7 @@
 	& > a {
 		text-decoration: none;
 		overflow-y: clip;
+		outline: none;
 
 		& > img {
 			height: 1.25rem;
@@ -42,7 +43,8 @@
 			transform: translateY(-1000px);
 		}
 
-		&:hover > img {
+		&:hover > img,
+		&:focus > img {
 			filter: drop-shadow(0 1000px 0 var(--heading-color));
 		}
 	}
