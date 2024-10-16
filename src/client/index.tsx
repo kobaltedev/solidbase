@@ -9,7 +9,7 @@ import { Dynamic } from "solid-js/web";
 import { SolidBaseProvider, useSolidBaseContext } from "./context";
 
 import "./index.css";
-import { getTheme } from "./theme";
+import { getRawTheme, getTheme } from "./theme";
 
 interface SolidBaseAppProps {
 	root?: BaseRouterProps["root"];
@@ -45,7 +45,7 @@ function Layout(rootProps: RouteSectionProps) {
 
 	createEffect(() => {
 		document.documentElement.setAttribute("data-theme", getTheme());
-		document.cookie = `theme=${getTheme()}; max-age=31536000; path=/`;
+		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
 	});
 
 	return (
@@ -65,7 +65,7 @@ export function SolidBaseServerScript() {
 					return match?.groups?.theme;
 				}
 
-				document.documentElement.setAttribute("data-theme", getThemeCookie() ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+				document.documentElement.setAttribute("data-theme", getThemeCookie().replace("s", "") ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 			`}
 		</script>
 	);

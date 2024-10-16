@@ -3,7 +3,7 @@ import { type ThemeType, getTheme, setTheme } from "../theme";
 import styles from "./ThemeSelector.module.css";
 
 interface ThemeOption {
-	value: ThemeType | undefined;
+	value: ThemeType | "system";
 	label: string;
 }
 
@@ -17,7 +17,7 @@ const THEME_OPTIONS: ThemeOption[] = [
 		label: "Dark",
 	},
 	{
-		value: undefined,
+		value: "system",
 		label: "System",
 	},
 ];
@@ -32,6 +32,7 @@ export default function ThemeSelector() {
 			onChange={(option) => {
 				setTheme(option?.value);
 			}}
+			allowDuplicateSelectionEvents
 			gutter={8}
 			sameWidth={false}
 			placement="bottom"

@@ -4,12 +4,11 @@ import { isServer } from "solid-js/web";
 import { getCookie as getServerCookie } from "vinxi/server";
 
 export type ThemeType = "light" | "dark";
+export type RawThemeType = ThemeType | `s${ThemeType}`;
 
 function getClientCookie(name: string) {
 	if (!name || !document.cookie) return undefined;
-	const match = document.cookie.match(
-		new RegExp(`\\\\W?${name}=(?<value>\\\\w+)`),
-	);
+	const match = document.cookie.match(new RegExp(`\\W?${name}=(?<value>\\w+)`));
 	return match?.groups?.value || undefined;
 }
 
@@ -19,20 +18,30 @@ function getServerTheme() {
 	return (getServerCookie("theme") ?? "light") as ThemeType;
 }
 
-const [theme, _setTheme] = createSignal<ThemeType>();
+const [theme, _setTheme] = createSignal<ThemeType | "system">();
 
-export function getTheme(): ThemeType {
+export function getRawTheme(): RawThemeType {
 	if (isServer) return getServerTheme();
 
-	if (theme()) return theme()!;
-
 	const prefersDark = usePrefersDark();
-	const prefersTheme = () => (prefersDark() ? "dark" : "light");
+	const prefersTheme = () => (prefersDark() ? "sdark" : "slight");
 
-	const userTheme = getClientCookie("theme") as ThemeType | undefined;
-	if (userTheme) setTheme(userTheme);
+	if (theme())
+		return theme()!.startsWith("s")
+			? prefersTheme()
+			: (theme()! as RawThemeType);
 
-	return userTheme ?? prefersTheme();
+	const userTheme = getClientCookie("theme") as RawThemeType | undefined;
+	if (userTheme && !userTheme.startsWith("s")) {
+		setTheme(userTheme as ThemeType);
+		return userTheme;
+	}
+
+	return prefersTheme();
+}
+
+export function getTheme(): ThemeType {
+	return getRawTheme().replace("s", "") as ThemeType;
 }
 
 export const setTheme = _setTheme;
