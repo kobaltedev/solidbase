@@ -15,11 +15,10 @@
 		& > span {
 			font-family: var(--font-headings);
 			color: var(--heading-color);
-			font-size: 1.25em;
 		}
 
 		&:nth-child(1) > span {
-			font-size: 1.5em;
+			font-size: 1.25em;
 		}
 
 		&:nth-child(2) {

@@ -4,11 +4,12 @@ import {
 	Router,
 } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { type JSX, Show, Suspense, children } from "solid-js";
+import { type JSX, Show, Suspense, children, createEffect } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { SolidBaseProvider, useSolidBaseContext } from "./context";
 
 import "./index.css";
+import { getTheme } from "./theme";
 
 interface SolidBaseAppProps {
 	root?: BaseRouterProps["root"];
@@ -41,6 +42,11 @@ export function SolidBaseApp(props: SolidBaseAppProps) {
 
 function Layout(rootProps: RouteSectionProps) {
 	const { Layout } = useSolidBaseContext().components;
+
+	createEffect(() => {
+		document.documentElement.setAttribute("data-theme", getTheme());
+		document.cookie = `theme=${getTheme()}; max-age=31536000; path=/`;
+	});
 
 	return (
 		<Suspense>

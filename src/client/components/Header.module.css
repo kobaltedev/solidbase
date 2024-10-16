@@ -8,25 +8,18 @@
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0 1rem;
-	background: white;
+	padding: 0 1.5rem;
+	background: var(--background-color);
 	border-bottom: 2px solid #e4e4e7;
 	grid-column-start: span 2;
 	transform: translateY(calc(-1 * var(--header-offset)));
+	border-bottom: 1px solid
+		color-mix(in hsl, var(--decoration-color) 15%, transparent);
 }
 
-.logo_container {
-	position: relative;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	flex-grow: 1;
-	flex-basis: 0;
-}
-
-.logo_link {
-	color: #27272a;
-	font-weight: 500;
-	font-size: 1.25rem;
-	line-height: 0;
+.logo-link {
+	text-decoration: none;
+	color: var(--heading-color);
+	font-family: var(--font-headings);
+	font-size: 1.25em;
 }

@@ -130,7 +130,7 @@ a[data-footnote-ref] {
 
 .code {
 	font-size: .9em;
-	color: var(--active-text-color);
+	color: var(--code-text-color);
 	background: var(--highligh-background-color);
 	padding: .2em .4em;
 	border-radius: var(--border-radius);

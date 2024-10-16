@@ -23,8 +23,12 @@
   ],
   "license": "MIT",
   "exports": {
-    "./client": "./src/client/index.tsx",
-    "./*": "./src/*"
+    "./client": {
+      "solid": "./src/client/index.tsx"
+    },
+    "./*": {
+      "solid": "./src/*"
+    }
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.2",
@@ -54,6 +58,7 @@
     "@solid-primitives/clipboard": "^1.5.10",
     "@solid-primitives/event-listener": "^2.3.3",
     "@solid-primitives/keyboard": "^1.2.8",
+    "@solid-primitives/media": "^2.2.9",
     "@solid-primitives/platform": "^0.1.2",
     "@solid-primitives/scroll": "^2.0.23",
     "@solidjs/meta": "^0.29.4",

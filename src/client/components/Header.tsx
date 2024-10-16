@@ -1,5 +1,6 @@
 import {
 	type ParentProps,
+	Show,
 	createEffect,
 	createSignal,
 	onMount,
@@ -7,12 +8,16 @@ import {
 import styles from "./Header.module.css";
 
 import { solidBaseConfig } from "virtual:solidbase";
+import { isMobile } from "@solid-primitives/platform";
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
+import { useSolidBaseContext } from "../context";
 
-const BUFFER_MULT = 6;
+const BUFFER_MULT = 3;
 
-export default function Header(props: ParentProps<{}>) {
+export default function Header(props: {}) {
 	const [ref, setRef] = createSignal<HTMLElement>();
+
+	const { ThemeSelector } = useSolidBaseContext().components;
 
 	const scroll = useWindowScrollPosition();
 	const [offset, setOffset] = createSignal(0);
@@ -25,6 +30,7 @@ export default function Header(props: ParentProps<{}>) {
 	let buffer = true;
 
 	createEffect((prev: number) => {
+		if (!isMobile) return 0;
 		if (ref()?.getAttribute("data-scrolling-to-header") === "") return scroll.y;
 
 		setOffset((prefOffset) => {
@@ -49,6 +55,7 @@ export default function Header(props: ParentProps<{}>) {
 	}, scroll.y);
 
 	createEffect(() => {
+		if (!isMobile) return;
 		document.body.style.setProperty(
 			"--header-offset",
 			`${Math.min(scroll.y, offset(), headerHeight)}px`,
@@ -57,8 +64,15 @@ export default function Header(props: ParentProps<{}>) {
 
 	return (
 		<header class={styles.header} ref={setRef}>
-			<a href="/">{solidBaseConfig.title}</a>
-			{props.children}
+			<a href="/" class={styles["logo-link"]}>
+				<Show
+					when={solidBaseConfig.logo}
+					fallback={<span>{solidBaseConfig.title}</span>}
+				>
+					<img src={solidBaseConfig.logo} alt={solidBaseConfig.title} />
+				</Show>
+			</a>
+			<ThemeSelector />
 		</header>
 	);
 }

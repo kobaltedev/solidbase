@@ -10,6 +10,7 @@ import LastUpdated from "./components/LastUpdated";
 import Layout from "./components/Layout";
 import Link from "./components/Link";
 import TableOfContents from "./components/TableOfContents";
+import ThemeSelector from "./components/ThemeSelector";
 import * as mdxComponents from "./components/mdx-components";
 
 export interface SolidBaseContextValue {
@@ -21,6 +22,7 @@ export interface SolidBaseContextValue {
 		Link: typeof Link;
 		LastUpdated: typeof LastUpdated;
 		Footer: typeof Footer;
+		ThemeSelector: typeof ThemeSelector;
 	};
 }
 
@@ -68,6 +70,7 @@ export function SolidBaseProvider(props: ParentProps) {
 							Link,
 							LastUpdated,
 							Footer,
+							ThemeSelector,
 							...solidBaseComponents,
 						},
 					}}

@@ -1,8 +1,9 @@
-import { createSignal } from "solid-js";
+import { usePrefersDark } from "@solid-primitives/media";
+import { createEffect, createSignal } from "solid-js";
 import { isServer } from "solid-js/web";
 import { getCookie as getServerCookie } from "vinxi/server";
 
-type ThemeType = "light" | "dark" | undefined;
+export type ThemeType = "light" | "dark";
 
 function getClientCookie(name: string) {
 	if (!name || !document.cookie) return undefined;
@@ -15,7 +16,7 @@ function getClientCookie(name: string) {
 function getServerTheme() {
 	"use server";
 
-	return getServerCookie("theme") as ThemeType;
+	return (getServerCookie("theme") ?? "light") as ThemeType;
 }
 
 const [theme, _setTheme] = createSignal<ThemeType>();
@@ -23,15 +24,15 @@ const [theme, _setTheme] = createSignal<ThemeType>();
 export function getTheme(): ThemeType {
 	if (isServer) return getServerTheme();
 
-	const userTheme = getClientCookie("theme");
-	if (userTheme) setTheme(userTheme as ThemeType);
-	setTheme(
-		window.matchMedia("(prefers-color-scheme: dark)").matches
-			? "dark"
-			: "light",
-	);
+	if (theme()) return theme()!;
 
-	return theme();
+	const prefersDark = usePrefersDark();
+	const prefersTheme = () => (prefersDark() ? "dark" : "light");
+
+	const userTheme = getClientCookie("theme") as ThemeType | undefined;
+	if (userTheme) setTheme(userTheme);
+
+	return userTheme ?? prefersTheme();
 }
 
 export const setTheme = _setTheme;

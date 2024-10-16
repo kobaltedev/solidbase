@@ -70,7 +70,7 @@
 		}
 
 		&.active {
-			color: var(--active-text-color);
+			color: var(--active-link-color);
 			opacity: 1;
 		}
 	}

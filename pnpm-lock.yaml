@@ -29,6 +29,9 @@ importers:
       '@solid-primitives/keyboard':
         specifier: ^1.2.8
         version: 1.2.8(solid-js@1.9.1)
+      '@solid-primitives/media':
+        specifier: ^2.2.9
+        version: 2.2.9(solid-js@1.9.1)
       '@solid-primitives/platform':
         specifier: ^0.1.2
         version: 0.1.2(solid-js@1.9.1)
