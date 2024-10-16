@@ -8,7 +8,7 @@ import { useCurrentPageData } from "../page-data";
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
-	const { TableOfContent, Link, LastUpdated, Footer } =
+	const { TableOfContents, Link, LastUpdated, Footer } =
 		useSolidBaseContext().components;
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
@@ -99,7 +99,7 @@ export default function Article(props: ParentProps) {
 				</div>
 
 				<aside class={styles.aside}>
-					<TableOfContent />
+					<TableOfContents />
 				</aside>
 			</article>
 		</>

@@ -9,13 +9,13 @@ import Header from "./components/Header";
 import LastUpdated from "./components/LastUpdated";
 import Layout from "./components/Layout";
 import Link from "./components/Link";
-import TableOfContent from "./components/TableOfContent";
+import TableOfContents from "./components/TableOfContents";
 import * as mdxComponents from "./components/mdx-components";
 
 export interface SolidBaseContextValue {
 	components: {
 		Header: typeof Header;
-		TableOfContent: typeof TableOfContent;
+		TableOfContents: typeof TableOfContents;
 		Layout: typeof Layout;
 		Article: typeof Article;
 		Link: typeof Link;
@@ -30,8 +30,7 @@ export function useSolidBaseContext() {
 	const context = useContext(SolidBaseContext);
 
 	if (context === undefined) {
-		console.log(import.meta.env.SOLIDBASE_DEV, import.meta.env);
-		if (import.meta.env.SOLIDBASE_DEV) location.reload();
+		if (import.meta.env.VITE_SOLIDBASE_DEV) location.reload();
 		throw new Error(
 			"[SolidBase]: `useSolidBaseContext` must be used within a `SolidBase` component",
 		);
@@ -63,7 +62,7 @@ export function SolidBaseProvider(props: ParentProps) {
 					value={{
 						components: {
 							Header,
-							TableOfContent,
+							TableOfContents,
 							Layout,
 							Article,
 							Link,

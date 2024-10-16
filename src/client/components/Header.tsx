@@ -25,6 +25,8 @@ export default function Header(props: ParentProps<{}>) {
 	let buffer = true;
 
 	createEffect((prev: number) => {
+		if (ref()?.getAttribute("data-scrolling-to-header") === "") return scroll.y;
+
 		setOffset((prefOffset) => {
 			const delta = scroll.y - prev;
 
@@ -49,7 +51,7 @@ export default function Header(props: ParentProps<{}>) {
 	createEffect(() => {
 		document.body.style.setProperty(
 			"--header-offset",
-			`${Math.min(scroll.y, offset())}px`,
+			`${Math.min(scroll.y, offset(), headerHeight)}px`,
 		);
 	});
 
