@@ -39,7 +39,8 @@
 		}
 	}
 
-	&:hover a {
+	&:hover a,
+	&:focus-within a {
 		opacity: 1;
 	}
 }
@@ -58,8 +59,10 @@
 		transition-duration: .15s;
 		opacity: 0.5;
 		min-width: 12rem;
+		outline: none;
 
-		&:hover {
+		&:hover,
+		&:focus {
 			background: color-mix(
 				in hsl,
 				var(--link-underline-color) 20%,
