@@ -56,9 +56,10 @@ a[data-footnote-ref] {
 	color: var(--heading-color);
 	text-decoration: none;
 	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
+	outline: none;
 
 	&:hover,
-	&:active {
+	&:focus {
 		box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
 	}
 }

@@ -31,7 +31,20 @@ export default function Layout(props: ParentProps) {
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
 			<div class={styles.skipnav}>
-				<Link href="#main-content">Skip to main content</Link>
+				<Link
+					href="#main-content"
+					onClick={() => {
+						(
+							document
+								.getElementById("main-content")
+								?.querySelector(
+									"button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+								) as HTMLElement | undefined
+						)?.focus();
+					}}
+				>
+					Skip to main content
+				</Link>
 			</div>
 
 			<Show

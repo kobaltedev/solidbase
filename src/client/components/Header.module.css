@@ -1,6 +1,8 @@
-.main {
+.header {
 	position: sticky;
 	top: 0;
+	width: 100dvw;
+	height: var(--header-height);
 	z-index: 50;
 	display: flex;
 	flex-wrap: wrap;
@@ -9,9 +11,8 @@
 	padding: 0 1rem;
 	background: white;
 	border-bottom: 2px solid #e4e4e7;
-	transition: background;
-	transition-duration: 500ms;
 	grid-column-start: span 2;
+	transform: translateY(calc(-1 * var(--header-offset)));
 }
 
 .logo_container {

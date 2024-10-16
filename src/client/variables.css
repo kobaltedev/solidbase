@@ -9,6 +9,9 @@ html {
 	--decoration-color: hsl(240, 5%, 54%);
 	--border-radius: .375rem;
 
+	--header-offset: 0px;
+	--header-height: 4rem;
+
 	--code-background-color: hsl(0, 0%, 98%);
 
 	--info-background-color: hsl(214, 100%, 97%);
@@ -52,13 +55,3 @@ html[data-theme="dark"] {
 	--danger-background-color: hsl(356, 38%, 16%);
 	--danger-text-color: hsl(0, 91%, 71%);
 }
-
-/*
-const customContainerColors = {
-	info: "blue",
-	tip: "lightgreen",
-	important: "violet",
-	warning: "lightyellow",
-	danger: "lightcoral",
-	details: "lightgray",    text-amber-800 bg-amber-50 dark:text-amber-400 dark:bg-amber-900/20
-};*/

@@ -10,6 +10,10 @@
 }
 
 .aside {
+	position: sticky;
+	top: calc(var(--header-height) + 2rem - var(--header-offset));
+	max-height: calc(100dvh - var(--header-height) - 4rem + var(--header-offset));
+	right: 0;
 	padding: 0 1rem 1rem;
 }
 
