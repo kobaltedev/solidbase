@@ -8,9 +8,8 @@ import styles from "./Header.module.css";
 
 import { solidBaseConfig } from "virtual:solidbase";
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
-import createTween from "@solid-primitives/tween";
 
-const BUFFER_MULT = 3;
+const BUFFER_MULT = 6;
 
 export default function Header(props: ParentProps<{}>) {
 	const [ref, setRef] = createSignal<HTMLElement>();
@@ -23,16 +22,11 @@ export default function Header(props: ParentProps<{}>) {
 		headerHeight = ref()!.getBoundingClientRect().height;
 	});
 
-	const smoothOffset = createTween(() => Math.min(offset(), headerHeight), {
-		duration: 250,
-	});
-
 	let buffer = true;
 
 	createEffect((prev: number) => {
 		setOffset((prefOffset) => {
-			let delta = scroll.y - prev;
-			if (delta < 0) delta /= 2;
+			const delta = scroll.y - prev;
 
 			const newVal = Math.max(
 				Math.min(Math.round(prefOffset + delta), headerHeight * BUFFER_MULT),
@@ -55,7 +49,7 @@ export default function Header(props: ParentProps<{}>) {
 	createEffect(() => {
 		document.body.style.setProperty(
 			"--header-offset",
-			`${Math.min(scroll.y, smoothOffset())}px`,
+			`${Math.min(scroll.y, offset())}px`,
 		);
 	});
 
