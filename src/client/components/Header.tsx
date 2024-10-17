@@ -69,7 +69,7 @@ export default function Header(props: HeaderProps) {
 
 	return (
 		<header class={styles.header} ref={setRef}>
-			<Show when={true}>
+			<Show when={isMobile}>
 				<button
 					type="button"
 					class={styles["mobile-menu"]}

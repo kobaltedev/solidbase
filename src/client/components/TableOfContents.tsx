@@ -83,6 +83,8 @@ function TableOfContentsItem(props: {
 	data: TableOfContentData;
 	current: string | undefined;
 }) {
+	const [ref, setRef] = createSignal<HTMLElement>();
+
 	const handleClick: JSX.EventHandlerUnion<HTMLAnchorElement, MouseEvent> = (
 		event,
 	) => {
@@ -93,12 +95,20 @@ function TableOfContentsItem(props: {
 				(event.target as HTMLAnchorElement).getAttribute("href")!.slice(1),
 			)
 			?.scrollIntoView(true);
-		setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
 	};
+
+	createEffect(() => {
+		const header = document.querySelector("header") as HTMLElement | undefined;
+		header?.setAttribute("data-scrolling-to-header", "");
+		if (props.data.url === props.current)
+			ref()?.scrollIntoView({ behavior: "smooth" });
+		setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
+	});
 
 	return (
 		<li class={styles.item}>
 			<a
+				ref={setRef}
 				onClick={handleClick}
 				href={props.data.url}
 				class={props.data.url === props.current ? styles.active : undefined}
