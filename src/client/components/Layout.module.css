@@ -24,6 +24,7 @@
 }
 
 .sidenav {
+	min-width: 14rem;
 	height: calc(100dvh - var(--header-height) + var(--header-offset));
 	position: sticky;
 	top: calc(var(--header-height) - var(--header-offset));
@@ -33,17 +34,6 @@
 	padding: 1rem;
 	border-right: 1px solid var(--decoration-color);
 	transition: transform .3s ease-in-out;
-}
-
-.sidenav-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background: rgba(0, 0, 0, 0.4);
-	backdrop-filter: blur(2px);
-	z-index: 50;
 }
 
 @media screen and (max-width: 1000px) {
@@ -59,10 +49,103 @@
 		transform: translateX(-100%);
 		z-index: 51;
 
-		&[data-expanded="true"] {
+		&[data-expanded] {
 			min-width: 80%;
 			background: var(--background-color);
 			transform: translateX(0px);
 		}
+	}
+}
+
+.sidenav-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(2px);
+	z-index: 50;
+}
+
+.sidenav-content {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.sidenav-header {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo-link {
+	text-decoration: none;
+	color: var(--heading-color);
+	font-family: var(--font-headings);
+	font-size: 1.25em;
+}
+
+.sidenav-links {
+	width: 100%;
+	color: var(--text-color);
+
+	& ul {
+		list-style-type: none;
+		padding: 0;
+	}
+
+	& li {
+		list-style-type: none;
+
+		& ul {
+			padding-top: 1rem;
+		}
+	}
+
+	h2 {
+		font-size: 0.85rem;
+		font-weight: medium;
+	}
+
+	.sidenav-link {
+		display: flex;
+		width: 100%;
+		color: var(--text-color);
+		text-decoration: none;
+		outline: none;
+		padding: 0.5rem;
+		border-radius: var(--border-radius);
+		font-size: 0.85rem;
+
+		&:hover,
+		&:focus {
+			background: color-mix(in hsl, var(--text-color) 10%, transparent);
+		}
+	}
+}
+
+.sidenav-close-btn {
+	appearance: none;
+	outline: none;
+	border: none;
+	background: transparent;
+	border-radius: var(--border-radius);
+	color: var(--text-color);
+	padding: 0.5rem;
+	cursor: var(--button-cursor);
+
+	&:hover,
+	&:focus {
+		background: color-mix(in hsl, var(--text-color) 10%, transparent);
+	}
+
+	& svg {
+		width: 1.25rem;
+		height: 1.25rem;
 	}
 }

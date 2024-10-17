@@ -1,12 +1,38 @@
 import { Title } from "@solidjs/meta";
 
-import { type ParentProps, Show, createSignal } from "solid-js";
+import { For, type ParentProps, Show, createSignal } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
 import styles from "./Layout.module.css";
 import Link from "./Link";
 
 import { solidBaseConfig } from "virtual:solidbase";
+import { Dialog } from "@kobalte/core/dialog";
+import { isMobile } from "@solid-primitives/platform";
+import { CrossIcon } from "./icons";
+
+interface SidebarItem {
+	title: string;
+	collapsed: boolean;
+	items: { title: string; link: string }[];
+}
+
+const SidebarItems: SidebarItem[] = [
+	{
+		title: "Overview",
+		collapsed: false,
+		items: [
+			{
+				title: "What is SolidBase?",
+				link: "/about",
+			},
+			{
+				title: "What are we missing?",
+				link: "/shitpost-channel",
+			},
+		],
+	},
+];
 
 export default function Layout(props: ParentProps) {
 	const { Header, Article } = useSolidBaseContext().components;
@@ -49,12 +75,36 @@ export default function Layout(props: ParentProps) {
 			<div class={styles.layout}>
 				<Header setSidebarOpen={setSidebarOpen} />
 
-				<Show when={sidebarOpen()}>
-					<div class={styles["sidenav-overlay"]} />
+				<Show when={isMobile}>
+					<Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
+						<Dialog.Portal>
+							<Dialog.Overlay class={styles["sidenav-overlay"]} />
+							<Dialog.Content class={styles.sidenav}>
+								<div class={styles["sidenav-content"]}>
+									<div class={styles["sidenav-header"]}>
+										<a href="/" class={styles["logo-link"]}>
+											<Show
+												when={solidBaseConfig.logo}
+												fallback={<span>{solidBaseConfig.title}</span>}
+											>
+												<img
+													src={solidBaseConfig.logo}
+													alt={solidBaseConfig.title}
+												/>
+											</Show>
+										</a>
+										<Dialog.CloseButton class={styles["sidenav-close-btn"]}>
+											<CrossIcon />
+										</Dialog.CloseButton>
+									</div>
+									<Navigation items={SidebarItems} />
+								</div>
+							</Dialog.Content>
+						</Dialog.Portal>
+					</Dialog>
 				</Show>
-				<aside class={styles.sidenav} data-expanded={sidebarOpen()}>
-					{/* <div style={{ flex: "1" }} /> */}
-					<div style={{ height: "100%" }}>Sidebar</div>
+				<aside class={styles.sidenav}>
+					<Navigation items={SidebarItems} />
 				</aside>
 
 				<main id="main-content">
@@ -64,3 +114,33 @@ export default function Layout(props: ParentProps) {
 		</CurrentPageDataContext.Provider>
 	);
 }
+
+interface NavigationProps {
+	items: SidebarItem[];
+}
+const Navigation = (props: NavigationProps) => {
+	return (
+		<nav class={styles["sidenav-links"]}>
+			<ul>
+				<For each={props.items}>
+					{(section) => (
+						<li>
+							<h2>{section.title}</h2>
+							<ul>
+								<For each={section.items}>
+									{(item) => (
+										<li>
+											<a class={styles["sidenav-link"]} href={item.link}>
+												{item.title}
+											</a>
+										</li>
+									)}
+								</For>
+							</ul>
+						</li>
+					)}
+				</For>
+			</ul>
+		</nav>
+	);
+};
