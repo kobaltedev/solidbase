@@ -51,5 +51,5 @@ export default function solidBaseVitePlugin(
 }
 
 export function isMarkdown(path: string) {
-	return path.match(/.(mdx|md)/);
+	return !!path.match(/\.(mdx|md)/gm);
 }
