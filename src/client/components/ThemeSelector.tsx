@@ -25,6 +25,7 @@ const THEME_OPTIONS: ThemeOption[] = [
 export default function ThemeSelector() {
 	return (
 		<Select<ThemeOption>
+			class={styles.root}
 			options={THEME_OPTIONS}
 			optionValue="value"
 			optionTextValue="label"
@@ -37,19 +38,19 @@ export default function ThemeSelector() {
 			sameWidth={false}
 			placement="bottom"
 			itemComponent={(props) => (
-				<Select.Item item={props.item}>
+				<Select.Item class={styles.item} item={props.item}>
 					<Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
 				</Select.Item>
 			)}
 		>
-			<Select.Trigger aria-label="toggle color mode">
+			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
 					{(state) => state.selectedOption().label}
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
-				<Select.Content>
-					<Select.Listbox />
+				<Select.Content class={styles.content}>
+					<Select.Listbox class={styles.list} />
 				</Select.Content>
 			</Select.Portal>
 		</Select>
