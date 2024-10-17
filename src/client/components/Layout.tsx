@@ -1,6 +1,6 @@
 import { Title } from "@solidjs/meta";
 
-import { type ParentProps, Show } from "solid-js";
+import { type ParentProps, Show, createSignal } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
 import styles from "./Layout.module.css";
@@ -12,6 +12,8 @@ export default function Layout(props: ParentProps) {
 	const { Header, Article } = useSolidBaseContext().components;
 
 	const pageData = useCurrentPageData();
+
+	const [sidebarOpen, setSidebarOpen] = createSignal(false);
 
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
@@ -45,21 +47,14 @@ export default function Layout(props: ParentProps) {
 			</Show>
 
 			<div class={styles.layout}>
-				<Header />
+				<Header setSidebarOpen={setSidebarOpen} />
 
-				<aside
-					class={styles.sidenav}
-					style={{
-						"min-width": "12rem",
-						flex: "1",
-						display: "flex",
-						"flex-direction": "row",
-						padding: "1rem",
-						"border-right": "1px solid gray",
-					}}
-				>
-					<div style={{ flex: "1" }} />
-					<div style={{ "margin-left": "auto", height: "100%" }}>Sidebar</div>
+				<Show when={sidebarOpen()}>
+					<div class={styles["sidenav-overlay"]} />
+				</Show>
+				<aside class={styles.sidenav} data-expanded={sidebarOpen()}>
+					{/* <div style={{ flex: "1" }} /> */}
+					<div style={{ height: "100%" }}>Sidebar</div>
 				</aside>
 
 				<main id="main-content">

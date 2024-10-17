@@ -1,5 +1,5 @@
 import {
-	type ParentProps,
+	type Setter,
 	Show,
 	createEffect,
 	createSignal,
@@ -11,10 +11,15 @@ import { solidBaseConfig } from "virtual:solidbase";
 import { isMobile } from "@solid-primitives/platform";
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { useSolidBaseContext } from "../context";
+import { MenuIcon } from "./icons";
 
 const BUFFER_MULT = 3;
 
-export default function Header(props: {}) {
+interface HeaderProps {
+	setSidebarOpen: Setter<boolean>;
+}
+
+export default function Header(props: HeaderProps) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
 	const { ThemeSelector } = useSolidBaseContext().components;
@@ -64,6 +69,16 @@ export default function Header(props: {}) {
 
 	return (
 		<header class={styles.header} ref={setRef}>
+			<Show when={true}>
+				<button
+					type="button"
+					class={styles["mobile-menu"]}
+					onClick={() => props.setSidebarOpen((p) => !p)}
+					aria-label="Open navigation"
+				>
+					<MenuIcon />
+				</button>
+			</Show>
 			<a href="/" class={styles["logo-link"]}>
 				<Show
 					when={solidBaseConfig.logo}

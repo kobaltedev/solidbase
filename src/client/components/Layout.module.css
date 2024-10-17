@@ -35,6 +35,17 @@
 	transition: transform .3s ease-in-out;
 }
 
+.sidenav-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	backdrop-filter: blur(2px);
+	z-index: 50;
+}
+
 @media screen and (max-width: 1000px) {
 	.layout {
 		grid-template-columns: 1fr;
@@ -46,5 +57,12 @@
 		top: 0;
 		height: 100dvh;
 		transform: translateX(-100%);
+		z-index: 51;
+
+		&[data-expanded="true"] {
+			min-width: 80%;
+			background: var(--background-color);
+			transform: translateX(0px);
+		}
 	}
 }
