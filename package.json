@@ -24,10 +24,14 @@
   "license": "MIT",
   "exports": {
     "./client": {
-      "solid": "./src/client/index.tsx"
+      "solid": "./src/client/index.tsx",
+      "import": "./src/client/index.tsx",
+      "types": "./src/client/index.tsx"
     },
     "./*": {
-      "solid": "./src/*"
+      "solid": "./src/*",
+      "import": "./src/*",
+      "types": "./src/*"
     }
   },
   "devDependencies": {
