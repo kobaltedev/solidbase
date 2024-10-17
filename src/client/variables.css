@@ -6,7 +6,7 @@ html {
 	--link-underline-color: hsl(199, 95%, 74%);
 	--active-link-color: hsl(201, 96%, 32%);
 	--code-text-color: hsl(201, 90%, 27%);
-	--highligh-background-color: hsl(204, 94%, 94%);
+	--highlight-background-color: hsl(204, 94%, 94%);
 	--decoration-color: hsl(240, 5%, 54%);
 	--border-radius: .375rem;
 
@@ -38,7 +38,7 @@ html[data-theme="dark"] {
 	--link-underline-color: hsl(201, 90%, 27%);
 	--active-link-color: hsl(200, 98%, 39%);
 	--code-text-color: hsl(199, 95%, 74%);
-	--highligh-background-color: hsl(202, 80%, 24%);
+	--highlight-background-color: hsl(202, 80%, 24%);
 
 	--code-background-color: hsl(240, 4%, 16%);
 
