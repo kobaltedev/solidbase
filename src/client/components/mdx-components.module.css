@@ -224,3 +224,41 @@ a[data-footnote-ref] {
 		color: var(--danger-text-color);
 	}
 }
+
+.table {
+	overflow-x: auto;
+
+	& > table {
+		width: 100%;
+		table-layout: auto;
+		text-align: left;
+		margin-top: 2em;
+		margin-bottom: 2em;
+		font-size: .875em;
+		line-height: 1.7;
+
+		& > thead {
+			color: var(--heading-color);
+			font-family: var(--font-headings);
+			border-bottom: 1px solid var(--decoration-color);
+		}
+
+		& tr {
+			color: var(--text-color);
+			border-bottom: 1px solid
+				color-mix(in hsl, var(--decoration-color) 20%, transparent);
+
+			& > * {
+				padding: .5rem;
+
+				&:first-child {
+					padding-left: 0;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+			}
+		}
+	}
+}

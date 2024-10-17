@@ -56,8 +56,8 @@ export function table(props: ComponentProps<"table">) {
 	const [local, others] = splitProps(props, ["class"]);
 
 	return (
-		<div style={{ "overflow-x": "auto" }}>
-			<table class="" {...others} />
+		<div class={styles.table}>
+			<table {...others} />
 		</div>
 	);
 }

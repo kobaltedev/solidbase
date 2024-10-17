@@ -157,7 +157,10 @@ const Navigation = (props: NavigationProps) => {
 								<For each={section.items}>
 									{(item) => (
 										<li>
-											<a class={styles["sidenav-link"]} href={item.link}>
+											<a
+												class={styles["sidenav-link"]}
+												href={(item as { link: string }).link}
+											>
 												{item.title}
 											</a>
 										</li>
