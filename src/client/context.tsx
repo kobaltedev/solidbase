@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import LastUpdated from "./components/LastUpdated";
 import Layout from "./components/Layout";
 import Link from "./components/Link";
+import LocaleSelector from "./components/LocaleSelector";
 import TableOfContents from "./components/TableOfContents";
 import ThemeSelector from "./components/ThemeSelector";
 import * as mdxComponents from "./components/mdx-components";
@@ -23,6 +24,7 @@ export interface SolidBaseContextValue {
 		LastUpdated: typeof LastUpdated;
 		Footer: typeof Footer;
 		ThemeSelector: typeof ThemeSelector;
+		LocaleSelector: typeof LocaleSelector;
 	};
 }
 
@@ -71,6 +73,7 @@ export function SolidBaseProvider(props: ParentProps) {
 							LastUpdated,
 							Footer,
 							ThemeSelector,
+							LocaleSelector,
 							...solidBaseComponents,
 						},
 					}}

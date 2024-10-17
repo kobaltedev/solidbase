@@ -1,4 +1,5 @@
 import {
+	For,
 	type Setter,
 	Show,
 	createEffect,
@@ -22,7 +23,7 @@ interface HeaderProps {
 export default function Header(props: HeaderProps) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
-	const { ThemeSelector } = useSolidBaseContext().components;
+	const { ThemeSelector, LocaleSelector } = useSolidBaseContext().components;
 
 	const scroll = useWindowScrollPosition();
 	const [offset, setOffset] = createSignal(0);
@@ -87,7 +88,10 @@ export default function Header(props: HeaderProps) {
 					<img src={solidBaseConfig.logo} alt={solidBaseConfig.title} />
 				</Show>
 			</a>
-			<ThemeSelector />
+			<div class={styles.selectors}>
+				<LocaleSelector />
+				<ThemeSelector />
+			</div>
 		</header>
 	);
 }

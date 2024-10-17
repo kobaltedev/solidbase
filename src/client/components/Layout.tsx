@@ -9,6 +9,7 @@ import Link from "./Link";
 import { solidBaseConfig } from "virtual:solidbase";
 import { Dialog } from "@kobalte/core/dialog";
 import { isMobile } from "@solid-primitives/platform";
+import { useDocumentLocaleEffect } from "../locale";
 import { CrossIcon } from "./icons";
 
 interface SidebarItem {
@@ -67,6 +68,8 @@ export default function Layout(props: ParentProps) {
 	const pageData = useCurrentPageData();
 
 	const [sidebarOpen, setSidebarOpen] = createSignal(false);
+
+	useDocumentLocaleEffect();
 
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>

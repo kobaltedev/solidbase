@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { SolidBaseConfig } from "../config";
 import { getGitTimestamp } from "../git";
+import { SolidBaseTOC } from "../remark-plugins";
 
 export async function loadVirtual(
 	startConfig: SolidStartInlineConfig,
@@ -25,6 +26,8 @@ export async function loadVirtual(
 			"footer",
 			"logo",
 			"socialLinks",
+			"locales",
+			"lang",
 		] as Array<keyof SolidBaseConfig>
 	)
 		.filter((key) => key in solidBaseConfig)
@@ -95,7 +98,7 @@ export async function transformMdxModule(
 		${code}
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},
-			toc: $$SolidBase_TOC,
+			toc: ${SolidBaseTOC},
 			editLink: "${modulePathLink}",
 			lastUpdated: ${lastUpdated},
 		};

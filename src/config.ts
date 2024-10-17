@@ -26,6 +26,13 @@ import {
 } from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
 
+interface SocialLink {
+	type: "discord" | "github" | "opencollective" | "custom";
+	link: string;
+	logo?: string;
+	label?: string;
+}
+
 export type SolidBaseConfig = {
 	title?: string;
 	description?: string;
@@ -38,6 +45,27 @@ export type SolidBaseConfig = {
 	socialLinks?:
 		| Record<Exclude<SocialLink["type"], "custom">, string>
 		| Record<string, Omit<SocialLink, "type">>;
+	lang?: string;
+	locales?: Record<string, LocaleConfig>;
+};
+
+type ResolvedConfigKeys =
+	| "title"
+	| "description"
+	| "lastUpdated"
+	| "footer"
+	| "lang";
+
+export type SolidBaseResolvedConfig = Omit<
+	SolidBaseConfig,
+	ResolvedConfigKeys
+> &
+	Required<Pick<SolidBaseConfig, ResolvedConfigKeys>>;
+
+export type LocaleConfig = {
+	label: string;
+	lang?: string;
+	link?: string;
 };
 
 export function withSolidBase(
@@ -51,6 +79,7 @@ export function withSolidBase(
 	baseConfig.description ??= "Solid Start Powered Static Site Generator";
 	baseConfig.lastUpdated ??= { dateStyle: "short", timeStyle: "short" };
 	baseConfig.footer ??= true;
+	baseConfig.lang ??= "en-US";
 
 	process.env.PORT ??= "4000";
 

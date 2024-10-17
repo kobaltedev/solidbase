@@ -49,3 +49,9 @@
 		height: 1.25rem;
 	}
 }
+
+.selectors {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}

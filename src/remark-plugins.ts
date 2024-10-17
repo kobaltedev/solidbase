@@ -49,6 +49,8 @@ function mapNode(node: ListItemNode): TOCTree {
 	};
 }
 
+export const SolidBaseTOC = "$$SolidBase_TOC";
+
 export function remarkTOC() {
 	return (tree: any) => {
 		const map = toc(tree, { ordered: true, maxDepth: 3 }).map as any;
@@ -65,14 +67,16 @@ export function remarkTOC() {
 			],
 		]);
 
+		const estree = fromJs(
+			`const ${SolidBaseTOC} = ${JSON.stringify(mapNode(map.children[0]))};`,
+			{ module: true },
+		);
+
 		tree.children.unshift({
 			type: "mdxjsEsm",
 			value: "",
 			data: {
-				estree: fromJs(
-					`export const $$SolidBase_TOC = ${JSON.stringify(mapNode(map.children[0]))};`,
-					{ module: true },
-				),
+				estree,
 			},
 		});
 	};

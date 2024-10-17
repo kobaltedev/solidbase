@@ -1,11 +1,15 @@
-import { SolidBaseServerScript, getTheme } from "@kobalte/solidbase/client";
+import {
+	SolidBaseServerScript,
+	getLang,
+	getTheme,
+} from "@kobalte/solidbase/client";
 // @refresh reload
 import { StartServer, createHandler } from "@solidjs/start/server";
 
 export default createHandler(() => (
 	<StartServer
 		document={({ assets, children, scripts }) => (
-			<html lang="en" data-theme={getTheme()}>
+			<html lang={getLang()?.code} data-theme={getTheme()}>
 				<head>
 					<meta charset="utf-8" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
