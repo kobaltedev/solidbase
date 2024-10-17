@@ -63,7 +63,9 @@ export function withSolidBase(
 		const viteConfig =
 			typeof vite === "function"
 				? vite(options)
-				: ((vite ?? {}) as ViteCustomizableConfig);
+				: ({ ...(vite ?? {}) } as ViteCustomizableConfig);
+
+		((viteConfig.optimizeDeps ??= {}).exclude ??= []).push("fsevents");
 
 		viteConfig.plugins ??= [];
 		viteConfig.plugins.push(
