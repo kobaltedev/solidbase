@@ -1,4 +1,8 @@
-import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
+import {
+	type RouteMatch,
+	useCurrentMatches,
+	useLocation,
+} from "@solidjs/router";
 import { createContext, createResource, useContext } from "solid-js";
 
 export interface TableOfContentData {
@@ -35,8 +39,10 @@ function getPageData() {
 
 	const [pageData] = createResource(
 		matches,
-		async (m: RouteMatch[]) => {
-			const key = m[m.length - 1].route.key as any;
+		async (m: RouteMatch[]): Promise<CurrentPageData> => {
+			const key = m[m.length - 1]?.route.key as { $component: any } | undefined;
+			if (!key) return { frontmatter: {} };
+
 			const component = key.$component;
 
 			let mod: any;

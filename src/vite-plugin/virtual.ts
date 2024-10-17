@@ -95,7 +95,7 @@ export async function transformMdxModule(
 		${code}
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},
-			toc: JSON.parse($$SolidBase_TOC),
+			toc: $$SolidBase_TOC,
 			editLink: "${modulePathLink}",
 			lastUpdated: ${lastUpdated},
 		};

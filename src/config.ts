@@ -21,6 +21,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import {
 	remarkCustomContainers,
 	remarkGithubAlertsToDirectives,
+	remarkRelativeImports,
 	remarkTOC,
 } from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
@@ -88,6 +89,7 @@ export function withSolidBase(
 					remarkMdxFrontmatter,
 					remarkGithubAlertsToDirectives,
 					remarkDirective,
+					remarkRelativeImports,
 					remarkGfm,
 					remarkTOC,
 					remarkCustomContainers,

@@ -65,6 +65,7 @@
     "@solidjs/router": "^0.14.7",
     "@vinxi/plugin-mdx": "^3.7.2",
     "cross-spawn": "^7.0.3",
+    "esast-util-from-js": "^2.0.1",
     "estree-util-value-to-estree": "^3.1.2",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",

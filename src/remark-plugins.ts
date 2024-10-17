@@ -1,3 +1,4 @@
+import { fromJs } from "esast-util-from-js";
 import { h } from "hastscript";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
@@ -68,31 +69,10 @@ export function remarkTOC() {
 			type: "mdxjsEsm",
 			value: "",
 			data: {
-				estree: {
-					type: "Program",
-					sourceType: "module",
-					body: [
-						{
-							type: "ExportNamedDeclaration",
-							source: null,
-							specifiers: [],
-							declaration: {
-								type: "VariableDeclaration",
-								kind: "const",
-								declarations: [
-									{
-										type: "VariableDeclarator",
-										id: { type: "Identifier", name: "$$SolidBase_TOC" },
-										init: {
-											type: "Literal",
-											value: JSON.stringify(mapNode(map.children[0])),
-										},
-									},
-								],
-							},
-						},
-					],
-				},
+				estree: fromJs(
+					`export const $$SolidBase_TOC = ${JSON.stringify(mapNode(map.children[0]))};`,
+					{ module: true },
+				),
 			},
 		});
 	};
@@ -167,6 +147,29 @@ export function remarkCustomContainers() {
 					attributes,
 				).properties;
 			}
+		});
+	};
+}
+
+export function remarkRelativeImports() {
+	return (tree: any) => {
+		visit(tree, (node) => {
+			if (node.type !== "image") return;
+
+			const { url } = node;
+			if (!(url.startsWith("./") || url.startsWith("../"))) return;
+
+			const ident = `$$SolidBase_RelativeImport${tree.children.length}`;
+
+			node.url = ident;
+
+			tree.children.push({
+				type: "mdxjsEsm",
+				value: "",
+				data: {
+					estree: fromJs(`import ${ident} from "${url}"`, { module: true }),
+				},
+			});
 		});
 	};
 }

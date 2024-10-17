@@ -27,6 +27,14 @@ export default function solidBaseVitePlugin(
 					return loadVirtual(startConfig, solidBaseConfig);
 				}
 			},
+			transform(code, id) {
+				if (isMarkdown(id)) {
+					return code.replaceAll(
+						/="(\$\$SolidBase_RelativeImport\d+)"/gm,
+						(_, ident) => `={${ident}}`,
+					);
+				}
+			},
 		},
 		{
 			name: "solidbase:post",
@@ -34,10 +42,14 @@ export default function solidBaseVitePlugin(
 			transform(code, id) {
 				if (
 					id.startsWith(dirname(fileURLToPath(import.meta.url))) &&
-					id.includes(".mdx")
+					isMarkdown(id)
 				)
 					return transformMdxModule(code, id, startConfig, solidBaseConfig);
 			},
 		},
 	];
+}
+
+export function isMarkdown(path: string) {
+	return path.match(/.(mdx|md)/);
 }
