@@ -14,7 +14,7 @@ import { CrossIcon } from "./icons";
 interface SidebarItem {
 	title: string;
 	collapsed: boolean;
-	items: { title: string; link: string }[];
+	items: ({ title: string; link: string } | SidebarItem)[];
 }
 
 const SidebarItems: SidebarItem[] = [
@@ -28,7 +28,34 @@ const SidebarItems: SidebarItem[] = [
 			},
 			{
 				title: "What are we missing?",
-				link: "/shitpost-channel",
+				link: "/dave",
+			},
+		],
+	},
+	{
+		title: "Features",
+		collapsed: false,
+		items: [
+			{
+				title: "MDX",
+				link: "/about",
+			},
+			{
+				title: "Code copy",
+				link: "/about",
+			},
+
+			{
+				title: "Good styles",
+				link: "/about",
+			},
+			{
+				title: "Cool team 8)",
+				link: "/about",
+			},
+			{
+				title: "CLI",
+				link: "/about",
 			},
 		],
 	},
