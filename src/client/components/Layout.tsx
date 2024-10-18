@@ -19,50 +19,6 @@ interface SidebarItem {
 	items: ({ title: string; link: string } | SidebarItem)[];
 }
 
-const SidebarItems: SidebarItem[] = [
-	{
-		title: "Overview",
-		collapsed: false,
-		items: [
-			{
-				title: "What is SolidBase?",
-				link: "/about",
-			},
-			{
-				title: "What are we missing?",
-				link: "/dave",
-			},
-		],
-	},
-	{
-		title: "Features",
-		collapsed: false,
-		items: [
-			{
-				title: "MDX",
-				link: "/about",
-			},
-			{
-				title: "Code copy",
-				link: "/about",
-			},
-
-			{
-				title: "Good styles",
-				link: "/about",
-			},
-			{
-				title: "Cool team 8)",
-				link: "/about",
-			},
-			{
-				title: "CLI",
-				link: "/about",
-			},
-		],
-	},
-];
-
 export default function Layout(props: ParentProps) {
 	const { Header, Article } = useSolidBaseContext().components;
 
@@ -128,14 +84,14 @@ export default function Layout(props: ParentProps) {
 											<CrossIcon />
 										</Dialog.CloseButton>
 									</div>
-									<Navigation items={SidebarItems} />
+									<Navigation items={solidBaseConfig.sidebar.items} />
 								</div>
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog>
 				</Show>
 				<aside class={styles.sidenav}>
-					<Navigation items={SidebarItems} />
+					<Navigation items={solidBaseConfig.sidebar.items} />
 				</aside>
 
 				<main id="main-content">

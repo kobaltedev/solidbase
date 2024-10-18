@@ -26,6 +26,12 @@ import {
 } from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
 
+export interface SidebarItem {
+	title: string;
+	collapsed: boolean;
+	items: ({ title: string; link: string } | SidebarItem)[];
+}
+
 interface SocialLink {
 	type: "discord" | "github" | "opencollective" | "custom";
 	link: string;
@@ -47,6 +53,10 @@ export type SolidBaseConfig = {
 		| Record<string, Omit<SocialLink, "type">>;
 	lang?: string;
 	locales?: Record<string, LocaleConfig>;
+	sidebar: {
+		headerTitle?: string;
+		items: SidebarItem[];
+	};
 };
 
 type ResolvedConfigKeys =
@@ -80,6 +90,7 @@ export function withSolidBase(
 	baseConfig.lastUpdated ??= { dateStyle: "short", timeStyle: "short" };
 	baseConfig.footer ??= true;
 	baseConfig.lang ??= "en-US";
+	baseConfig.sidebar ??= {};
 
 	process.env.PORT ??= "4000";
 
