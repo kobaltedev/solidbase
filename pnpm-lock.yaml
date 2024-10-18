@@ -83,9 +83,6 @@ importers:
       remark-directive:
         specifier: ^3.0.0
         version: 3.0.0
-      remark-expressive-code:
-        specifier: ^0.37.0
-        version: 0.37.0
       remark-frontmatter:
         specifier: ^5.0.0
         version: 5.0.0
@@ -3011,9 +3008,6 @@ packages:
 
   remark-directive@3.0.0:
     resolution: {integrity: sha512-l1UyWJ6Eg1VPU7Hm/9tt0zKtReJQNOA4+iDMAxTyZNWnJnFlbS/7zhiel/rogTLQ2vMYwDzSJa4BiVNqGlqIMA==}
-
-  remark-expressive-code@0.37.0:
-    resolution: {integrity: sha512-l4SfO5OhqHEjly2+OX2D/kwISHTDFpkiV/QwABiM/cyjRNpwzrs0DEDUeMeqVke9wYMeq36q9ogrbShjJTDqSg==}
 
   remark-frontmatter@5.0.0:
     resolution: {integrity: sha512-XTFYvNASMe5iPN0719nPrdItC9aU0ssC4v14mH1BCi1u0n1gAocqcujWUrByftZTbLhRtiKRyjYTSIOcr69UVQ==}
@@ -7115,10 +7109,6 @@ snapshots:
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
-
-  remark-expressive-code@0.37.0:
-    dependencies:
-      expressive-code: 0.37.0
 
   remark-frontmatter@5.0.0:
     dependencies:
