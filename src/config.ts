@@ -32,7 +32,7 @@ export interface SidebarItem {
 	items: ({ title: string; link: string } | SidebarItem)[];
 }
 
-interface SocialLink {
+export interface SocialLink {
 	type: "discord" | "github" | "opencollective" | "custom";
 	link: string;
 	logo?: string;
@@ -83,14 +83,14 @@ export function withSolidBase(
 	solidBaseConfig?: SolidBaseConfig,
 ) {
 	const config = startConfig ?? {};
-	const baseConfig = solidBaseConfig ?? {};
+	const baseConfig: Partial<SolidBaseConfig> = solidBaseConfig ?? {};
 
 	baseConfig.title ??= "SolidBase";
 	baseConfig.description ??= "Solid Start Powered Static Site Generator";
 	baseConfig.lastUpdated ??= { dateStyle: "short", timeStyle: "short" };
 	baseConfig.footer ??= true;
 	baseConfig.lang ??= "en-US";
-	baseConfig.sidebar ??= {};
+	baseConfig.sidebar ??= { items: [] };
 
 	process.env.PORT ??= "4000";
 

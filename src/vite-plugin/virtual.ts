@@ -8,7 +8,7 @@ import { SolidBaseTOC } from "../remark-plugins";
 
 export async function loadVirtual(
 	startConfig: SolidStartInlineConfig,
-	solidBaseConfig: SolidBaseConfig,
+	solidBaseConfig: Partial<SolidBaseConfig>,
 ) {
 	const componentsPath = join(
 		dirname(fileURLToPath(import.meta.url)),
@@ -71,7 +71,7 @@ export async function transformMdxModule(
 	code: string,
 	id: string,
 	startConfig: SolidStartInlineConfig,
-	solidBaseConfig: SolidBaseConfig,
+	solidBaseConfig: Partial<SolidBaseConfig>,
 ) {
 	const rootPath = join(
 		dirname(fileURLToPath(import.meta.url)),

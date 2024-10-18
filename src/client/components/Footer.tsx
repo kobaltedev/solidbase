@@ -2,6 +2,7 @@ import styles from "./Footer.module.css";
 
 import { solidBaseConfig } from "virtual:solidbase";
 import { For, Show } from "solid-js";
+import type { SocialLink } from "../../config";
 
 const logos: Partial<Record<SocialLink["type"], string>> = {
 	discord:
@@ -44,7 +45,7 @@ export default function Footer() {
 
 								if (!preset) data.type = "custom";
 
-								return <SocialLink {...data} />;
+								return <SocialLinkView {...data} />;
 							}}
 						</For>
 					</div>
@@ -54,7 +55,7 @@ export default function Footer() {
 	);
 }
 
-function SocialLink(props: SocialLink) {
+function SocialLinkView(props: SocialLink) {
 	return (
 		<a href={props.link} target="_blank" rel="noreferrer noopener">
 			<Show
