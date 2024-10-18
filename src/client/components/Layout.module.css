@@ -109,6 +109,9 @@
 		list-style-type: none;
 
 		& ul {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
 			padding-top: 1rem;
 		}
 	}
@@ -131,6 +134,10 @@
 		&:hover,
 		&:focus {
 			background: color-mix(in hsl, var(--text-color) 10%, transparent);
+		}
+
+		&.active {
+			background: color-mix(in hsl, var(--text-color) 5%, transparent);
 		}
 	}
 }

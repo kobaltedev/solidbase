@@ -9,6 +9,7 @@ import Link from "./Link";
 import { solidBaseConfig } from "virtual:solidbase";
 import { Dialog } from "@kobalte/core/dialog";
 import { isMobile } from "@solid-primitives/platform";
+import { A } from "@solidjs/router";
 import { useDocumentLocaleEffect } from "../locale";
 import { CrossIcon } from "./icons";
 
@@ -160,12 +161,14 @@ const Navigation = (props: NavigationProps) => {
 								<For each={section.items}>
 									{(item) => (
 										<li>
-											<a
-												class={styles["sidenav-link"]}
+											<A
+												class={`${styles["sidenav-link"]}`}
+												activeClass={styles.active}
 												href={(item as { link: string }).link}
+												end
 											>
 												{item.title}
-											</a>
+											</A>
 										</li>
 									)}
 								</For>
