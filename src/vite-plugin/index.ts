@@ -11,7 +11,7 @@ const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
 export default function solidBaseVitePlugin(
 	startConfig: SolidStartInlineConfig,
-	solidBaseConfig: SolidBaseConfig,
+	solidBaseConfig: Partial<SolidBaseConfig>,
 ): PluginOption {
 	return [
 		{
