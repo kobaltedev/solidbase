@@ -1,8 +1,4 @@
-import {
-	type RouteMatch,
-	useCurrentMatches,
-	useLocation,
-} from "@solidjs/router";
+import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
 import { createContext, createResource, useContext } from "solid-js";
 
 export interface TableOfContentData {

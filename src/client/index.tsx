@@ -73,4 +73,4 @@ export function SolidBaseServerScript() {
 }
 
 export { getTheme, setTheme } from "./theme";
-export { getLang } from "./lang";
+export { getLocale, useLocale } from "./locale";
