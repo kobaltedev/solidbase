@@ -29,6 +29,7 @@ export async function loadVirtual(
 			"locales",
 			"lang",
 			"sidebar",
+			"search",
 		] as Array<keyof SolidBaseConfig>
 	)
 		.filter((key) => key in solidBaseConfig)

@@ -18,6 +18,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import rehypeExpressiveCode, {
 	type ExpressiveCodeTheme,
 } from "rehype-expressive-code";
+import type { SearchConfig } from "./client/search";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins";
 import {
 	remarkCustomContainers,
@@ -58,6 +59,7 @@ export type SolidBaseConfig = {
 		headerTitle?: string;
 		items: SidebarItem[];
 	};
+	search?: SearchConfig;
 };
 
 type ResolvedConfigKeys =

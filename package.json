@@ -55,6 +55,8 @@
   },
   "packageManager": "pnpm@9.12.1",
   "dependencies": {
+    "@docsearch/css": "^3.6.2",
+    "@docsearch/js": "^3.6.2",
     "@expressive-code/plugin-collapsible-sections": "^0.37.0",
     "@expressive-code/plugin-line-numbers": "^0.37.0",
     "@kobalte/core": "^0.13.7",

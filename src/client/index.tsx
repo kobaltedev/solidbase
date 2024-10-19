@@ -5,7 +5,7 @@ import {
 } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { type JSX, Show, Suspense, children, createEffect } from "solid-js";
-import { Dynamic, getRequestEvent } from "solid-js/web";
+import { Dynamic } from "solid-js/web";
 
 import { SolidBaseProvider, useSolidBaseContext } from "./context";
 

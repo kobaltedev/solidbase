@@ -1,18 +1,20 @@
+import { solidBaseConfig } from "virtual:solidbase";
+import { isMobile } from "@solid-primitives/platform";
+import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import {
-	For,
 	type Setter,
 	Show,
 	createEffect,
 	createSignal,
+	lazy,
 	onMount,
 } from "solid-js";
-import styles from "./Header.module.css";
 
-import { solidBaseConfig } from "virtual:solidbase";
-import { isMobile } from "@solid-primitives/platform";
-import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { useSolidBaseContext } from "../context";
+import styles from "./Header.module.css";
 import { MenuIcon } from "./icons";
+
+const DocSearch = lazy(() => import("./DocSearch"));
 
 const BUFFER_MULT = 3;
 
@@ -89,6 +91,7 @@ export default function Header(props: HeaderProps) {
 				</Show>
 			</a>
 			<div class={styles.selectors}>
+				{solidBaseConfig.search?.provider === "algolia" && <DocSearch />}
 				<LocaleSelector />
 				<ThemeSelector />
 			</div>

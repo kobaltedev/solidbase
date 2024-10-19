@@ -21,6 +21,14 @@ export default defineConfig(
 				github: "https://github.com/kobaltedev/solidbase",
 				discord: "https://discord.com/invite/solidjs",
 			},
+			search: {
+				provider: "algolia",
+				options: {
+					appId: "H7ZQSI0SAN",
+					apiKey: "c9354456dd4bb74c37e4d2b762b89b88",
+					indexName: "kobalte",
+				},
+			},
 		},
 	),
 );
