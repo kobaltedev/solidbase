@@ -5,6 +5,7 @@ import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
 import { useSolidBaseContext } from "../context";
 import { useCurrentPageData } from "../page-data";
+import { usePrevNext, useSidebar } from "../sidebar";
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
@@ -58,6 +59,8 @@ export default function Article(props: ParentProps) {
 		}
 	};
 
+	const prevNext = usePrevNext();
+
 	return (
 		<>
 			<WindowEventListener onClick={onClick} />
@@ -76,21 +79,29 @@ export default function Article(props: ParentProps) {
 						</Show>
 					</div>
 
-					<Show when={pageData().lastUpdated || pageData().lastUpdated}>
-						<div class={styles.related}>
-							<Show when={pageData().lastUpdated} fallback={<div />}>
-								<a class={styles.prev} href={"/"}>
-									<span>Previous</span>
-									TITLE
-								</a>
-							</Show>
-							<Show when={pageData().lastUpdated}>
-								<a class={styles.next} href={"/"}>
-									<span>Next</span>
-									TITLE
-								</a>
-							</Show>
-						</div>
+					<Show when={prevNext.prevLink() || prevNext.nextLink()}>
+						<nav class={styles.related}>
+							<div>
+								<Show when={prevNext.prevLink()}>
+									{(link) => (
+										<a class={styles.prev} href={link().link}>
+											<span>Previous</span>
+											{link().title}
+										</a>
+									)}
+								</Show>
+							</div>
+							<div>
+								<Show when={prevNext.nextLink()}>
+									{(link) => (
+										<a class={styles.next} href={link().link}>
+											<span>Next</span>
+											{link().title}
+										</a>
+									)}
+								</Show>
+							</div>
+						</nav>
 					</Show>
 
 					<Show when={solidBaseConfig.footer}>
