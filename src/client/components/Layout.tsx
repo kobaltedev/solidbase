@@ -8,9 +8,10 @@ import Link from "./Link";
 
 import { solidBaseConfig } from "virtual:solidbase";
 import { Dialog } from "@kobalte/core/dialog";
-import { isMobile } from "@solid-primitives/platform";
 import { A } from "@solidjs/router";
+import { Dynamic } from "solid-js/web";
 import type { Sidebar } from "../../config";
+import { mobileLayout } from "../globals";
 import { useSidebar } from "../sidebar";
 import { CrossIcon } from "./icons";
 
@@ -63,44 +64,52 @@ export default function Layout(props: ParentProps) {
 			<div class={styles.layout}>
 				<Header setSidebarOpen={setSidebarOpen} />
 
-				<Show when={sidebar()}>
-					{(sidebar) => (
-						<>
-							<Show when={isMobile}>
-								<Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
-									<Dialog.Portal>
-										<Dialog.Overlay class={styles["sidenav-overlay"]} />
-										<Dialog.Content class={styles.sidenav}>
-											<div class={styles["sidenav-content"]}>
-												<div class={styles["sidenav-header"]}>
-													<a href="/" class={styles["logo-link"]}>
-														<Show
-															when={solidBaseConfig.logo}
-															fallback={<span>{solidBaseConfig.title}</span>}
-														>
-															<img
-																src={solidBaseConfig.logo}
-																alt={solidBaseConfig.title}
-															/>
-														</Show>
-													</a>
-													<Dialog.CloseButton
-														class={styles["sidenav-close-btn"]}
-													>
-														<CrossIcon />
-													</Dialog.CloseButton>
-												</div>
-												<Navigation sidebar={sidebar()} />
-											</div>
-										</Dialog.Content>
-									</Dialog.Portal>
-								</Dialog>
+				<Show
+					when={sidebar() && sidebar()!.items?.length > 0}
+					fallback={<div />}
+				>
+					<Dialog
+						open={!mobileLayout() || sidebarOpen()}
+						onOpenChange={setSidebarOpen}
+						modal={mobileLayout()}
+					>
+						<Dynamic
+							component={
+								mobileLayout()
+									? Dialog.Portal
+									: (props: ParentProps) => props.children
+							}
+						>
+							<Show when={mobileLayout()}>
+								<Dialog.Overlay class={styles["sidenav-overlay"]} />
 							</Show>
-							<aside class={styles.sidenav}>
-								<Navigation sidebar={sidebar()} />
-							</aside>
-						</>
-					)}
+							<Dialog.Content as="aside" class={styles.sidenav}>
+								<div class={styles["sidenav-content"]}>
+									<Show when={mobileLayout()}>
+										<div class={styles["sidenav-header"]}>
+											<a href="/" class={styles["logo-link"]}>
+												<Show
+													when={solidBaseConfig.logo}
+													fallback={<span>{solidBaseConfig.title}</span>}
+												>
+													<img
+														src={solidBaseConfig.logo}
+														alt={solidBaseConfig.title}
+													/>
+												</Show>
+											</a>
+											<Show when={mobileLayout()}>
+												<Dialog.CloseButton class={styles["sidenav-close-btn"]}>
+													<CrossIcon />
+												</Dialog.CloseButton>
+											</Show>
+										</div>
+									</Show>
+									<Navigation sidebar={sidebar()!} />
+								</div>
+							</Dialog.Content>
+						</Dynamic>
+					</Dialog>
 				</Show>
 
 				<main id="main-content">

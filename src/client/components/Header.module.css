@@ -5,9 +5,8 @@
 	height: var(--header-height);
 	z-index: 50;
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
+	align-items: stretch;
+	flex-direction: column;
 	padding: 0 1.5rem;
 	background: var(--background-color);
 	border-bottom: 2px solid #e4e4e7;
@@ -15,10 +14,27 @@
 	transform: translateY(calc(-1 * var(--header-offset)));
 	border-bottom: 1px solid
 		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+
+	& > div {
+		display: flex;
+		flex: 1;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+	}
 }
-@media screen and (max-width: 1300px) {
+
+@media screen and (max-width: 1100px) {
 	.header {
 		padding: 0 1rem;
+	}
+
+	.mobile-bar {
+		display: flex;
+	}
+
+	html {
+		--header-height: 5.5rem !important;
 	}
 }
 
@@ -27,6 +43,10 @@
 	color: var(--heading-color);
 	font-family: var(--font-headings);
 	font-size: 1.25em;
+}
+
+.mobile-bar {
+	display: none !important;
 }
 
 .mobile-menu {

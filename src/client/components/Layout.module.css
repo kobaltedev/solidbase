@@ -32,11 +32,10 @@
 	display: flex;
 	flex-direction: row;
 	padding: 1rem;
-	border-right: 1px solid var(--decoration-color);
 	transition: transform .3s ease-in-out;
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
 	.layout {
 		grid-template-columns: 1fr;
 	}
@@ -117,8 +116,9 @@
 	}
 
 	h2 {
+		color: var(--heading-color);
 		font-size: 0.85rem;
-		font-weight: medium;
+		font-weight: 500;
 	}
 
 	.sidenav-link {
@@ -130,19 +130,27 @@
 		padding: 0.5rem;
 		border-radius: var(--border-radius);
 		font-size: 0.85rem;
+		transition-property: background-color, color;
+		transition-timing-function: var(--transition-timing);
+		transition-duration: .15s;
 
 		&:hover,
-		&:focus {
-			background: color-mix(in hsl, var(--text-color) 5%, transparent);
+		&:focus-visible {
+			color: var(--heading-color);
+			background: color-mix(
+				in hsl,
+				var(--link-underline-color) 20%,
+				transparent
+			);
 		}
 
 		&.active {
-			background: color-mix(in hsl, var(--text-color) 10%, transparent);
+			color: var(--active-link-color);
 		}
 	}
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
 	.sidenav-links {
 		& li > ul {
 			padding-top: 0.5rem;

@@ -16,9 +16,10 @@
 	right: 0;
 	transition: transform 0.3s ease-in-out;
 	overflow-y: auto;
+	margin-left: 2rem;
 }
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1100px) {
 	.article {
 		margin: 2rem 1.25rem;
 	}

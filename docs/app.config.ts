@@ -35,7 +35,7 @@ export default defineConfig(
 							collapsed: false,
 							items: [
 								{
-									title: "Introducation",
+									title: "Introduction",
 									link: "/",
 								},
 								{

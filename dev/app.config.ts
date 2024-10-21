@@ -29,6 +29,48 @@ export default defineConfig(
 					indexName: "kobalte",
 				},
 			},
+			sidebar: {
+				"/": {
+					items: [
+						{
+							title: "Dev",
+							collapsed: false,
+							items: [
+								{
+									title: "Test",
+									link: "/",
+								},
+							],
+						},
+						{
+							title: "Other",
+							collapsed: false,
+							items: [
+								{
+									title: "MDX",
+									link: "/about",
+								},
+								{
+									title: "Code copy",
+									link: "/about",
+								},
+								{
+									title: "Good styles",
+									link: "/about",
+								},
+								{
+									title: "Cool team 8)",
+									link: "/about",
+								},
+								{
+									title: "CLI",
+									link: "/about",
+								},
+							],
+						},
+					],
+				},
+			},
 		},
 	),
 );

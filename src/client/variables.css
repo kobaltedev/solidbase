@@ -13,6 +13,8 @@ html {
 	--header-offset: 0px;
 	--header-height: 3.5rem;
 
+	--transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
 	--code-background-color: hsl(0, 0%, 98%);
 
 	--info-background-color: hsl(214, 100%, 97%);

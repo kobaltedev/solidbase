@@ -55,14 +55,14 @@
 		display: block;
 		line-height: 1.75;
 		transition-property: background-color, opacity, color;
-		transition-timing-function: ease-in-out;
+		transition-timing-function: var(--transition-timing);
 		transition-duration: .15s;
 		opacity: 0.5;
 		min-width: 12rem;
 		outline: none;
 
 		&:hover,
-		&:focus {
+		&:focus-visible {
 			background: color-mix(
 				in hsl,
 				var(--link-underline-color) 20%,

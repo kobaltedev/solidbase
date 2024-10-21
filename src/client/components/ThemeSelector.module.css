@@ -28,6 +28,7 @@
 }
 
 .content {
+	z-index: 51;
 	color: var(--text-color);
 	background: color-mix(in hsl, var(--text-color) 10%, var(--background-color));
 	border-radius: var(--border-radius);

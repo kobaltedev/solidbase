@@ -100,8 +100,9 @@ function TableOfContentsItem(props: {
 	createEffect(() => {
 		const header = document.querySelector("header") as HTMLElement | undefined;
 		header?.setAttribute("data-scrolling-to-header", "");
-		if (props.data.url === props.current)
+		if (props.data.url === props.current && !elementInViewport(ref()!)) {
 			ref()?.scrollIntoView({ behavior: "smooth" });
+		}
 		setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
 	});
 
@@ -131,5 +132,19 @@ function TableOfContentsItem(props: {
 function flattenData(data: TableOfContentData): Array<string> {
 	return [data?.url, ...(data?.children ?? []).flatMap(flattenData)].filter(
 		Boolean,
+	);
+}
+
+function elementInViewport(el: HTMLElement) {
+	const rect = el.getBoundingClientRect();
+	return (
+		rect.top >= 0 &&
+		rect.left >= 0 &&
+		rect.bottom <=
+			(window.innerHeight ||
+				document.documentElement.clientHeight) /* or $(window).height() */ &&
+		rect.right <=
+			(window.innerWidth ||
+				document.documentElement.clientWidth) /* or $(window).width() */
 	);
 }
