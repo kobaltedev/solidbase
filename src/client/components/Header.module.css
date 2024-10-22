@@ -14,6 +14,7 @@
 	transform: translateY(calc(-1 * var(--header-offset)));
 	border-bottom: 1px solid
 		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	font-size: 14px;
 
 	& > div {
 		display: flex;
@@ -75,4 +76,34 @@
 	display: flex;
 	flex-direction: row;
 	gap: 1rem;
+}
+
+.navLink {
+	text-decoration: none;
+
+	padding: 0.5rem;
+	/* background: color-mix(in hsl, var(--text-color) 10%, transparent); */
+	border: none;
+	outline: none;
+	color: var(--text-color);
+	border-radius: var(--border-radius);
+	cursor: var(--button-cursor);
+	font-weight: 500;
+
+	&:hover {
+		background: color-mix(in hsl, var(--text-color) 10%, transparent);
+	}
+
+	&[data-matched] {
+		color: color-mix(in hsl, var(--active-link-color) 70%, white);
+
+		&:hover {
+			color: var(--text-color);
+			background-color: color-mix(
+				in hsl,
+				var(--active-link-color) 50%,
+				transparent
+			);
+		}
+	}
 }

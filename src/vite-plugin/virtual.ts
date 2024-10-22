@@ -27,6 +27,7 @@ export async function loadVirtual(
 			"logo",
 			"socialLinks",
 			"locales",
+			"nav",
 			"lang",
 			"sidebar",
 			"search",

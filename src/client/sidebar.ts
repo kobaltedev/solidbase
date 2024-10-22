@@ -1,25 +1,26 @@
-import { solidBaseConfig } from "virtual:solidbase";
 import { useLocation } from "@solidjs/router";
 import { createMemo } from "solid-js";
 
 import type { Sidebar, SidebarItem, SidebarLink } from "../config";
+import { useSolidBaseContext } from "./context";
 
 export function useSidebar() {
-	const sidebars = (() => {
-		const sidebarConfig = solidBaseConfig.sidebar;
+	const { config, locale } = useSolidBaseContext();
+
+	const sidebars = createMemo(() => {
+		const sidebarConfig = config().sidebar;
 		if (!sidebarConfig) return;
 		if (Object.keys(sidebarConfig).length === 0) return;
 
 		if ("items" in sidebarConfig) return { "/": sidebarConfig };
 		return sidebarConfig;
-	})();
-
-	const location = useLocation();
+	});
 
 	const sidebar = createMemo(() => {
-		if (!sidebars) return;
+		const s = sidebars();
+		if (!s) return;
 
-		const sidebarsEntries = Object.entries(sidebars);
+		const sidebarsEntries = Object.entries(s);
 		if (sidebarsEntries.length === 1) {
 			const [prefix, sidebar] = sidebarsEntries[0];
 			return { prefix, ...sidebar };
@@ -28,7 +29,8 @@ export function useSidebar() {
 		sidebarsEntries.sort((a, b) => b[0].length - a[0].length);
 
 		for (const [prefix, sidebar] of sidebarsEntries) {
-			if (location.pathname.startsWith(prefix)) return { prefix, ...sidebar };
+			console.log(locale.routePath());
+			if (locale.routePath().startsWith(prefix)) return { prefix, ...sidebar };
 		}
 	});
 

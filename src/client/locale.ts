@@ -60,8 +60,6 @@ export function useLocale() {
 
 	const currentLocale = createMemo(() => getLocaleForPath(location.pathname));
 
-	const getLocaleLink = (locale: ResolvedLocale) =>
-		locale.config?.link ?? `/${locale.isRoot ? "" : `${locale.code}/`}`;
 	const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);
 
 	return {
@@ -76,8 +74,24 @@ export function useLocale() {
 				document.documentElement.lang = locale.code;
 			});
 		},
+		applyPathPrefix: (path: string) => {
+			const link = getLocaleLink(currentLocale());
+			if (link === "/") return path;
+			let p = path;
+			if (p.startsWith("/")) p = p.slice(1);
+			return `${link}${p}`;
+		},
+		routePath: () => {
+			const rest = match()?.params.rest;
+
+			if (!rest) return "/";
+			return `/${rest}`;
+		},
 	};
 }
+
+export const getLocaleLink = (locale: ResolvedLocale) =>
+	locale.config?.link ?? `/${locale.isRoot ? "" : `${locale.code}/`}`;
 
 export function getLocale() {
 	let path: string;

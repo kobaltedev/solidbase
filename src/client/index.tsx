@@ -23,21 +23,21 @@ export function SolidBaseApp(props: SolidBaseAppProps) {
 	});
 
 	return (
-		<SolidBaseProvider>
-			<Router
-				root={(rootProps) => (
+		<Router
+			root={(rootProps) => (
+				<SolidBaseProvider>
 					<Show when={props.root} fallback={<Layout {...rootProps} />}>
 						<Dynamic component={props.root} {...rootProps}>
 							<Layout {...rootProps} />
 						</Dynamic>
 					</Show>
-				)}
-			>
-				<Show when={resolved()} fallback={<FileRoutes />}>
-					{resolved()}
-				</Show>
-			</Router>
-		</SolidBaseProvider>
+				</SolidBaseProvider>
+			)}
+		>
+			<Show when={resolved()} fallback={<FileRoutes />}>
+				{resolved()}
+			</Show>
+		</Router>
 	);
 }
 

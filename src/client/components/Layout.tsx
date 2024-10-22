@@ -1,18 +1,16 @@
+import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
-
+import { A } from "@solidjs/router";
 import { For, type ParentProps, Show, createSignal } from "solid-js";
+import { Dynamic } from "solid-js/web";
+
+import type { Sidebar } from "../../config";
 import { useSolidBaseContext } from "../context";
+import { mobileLayout } from "../globals";
 import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
+import { useSidebar } from "../sidebar";
 import styles from "./Layout.module.css";
 import Link from "./Link";
-
-import { solidBaseConfig } from "virtual:solidbase";
-import { Dialog } from "@kobalte/core/dialog";
-import { A } from "@solidjs/router";
-import { Dynamic } from "solid-js/web";
-import type { Sidebar } from "../../config";
-import { mobileLayout } from "../globals";
-import { useSidebar } from "../sidebar";
 import { CrossIcon } from "./icons";
 
 interface SidebarItem {
@@ -22,7 +20,10 @@ interface SidebarItem {
 }
 
 export default function Layout(props: ParentProps) {
-	const { Header, Article } = useSolidBaseContext().components;
+	const {
+		config,
+		components: { Header, Article },
+	} = useSolidBaseContext();
 
 	const pageData = useCurrentPageData();
 
@@ -51,10 +52,10 @@ export default function Layout(props: ParentProps) {
 
 			<Show
 				when={pageData().frontmatter?.title}
-				fallback={<Title>{solidBaseConfig.title}</Title>}
+				fallback={<Title>{config().title}</Title>}
 			>
 				<Title>
-					{(solidBaseConfig.titleTemplate ?? ":title").replace(
+					{(config().titleTemplate ?? ":title").replace(
 						":title",
 						pageData().frontmatter?.title,
 					)}
@@ -89,13 +90,10 @@ export default function Layout(props: ParentProps) {
 										<div class={styles["sidenav-header"]}>
 											<a href="/" class={styles["logo-link"]}>
 												<Show
-													when={solidBaseConfig.logo}
-													fallback={<span>{solidBaseConfig.title}</span>}
+													when={config().logo}
+													fallback={<span>{config().title}</span>}
 												>
-													<img
-														src={solidBaseConfig.logo}
-														alt={solidBaseConfig.title}
-													/>
+													<img src={config().logo} alt={config().title} />
 												</Show>
 											</a>
 											<Show when={mobileLayout()}>
@@ -124,6 +122,8 @@ interface NavigationProps {
 	sidebar: Sidebar;
 }
 const Navigation = (props: NavigationProps) => {
+	const { locale } = useSolidBaseContext();
+
 	return (
 		<nav class={styles["sidenav-links"]}>
 			<ul>
@@ -138,7 +138,9 @@ const Navigation = (props: NavigationProps) => {
 											<A
 												class={`${styles["sidenav-link"]}`}
 												activeClass={styles.active}
-												href={(item as { link: string }).link}
+												href={locale.applyPathPrefix(
+													(item as { link: string }).link,
+												)}
 												end
 											>
 												{item.title}

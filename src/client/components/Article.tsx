@@ -60,6 +60,7 @@ export default function Article(props: ParentProps) {
 	};
 
 	const prevNext = usePrevNext();
+	const { config } = useSolidBaseContext();
 
 	return (
 		<>
@@ -104,7 +105,7 @@ export default function Article(props: ParentProps) {
 						</nav>
 					</Show>
 
-					<Show when={solidBaseConfig.footer}>
+					<Show when={config().footer}>
 						<Footer />
 					</Show>
 				</div>

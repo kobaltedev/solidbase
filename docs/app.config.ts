@@ -25,8 +25,89 @@ export default defineConfig(
 			locales: {
 				fr: {
 					label: "French",
+					config: {
+						nav: [
+							{
+								text: "Guide",
+								link: "/guide",
+							},
+							{
+								text: "Référence",
+								link: "/reference",
+							},
+						],
+						sidebar: {
+							"/": {
+								items: [
+									{
+										title: "Aperçu",
+										collapsed: false,
+										items: [
+											{
+												title: "Introduction",
+												link: "/",
+											},
+											{
+												title: "Qu'est-ce que SolidBase ?",
+												link: "/about",
+											},
+											{
+												title: "Que nous manque-t-il ?",
+												link: "/dave",
+											},
+										],
+									},
+									{
+										title: "Fonctionnalités",
+										collapsed: false,
+										items: [
+											{
+												title: "MDX",
+												link: "/about",
+											},
+											{
+												title: "Copie de code",
+												link: "/about",
+											},
+											{
+												title: "Bons styles",
+												link: "/about",
+											},
+											{
+												title: "Équipe cool 8)",
+												link: "/about",
+											},
+											{
+												title: "CLI",
+												link: "/about",
+											},
+										],
+									},
+								],
+							},
+							"/reference": {
+								items: [
+									{
+										title: "Référence",
+										collapsed: false,
+										items: [],
+									},
+								],
+							},
+						},
+					},
 				},
 			},
+			nav: [
+				{
+					text: "Guide",
+					link: "/guide",
+				},
+				{
+					text: "Reference",
+					link: "/reference",
+				},
+			],
 			sidebar: {
 				"/": {
 					items: [

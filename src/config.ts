@@ -65,6 +65,7 @@ export type SolidBaseConfig = {
 		| Record<string, Omit<SocialLink, "type">>;
 	lang?: string;
 	locales?: Record<string, LocaleConfig>;
+	nav?: Array<NavItem>;
 	sidebar?: Sidebar | Record<`/${string}`, Sidebar>;
 	search?: SearchConfig;
 };
@@ -86,6 +87,13 @@ export type LocaleConfig = {
 	label: string;
 	lang?: string;
 	link?: string;
+	config?: SolidBaseConfig;
+};
+
+export type NavItem = {
+	text: string;
+	link: string;
+	activeMatch?: string;
 };
 
 export function withSolidBase(

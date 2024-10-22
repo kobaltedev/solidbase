@@ -1,6 +1,8 @@
-import { solidBaseConfig } from "virtual:solidbase";
+import { createEventListener } from "@solid-primitives/event-listener";
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
+import { useMatch } from "@solidjs/router";
 import {
+	For,
 	type Setter,
 	Show,
 	createEffect,
@@ -9,9 +11,9 @@ import {
 	onMount,
 } from "solid-js";
 
-import { createEventListener } from "@solid-primitives/event-listener";
 import { useSolidBaseContext } from "../context";
 import { mobileLayout } from "../globals";
+import { getLocaleLink } from "../locale";
 import styles from "./Header.module.css";
 import { MenuIcon } from "./icons";
 
@@ -80,19 +82,44 @@ export default function Header(props: HeaderProps) {
 		);
 	});
 
+	const { config, locale } = useSolidBaseContext();
+
 	return (
 		<header class={styles.header} ref={setRef}>
 			<div>
-				<a href="/" class={styles["logo-link"]}>
-					<Show
-						when={solidBaseConfig.logo}
-						fallback={<span>{solidBaseConfig.title}</span>}
-					>
-						<img src={solidBaseConfig.logo} alt={solidBaseConfig.title} />
+				<a
+					href={getLocaleLink(locale.currentLocale())}
+					class={styles["logo-link"]}
+				>
+					<Show when={config().logo} fallback={<span>{config().title}</span>}>
+						<img src={config().logo} alt={config().title} />
 					</Show>
 				</a>
 				<div class={styles.selectors}>
-					{solidBaseConfig.search?.provider === "algolia" && <DocSearch />}
+					{config().search?.provider === "algolia" && <DocSearch />}
+					<Show when={config().nav}>
+						{(nav) => (
+							<For each={nav()}>
+								{(item) => {
+									const match = useMatch(() =>
+										locale.applyPathPrefix(
+											`${item.activeMatch ?? item.link}/*rest`,
+										),
+									);
+
+									return (
+										<a
+											class={styles.navLink}
+											href={locale.applyPathPrefix(item.link)}
+											data-matched={match() !== undefined ? true : undefined}
+										>
+											{item.text}
+										</a>
+									);
+								}}
+							</For>
+						)}
+					</Show>
 					<LocaleSelector />
 					<ThemeSelector />
 				</div>

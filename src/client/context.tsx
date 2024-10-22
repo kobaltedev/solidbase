@@ -1,8 +1,14 @@
 // @ts-ignore
 import { overrideMdxComponents, solidBaseComponents } from "virtual:solidbase";
 import { MetaProvider } from "@solidjs/meta";
-import { type ParentProps, createContext, useContext } from "solid-js";
+import {
+	type Accessor,
+	type ParentProps,
+	createContext,
+	useContext,
+} from "solid-js";
 import { MDXProvider } from "solid-mdx";
+import type { SolidBaseResolvedConfig } from "../config";
 import Article from "./components/Article";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
@@ -13,6 +19,8 @@ import LocaleSelector from "./components/LocaleSelector";
 import TableOfContents from "./components/TableOfContents";
 import ThemeSelector from "./components/ThemeSelector";
 import * as mdxComponents from "./components/mdx-components";
+import { useRouteConfig } from "./config";
+import { useLocale } from "./locale";
 
 export interface SolidBaseContextValue {
 	components: {
@@ -26,6 +34,8 @@ export interface SolidBaseContextValue {
 		ThemeSelector: typeof ThemeSelector;
 		LocaleSelector: typeof LocaleSelector;
 	};
+	config: Accessor<SolidBaseResolvedConfig>;
+	locale: ReturnType<typeof useLocale>;
 }
 
 const SolidBaseContext = createContext<SolidBaseContextValue>();
@@ -54,6 +64,9 @@ function renameCustomMdxComponents(components: Record<string, any>) {
 }
 
 export function SolidBaseProvider(props: ParentProps) {
+	const locale = useLocale();
+	const config = useRouteConfig();
+
 	return (
 		<MetaProvider>
 			<MDXProvider
@@ -76,6 +89,8 @@ export function SolidBaseProvider(props: ParentProps) {
 							LocaleSelector,
 							...solidBaseComponents,
 						},
+						locale,
+						config,
 					}}
 				>
 					{props.children}
