@@ -131,15 +131,15 @@ export default function Header(props: HeaderProps) {
 					onClick={() => props.setSidebarOpen((p) => !p)}
 					aria-label="Open navigation"
 				>
-					<MenuIcon />
+					<MenuIcon /> Menu
 				</button>
 				<button
 					type="button"
 					class={styles["mobile-menu"]}
 					onClick={() => props.setSidebarOpen((p) => !p)}
-					aria-label="Open navigation"
+					aria-label="Open table of contenst"
 				>
-					<MenuIcon />
+					On this page
 				</button>
 			</div>
 		</header>
