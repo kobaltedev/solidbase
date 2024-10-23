@@ -8,7 +8,6 @@ import { mobileLayout } from "../globals";
 import { useCurrentPageData } from "../page-data";
 import { usePrevNext } from "../sidebar";
 import styles from "./Article.module.css";
-import layoutStyles from "./Layout.module.css";
 
 export default function Article(props: ParentProps) {
 	const {
@@ -115,22 +114,10 @@ export default function Article(props: ParentProps) {
 					</Show>
 				</div>
 
-				<Show
-					when={mobileLayout()}
-					fallback={
-						<aside class={styles.aside}>
-							<TableOfContents />
-						</aside>
-					}
-				>
-					<Dialog open={tocOpen()} onOpenChange={setTocOpen}>
-						<Dialog.Portal>
-							<Dialog.Overlay class={layoutStyles["sidenav-overlay"]} />
-							<Dialog.Content class={styles.sidenav}>
-								<TableOfContents />
-							</Dialog.Content>
-						</Dialog.Portal>
-					</Dialog>
+				<Show when={!mobileLayout()}>
+					<aside class={styles.aside}>
+						<TableOfContents />
+					</aside>
 				</Show>
 			</article>
 		</>

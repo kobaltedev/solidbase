@@ -1,16 +1,9 @@
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
-import {
-	For,
-	type JSX,
-	Show,
-	createEffect,
-	createMemo,
-	createSignal,
-} from "solid-js";
+import { For, type JSX, Show, createEffect, createSignal } from "solid-js";
 import { type TableOfContentData, useCurrentPageData } from "../page-data";
 import styles from "./TableOfContents.module.css";
 
-export default function TableOfContents(props: { scrollspy?: boolean }) {
+export default function TableOfContents(props: {}) {
 	const toc = () => useCurrentPageData()().toc;
 
 	const [currentSection, setCurrentSection] = createSignal<string | undefined>(
@@ -24,7 +17,7 @@ export default function TableOfContents(props: { scrollspy?: boolean }) {
 	>([]);
 
 	createEffect(() => {
-		if (!toc() || !props.scrollspy) return [];
+		if (!toc()) return [];
 		setHeadingPositions(
 			flattenData(toc()!).map((url) => {
 				const el = document.getElementById(url.slice(1));
@@ -51,8 +44,6 @@ export default function TableOfContents(props: { scrollspy?: boolean }) {
 	});
 
 	createEffect(() => {
-		if (!props.scrollspy) return;
-
 		const top = scroll.y;
 		let current = headingPositions()[0]?.url;
 
@@ -74,11 +65,7 @@ export default function TableOfContents(props: { scrollspy?: boolean }) {
 			<nav class={styles.toc}>
 				<span>On This Page</span>
 				<ol>
-					<TableOfContentsItem
-						data={toc()!}
-						current={currentSection()}
-						scrollspy={!!props.scrollspy}
-					/>
+					<TableOfContentsItem data={toc()!} current={currentSection()} />
 				</ol>
 			</nav>
 		</Show>
@@ -88,7 +75,6 @@ export default function TableOfContents(props: { scrollspy?: boolean }) {
 function TableOfContentsItem(props: {
 	data: TableOfContentData;
 	current: string | undefined;
-	scrollspy: boolean;
 }) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
@@ -127,11 +113,7 @@ function TableOfContentsItem(props: {
 				<ol>
 					<For each={props.data.children}>
 						{(nested) => (
-							<TableOfContentsItem
-								data={nested}
-								current={props.current}
-								scrollspy={props.scrollspy}
-							/>
+							<TableOfContentsItem data={nested} current={props.current} />
 						)}
 					</For>
 				</ol>
