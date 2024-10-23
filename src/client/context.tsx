@@ -4,7 +4,9 @@ import { MetaProvider } from "@solidjs/meta";
 import {
 	type Accessor,
 	type ParentProps,
+	type Setter,
 	createContext,
+	createSignal,
 	useContext,
 } from "solid-js";
 import { MDXProvider } from "solid-mdx";
@@ -36,6 +38,10 @@ export interface SolidBaseContextValue {
 	};
 	config: Accessor<SolidBaseResolvedConfig>;
 	locale: ReturnType<typeof useLocale>;
+	sidebarOpen: Accessor<boolean>;
+	setSidebarOpen: Setter<boolean>;
+	tocOpen: Accessor<boolean>;
+	setTocOpen: Setter<boolean>;
 }
 
 const SolidBaseContext = createContext<SolidBaseContextValue>();
@@ -67,6 +73,9 @@ export function SolidBaseProvider(props: ParentProps) {
 	const locale = useLocale();
 	const config = useRouteConfig();
 
+	const [sidebarOpen, setSidebarOpen] = createSignal(false);
+	const [tocOpen, setTocOpen] = createSignal(false);
+
 	return (
 		<MetaProvider>
 			<MDXProvider
@@ -91,6 +100,10 @@ export function SolidBaseProvider(props: ParentProps) {
 						},
 						locale,
 						config,
+						sidebarOpen,
+						setSidebarOpen,
+						tocOpen,
+						setTocOpen,
 					}}
 				>
 					{props.children}

@@ -1,16 +1,21 @@
-import { solidBaseConfig } from "virtual:solidbase";
+import { Dialog } from "@kobalte/core/dialog";
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
 import { useSolidBaseContext } from "../context";
+import { mobileLayout } from "../globals";
 import { useCurrentPageData } from "../page-data";
-import { usePrevNext, useSidebar } from "../sidebar";
+import { usePrevNext } from "../sidebar";
 import styles from "./Article.module.css";
+import layoutStyles from "./Layout.module.css";
 
 export default function Article(props: ParentProps) {
-	const { TableOfContents, Link, LastUpdated, Footer } =
-		useSolidBaseContext().components;
+	const {
+		components: { TableOfContents, Link, LastUpdated, Footer },
+		tocOpen,
+		setTocOpen,
+	} = useSolidBaseContext();
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -110,9 +115,23 @@ export default function Article(props: ParentProps) {
 					</Show>
 				</div>
 
-				<aside class={styles.aside}>
-					<TableOfContents />
-				</aside>
+				<Show
+					when={mobileLayout()}
+					fallback={
+						<aside class={styles.aside}>
+							<TableOfContents />
+						</aside>
+					}
+				>
+					<Dialog open={tocOpen()} onOpenChange={setTocOpen}>
+						<Dialog.Portal>
+							<Dialog.Overlay class={layoutStyles["sidenav-overlay"]} />
+							<Dialog.Content class={styles.sidenav}>
+								<TableOfContents />
+							</Dialog.Content>
+						</Dialog.Portal>
+					</Dialog>
+				</Show>
 			</article>
 		</>
 	);

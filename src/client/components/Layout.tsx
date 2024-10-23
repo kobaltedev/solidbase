@@ -29,11 +29,11 @@ export default function Layout(props: ParentProps) {
 	const {
 		config,
 		components: { Header, Article },
+		sidebarOpen,
+		setSidebarOpen,
 	} = useSolidBaseContext();
 
 	const pageData = useCurrentPageData();
-
-	const [sidebarOpen, setSidebarOpen] = createSignal(false);
 
 	const sidebar = useSidebar();
 
@@ -78,7 +78,7 @@ export default function Layout(props: ParentProps) {
 			</Show>
 
 			<div class={styles.layout}>
-				<Header setSidebarOpen={setSidebarOpen} />
+				<Header />
 
 				<Show
 					when={sidebar() && sidebar()!.items?.length > 0}
@@ -108,9 +108,6 @@ export default function Layout(props: ParentProps) {
 													<img src={config().logo} alt={config().title} />
 												</Show>
 											</a>
-											<Dialog.CloseButton class={styles["sidenav-close-btn"]}>
-												<CrossIcon />
-											</Dialog.CloseButton>
 										</div>
 										<Navigation sidebar={sidebar()!} />
 									</div>

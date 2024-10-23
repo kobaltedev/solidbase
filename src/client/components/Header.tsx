@@ -15,20 +15,22 @@ import { useSolidBaseContext } from "../context";
 import { mobileLayout } from "../globals";
 import { getLocaleLink } from "../locale";
 import styles from "./Header.module.css";
-import { MenuIcon } from "./icons";
+import { MenuLeftIcon, MenuRightIcon } from "./icons";
 
 const DocSearch = lazy(() => import("./DocSearch"));
 
 const BUFFER_MULT = 3;
 
-interface HeaderProps {
-	setSidebarOpen: Setter<boolean>;
-}
+interface HeaderProps {}
 
 export default function Header(props: HeaderProps) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
-	const { ThemeSelector, LocaleSelector } = useSolidBaseContext().components;
+	const {
+		components: { ThemeSelector, LocaleSelector },
+		setSidebarOpen,
+		setTocOpen,
+	} = useSolidBaseContext();
 
 	const scroll = useWindowScrollPosition();
 	const [offset, setOffset] = createSignal(0);
@@ -128,18 +130,18 @@ export default function Header(props: HeaderProps) {
 				<button
 					type="button"
 					class={styles["mobile-menu"]}
-					onClick={() => props.setSidebarOpen((p) => !p)}
+					onClick={() => setSidebarOpen((p) => !p)}
 					aria-label="Open navigation"
 				>
-					<MenuIcon /> Menu
+					<MenuLeftIcon /> Menu
 				</button>
 				<button
 					type="button"
 					class={styles["mobile-menu"]}
-					onClick={() => props.setSidebarOpen((p) => !p)}
-					aria-label="Open table of contenst"
+					onClick={() => setTocOpen((p) => !p)}
+					aria-label="Open table of contents"
 				>
-					On this page
+					On this page <MenuRightIcon />
 				</button>
 			</div>
 		</header>

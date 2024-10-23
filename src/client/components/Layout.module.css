@@ -46,7 +46,7 @@
 		top: 0;
 		height: 100dvh;
 		z-index: 51;
-		min-width: 80%;
+		width: 70dvw;
 		background: var(--background-color);
 		animation: contentHide 300ms ease-out forwards;
 
@@ -163,27 +163,6 @@
 	}
 }
 
-.sidenav-close-btn {
-	appearance: none;
-	outline: none;
-	border: none;
-	background: transparent;
-	border-radius: var(--border-radius);
-	color: var(--text-color);
-	padding: 0.5rem;
-	cursor: var(--button-cursor);
-
-	&:hover,
-	&:focus {
-		background: color-mix(in hsl, var(--text-color) 10%, transparent);
-	}
-
-	& svg {
-		width: 1.25rem;
-		height: 1.25rem;
-	}
-}
-
 @keyframes overlayShow {
 	from {
 		opacity: 0;
@@ -214,10 +193,10 @@
 @keyframes contentHide {
 	from {
 		opacity: 1;
-		transform: translateX(-100%);
+		transform: translateX(0);
 	}
 	to {
 		opacity: 0;
-		transform: translateX(0);
+		transform: translateX(-100%);
 	}
 }

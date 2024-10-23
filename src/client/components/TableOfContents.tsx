@@ -10,7 +10,7 @@ import {
 import { type TableOfContentData, useCurrentPageData } from "../page-data";
 import styles from "./TableOfContents.module.css";
 
-export default function TableOfContents(props: {}) {
+export default function TableOfContents(props: { scrollspy?: boolean }) {
 	const toc = () => useCurrentPageData()().toc;
 
 	const [currentSection, setCurrentSection] = createSignal<string | undefined>(
@@ -24,7 +24,7 @@ export default function TableOfContents(props: {}) {
 	>([]);
 
 	createEffect(() => {
-		if (!toc()) return [];
+		if (!toc() || !props.scrollspy) return [];
 		setHeadingPositions(
 			flattenData(toc()!).map((url) => {
 				const el = document.getElementById(url.slice(1));
@@ -51,6 +51,8 @@ export default function TableOfContents(props: {}) {
 	});
 
 	createEffect(() => {
+		if (!props.scrollspy) return;
+
 		const top = scroll.y;
 		let current = headingPositions()[0]?.url;
 
@@ -72,7 +74,11 @@ export default function TableOfContents(props: {}) {
 			<nav class={styles.toc}>
 				<span>On This Page</span>
 				<ol>
-					<TableOfContentsItem data={toc()!} current={currentSection()} />
+					<TableOfContentsItem
+						data={toc()!}
+						current={currentSection()}
+						scrollspy={!!props.scrollspy}
+					/>
 				</ol>
 			</nav>
 		</Show>
@@ -82,6 +88,7 @@ export default function TableOfContents(props: {}) {
 function TableOfContentsItem(props: {
 	data: TableOfContentData;
 	current: string | undefined;
+	scrollspy: boolean;
 }) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
@@ -120,7 +127,11 @@ function TableOfContentsItem(props: {
 				<ol>
 					<For each={props.data.children}>
 						{(nested) => (
-							<TableOfContentsItem data={nested} current={props.current} />
+							<TableOfContentsItem
+								data={nested}
+								current={props.current}
+								scrollspy={props.scrollspy}
+							/>
 						)}
 					</For>
 				</ol>

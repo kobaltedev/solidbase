@@ -41,6 +41,23 @@ export function MenuIcon(props: ComponentProps<"svg">) {
 	);
 }
 
+export function MenuLeftIcon(props: ComponentProps<"svg">) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M3 4H21V6H3V4ZM3 11H15V13H3V11ZM3 18H21V20H3V18Z" />
+		</svg>
+	);
+}
+
+export function MenuRightIcon(props: ComponentProps<"svg">) {
+	return <MenuLeftIcon style="transform: scaleX(-1)" {...props} />;
+}
+
 export function CrossIcon(props: ComponentProps<"svg">) {
 	return (
 		<svg
