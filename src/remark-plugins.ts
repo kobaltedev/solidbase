@@ -2,7 +2,9 @@ import { fromJs } from "esast-util-from-js";
 import { h } from "hastscript";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
+import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
+import { SolidBaseConfig, type SolidBaseResolvedConfig } from "./config";
 
 interface ParagraphNode {
 	type: "paragraph";
@@ -79,6 +81,35 @@ export function remarkTOC() {
 				estree,
 			},
 		});
+	};
+}
+
+export function remarkIssueAutolink(
+	issueAutolink: SolidBaseResolvedConfig["issueAutolink"],
+) {
+	if (issueAutolink === false) return;
+
+	const url = (issue: string) => {
+		const number = issue.slice(1);
+		if (typeof issueAutolink === "function") return issueAutolink(number);
+		return issueAutolink.replace(":issue", number);
+	};
+
+	return (tree: any) => {
+		findAndReplace(tree, [
+			[
+				/(?<=(^| ))#\d+/gm,
+				(match: string) => {
+					return u("link", { url: url(match) }, [u("text", match)]);
+				},
+			],
+			[
+				/\\#\d+/g,
+				(match: string) => {
+					return match.slice(1);
+				},
+			],
+		]);
 	};
 }
 

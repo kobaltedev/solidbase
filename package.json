@@ -87,6 +87,7 @@
     "remark-mdx-frontmatter": "^5.0.0",
     "solid-mdx": "^0.0.7",
     "unified": "^11.0.5",
+    "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   }
 }

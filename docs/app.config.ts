@@ -21,6 +21,7 @@ export default defineConfig(
 				github: "https://github.com/kobaltedev/solidbase",
 				discord: "https://discord.com/invite/solidjs",
 			},
+			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			locales: {
 				fr: {

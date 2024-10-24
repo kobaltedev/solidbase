@@ -23,6 +23,7 @@ import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins";
 import {
 	remarkCustomContainers,
 	remarkGithubAlertsToDirectives,
+	remarkIssueAutolink,
 	remarkRelativeImports,
 	remarkTOC,
 } from "./remark-plugins";
@@ -58,6 +59,7 @@ export type SolidBaseConfig = {
 	titleTemplate?: string;
 	componentsFolder?: string;
 	editPath?: string | ((path: string) => string);
+	issueAutolink?: false | string | ((issue: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
 	footer?: boolean;
 	socialLinks?:
@@ -75,7 +77,8 @@ type ResolvedConfigKeys =
 	| "description"
 	| "lastUpdated"
 	| "footer"
-	| "lang";
+	| "lang"
+	| "issueAutolink";
 
 export type SolidBaseResolvedConfig = Omit<
 	SolidBaseConfig,
@@ -109,6 +112,7 @@ export function withSolidBase(
 	baseConfig.footer ??= true;
 	baseConfig.lang ??= "en-US";
 	baseConfig.sidebar ??= { items: [] };
+	baseConfig.issueAutolink ??= false;
 
 	process.env.PORT ??= "4000";
 
@@ -167,6 +171,7 @@ export function withSolidBase(
 					remarkRelativeImports,
 					remarkTOC,
 					remarkCustomContainers,
+					[remarkIssueAutolink, baseConfig.issueAutolink],
 				],
 			}),
 		);
