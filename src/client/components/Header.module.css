@@ -11,7 +11,6 @@
 	background: var(--background-color);
 	border-bottom: 2px solid #e4e4e7;
 	grid-column-start: span 2;
-	transform: translateY(calc(-1 * var(--header-offset)));
 	border-bottom: 1px solid
 		color-mix(in hsl, var(--decoration-color) 15%, transparent);
 	font-size: 14px;
@@ -37,6 +36,12 @@
 
 @media screen and (min-width: 1100px) {
 	.mobile-bar {
+		display: none !important;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.selectors {
 		display: none !important;
 	}
 }
@@ -102,9 +107,7 @@
 
 .navLink {
 	text-decoration: none;
-
 	padding: 0.5rem;
-	/* background: color-mix(in hsl, var(--text-color) 10%, transparent); */
 	border: none;
 	outline: none;
 	color: var(--text-color);
@@ -154,7 +157,7 @@
 	left: 0;
 	z-index: 51;
 	width: 100dvw;
-	max-height: calc(100dvh - var(--header-height));
+	max-height: 100dvh;
 	background: var(--background-color);
 	overflow-y: auto;
 	animation: contentHide 50ms ease-out forwards;

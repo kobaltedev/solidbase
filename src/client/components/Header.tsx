@@ -1,5 +1,4 @@
 import { createEventListener } from "@solid-primitives/event-listener";
-import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { useMatch } from "@solidjs/router";
 import { For, Show, createEffect, createSignal, lazy, onMount } from "solid-js";
 
@@ -26,58 +25,6 @@ export default function Header(props: HeaderProps) {
 		setTocOpen,
 		tocOpen,
 	} = useSolidBaseContext();
-
-	const scroll = useWindowScrollPosition();
-	const [offset, setOffset] = createSignal(0);
-
-	let headerHeight = 0;
-	onMount(() => {
-		headerHeight = ref()!.getBoundingClientRect().height;
-		createEventListener(
-			window,
-			"resize",
-			() => (headerHeight = ref()!.getBoundingClientRect().height),
-		);
-	});
-
-	let buffer = true;
-
-	createEffect((prev: number) => {
-		if (!mobileLayout()) return 0;
-		if (ref()?.getAttribute("data-scrolling-to-header") === "") return scroll.y;
-
-		setOffset((prefOffset) => {
-			const delta = scroll.y - prev;
-
-			const newVal = Math.max(
-				Math.min(prefOffset + delta, headerHeight * BUFFER_MULT),
-				0,
-			);
-
-			if (newVal >= headerHeight && buffer) {
-				buffer = false;
-				return headerHeight * BUFFER_MULT;
-			}
-
-			if (newVal < headerHeight) buffer = true;
-
-			return newVal;
-		});
-
-		return scroll.y;
-	}, scroll.y);
-
-	createEffect(() => {
-		if (!mobileLayout()) {
-			document.body.style.removeProperty("--header-offset");
-			setOffset(0);
-			return;
-		}
-		document.body.style.setProperty(
-			"--header-offset",
-			`${Math.min(scroll.y, offset(), headerHeight)}px`,
-		);
-	});
 
 	const { config, locale } = useSolidBaseContext();
 
@@ -144,7 +91,10 @@ export default function Header(props: HeaderProps) {
 			</header>
 
 			<Dialog.Portal mount={tocRef()}>
-				<Dialog.Content class={styles["toc-popup"]}>
+				<Dialog.Content
+					class={styles["toc-popup"]}
+					onClick={() => setTocOpen(false)}
+				>
 					<TableOfContents />
 				</Dialog.Content>
 			</Dialog.Portal>

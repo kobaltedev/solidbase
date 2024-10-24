@@ -11,8 +11,8 @@
 
 .aside {
 	position: sticky;
-	top: calc(var(--header-height) + 2rem - var(--header-offset));
-	max-height: calc(100dvh - var(--header-height) - 4rem + var(--header-offset));
+	top: calc(var(--header-height) + 2rem);
+	max-height: calc(100dvh - var(--header-height) - 4rem);
 	width: 12rem;
 	right: 0;
 	transition: transform 0.3s ease-in-out;
@@ -31,6 +31,9 @@
 	margin: 4rem 0 1rem;
 	display: flex;
 	justify-content: space-between;
+	white-space: nowrap;
+	flex-wrap: wrap;
+	gap: .5rem;
 }
 
 .related {
@@ -67,4 +70,5 @@
 
 .next {
 	align-items: flex-end;
+	text-align: right;
 }

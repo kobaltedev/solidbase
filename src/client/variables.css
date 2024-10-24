@@ -10,7 +10,6 @@ html {
 	--decoration-color: hsl(240, 5%, 54%);
 	--border-radius: .375rem;
 
-	--header-offset: 0px;
 	--header-height: 3.5rem;
 
 	--transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
