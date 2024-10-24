@@ -1,56 +1,56 @@
-@import "./reset.css";
-@import "./variables.css";
+@import "../default-theme/reset.css";
+@import "../default-theme/variables.css";
 
 @font-face {
-	font-family: Lexend;
-	font-style: normal;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url("./fonts/Lexend.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: Inter;
-	font-style: normal;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url("./fonts/Inter.woff2") format("woff2");
-}
-@font-face {
-	font-family: InterVariable;
-	font-style: italic;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url("./fonts/Inter-Italic.woff2") format("woff2");
+  font-family: Lexend;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Lexend.woff2") format("woff2");
 }
 
 @font-face {
-	font-family: "JetBrains Mono";
-	font-style: normal;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url("./fonts/JetBrainsMono.woff2") format("woff2");
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Inter.woff2") format("woff2");
 }
 @font-face {
-	font-family: "JetBrains Mono";
-	font-style: italic;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url("./fonts/JetBrainsMono-Italic.woff2") format("woff2");
+  font-family: InterVariable;
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Inter-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/JetBrainsMono.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/JetBrainsMono-Italic.woff2") format("woff2");
 }
 
 html {
-	--font-headings: Lexend, Segoe UI, Roboto, sans-serif;
-	--font-text: Inter, Segoe UI, Roboto, sans-serif;
-	--font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+  --font-headings: Lexend, Segoe UI, Roboto, sans-serif;
+  --font-text: Inter, Segoe UI, Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
 
-	background: var(--background-color);
-	font-optical-sizing: auto;
-	font-family: var(--font-text);
+  background: var(--background-color);
+  font-optical-sizing: auto;
+  font-family: var(--font-text);
 }
 
 code {
-	font-family: var(--font-mono) !important;
+  font-family: var(--font-mono) !important;
 }
 
 h1,
@@ -59,30 +59,30 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: var(--font-headings);
+  font-family: var(--font-headings);
 }
 
 article *[id] {
-	scroll-margin-top: 5rem;
+  scroll-margin-top: 5rem;
 }
 
 @media screen and (max-width: 1100px) {
-	article *[id] {
-		scroll-margin-top: 7.5rem;
-	}
+  article *[id] {
+    scroll-margin-top: 7.5rem;
+  }
 }
 
 .expressive-code.expressive-code figure {
-	--code-background: var(--code-background-color);
-	box-shadow: none;
-	border-radius: var(--border-radius);
-	cursor: text;
+  --code-background: var(--code-background-color);
+  box-shadow: none;
+  border-radius: var(--border-radius);
+  cursor: text;
 
-	& pre {
-		border: none;
-	}
+  & pre {
+    border: none;
+  }
 
-	& .copy {
-		margin-top: .2rem;
-	}
+  & .copy {
+    margin-top: 0.2rem;
+  }
 }

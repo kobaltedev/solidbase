@@ -4,207 +4,207 @@ import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
 import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
-import { SolidBaseConfig, type SolidBaseResolvedConfig } from "./config";
+import { type SolidBaseResolvedConfig } from "./config";
 
 interface ParagraphNode {
-	type: "paragraph";
-	url: string;
-	children: [
-		{
-			type: "link";
-			url: string;
-			children: [
-				{
-					type: "text";
-					value: string;
-				},
-			];
-		},
-	];
+  type: "paragraph";
+  url: string;
+  children: [
+    {
+      type: "link";
+      url: string;
+      children: [
+        {
+          type: "text";
+          value: string;
+        },
+      ];
+    },
+  ];
 }
 
 interface ListItemNode {
-	type: "listItem";
-	children: [
-		ParagraphNode,
-		(
-			| {
-					type: "list";
-					children: Array<ListItemNode>;
-			  }
-			| undefined
-		),
-	];
+  type: "listItem";
+  children: [
+    ParagraphNode,
+    (
+      | {
+          type: "list";
+          children: Array<ListItemNode>;
+        }
+      | undefined
+    ),
+  ];
 }
 
 interface TOCTree {
-	title: string;
-	url: string;
-	children: Array<TOCTree>;
+  title: string;
+  url: string;
+  children: Array<TOCTree>;
 }
 
 function mapNode(node: ListItemNode): TOCTree {
-	return {
-		title: node.children[0].children[0].children[0].value,
-		url: node.children[0].children[0].url,
-		children: (node.children[1]?.children ?? []).map(mapNode),
-	};
+  return {
+    title: node.children[0].children[0].children[0].value,
+    url: node.children[0].children[0].url,
+    children: (node.children[1]?.children ?? []).map(mapNode),
+  };
 }
 
 export const SolidBaseTOC = "$$SolidBase_TOC";
 
 export function remarkTOC() {
-	return (tree: any) => {
-		const map = toc(tree, { ordered: true, maxDepth: 3 }).map as any;
-		map.data ??= {};
-		map.data.hProperties ??= {};
-		map.data.hProperties["data-toc"] = "";
+  return (tree: any) => {
+    const map = toc(tree, { ordered: true, maxDepth: 3 }).map as any;
+    map.data ??= {};
+    map.data.hProperties ??= {};
+    map.data.hProperties["data-toc"] = "";
 
-		findAndReplace(tree, [
-			[
-				"[[toc]]",
-				() => {
-					return map;
-				},
-			],
-		]);
+    findAndReplace(tree, [
+      [
+        "[[toc]]",
+        () => {
+          return map;
+        },
+      ],
+    ]);
 
-		const estree = fromJs(
-			`const ${SolidBaseTOC} = ${JSON.stringify(mapNode(map.children[0]))};`,
-			{ module: true },
-		);
+    const estree = fromJs(
+      `const ${SolidBaseTOC} = ${JSON.stringify(mapNode(map.children[0]))};`,
+      { module: true },
+    );
 
-		tree.children.unshift({
-			type: "mdxjsEsm",
-			value: "",
-			data: {
-				estree,
-			},
-		});
-	};
+    tree.children.unshift({
+      type: "mdxjsEsm",
+      value: "",
+      data: {
+        estree,
+      },
+    });
+  };
 }
 
 export function remarkIssueAutolink(
-	issueAutolink: SolidBaseResolvedConfig["issueAutolink"],
+  issueAutolink: SolidBaseResolvedConfig<any>["issueAutolink"],
 ) {
-	if (issueAutolink === false) return;
+  if (issueAutolink === false) return;
 
-	const url = (issue: string) => {
-		const number = issue.slice(1);
-		if (typeof issueAutolink === "function") return issueAutolink(number);
-		return issueAutolink.replace(":issue", number);
-	};
+  const url = (issue: string) => {
+    const number = issue.slice(1);
+    if (typeof issueAutolink === "function") return issueAutolink(number);
+    return issueAutolink.replace(":issue", number);
+  };
 
-	return (tree: any) => {
-		findAndReplace(tree, [
-			[
-				/(?<=(^| ))#\d+/gm,
-				(match: string) => {
-					return u("link", { url: url(match) }, [u("text", match)]);
-				},
-			],
-			[
-				/\\#\d+/g,
-				(match: string) => {
-					return match.slice(1);
-				},
-			],
-		]);
-	};
+  return (tree: any) => {
+    findAndReplace(tree, [
+      [
+        /(?<=(^| ))#\d+/gm,
+        (match: string) => {
+          return u("link", { url: url(match) }, [u("text", match)]);
+        },
+      ],
+      [
+        /\\#\d+/g,
+        (match: string) => {
+          return match.slice(1);
+        },
+      ],
+    ]);
+  };
 }
 
 const customContainers = new Set([
-	"info",
-	"note",
-	"tip",
-	"important",
-	"warning",
-	"danger",
-	"caution",
-	"details",
+  "info",
+  "note",
+  "tip",
+  "important",
+  "warning",
+  "danger",
+  "caution",
+  "details",
 ]);
 
 export function remarkGithubAlertsToDirectives() {
-	return (tree: any) => {
-		visit(tree, (node) => {
-			if (node.type !== "blockquote") return;
+  return (tree: any) => {
+    visit(tree, (node) => {
+      if (node.type !== "blockquote") return;
 
-			const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
-			if (!text) return;
-			const matches = text.match(/^\[!(\w+)]/);
-			if (!matches) return;
-			const key = matches[1];
-			if (!key) return;
-			const directive = key.toLowerCase();
+      const text: string | undefined = node.children?.[0]?.children?.[0]?.value;
+      if (!text) return;
+      const matches = text.match(/^\[!(\w+)]/);
+      if (!matches) return;
+      const key = matches[1];
+      if (!key) return;
+      const directive = key.toLowerCase();
 
-			node.children[0].children[0].value = text.slice(matches[0].length);
+      node.children[0].children[0].value = text.slice(matches[0].length);
 
-			Object.assign(node, {
-				type: "containerDirective",
-				name: directive,
-				children: node.children,
-			});
-		});
-	};
+      Object.assign(node, {
+        type: "containerDirective",
+        name: directive,
+        children: node.children,
+      });
+    });
+  };
 }
 
 export function remarkCustomContainers() {
-	return (tree: any) => {
-		visit(tree, (node) => {
-			if (
-				node.type === "containerDirective" ||
-				node.type === "leafDirective" ||
-				node.type === "textDirective"
-			) {
-				if (!customContainers.has(node.name)) return;
-				const maybeLabel = node.children[0];
-				const hasLabel = maybeLabel.data?.directiveLabel;
+  return (tree: any) => {
+    visit(tree, (node) => {
+      if (
+        node.type === "containerDirective" ||
+        node.type === "leafDirective" ||
+        node.type === "textDirective"
+      ) {
+        if (!customContainers.has(node.name)) return;
+        const maybeLabel = node.children[0];
+        const hasLabel = maybeLabel.data?.directiveLabel;
 
-				let labelText = undefined;
+        let labelText = undefined;
 
-				if (hasLabel) {
-					const maybeLabelElement = maybeLabel.children[0];
-					if (maybeLabelElement.type === "text") {
-						labelText = maybeLabelElement.value;
-						(node.children as any[]).shift();
-					}
-				}
+        if (hasLabel) {
+          const maybeLabelElement = maybeLabel.children[0];
+          if (maybeLabelElement.type === "text") {
+            labelText = maybeLabelElement.value;
+            (node.children as any[]).shift();
+          }
+        }
 
-				const data = node.data || (node.data = {});
+        const data = node.data || (node.data = {});
 
-				const attributes = node.attributes || {};
-				attributes.type = node.name;
-				attributes.title = labelText;
+        const attributes = node.attributes || {};
+        attributes.type = node.name;
+        attributes.title = labelText;
 
-				data.hName = "$$SolidBase_CustomContainer";
-				data.hProperties = h(
-					"$$SolidBase_CustomContainer",
-					attributes,
-				).properties;
-			}
-		});
-	};
+        data.hName = "$$SolidBase_CustomContainer";
+        data.hProperties = h(
+          "$$SolidBase_CustomContainer",
+          attributes,
+        ).properties;
+      }
+    });
+  };
 }
 
 export function remarkRelativeImports() {
-	return (tree: any) => {
-		visit(tree, (node) => {
-			if (node.type !== "image") return;
+  return (tree: any) => {
+    visit(tree, (node) => {
+      if (node.type !== "image") return;
 
-			const { url } = node;
-			if (!(url.startsWith("./") || url.startsWith("../"))) return;
+      const { url } = node;
+      if (!(url.startsWith("./") || url.startsWith("../"))) return;
 
-			const ident = `$$SolidBase_RelativeImport${tree.children.length}`;
+      const ident = `$$SolidBase_RelativeImport${tree.children.length}`;
 
-			node.url = ident;
+      node.url = ident;
 
-			tree.children.push({
-				type: "mdxjsEsm",
-				value: "",
-				data: {
-					estree: fromJs(`import ${ident} from "${url}"`, { module: true }),
-				},
-			});
-		});
-	};
+      tree.children.push({
+        type: "mdxjsEsm",
+        value: "",
+        data: {
+          estree: fromJs(`import ${ident} from "${url}"`, { module: true }),
+        },
+      });
+    });
+  };
 }

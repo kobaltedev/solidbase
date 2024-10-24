@@ -1,3 +1,3 @@
 declare module "virtual:solidbase" {
-	export const solidBaseConfig: import("./config").SolidBaseResolvedConfig;
+  export const solidBaseConfig: import("./config").SolidBaseResolvedConfig<any>;
 }

@@ -1,65 +1,67 @@
 import {
-	type BaseRouterProps,
-	type RouteSectionProps,
-	Router,
+  type BaseRouterProps,
+  type RouteSectionProps,
+  Router,
 } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { type JSX, Show, Suspense, children, createEffect } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
-import { SolidBaseProvider, useSolidBaseContext } from "./context";
-
 import "./index.css";
-import { getRawTheme, getTheme } from "./theme";
+import { SolidBaseProvider, useSolidBaseContext } from "../client/context";
+import { getRawTheme, getTheme } from "../client/theme";
 
 interface SolidBaseAppProps {
-	root?: BaseRouterProps["root"];
-	children?: BaseRouterProps["children"];
+  root?: BaseRouterProps["root"];
+  children?: BaseRouterProps["children"];
 }
 
 export function SolidBaseApp(props: SolidBaseAppProps) {
-	const resolved = children(() => {
-		return props.children as unknown as JSX.Element;
-	});
+  const resolved = children(() => {
+    return props.children as unknown as JSX.Element;
+  });
 
-	return (
-		<Router
-			root={(rootProps) => (
-				<SolidBaseProvider>
-					<Show when={props.root} fallback={<Layout {...rootProps} />}>
-						<Dynamic component={props.root} {...rootProps}>
-							<Layout {...rootProps} />
-						</Dynamic>
-					</Show>
-				</SolidBaseProvider>
-			)}
-		>
-			<Show when={resolved()} fallback={<FileRoutes />}>
-				{resolved()}
-			</Show>
-		</Router>
-	);
+  return (
+    <Router
+      root={(rootProps) => (
+        <SolidBaseProvider>
+          <Show when={props.root} fallback={<Layout {...rootProps} />}>
+            <Dynamic component={props.root} {...rootProps}>
+              <Layout {...rootProps} />
+            </Dynamic>
+          </Show>
+        </SolidBaseProvider>
+      )}
+    >
+      <Show when={resolved()} fallback={<FileRoutes />}>
+        {resolved()}
+      </Show>
+    </Router>
+  );
 }
 
 function Layout(rootProps: RouteSectionProps) {
-	const { Layout } = useSolidBaseContext().components;
+  const { Layout } = useSolidBaseContext().components;
 
-	createEffect(() => {
-		document.documentElement.setAttribute("data-theme", getTheme());
-		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
-	});
+  createEffect(() => {
+    document.documentElement.setAttribute("data-theme", getTheme());
+    document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
+  });
 
-	return (
-		<Suspense>
-			<Layout>{rootProps.children}</Layout>
-		</Suspense>
-	);
+  return (
+    <Suspense>
+      <Layout>{rootProps.children}</Layout>
+    </Suspense>
+  );
 }
 
+export { getTheme, setTheme } from "./theme";
+export { getLocale, useLocale } from "./locale";
+
 export function SolidBaseServerScript() {
-	return (
-		<script>
-			{`
+  return (
+    <script>
+      {`
 				function getThemeCookie() {
 					if (!document.cookie) return undefined;
 					const match = document.cookie.match(new RegExp(\`\\\\W?theme=(?<theme>\\\\w+)\`));
@@ -68,9 +70,6 @@ export function SolidBaseServerScript() {
 
 				document.documentElement.setAttribute("data-theme", getThemeCookie().replace("s", "") ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 			`}
-		</script>
-	);
+    </script>
+  );
 }
-
-export { getTheme, setTheme } from "./theme";
-export { getLocale, useLocale } from "./locale";
