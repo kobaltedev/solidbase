@@ -1,3 +1,5 @@
+import { ThemeDefinition } from "../config";
+
 export type DefaultThemeConfig = {
   editPath?: string | ((path: string) => string);
   lastUpdated?: Intl.DateTimeFormatOptions | false;
@@ -14,15 +16,17 @@ type ResolvedThemeKeys = "nav" | "sidebar" | "lastUpdated" | "footer";
 type ResolvedThemeConfig = Omit<DefaultThemeConfig, ResolvedThemeKeys> &
   Required<Pick<DefaultThemeConfig, ResolvedThemeKeys>>;
 
-export function defaultTheme(config: DefaultThemeConfig): ResolvedThemeConfig {
-  return {
+const defaultTheme: ThemeDefinition<DefaultThemeConfig, ResolvedThemeConfig> = {
+  path: import.meta.resolve("@kobalte/solidbase/default-theme"),
+  resolveConfig: (config: DefaultThemeConfig): ResolvedThemeConfig => ({
     nav: [],
     sidebar: { items: [] },
     lastUpdated: { dateStyle: "short", timeStyle: "short" },
     footer: true,
     ...config,
-  };
-}
+  }),
+};
+export default defaultTheme;
 
 export type SearchConfig = {
   provider: "algolia";

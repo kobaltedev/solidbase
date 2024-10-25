@@ -1,8 +1,8 @@
 import { FileRoutes } from "@solidjs/start/router";
 import { Router } from "@solidjs/router";
+import { SolidBaseRoot } from "@kobalte/solidbase/client";
 
 import "./app.css";
-import { SolidBaseRoot } from "../../src/client/context";
 
 export default function App() {
   return (

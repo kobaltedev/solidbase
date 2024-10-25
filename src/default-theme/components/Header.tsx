@@ -13,16 +13,16 @@ const DocSearch = lazy(() => import("./DocSearch"));
 
 const BUFFER_MULT = 3;
 
-interface HeaderProps {}
-
-export default function Header(props: HeaderProps) {
+export default function Header() {
   const [ref, setRef] = createSignal<HTMLElement>();
   const [tocRef, setTocRef] = createSignal<HTMLElement>();
 
   const {
+    tocOpen,
+    setTocOpen,
+    setSidebarOpen,
     components: { ThemeSelector, LocaleSelector, TableOfContents },
-  } = useSolidBaseContext();
-  const { tocOpen, setTocOpen, setSidebarOpen } = useThemeContext();
+  } = useThemeContext();
 
   const config = useRouteConfig();
   const { locale } = useSolidBaseContext();

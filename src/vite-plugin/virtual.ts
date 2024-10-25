@@ -2,40 +2,22 @@ import { readdir } from "node:fs/promises";
 import { dirname, join, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
-import type { SolidBaseConfig } from "../config";
+
+import type { SolidBaseConfig, ThemeDefinition } from "../config";
 import { getGitTimestamp } from "../git";
 import { SolidBaseTOC } from "../remark-plugins";
 
 export async function loadVirtual(
+  theme: ThemeDefinition<any, any>,
   startConfig: SolidStartInlineConfig,
   solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
   const componentsPath = join(
     dirname(fileURLToPath(import.meta.url)),
     startConfig?.appRoot ?? "./src",
-    solidBaseConfig?.componentsFolder ?? "solidbase-components",
+    solidBaseConfig?.componentsFolder ?? "solidbase",
   );
   let template = "";
-
-  // const partialConfig = (
-  //   [
-  //     "title",
-  //     "description",
-  //     "titleTemplate",
-  //     "lastUpdated",
-  //     "footer",
-  //     "logo",
-  //     "socialLinks",
-  //     "locales",
-  //     "nav",
-  //     "lang",
-  //     "sidebar",
-  //     "search",
-  //   ] as Array<keyof SolidBaseConfig<any>>
-  // )
-  //   .filter((key) => key in solidBaseConfig)
-  //   // biome-ignore lint/style/noCommaOperator: cursed stuff
-  //   .reduce((obj2: any, key) => ((obj2[key] = solidBaseConfig[key]), obj2), {});
 
   template += `
 		export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};
@@ -66,6 +48,12 @@ export async function loadVirtual(
 		};
 	`;
 
+  template += `
+		import { lazy } from "solid-js";
+		export const Root = lazy(() => import("${fileURLToPath(theme.path)}/components/Layout"));
+		export * as mdxComponents from "${fileURLToPath(theme.path)}/components/mdx-components";
+	`;
+
   return template;
 }
 
@@ -73,7 +61,7 @@ export async function transformMdxModule(
   code: string,
   id: string,
   startConfig: SolidStartInlineConfig,
-  solidBaseConfig: Partial<SolidBaseConfig>,
+  solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
   const rootPath = join(
     dirname(fileURLToPath(import.meta.url)),

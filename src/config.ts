@@ -27,7 +27,7 @@ import {
   remarkTOC,
 } from "./remark-plugins";
 import solidBaseVitePlugin from "./vite-plugin";
-import { defaultTheme } from "./default-theme/config";
+import defaultTheme from "./default-theme/config";
 
 export type SolidBaseConfig<ThemeConfig> = {
   title?: string;
@@ -56,10 +56,14 @@ export type LocaleConfig<ThemeConfig> = {
   themeConfig?: ThemeConfig;
 };
 
+export type ThemeDefinition<InputConfig, ResolvedConfig> = {
+  path: string;
+  resolveConfig: (c: InputConfig) => ResolvedConfig;
+};
 export const withSolidBase = createWithSolidBase(defaultTheme);
 
 function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
-  theme: (config: ThemeConfig) => ResolvedThemeConfig,
+  theme: ThemeDefinition<ThemeConfig, ResolvedThemeConfig>,
 ) {
   return (
     startConfig?: SolidStartInlineConfig,
@@ -76,13 +80,17 @@ function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
         (acc, [key, value]) => {
           acc[key] = {
             ...value,
-            themeConfig: theme(value.themeConfig ?? ({} as ThemeConfig)),
+            themeConfig: theme.resolveConfig(
+              value.themeConfig ?? ({} as ThemeConfig),
+            ),
           };
           return acc;
         },
         {} as any,
       ),
-      themeConfig: theme(solidBaseConfig?.themeConfig ?? ({} as ThemeConfig)),
+      themeConfig: theme.resolveConfig(
+        solidBaseConfig?.themeConfig ?? ({} as ThemeConfig),
+      ),
     };
 
     process.env.PORT ??= "4000";
@@ -147,7 +155,7 @@ function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
         }),
       );
 
-      viteConfig.plugins.push(solidBaseVitePlugin(config, baseConfig));
+      viteConfig.plugins.push(solidBaseVitePlugin(theme, config, baseConfig));
 
       return viteConfig;
     };

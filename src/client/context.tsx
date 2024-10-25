@@ -1,49 +1,16 @@
-// @ts-ignore
-import { overrideMdxComponents, solidBaseComponents } from "virtual:solidbase";
-import { MetaProvider } from "@solidjs/meta";
-import {
-  type Accessor,
-  type RouteSectionProps,
-  type Setter,
-  createContext,
-  createSignal,
-  useContext,
-} from "solid-js";
-import { MDXProvider } from "solid-mdx";
+import { type Accessor, Component, createContext, useContext } from "solid-js";
+import { RouteSectionProps } from "@solidjs/router";
 
 import type { SolidBaseResolvedConfig } from "../config";
-import Article from "../default-theme/components/Article";
-import Footer from "../default-theme/components/Footer";
-import Header from "../default-theme/components/Header";
-import LastUpdated from "../default-theme/components/LastUpdated";
-import _Layout from "../default-theme/components/Layout";
-import Link from "../default-theme/components/Link";
-import LocaleSelector from "../default-theme/components/LocaleSelector";
-import TableOfContents from "../default-theme/components/TableOfContents";
-import ThemeSelector from "../default-theme/components/ThemeSelector";
-import * as mdxComponents from "../default-theme/components/mdx-components";
-import { useRouteConfig } from "./config";
 import { useLocale } from "./locale";
-import { Layout } from ".";
-import { CurrentPageDataContext, useCurrentPageData } from "./page-data";
 
 export interface SolidBaseContextValue<ThemeConfig> {
-  components: {
-    Header: typeof Header;
-    TableOfContents: typeof TableOfContents;
-    Layout: typeof _Layout;
-    Article: typeof Article;
-    Link: typeof Link;
-    LastUpdated: typeof LastUpdated;
-    Footer: typeof Footer;
-    ThemeSelector: typeof ThemeSelector;
-    LocaleSelector: typeof LocaleSelector;
-  };
   config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
   locale: ReturnType<typeof useLocale>;
+  Root: Component<RouteSectionProps>;
 }
 
-const SolidBaseContext = createContext<SolidBaseContextValue<any>>();
+export const SolidBaseContext = createContext<SolidBaseContextValue<any>>();
 
 export function useSolidBaseContext<ThemeConfig>() {
   const context = useContext(SolidBaseContext);
@@ -56,54 +23,4 @@ export function useSolidBaseContext<ThemeConfig>() {
   }
 
   return context as SolidBaseContextValue<ThemeConfig>;
-}
-
-function renameCustomMdxComponents(components: Record<string, any>) {
-  for (const name of Object.keys(components)) {
-    if (name[0].toUpperCase() === name[0]) {
-      components[`$$solidbase_${name.toLowerCase()}`] = components[name];
-      components[name] = undefined;
-    }
-  }
-  return components;
-}
-
-export function SolidBaseRoot(props: RouteSectionProps) {
-  const locale = useLocale();
-  const config = useRouteConfig();
-  const pageData = useCurrentPageData();
-
-  return (
-    <CurrentPageDataContext.Provider value={pageData}>
-      <MetaProvider>
-        <MDXProvider
-          components={renameCustomMdxComponents({
-            ...mdxComponents,
-            ...(overrideMdxComponents ?? {}),
-          })}
-        >
-          <SolidBaseContext.Provider
-            value={{
-              components: {
-                Header,
-                TableOfContents,
-                Layout: _Layout,
-                Article,
-                Link,
-                LastUpdated,
-                Footer,
-                ThemeSelector,
-                LocaleSelector,
-                ...solidBaseComponents,
-              },
-              locale,
-              config,
-            }}
-          >
-            <Layout {...props} />
-          </SolidBaseContext.Provider>
-        </MDXProvider>
-      </MetaProvider>
-    </CurrentPageDataContext.Provider>
-  );
 }

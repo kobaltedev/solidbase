@@ -1,5 +1,5 @@
-@import "../default-theme/reset.css";
-@import "../default-theme/variables.css";
+@import "./reset.css";
+@import "./variables.css";
 
 @font-face {
   font-family: Lexend;

@@ -1,4 +1,3 @@
-import { Dialog } from "@kobalte/core/dialog";
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
@@ -9,15 +8,14 @@ import { usePrevNext } from "../sidebar";
 import styles from "./Article.module.css";
 import { useCurrentPageData } from "../../client/page-data";
 import { useSolidBaseContext } from "../../client/context";
-import { DefaultThemeConfig } from "../config";
+import { useThemeContext } from "../context";
 
 export default function Article(props: ParentProps) {
+  const { config } = useSolidBaseContext();
+
   const {
     components: { TableOfContents, Link, LastUpdated, Footer },
-    config,
-    // tocOpen,
-    // setTocOpen,
-  } = useSolidBaseContext<DefaultThemeConfig>();
+  } = useThemeContext();
 
   const [contentRef, setContentRef] = createSignal<HTMLElement>();
 

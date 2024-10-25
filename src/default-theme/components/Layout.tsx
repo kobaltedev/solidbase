@@ -1,8 +1,9 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
-import { A } from "@solidjs/router";
-import { For, type ParentProps, Show, createEffect } from "solid-js";
+import { A, RouteSectionProps } from "@solidjs/router";
+import { For, Show } from "solid-js";
 
+import "../index.css";
 import { ThemeContextProvider, useThemeContext } from "../context";
 import { mobileLayout } from "../globals";
 import { useSidebar } from "../sidebar";
@@ -12,23 +13,23 @@ import { useCurrentPageData } from "../../client/page-data";
 import { Sidebar } from "../config";
 import { useRouteConfig, useSolidBaseContext } from "../utils";
 
-interface SidebarItem {
-  title: string;
-  collapsed: boolean;
-  items: ({ title: string; link: string } | SidebarItem)[];
-}
+export default (props: RouteSectionProps) => (
+  <ThemeContextProvider>
+    <Layout {...props} />
+  </ThemeContextProvider>
+);
 
-export default function Layout(props: ParentProps) {
+function Layout(props: RouteSectionProps) {
   const {
     components: { Header, Article },
-  } = useSolidBaseContext();
+  } = useThemeContext();
   const config = useRouteConfig();
 
   const sidebar = useSidebar();
   const pageData = useCurrentPageData();
 
   return (
-    <ThemeContextProvider>
+    <>
       <div class={styles.skipnav}>
         <Link
           href="#main-content"
@@ -108,7 +109,7 @@ export default function Layout(props: ParentProps) {
           <Article>{props.children}</Article>
         </main>
       </div>
-    </ThemeContextProvider>
+    </>
   );
 }
 
