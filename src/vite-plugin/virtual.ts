@@ -37,7 +37,6 @@ export async function loadVirtual(
   //   // biome-ignore lint/style/noCommaOperator: cursed stuff
   //   .reduce((obj2: any, key) => ((obj2[key] = solidBaseConfig[key]), obj2), {});
 
-  console.log(JSON.stringify(solidBaseConfig, null, 4));
   template += `
 		export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};
 	`;

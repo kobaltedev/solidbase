@@ -1,10 +1,12 @@
 import { createMediaQuery } from "@solid-primitives/media";
-import { createEffect, createSignal, on } from "solid-js";
+import { createEffect, createRoot, createSignal, on } from "solid-js";
 
 const [_mobileLayout, setMobileLayout] = createSignal(false);
 const query = createMediaQuery("(max-width: 1100px)");
 
-createEffect(on(query, (q) => setMobileLayout(q), { defer: true }));
+createRoot(() => {
+  createEffect(on(query, (q) => setMobileLayout(q), { defer: true }));
+});
 
 setTimeout(() => setMobileLayout(query()));
 

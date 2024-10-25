@@ -3,16 +3,14 @@ import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import { For, type ParentProps, Show, createEffect } from "solid-js";
 
-import { useRouteConfig, useSolidBaseContext } from "../context";
+import { ThemeContextProvider, useThemeContext } from "../context";
 import { mobileLayout } from "../globals";
 import { useSidebar } from "../sidebar";
 import styles from "./Layout.module.css";
 import Link from "./Link";
-import {
-  CurrentPageDataContext,
-  useCurrentPageData,
-} from "../../client/page-data";
+import { useCurrentPageData } from "../../client/page-data";
 import { Sidebar } from "../config";
+import { useRouteConfig, useSolidBaseContext } from "../utils";
 
 interface SidebarItem {
   title: string;
@@ -23,26 +21,14 @@ interface SidebarItem {
 export default function Layout(props: ParentProps) {
   const {
     components: { Header, Article },
-    sidebarOpen,
-    setSidebarOpen,
   } = useSolidBaseContext();
-
   const config = useRouteConfig();
-  const pageData = useCurrentPageData();
 
   const sidebar = useSidebar();
-
-  createEffect(() =>
-    console.log(
-      "side",
-      mobileLayout(),
-      sidebarOpen(),
-      !mobileLayout() || sidebarOpen(),
-    ),
-  );
+  const pageData = useCurrentPageData();
 
   return (
-    <CurrentPageDataContext.Provider value={pageData}>
+    <ThemeContextProvider>
       <div class={styles.skipnav}>
         <Link
           href="#main-content"
@@ -89,26 +75,32 @@ export default function Layout(props: ParentProps) {
               </aside>
             }
           >
-            <Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
-              <Dialog.Portal>
-                <Dialog.Overlay class={styles["sidenav-overlay"]} />
-                <Dialog.Content class={styles.sidenav}>
-                  <div class={styles["sidenav-content"]}>
-                    <div class={styles["sidenav-header"]}>
-                      <a href="/" class={styles["logo-link"]}>
-                        <Show
-                          when={config().logo}
-                          fallback={<span>{config().title}</span>}
-                        >
-                          <img src={config().logo} alt={config().title} />
-                        </Show>
-                      </a>
-                    </div>
-                    <Navigation sidebar={sidebar()!} />
-                  </div>
-                </Dialog.Content>
-              </Dialog.Portal>
-            </Dialog>
+            {(_) => {
+              const { sidebarOpen, setSidebarOpen } = useThemeContext();
+
+              return (
+                <Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
+                  <Dialog.Portal>
+                    <Dialog.Overlay class={styles["sidenav-overlay"]} />
+                    <Dialog.Content class={styles.sidenav}>
+                      <div class={styles["sidenav-content"]}>
+                        <div class={styles["sidenav-header"]}>
+                          <a href="/" class={styles["logo-link"]}>
+                            <Show
+                              when={config().logo}
+                              fallback={<span>{config().title}</span>}
+                            >
+                              <img src={config().logo} alt={config().title} />
+                            </Show>
+                          </a>
+                        </div>
+                        <Navigation sidebar={sidebar()!} />
+                      </div>
+                    </Dialog.Content>
+                  </Dialog.Portal>
+                </Dialog>
+              );
+            }}
           </Show>
         </Show>
 
@@ -116,7 +108,7 @@ export default function Layout(props: ParentProps) {
           <Article>{props.children}</Article>
         </main>
       </div>
-    </CurrentPageDataContext.Provider>
+    </ThemeContextProvider>
   );
 }
 

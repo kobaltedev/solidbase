@@ -28,6 +28,11 @@
       "import": "./src/client/index.tsx",
       "types": "./src/client/index.tsx"
     },
+    "./server": {
+      "solid": "./src/server.ts",
+      "import": "./src/server.ts",
+      "types": "./src/server.ts"
+    },
     "./*": {
       "solid": "./src/*",
       "import": "./src/*",
@@ -62,6 +67,7 @@
     "@kobalte/core": "^0.13.7",
     "@mdx-js/mdx": "^3.0.1",
     "@solid-primitives/clipboard": "^1.5.10",
+    "@solid-primitives/context": "^0.2.3",
     "@solid-primitives/event-listener": "^2.3.3",
     "@solid-primitives/keyboard": "^1.2.8",
     "@solid-primitives/media": "^2.2.9",

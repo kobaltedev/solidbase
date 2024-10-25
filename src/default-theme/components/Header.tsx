@@ -2,11 +2,12 @@ import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 import { Dialog } from "@kobalte/core/dialog";
 
-import { useRouteConfig, useSolidBaseContext } from "../context";
+import { useRouteConfig, useSolidBaseContext } from "../utils";
 import styles from "./Header.module.css";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 import { getLocaleLink } from "../../client/locale";
 import { DefaultThemeConfig } from "../config";
+import { useThemeContext } from "../context";
 
 const DocSearch = lazy(() => import("./DocSearch"));
 
@@ -20,10 +21,8 @@ export default function Header(props: HeaderProps) {
 
   const {
     components: { ThemeSelector, LocaleSelector, TableOfContents },
-    setSidebarOpen,
-    setTocOpen,
-    tocOpen,
   } = useSolidBaseContext();
+  const { tocOpen, setTocOpen, setSidebarOpen } = useThemeContext();
 
   const config = useRouteConfig();
   const { locale } = useSolidBaseContext();

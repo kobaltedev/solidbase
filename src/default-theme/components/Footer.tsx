@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 
 import styles from "./Footer.module.css";
 
-import { useRouteConfig } from "../context";
+import { useRouteConfig } from "../utils";
 import { SocialLink } from "../config";
 
 const logos: Partial<Record<SocialLink["type"], string>> = {

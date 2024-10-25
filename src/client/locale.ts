@@ -2,6 +2,7 @@ import { solidBaseConfig } from "virtual:solidbase";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
+
 import type { LocaleConfig } from "../config";
 
 export const DEFAULT_LANG_CODE = "en-US";
@@ -16,7 +17,6 @@ export interface ResolvedLocale<ThemeConfig> {
 const locales = (() => {
   let rootHandled = false;
 
-  console.log(solidBaseConfig.locales);
   const array: Array<ResolvedLocale<any>> = Object.entries(
     solidBaseConfig.locales ?? {},
   ).map(([locale, config]) => {

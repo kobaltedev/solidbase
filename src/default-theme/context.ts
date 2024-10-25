@@ -1,11 +1,17 @@
-import { useSolidBaseContext as _useSolidBaseContext } from "../client/context";
-import { useRouteConfig as _useRouteConfig } from "../client/config";
-import { DefaultThemeConfig } from "./config";
+import { createContextProvider } from "@solid-primitives/context";
+import { createSignal } from "solid-js";
 
-export function useSolidBaseContext() {
-  return _useSolidBaseContext<DefaultThemeConfig>();
-}
+export const [ThemeContextProvider, useThemeContext] = createContextProvider(
+  () => {
+    const [sidebarOpen, setSidebarOpen] = createSignal(false);
+    const [tocOpen, setTocOpen] = createSignal(false);
 
-export function useRouteConfig() {
-  return _useRouteConfig<DefaultThemeConfig>();
-}
+    return {
+      sidebarOpen,
+      setSidebarOpen,
+      tocOpen,
+      setTocOpen,
+    };
+  },
+  null!,
+);

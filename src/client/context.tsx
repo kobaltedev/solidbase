@@ -3,19 +3,20 @@ import { overrideMdxComponents, solidBaseComponents } from "virtual:solidbase";
 import { MetaProvider } from "@solidjs/meta";
 import {
   type Accessor,
-  type ParentProps,
+  type RouteSectionProps,
   type Setter,
   createContext,
   createSignal,
   useContext,
 } from "solid-js";
 import { MDXProvider } from "solid-mdx";
+
 import type { SolidBaseResolvedConfig } from "../config";
 import Article from "../default-theme/components/Article";
 import Footer from "../default-theme/components/Footer";
 import Header from "../default-theme/components/Header";
 import LastUpdated from "../default-theme/components/LastUpdated";
-import Layout from "../default-theme/components/Layout";
+import _Layout from "../default-theme/components/Layout";
 import Link from "../default-theme/components/Link";
 import LocaleSelector from "../default-theme/components/LocaleSelector";
 import TableOfContents from "../default-theme/components/TableOfContents";
@@ -23,12 +24,14 @@ import ThemeSelector from "../default-theme/components/ThemeSelector";
 import * as mdxComponents from "../default-theme/components/mdx-components";
 import { useRouteConfig } from "./config";
 import { useLocale } from "./locale";
+import { Layout } from ".";
+import { CurrentPageDataContext, useCurrentPageData } from "./page-data";
 
 export interface SolidBaseContextValue<ThemeConfig> {
   components: {
     Header: typeof Header;
     TableOfContents: typeof TableOfContents;
-    Layout: typeof Layout;
+    Layout: typeof _Layout;
     Article: typeof Article;
     Link: typeof Link;
     LastUpdated: typeof LastUpdated;
@@ -38,10 +41,6 @@ export interface SolidBaseContextValue<ThemeConfig> {
   };
   config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
   locale: ReturnType<typeof useLocale>;
-  sidebarOpen: Accessor<boolean>;
-  setSidebarOpen: Setter<boolean>;
-  tocOpen: Accessor<boolean>;
-  setTocOpen: Setter<boolean>;
 }
 
 const SolidBaseContext = createContext<SolidBaseContextValue<any>>();
@@ -69,46 +68,42 @@ function renameCustomMdxComponents(components: Record<string, any>) {
   return components;
 }
 
-export function SolidBaseProvider(props: ParentProps) {
+export function SolidBaseRoot(props: RouteSectionProps) {
   const locale = useLocale();
   const config = useRouteConfig();
-
-  const [sidebarOpen, setSidebarOpen] = createSignal(false);
-  const [tocOpen, setTocOpen] = createSignal(false);
+  const pageData = useCurrentPageData();
 
   return (
-    <MetaProvider>
-      <MDXProvider
-        components={renameCustomMdxComponents({
-          ...mdxComponents,
-          ...(overrideMdxComponents ?? {}),
-        })}
-      >
-        <SolidBaseContext.Provider
-          value={{
-            components: {
-              Header,
-              TableOfContents,
-              Layout,
-              Article,
-              Link,
-              LastUpdated,
-              Footer,
-              ThemeSelector,
-              LocaleSelector,
-              ...solidBaseComponents,
-            },
-            locale,
-            config,
-            sidebarOpen,
-            setSidebarOpen,
-            tocOpen,
-            setTocOpen,
-          }}
+    <CurrentPageDataContext.Provider value={pageData}>
+      <MetaProvider>
+        <MDXProvider
+          components={renameCustomMdxComponents({
+            ...mdxComponents,
+            ...(overrideMdxComponents ?? {}),
+          })}
         >
-          {props.children}
-        </SolidBaseContext.Provider>
-      </MDXProvider>
-    </MetaProvider>
+          <SolidBaseContext.Provider
+            value={{
+              components: {
+                Header,
+                TableOfContents,
+                Layout: _Layout,
+                Article,
+                Link,
+                LastUpdated,
+                Footer,
+                ThemeSelector,
+                LocaleSelector,
+                ...solidBaseComponents,
+              },
+              locale,
+              config,
+            }}
+          >
+            <Layout {...props} />
+          </SolidBaseContext.Provider>
+        </MDXProvider>
+      </MetaProvider>
+    </CurrentPageDataContext.Provider>
   );
 }
