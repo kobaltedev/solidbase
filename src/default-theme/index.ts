@@ -1,8 +1,7 @@
-import { ThemeDefinition } from "../config";
+import { defineTheme, ThemeDefinition } from "../config";
+import { fileURLToPath } from "node:url";
 
 export type DefaultThemeConfig = {
-  editPath?: string | ((path: string) => string);
-  lastUpdated?: Intl.DateTimeFormatOptions | false;
   footer?: boolean;
   socialLinks?:
     | Record<Exclude<SocialLink["type"], "custom">, string>
@@ -10,22 +9,46 @@ export type DefaultThemeConfig = {
   nav?: Array<NavItem>;
   sidebar?: Sidebar | Record<`/${string}`, Sidebar>;
   search?: SearchConfig;
+  fonts?: boolean;
 };
 
-type ResolvedThemeKeys = "nav" | "sidebar" | "lastUpdated" | "footer";
+type ResolvedThemeKeys = "nav" | "sidebar" | "footer" | "fonts";
 type ResolvedThemeConfig = Omit<DefaultThemeConfig, ResolvedThemeKeys> &
   Required<Pick<DefaultThemeConfig, ResolvedThemeKeys>>;
 
-const defaultTheme: ThemeDefinition<DefaultThemeConfig, ResolvedThemeConfig> = {
-  path: import.meta.resolve("@kobalte/solidbase/default-theme"),
-  resolveConfig: (config: DefaultThemeConfig): ResolvedThemeConfig => ({
-    nav: [],
-    sidebar: { items: [] },
-    lastUpdated: { dateStyle: "short", timeStyle: "short" },
-    footer: true,
-    ...config,
-  }),
-};
+const defaultTheme: ThemeDefinition<DefaultThemeConfig, ResolvedThemeConfig> =
+  defineTheme({
+    path: import.meta.resolve("@kobalte/solidbase/default-theme"),
+    resolveConfig: (config: DefaultThemeConfig): ResolvedThemeConfig => ({
+      nav: [],
+      sidebar: { items: [] },
+      footer: true,
+      fonts: true,
+      ...config,
+    }),
+    vite(config) {
+      const rootPath = fileURLToPath(
+        import.meta.resolve(
+          "@kobalte/solidbase/default-theme/components/index.tsx",
+        ),
+      );
+
+      return {
+        config() {
+          return {
+            define: {
+              "import.meta.env.SOLIDBASE_DEFAULT_THEME_FONTS": config.fonts,
+            },
+          };
+        },
+        transform(code, path) {
+          if (path === rootPath && config.fonts) {
+            return `import "../fonts/index.css";\n${code}`;
+          }
+        },
+      };
+    },
+  });
 export default defaultTheme;
 
 export type SearchConfig = {

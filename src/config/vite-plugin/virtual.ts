@@ -3,12 +3,13 @@ import { dirname, join, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 
-import type { SolidBaseConfig, ThemeDefinition } from "../config";
+import type { SolidBaseConfig } from "../../config";
 import { getGitTimestamp } from "../git";
 import { SolidBaseTOC } from "../remark-plugins";
+import { Theme } from "..";
 
 export async function loadVirtual(
-  theme: ThemeDefinition<any, any>,
+  theme: Theme<any, any>,
   startConfig: SolidStartInlineConfig,
   solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
@@ -50,8 +51,8 @@ export async function loadVirtual(
 
   template += `
 		import { lazy } from "solid-js";
-		export const Root = lazy(() => import("${fileURLToPath(theme.path)}/components/Layout"));
-		export * as mdxComponents from "${fileURLToPath(theme.path)}/components/mdx-components";
+		export const Root = lazy(() => import("${fileURLToPath(theme.path)}/components"));
+		export * as mdxComponents from "${fileURLToPath(theme.path)}/mdx-components";
 	`;
 
   return template;

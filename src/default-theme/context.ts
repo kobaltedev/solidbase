@@ -7,7 +7,6 @@ import Article from "./components/Article";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import LastUpdated from "./components/LastUpdated";
-import Layout from "./components/Layout";
 import Link from "./components/Link";
 import LocaleSelector from "./components/LocaleSelector";
 import TableOfContents from "./components/TableOfContents";
@@ -26,7 +25,6 @@ export const [ThemeContextProvider, useThemeContext] = createContextProvider(
       components: {
         Header,
         TableOfContents,
-        Layout,
         Article,
         Link,
         LastUpdated,

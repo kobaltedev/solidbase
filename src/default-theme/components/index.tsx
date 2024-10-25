@@ -3,15 +3,17 @@ import { Title } from "@solidjs/meta";
 import { A, RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
-import "../index.css";
 import { ThemeContextProvider, useThemeContext } from "../context";
 import { mobileLayout } from "../globals";
 import { useSidebar } from "../sidebar";
-import styles from "./Layout.module.css";
 import Link from "./Link";
 import { useCurrentPageData } from "../../client/page-data";
 import { Sidebar } from "../config";
 import { useRouteConfig, useSolidBaseContext } from "../utils";
+
+import "../index.css";
+import styles from "./index.module.css";
+// font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (
   <ThemeContextProvider>
@@ -21,6 +23,8 @@ export default (props: RouteSectionProps) => (
 
 function Layout(props: RouteSectionProps) {
   const {
+    sidebarOpen,
+    setSidebarOpen,
     components: { Header, Article },
   } = useThemeContext();
   const config = useRouteConfig();
@@ -76,32 +80,26 @@ function Layout(props: RouteSectionProps) {
               </aside>
             }
           >
-            {(_) => {
-              const { sidebarOpen, setSidebarOpen } = useThemeContext();
-
-              return (
-                <Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
-                  <Dialog.Portal>
-                    <Dialog.Overlay class={styles["sidenav-overlay"]} />
-                    <Dialog.Content class={styles.sidenav}>
-                      <div class={styles["sidenav-content"]}>
-                        <div class={styles["sidenav-header"]}>
-                          <a href="/" class={styles["logo-link"]}>
-                            <Show
-                              when={config().logo}
-                              fallback={<span>{config().title}</span>}
-                            >
-                              <img src={config().logo} alt={config().title} />
-                            </Show>
-                          </a>
-                        </div>
-                        <Navigation sidebar={sidebar()!} />
-                      </div>
-                    </Dialog.Content>
-                  </Dialog.Portal>
-                </Dialog>
-              );
-            }}
+            <Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
+              <Dialog.Portal>
+                <Dialog.Overlay class={styles["sidenav-overlay"]} />
+                <Dialog.Content class={styles.sidenav}>
+                  <div class={styles["sidenav-content"]}>
+                    <div class={styles["sidenav-header"]}>
+                      <a href="/" class={styles["logo-link"]}>
+                        <Show
+                          when={config().logo}
+                          fallback={<span>{config().title}</span>}
+                        >
+                          <img src={config().logo} alt={config().title} />
+                        </Show>
+                      </a>
+                    </div>
+                    <Navigation sidebar={sidebar()!} />
+                  </div>
+                </Dialog.Content>
+              </Dialog.Portal>
+            </Dialog>
           </Show>
         </Show>
 

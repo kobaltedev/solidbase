@@ -1,4 +1,5 @@
 import { defineConfig } from "@solidjs/start/config";
+
 import { withSolidBase } from "../src/config";
 
 export default defineConfig(
