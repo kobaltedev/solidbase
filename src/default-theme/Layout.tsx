@@ -3,30 +3,30 @@ import { Title } from "@solidjs/meta";
 import { A, RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
-import { ThemeContextProvider, useThemeContext } from "../context";
-import { mobileLayout } from "../globals";
-import { useSidebar } from "../sidebar";
-import Link from "./Link";
-import { useCurrentPageData } from "../../client/page-data";
-import { useRouteConfig, useSolidBaseContext } from "../utils";
+import {
+  DefaultThemeContextProvider,
+  useDefaultThemeContext,
+  useThemeComponents,
+} from "./context";
+import { mobileLayout } from "./globals";
+import { useSidebar } from "./sidebar";
+import { useCurrentPageData } from "../client/page-data";
+import { useRouteConfig, useSolidBaseContext } from "./utils";
 
-import "../index.css";
-import styles from "./index.module.css";
-import { Sidebar } from "..";
+import "./index.css";
+import styles from "./Layout.module.css";
+import { Sidebar } from ".";
 // font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (
-  <ThemeContextProvider>
+  <DefaultThemeContextProvider>
     <Layout {...props} />
-  </ThemeContextProvider>
+  </DefaultThemeContextProvider>
 );
 
 function Layout(props: RouteSectionProps) {
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-    components: { Header, Article },
-  } = useThemeContext();
+  const { Header, Article, Link } = useThemeComponents();
+  const { sidebarOpen, setSidebarOpen } = useDefaultThemeContext();
   const config = useRouteConfig();
 
   const sidebar = useSidebar();

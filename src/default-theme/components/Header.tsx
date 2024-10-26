@@ -6,8 +6,8 @@ import { useRouteConfig, useSolidBaseContext } from "../utils";
 import styles from "./Header.module.css";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 import { getLocaleLink } from "../../client/locale";
-import { DefaultThemeConfig } from "../config";
-import { useThemeContext } from "../context";
+import { useDefaultThemeContext, useThemeComponents } from "../context";
+import { DefaultThemeConfig } from "..";
 
 const DocSearch = lazy(() => import("./DocSearch"));
 
@@ -17,12 +17,10 @@ export default function Header() {
   const [ref, setRef] = createSignal<HTMLElement>();
   const [tocRef, setTocRef] = createSignal<HTMLElement>();
 
-  const {
-    tocOpen,
-    setTocOpen,
-    setSidebarOpen,
-    components: { ThemeSelector, LocaleSelector, TableOfContents },
-  } = useThemeContext();
+  const { ThemeSelector, LocaleSelector, TableOfContents } =
+    useThemeComponents();
+
+  const { tocOpen, setTocOpen, setSidebarOpen } = useDefaultThemeContext();
 
   const config = useRouteConfig();
   const { locale } = useSolidBaseContext();

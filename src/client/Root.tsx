@@ -1,4 +1,4 @@
-import { overrideMdxComponents, Root, mdxComponents } from "virtual:solidbase";
+import { Layout, mdxComponents } from "virtual:solidbase";
 import { MetaProvider, useHead } from "@solidjs/meta";
 import { MDXProvider } from "solid-mdx";
 import { RouteSectionProps } from "@solidjs/router";
@@ -7,7 +7,7 @@ import { createEffect, createUniqueId, Suspense } from "solid-js";
 import { useRouteConfig } from "./config";
 import { useLocale } from "./locale";
 import { CurrentPageDataContext, useCurrentPageData } from "./page-data";
-import { SolidBaseContext, useSolidBaseContext } from "./context";
+import { SolidBaseContext } from "./context";
 import { getRawTheme, getTheme } from "./theme";
 
 function renameCustomMdxComponents(components: Record<string, any>) {
@@ -31,11 +31,10 @@ export function SolidBaseRoot(props: RouteSectionProps) {
         <MDXProvider
           components={renameCustomMdxComponents({
             ...mdxComponents,
-            ...(overrideMdxComponents ?? {}),
           })}
         >
-          <SolidBaseContext.Provider value={{ locale, config, Root }}>
-            <Layout {...props} />
+          <SolidBaseContext.Provider value={{ locale, config }}>
+            <Inner {...props} />
           </SolidBaseContext.Provider>
         </MDXProvider>
       </MetaProvider>
@@ -45,9 +44,7 @@ export function SolidBaseRoot(props: RouteSectionProps) {
 
 import readThemeCookieScript from "./read-theme-cookie.js?raw";
 
-export function Layout(props: RouteSectionProps) {
-  const { Root } = useSolidBaseContext();
-
+export function Inner(props: RouteSectionProps) {
   createEffect(() => {
     document.documentElement.setAttribute("data-theme", getTheme());
     document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
@@ -62,7 +59,7 @@ export function Layout(props: RouteSectionProps) {
 
   return (
     <Suspense>
-      <Root {...props} />
+      <Layout {...props} />
     </Suspense>
   );
 }

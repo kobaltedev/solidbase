@@ -10,10 +10,7 @@ export default function LastUpdated() {
 
   const formatter = createMemo(
     () =>
-      new Intl.DateTimeFormat(
-        undefined,
-        config().themeConfig?.lastUpdated || undefined,
-      ),
+      new Intl.DateTimeFormat(undefined, config()?.lastUpdated || undefined),
   );
 
   const date = createMemo(() => new Date(pageData().lastUpdated ?? 0));

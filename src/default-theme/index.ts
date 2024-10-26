@@ -16,13 +16,13 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
   path: import.meta.resolve("@kobalte/solidbase/default-theme"),
   vite(config) {
     const rootPath = fileURLToPath(
-      import.meta.resolve("@kobalte/solidbase/default-theme/context.ts"),
+      import.meta.resolve("@kobalte/solidbase/default-theme/context.tsx"),
     );
 
     return {
       transform(code, path) {
-        if (path === rootPath && config.themeConfig?.fonts) {
-          return `import "../fonts/index.css";\n${code}`;
+        if (path === rootPath && (config.themeConfig?.fonts ?? true)) {
+          return `import "./fonts/index.css";\n${code}`;
         }
       },
     };

@@ -7,7 +7,6 @@ import { useLocale } from "./locale";
 export interface SolidBaseContextValue<ThemeConfig> {
   config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
   locale: ReturnType<typeof useLocale>;
-  Root: Component<RouteSectionProps>;
 }
 
 export const SolidBaseContext = createContext<SolidBaseContextValue<any>>();

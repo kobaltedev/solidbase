@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises";
+import { access, readdir } from "node:fs/promises";
 import { dirname, join, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
@@ -9,50 +9,55 @@ import { SolidBaseTOC } from "../remark-plugins";
 import { Theme } from "..";
 
 export async function loadVirtual(
-  theme: Theme<any, any>,
+  theme: Theme<any>,
   startConfig: SolidStartInlineConfig,
   solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
-  const componentsPath = join(
-    dirname(fileURLToPath(import.meta.url)),
-    startConfig?.appRoot ?? "./src",
-    solidBaseConfig?.componentsFolder ?? "solidbase",
-  );
-  let template = "";
+  let template = `
+  	export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)}
+  `;
 
-  template += `
-		export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};
-	`;
+  const themePaths = (() => {
+    let t: Theme<any> | undefined = theme;
+    const paths: Array<string> = [];
 
-  const componentFiles = await readdir(componentsPath).catch(() => []);
-  const componentNames = componentFiles.map((file) => parse(file).name);
+    while (t !== undefined) {
+      paths.push(fileURLToPath(t.path));
+      t = t.extends;
+    }
 
-  if (componentNames.includes("mdx-components")) {
-    template += `
-			export * as overrideMdxComponents from "${join(componentsPath, "mdx-components")}";
-		`;
-  } else {
-    template += `
-			export const overrideMdxComponents = {};
-		`;
+    paths.reverse();
+
+    return paths;
+  })();
+
+  const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
+
+  for (let i = 0; i < themePaths.length; i++) {
+    const themePath = themePaths[i]!;
+
+    const dir: string[] = await readdir(themePath).catch(() => []);
+
+    const mdxComponentsFile = dir.find((url) => {
+      const name = parse(url).name;
+      return name === "mdx-components";
+    });
+
+    if (mdxComponentsFile)
+      mdxComponentFiles.push({
+        importName: `mdxComponents${i}`,
+        path: `${themePath}/mdx-components`,
+      });
   }
-
-  const components = componentNames.filter(
-    (name) => name[0] === name[0].toUpperCase(),
-  );
-
-  template += `
-		${components.map((name) => `import ${name} from "${join(componentsPath, name)}"`).join("\n")}
-
-		export const solidBaseComponents = {
-			${components.join(",\n")}
-		};
-	`;
 
   template += `
 		import { lazy } from "solid-js";
-		export const Root = lazy(() => import("${fileURLToPath(theme.path)}/components"));
-		export * as mdxComponents from "${fileURLToPath(theme.path)}/mdx-components";
+		export const Layout = lazy(() => import("${themePaths[themePaths.length - 1]}/Layout"));
+
+		${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.path}";\n`).join("")}
+		export const mdxComponents = {
+			${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
+		};
 	`;
 
   return template;

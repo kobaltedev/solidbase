@@ -5,17 +5,16 @@ import { type ParentProps, Show, createSignal } from "solid-js";
 
 import { mobileLayout } from "../globals";
 import { usePrevNext } from "../sidebar";
-import styles from "./Article.module.css";
 import { useCurrentPageData } from "../../client/page-data";
-import { useSolidBaseContext } from "../../client/context";
-import { useThemeContext } from "../context";
+import { useThemeComponents } from "../context";
+import { useSolidBaseContext } from "../utils";
+
+import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
   const { config } = useSolidBaseContext();
 
-  const {
-    components: { TableOfContents, Link, LastUpdated, Footer },
-  } = useThemeContext();
+  const { TableOfContents, Link, LastUpdated, Footer } = useThemeComponents();
 
   const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -109,7 +108,7 @@ export default function Article(props: ParentProps) {
             </nav>
           </Show>
 
-          <Show when={config().footer}>
+          <Show when={config().themeConfig?.footer}>
             <Footer />
           </Show>
         </div>

@@ -2,11 +2,10 @@ import docsearch from "@docsearch/js";
 import { onMount } from "solid-js";
 
 import "./DocSearch.css";
-import { useRouteConfig } from "../../client/config";
-import { DefaultThemeConfig } from "../config";
+import { useRouteConfig } from "../utils";
 
 export default function DocSearch() {
-  const config = useRouteConfig<DefaultThemeConfig>();
+  const config = useRouteConfig();
 
   onMount(() => {
     const search = config().themeConfig?.search;

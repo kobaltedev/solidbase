@@ -3,14 +3,14 @@ import type { PluginOption } from "vite";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { SolidBaseConfig, ThemeDefinition } from "../config";
+import type { SolidBaseConfig, ThemeDefinition } from "../";
 import { loadVirtual, transformMdxModule } from "./virtual";
 
 const virtualModuleId = "virtual:solidbase";
 const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
 export default function solidBaseVitePlugin(
-  theme: ThemeDefinition<any, any>,
+  theme: ThemeDefinition<any>,
   startConfig: SolidStartInlineConfig,
   solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ): PluginOption {

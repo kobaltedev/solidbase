@@ -2,7 +2,7 @@ import type {
   SolidStartInlineConfig,
   ViteCustomizableConfig,
 } from "@solidjs/start/config";
-import { type Plugin as VitePlugin } from "vite";
+import { Plugin, type Plugin as VitePlugin } from "vite";
 
 import solidBaseVitePlugin from "./vite-plugin";
 import { solidBaseMdx } from "./mdx";
@@ -13,7 +13,7 @@ export type SolidBaseConfig<ThemeConfig> = {
   description?: string;
   logo?: string;
   titleTemplate?: string;
-  componentsFolder?: string;
+  // componentsFolder?: string;
   issueAutolink?: IssueAutoLinkConfig;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
@@ -87,11 +87,20 @@ export function createWithSolidBase<ThemeConfig>(
       viteConfig.plugins.push(solidBaseMdx(sbConfig));
       viteConfig.plugins.push(solidBaseVitePlugin(theme, config, sbConfig));
 
-      if (theme.vite)
-        viteConfig.plugins.push({
-          ...theme.vite(sbConfig),
-          name: "solidbase-theme",
-        });
+      let t: ThemeDefinition<any> | undefined = theme;
+      let plugins: Array<Plugin> = [];
+      while (t !== undefined) {
+        if (t.vite)
+          plugins.push({
+            ...t.vite(sbConfig),
+            name: `solidbase-theme-${plugins.length}`,
+          });
+
+        t = t.extends;
+      }
+      plugins.reverse();
+
+      viteConfig.plugins.push(...plugins);
 
       return viteConfig;
     };
