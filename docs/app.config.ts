@@ -1,8 +1,15 @@
 import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "../src/config";
+
+import { createWithSolidBase, defineTheme } from "../src/config";
+import defaultTheme from "../src/default-theme";
+
+const theme = defineTheme({
+  componentsPath: import.meta.resolve("./src/solidbase-theme"),
+  extends: defaultTheme,
+});
 
 export default defineConfig(
-  withSolidBase(
+  createWithSolidBase(theme)(
     {
       ssr: true,
       server: {

@@ -43,7 +43,7 @@ export type LocaleConfig<ThemeConfig> = {
 };
 
 export type ThemeDefinition<Config> = {
-  path: string;
+  componentsPath: string;
   extends?: ThemeDefinition<Config>;
   vite?(config: SolidBaseResolvedConfig<Config>): Omit<VitePlugin, "name">;
 };
@@ -53,6 +53,10 @@ export const withSolidBase = createWithSolidBase(defaultTheme);
 export function createWithSolidBase<ThemeConfig>(
   theme: ThemeDefinition<ThemeConfig>,
 ) {
+  if (parse(theme.componentsPath).ext !== "") {
+    theme.componentsPath = dirname(theme.componentsPath);
+  }
+
   return (
     startConfig?: SolidStartInlineConfig,
     solidBaseConfig?: SolidBaseConfig<ThemeConfig>,
@@ -109,10 +113,9 @@ export function createWithSolidBase<ThemeConfig>(
   };
 }
 
-import { dirname } from "node:path";
+import { dirname, parse } from "node:path";
 import { IssueAutoLinkConfig } from "./remark-plugins";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
-  def.path = dirname(def.path);
   return def;
 }
 export type Theme<C> = ReturnType<typeof defineTheme<C>>;

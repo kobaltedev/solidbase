@@ -4,7 +4,7 @@ import { createWithSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
 
 const customTheme = defineTheme({
-  path: import.meta.resolve("./src/solidbase-theme"),
+  componentsPath: import.meta.resolve("./src/solidbase-theme"),
   extends: defaultTheme,
 });
 

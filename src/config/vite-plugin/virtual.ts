@@ -22,7 +22,7 @@ export async function loadVirtual(
     const paths: Array<string> = [];
 
     while (t !== undefined) {
-      paths.push(fileURLToPath(t.path));
+      paths.push(fileURLToPath(t.componentsPath));
       t = t.extends;
     }
 
@@ -30,6 +30,8 @@ export async function loadVirtual(
 
     return paths;
   })();
+
+  console.log(themePaths);
 
   const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
 

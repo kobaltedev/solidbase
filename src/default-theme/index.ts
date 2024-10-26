@@ -13,7 +13,7 @@ export type DefaultThemeConfig = {
 };
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
-  path: import.meta.resolve("@kobalte/solidbase/default-theme"),
+  componentsPath: import.meta.resolve("@kobalte/solidbase/default-theme"),
   vite(config) {
     const rootPath = fileURLToPath(
       import.meta.resolve("@kobalte/solidbase/default-theme/context.tsx"),

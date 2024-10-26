@@ -25,7 +25,7 @@ export type ThemeComponents = typeof defaultComponents;
 
 const ComponentsContext = createContext<ThemeComponents>(defaultComponents);
 
-export function DefaultThemeComponentsProvider(
+export function ComponentsProvider(
   props: ParentProps & { components?: Partial<ThemeComponents> },
 ) {
   return (
