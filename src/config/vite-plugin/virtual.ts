@@ -3,56 +3,56 @@ import { dirname, join, parse } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 
+import type { Theme } from "..";
 import type { SolidBaseConfig } from "../../config";
 import { getGitTimestamp } from "../git";
 import { SolidBaseTOC } from "../remark-plugins";
-import { Theme } from "..";
 
 export async function loadVirtual(
-  theme: Theme<any>,
-  startConfig: SolidStartInlineConfig,
-  solidBaseConfig: Partial<SolidBaseConfig<any>>,
+	theme: Theme<any>,
+	startConfig: SolidStartInlineConfig,
+	solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
-  let template = `
+	let template = `
   	export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)}
   `;
 
-  const themePaths = (() => {
-    let t: Theme<any> | undefined = theme;
-    const paths: Array<string> = [];
+	const themePaths = (() => {
+		let t: Theme<any> | undefined = theme;
+		const paths: Array<string> = [];
 
-    while (t !== undefined) {
-      paths.push(fileURLToPath(t.componentsPath));
-      t = t.extends;
-    }
+		while (t !== undefined) {
+			paths.push(fileURLToPath(t.componentsPath));
+			t = t.extends;
+		}
 
-    paths.reverse();
+		paths.reverse();
 
-    return paths;
-  })();
+		return paths;
+	})();
 
-  console.log(themePaths);
+	console.log(themePaths);
 
-  const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
+	const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
 
-  for (let i = 0; i < themePaths.length; i++) {
-    const themePath = themePaths[i]!;
+	for (let i = 0; i < themePaths.length; i++) {
+		const themePath = themePaths[i]!;
 
-    const dir: string[] = await readdir(themePath).catch(() => []);
+		const dir: string[] = await readdir(themePath).catch(() => []);
 
-    const mdxComponentsFile = dir.find((url) => {
-      const name = parse(url).name;
-      return name === "mdx-components";
-    });
+		const mdxComponentsFile = dir.find((url) => {
+			const name = parse(url).name;
+			return name === "mdx-components";
+		});
 
-    if (mdxComponentsFile)
-      mdxComponentFiles.push({
-        importName: `mdxComponents${i}`,
-        path: `${themePath}/mdx-components`,
-      });
-  }
+		if (mdxComponentsFile)
+			mdxComponentFiles.push({
+				importName: `mdxComponents${i}`,
+				path: `${themePath}/mdx-components`,
+			});
+	}
 
-  template += `
+	template += `
 		import { lazy } from "solid-js";
 		export const Layout = lazy(() => import("${themePaths[themePaths.length - 1]}/Layout"));
 
@@ -62,38 +62,38 @@ export async function loadVirtual(
 		};
 	`;
 
-  return template;
+	return template;
 }
 
 export async function transformMdxModule(
-  code: string,
-  id: string,
-  startConfig: SolidStartInlineConfig,
-  solidBaseConfig: Partial<SolidBaseConfig<any>>,
+	code: string,
+	id: string,
+	startConfig: SolidStartInlineConfig,
+	solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
-  const rootPath = join(
-    dirname(fileURLToPath(import.meta.url)),
-    startConfig?.appRoot ?? "./src",
-    "routes",
-  );
+	const rootPath = join(
+		dirname(fileURLToPath(import.meta.url)),
+		startConfig?.appRoot ?? "./src",
+		"routes",
+	);
 
-  const modulePath = id.split("?")[0];
+	const modulePath = id.split("?")[0];
 
-  let modulePathLink = "";
-  if (solidBaseConfig.editPath) {
-    const path = modulePath.slice(rootPath.length).replace(/^\//, "");
+	let modulePathLink = "";
+	if (solidBaseConfig.editPath) {
+		const path = modulePath.slice(rootPath.length).replace(/^\//, "");
 
-    if (typeof solidBaseConfig.editPath === "string")
-      modulePathLink = solidBaseConfig.editPath.replace(/:path/g, path);
-    else modulePathLink = solidBaseConfig.editPath(path);
-  }
+		if (typeof solidBaseConfig.editPath === "string")
+			modulePathLink = solidBaseConfig.editPath.replace(/:path/g, path);
+		else modulePathLink = solidBaseConfig.editPath(path);
+	}
 
-  let lastUpdated = 0;
-  if (solidBaseConfig.lastUpdated) {
-    lastUpdated = await getGitTimestamp(modulePath);
-  }
+	let lastUpdated = 0;
+	if (solidBaseConfig.lastUpdated) {
+		lastUpdated = await getGitTimestamp(modulePath);
+	}
 
-  return `
+	return `
 		${code}
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? frontmatter : {},

@@ -5,14 +5,14 @@ import "./DocSearch.css";
 import { useRouteConfig } from "../utils";
 
 export default function DocSearch() {
-  const config = useRouteConfig();
+	const config = useRouteConfig();
 
-  onMount(() => {
-    const search = config().themeConfig?.search;
-    if (!search || search.provider !== "algolia") return;
+	onMount(() => {
+		const search = config().themeConfig?.search;
+		if (!search || search.provider !== "algolia") return;
 
-    docsearch({ ...search.options, container: "#docsearch" });
-  });
+		docsearch({ ...search.options, container: "#docsearch" });
+	});
 
-  return <div id="docsearch" />;
+	return <div id="docsearch" />;
 }

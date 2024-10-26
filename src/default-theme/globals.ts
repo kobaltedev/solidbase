@@ -5,7 +5,7 @@ const [_mobileLayout, setMobileLayout] = createSignal(false);
 const query = createMediaQuery("(max-width: 1100px)");
 
 createRoot(() => {
-  createEffect(on(query, (q) => setMobileLayout(q), { defer: true }));
+	createEffect(on(query, (q) => setMobileLayout(q), { defer: true }));
 });
 
 setTimeout(() => setMobileLayout(query()));

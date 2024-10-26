@@ -1,7 +1,7 @@
-import { RouteSectionProps } from "@solidjs/router";
+import type { RouteSectionProps } from "@solidjs/router";
 
 import Layout from "../../../src/default-theme/Layout";
 
 export default function (props: RouteSectionProps) {
-  return <Layout {...props} />;
+	return <Layout {...props} />;
 }

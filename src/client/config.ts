@@ -5,16 +5,16 @@ import type { SolidBaseResolvedConfig } from "../config";
 import { useLocale } from "./locale";
 
 export function useRouteConfig<ThemeConfig>(): Accessor<
-  SolidBaseResolvedConfig<ThemeConfig>
+	SolidBaseResolvedConfig<ThemeConfig>
 > {
-  const { currentLocale } = useLocale();
+	const { currentLocale } = useLocale();
 
-  return createMemo(() => {
-    const localeConfig = currentLocale().config.themeConfig ?? {};
+	return createMemo(() => {
+		const localeConfig = currentLocale().config.themeConfig ?? {};
 
-    return {
-      ...solidBaseConfig,
-      themeConfig: { ...solidBaseConfig.themeConfig, ...localeConfig },
-    };
-  });
+		return {
+			...solidBaseConfig,
+			themeConfig: { ...solidBaseConfig.themeConfig, ...localeConfig },
+		};
+	});
 }
