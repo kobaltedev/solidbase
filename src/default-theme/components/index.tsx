@@ -8,11 +8,11 @@ import { mobileLayout } from "../globals";
 import { useSidebar } from "../sidebar";
 import Link from "./Link";
 import { useCurrentPageData } from "../../client/page-data";
-import { Sidebar } from "../config";
 import { useRouteConfig, useSolidBaseContext } from "../utils";
 
 import "../index.css";
 import styles from "./index.module.css";
+import { Sidebar } from "..";
 // font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (

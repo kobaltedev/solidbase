@@ -12,43 +12,22 @@ export type DefaultThemeConfig = {
   fonts?: boolean;
 };
 
-type ResolvedThemeKeys = "nav" | "sidebar" | "footer" | "fonts";
-type ResolvedThemeConfig = Omit<DefaultThemeConfig, ResolvedThemeKeys> &
-  Required<Pick<DefaultThemeConfig, ResolvedThemeKeys>>;
+const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
+  path: import.meta.resolve("@kobalte/solidbase/default-theme"),
+  vite(config) {
+    const rootPath = fileURLToPath(
+      import.meta.resolve("@kobalte/solidbase/default-theme/context.ts"),
+    );
 
-const defaultTheme: ThemeDefinition<DefaultThemeConfig, ResolvedThemeConfig> =
-  defineTheme({
-    path: import.meta.resolve("@kobalte/solidbase/default-theme"),
-    resolveConfig: (config: DefaultThemeConfig): ResolvedThemeConfig => ({
-      nav: [],
-      sidebar: { items: [] },
-      footer: true,
-      fonts: true,
-      ...config,
-    }),
-    vite(config) {
-      const rootPath = fileURLToPath(
-        import.meta.resolve(
-          "@kobalte/solidbase/default-theme/components/index.tsx",
-        ),
-      );
-
-      return {
-        config() {
-          return {
-            define: {
-              "import.meta.env.SOLIDBASE_DEFAULT_THEME_FONTS": config.fonts,
-            },
-          };
-        },
-        transform(code, path) {
-          if (path === rootPath && config.fonts) {
-            return `import "../fonts/index.css";\n${code}`;
-          }
-        },
-      };
-    },
-  });
+    return {
+      transform(code, path) {
+        if (path === rootPath && config.themeConfig?.fonts) {
+          return `import "../fonts/index.css";\n${code}`;
+        }
+      },
+    };
+  },
+});
 export default defaultTheme;
 
 export type SearchConfig = {

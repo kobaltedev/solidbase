@@ -1,9 +1,9 @@
 import { useLocation } from "@solidjs/router";
 import { createMemo } from "solid-js";
 
-import { type Sidebar, type SidebarItem, type SidebarLink } from "./config";
 import { useRouteConfig } from "./utils";
 import { useLocale } from "../client";
+import type { Sidebar, SidebarItem, SidebarLink } from ".";
 
 export function useSidebar() {
   const config = useRouteConfig();

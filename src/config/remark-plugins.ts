@@ -4,7 +4,6 @@ import { findAndReplace } from "mdast-util-find-and-replace";
 import { toc } from "mdast-util-toc";
 import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
-import { type SolidBaseResolvedConfig } from "./config";
 
 interface ParagraphNode {
   type: "paragraph";
@@ -13,12 +12,7 @@ interface ParagraphNode {
     {
       type: "link";
       url: string;
-      children: [
-        {
-          type: "text";
-          value: string;
-        },
-      ];
+      children: [{ type: "text"; value: string }];
     },
   ];
 }
@@ -27,13 +21,7 @@ interface ListItemNode {
   type: "listItem";
   children: [
     ParagraphNode,
-    (
-      | {
-          type: "list";
-          children: Array<ListItemNode>;
-        }
-      | undefined
-    ),
+    { type: "list"; children: Array<ListItemNode> } | undefined,
   ];
 }
 
@@ -84,9 +72,8 @@ export function remarkTOC() {
   };
 }
 
-export function remarkIssueAutolink(
-  issueAutolink: SolidBaseResolvedConfig<any>["issueAutolink"],
-) {
+export type IssueAutoLinkConfig = false | string | ((issue: string) => string);
+export function remarkIssueAutolink(issueAutolink: IssueAutoLinkConfig) {
   if (issueAutolink === false) return;
 
   const url = (issue: string) => {

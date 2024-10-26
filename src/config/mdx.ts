@@ -22,7 +22,7 @@ import {
   remarkRelativeImports,
   remarkTOC,
 } from "./remark-plugins";
-import { type SolidBaseResolvedConfig } from "./config";
+import { SolidBaseResolvedConfig } from ".";
 
 export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
   return mdx.default.withImports({})({

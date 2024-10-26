@@ -14,7 +14,7 @@ export type SolidBaseConfig<ThemeConfig> = {
   logo?: string;
   titleTemplate?: string;
   componentsFolder?: string;
-  issueAutolink?: false | string | ((issue: string) => string);
+  issueAutolink?: IssueAutoLinkConfig;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
   themeConfig?: ThemeConfig;
@@ -42,17 +42,16 @@ export type LocaleConfig<ThemeConfig> = {
   themeConfig?: ThemeConfig;
 };
 
-export type ThemeDefinition<InputConfig, ResolvedConfig> = {
+export type ThemeDefinition<Config> = {
   path: string;
-  extends?: ThemeDefinition<InputConfig, ResolvedConfig>;
-  resolveConfig: (c: InputConfig) => ResolvedConfig;
-  vite?(config: ResolvedConfig): Omit<VitePlugin, "name">;
+  extends?: ThemeDefinition<Config>;
+  vite?(config: SolidBaseResolvedConfig<Config>): Omit<VitePlugin, "name">;
 };
 
 export const withSolidBase = createWithSolidBase(defaultTheme);
 
-export function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
-  theme: ThemeDefinition<ThemeConfig, ResolvedThemeConfig>,
+export function createWithSolidBase<ThemeConfig>(
+  theme: ThemeDefinition<ThemeConfig>,
 ) {
   return (
     startConfig?: SolidStartInlineConfig,
@@ -66,29 +65,13 @@ export function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
       ...new Set((config.extensions ?? []).concat(["md", "mdx"])),
     ];
 
-    const themeConfig = theme.resolveConfig(
-      solidBaseConfig?.themeConfig ?? ({} as ThemeConfig),
-    );
-    const sbConfig: SolidBaseResolvedConfig<ResolvedThemeConfig> = {
+    const sbConfig: SolidBaseResolvedConfig<ThemeConfig> = {
       title: "SolidBase",
       description: "Solid Start Powered Static Site Generator",
       lang: "en-US",
       issueAutolink: false,
       lastUpdated: { dateStyle: "short", timeStyle: "short" },
       ...solidBaseConfig,
-      locales: Object.entries(solidBaseConfig?.locales ?? {}).reduce(
-        (acc, [key, value]) => {
-          acc[key] = {
-            ...value,
-            themeConfig: theme.resolveConfig(
-              value.themeConfig ?? ({} as ThemeConfig),
-            ),
-          };
-          return acc;
-        },
-        {} as any,
-      ),
-      themeConfig,
     };
 
     const vite = config.vite;
@@ -105,12 +88,10 @@ export function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
       viteConfig.plugins.push(solidBaseVitePlugin(theme, config, sbConfig));
 
       if (theme.vite)
-        viteConfig.plugins.push(
-          Object.assign({
-            ...theme.vite(themeConfig),
-            name: "solidbase-theme",
-          }),
-        );
+        viteConfig.plugins.push({
+          ...theme.vite(sbConfig),
+          name: "solidbase-theme",
+        });
 
       return viteConfig;
     };
@@ -120,8 +101,9 @@ export function createWithSolidBase<ThemeConfig, ResolvedThemeConfig>(
 }
 
 import { dirname } from "node:path";
-export function defineTheme<I, R>(def: ThemeDefinition<I, R>) {
+import { IssueAutoLinkConfig } from "./remark-plugins";
+export function defineTheme<C>(def: ThemeDefinition<C>) {
   def.path = dirname(def.path);
   return def;
 }
-export type Theme<I, R> = ReturnType<typeof defineTheme<I, R>>;
+export type Theme<C> = ReturnType<typeof defineTheme<C>>;
