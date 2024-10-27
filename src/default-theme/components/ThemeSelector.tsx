@@ -1,5 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { type ThemeType, getTheme, setTheme } from "../theme";
+import { type ThemeType, getTheme, setTheme } from "../../client/theme";
 import styles from "./ThemeSelector.module.css";
 
 interface ThemeOption {

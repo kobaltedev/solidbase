@@ -1,8 +1,15 @@
 import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "../src/config";
+
+import { createWithSolidBase, defineTheme } from "../src/config";
+import defaultTheme from "../src/default-theme";
+
+const theme = defineTheme({
+	componentsPath: import.meta.resolve("./src/solidbase-theme"),
+	extends: defaultTheme,
+});
 
 export default defineConfig(
-	withSolidBase(
+	createWithSolidBase(theme)(
 		{
 			ssr: true,
 			server: {
@@ -15,18 +22,12 @@ export default defineConfig(
 			title: "SolidBase",
 			description: "Solid Start Powered Static Site Generator",
 			titleTemplate: ":title – SolidBase",
-			editPath:
-				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
-			socialLinks: {
-				github: "https://github.com/kobaltedev/solidbase",
-				discord: "https://discord.com/invite/solidjs",
-			},
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			locales: {
 				fr: {
 					label: "French",
-					config: {
+					themeConfig: {
 						nav: [
 							{
 								text: "Guide",
@@ -99,73 +100,81 @@ export default defineConfig(
 					},
 				},
 			},
-			nav: [
-				{
-					text: "Guide",
-					link: "/guide",
+			themeConfig: {
+				editPath:
+					"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
+				socialLinks: {
+					github: "https://github.com/kobaltedev/solidbase",
+					discord: "https://discord.com/invite/solidjs",
 				},
-				{
-					text: "Reference",
-					link: "/reference",
-				},
-			],
-			sidebar: {
-				"/": {
-					items: [
-						{
-							title: "Overview",
-							collapsed: false,
-							items: [
-								{
-									title: "Introduction",
-									link: "/",
-								},
-								{
-									title: "What is SolidBase?",
-									link: "/about",
-								},
-								{
-									title: "What are we missing?",
-									link: "/dave",
-								},
-							],
-						},
-						{
-							title: "Features",
-							collapsed: false,
-							items: [
-								{
-									title: "MDX",
-									link: "/about",
-								},
-								{
-									title: "Code copy",
-									link: "/about",
-								},
-								{
-									title: "Good styles",
-									link: "/about",
-								},
-								{
-									title: "Cool team 8)",
-									link: "/about",
-								},
-								{
-									title: "CLI",
-									link: "/about",
-								},
-							],
-						},
-					],
-				},
-				"/reference": {
-					items: [
-						{
-							title: "Reference",
-							collapsed: false,
-							items: [],
-						},
-					],
+				nav: [
+					{
+						text: "Guide",
+						link: "/guide",
+					},
+					{
+						text: "Reference",
+						link: "/reference",
+					},
+				],
+				sidebar: {
+					"/": {
+						items: [
+							{
+								title: "Overview",
+								collapsed: false,
+								items: [
+									{
+										title: "Introduction",
+										link: "/",
+									},
+									{
+										title: "What is SolidBase?",
+										link: "/about",
+									},
+									{
+										title: "What are we missing?",
+										link: "/dave",
+									},
+								],
+							},
+							{
+								title: "Features",
+								collapsed: false,
+								items: [
+									{
+										title: "MDX",
+										link: "/about",
+									},
+									{
+										title: "Code copy",
+										link: "/about",
+									},
+									{
+										title: "Good styles",
+										link: "/about",
+									},
+									{
+										title: "Cool team 8)",
+										link: "/about",
+									},
+									{
+										title: "CLI",
+										link: "/about",
+									},
+								],
+							},
+						],
+					},
+					"/reference": {
+						items: [
+							{
+								title: "Reference",
+								collapsed: false,
+								items: [],
+							},
+						],
+					},
 				},
 			},
 		},

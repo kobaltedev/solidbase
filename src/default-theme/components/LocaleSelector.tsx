@@ -1,17 +1,17 @@
 import { Select } from "@kobalte/core/select";
 import { Show } from "solid-js";
 
-import { type ResolvedLocale, useLocale } from "../locale";
+import { type ResolvedLocale, useLocale } from "../../client/locale";
 import styles from "./ThemeSelector.module.css";
 
-export default function LocaleSelector() {
+export default function LocaleSelector<ThemeConfig>() {
 	const { locales, currentLocale, setLocale } = useLocale();
 
 	return (
 		<Show when={locales.length > 1}>
 			{(_) => {
 				return (
-					<Select<ResolvedLocale>
+					<Select<ResolvedLocale<ThemeConfig>>
 						class={styles.root}
 						value={currentLocale()}
 						options={locales}
@@ -31,7 +31,7 @@ export default function LocaleSelector() {
 						)}
 					>
 						<Select.Trigger class={styles.trigger} aria-label="change locale">
-							<Select.Value<ResolvedLocale>>
+							<Select.Value<ResolvedLocale<ThemeConfig>>>
 								{(state) => state.selectedOption().config.label}
 							</Select.Value>
 						</Select.Trigger>

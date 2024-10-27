@@ -1,0 +1,37 @@
+@font-face {
+	font-family: Lexend;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./Lexend.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: Inter;
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./Inter.woff2") format("woff2");
+}
+@font-face {
+	font-family: InterVariable;
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./Inter-Italic.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "JetBrains Mono";
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./JetBrainsMono.woff2") format("woff2");
+}
+@font-face {
+	font-family: "JetBrains Mono";
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url("./JetBrainsMono-Italic.woff2") format("woff2");
+}

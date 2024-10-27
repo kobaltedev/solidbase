@@ -1,53 +1,39 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
-import { A } from "@solidjs/router";
+import { A, type RouteSectionProps } from "@solidjs/router";
+import { For, Show } from "solid-js";
+
+import { useCurrentPageData } from "../client/page-data";
 import {
-	For,
-	type ParentProps,
-	Show,
-	createEffect,
-	createSignal,
-} from "solid-js";
-import { Dynamic } from "solid-js/web";
+	DefaultThemeContextProvider,
+	useDefaultThemeContext,
+	useThemeComponents,
+} from "./context";
+import { mobileLayout } from "./globals";
+import { useSidebar } from "./sidebar";
+import { useRouteConfig, useSolidBaseContext } from "./utils";
 
-import type { Sidebar } from "../../config";
-import { useSolidBaseContext } from "../context";
-import { mobileLayout } from "../globals";
-import { CurrentPageDataContext, useCurrentPageData } from "../page-data";
-import { useSidebar } from "../sidebar";
+import "./index.css";
+import type { Sidebar } from ".";
 import styles from "./Layout.module.css";
-import Link from "./Link";
-import { CrossIcon } from "./icons";
+// font css is imported by theme vite plugin
 
-interface SidebarItem {
-	title: string;
-	collapsed: boolean;
-	items: ({ title: string; link: string } | SidebarItem)[];
-}
+export default (props: RouteSectionProps) => (
+	<DefaultThemeContextProvider>
+		<Layout {...props} />
+	</DefaultThemeContextProvider>
+);
 
-export default function Layout(props: ParentProps) {
-	const {
-		config,
-		components: { Header, Article },
-		sidebarOpen,
-		setSidebarOpen,
-	} = useSolidBaseContext();
-
-	const pageData = useCurrentPageData();
+function Layout(props: RouteSectionProps) {
+	const { Header, Article, Link } = useThemeComponents();
+	const { sidebarOpen, setSidebarOpen } = useDefaultThemeContext();
+	const config = useRouteConfig();
 
 	const sidebar = useSidebar();
-
-	createEffect(() =>
-		console.log(
-			"side",
-			mobileLayout(),
-			sidebarOpen(),
-			!mobileLayout() || sidebarOpen(),
-		),
-	);
+	const pageData = useCurrentPageData();
 
 	return (
-		<CurrentPageDataContext.Provider value={pageData}>
+		<>
 			<div class={styles.skipnav}>
 				<Link
 					href="#main-content"
@@ -121,7 +107,7 @@ export default function Layout(props: ParentProps) {
 					<Article>{props.children}</Article>
 				</main>
 			</div>
-		</CurrentPageDataContext.Provider>
+		</>
 	);
 }
 

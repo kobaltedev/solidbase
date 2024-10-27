@@ -1,14 +1,16 @@
 import { useLocation } from "@solidjs/router";
 import { createMemo } from "solid-js";
 
-import type { Sidebar, SidebarItem, SidebarLink } from "../config";
-import { useSolidBaseContext } from "./context";
+import type { Sidebar, SidebarItem, SidebarLink } from ".";
+import { useLocale } from "../client";
+import { useRouteConfig } from "./utils";
 
 export function useSidebar() {
-	const { config, locale } = useSolidBaseContext();
+	const config = useRouteConfig();
+	const locale = useLocale();
 
 	const sidebars = createMemo(() => {
-		const sidebarConfig = config().sidebar;
+		const sidebarConfig = config().themeConfig?.sidebar;
 		if (!sidebarConfig) return;
 		if (Object.keys(sidebarConfig).length === 0) return;
 
@@ -29,7 +31,6 @@ export function useSidebar() {
 		sidebarsEntries.sort((a, b) => b[0].length - a[0].length);
 
 		for (const [prefix, sidebar] of sidebarsEntries) {
-			console.log(locale.routePath());
 			if (locale.routePath().startsWith(prefix)) return { prefix, ...sidebar };
 		}
 	});

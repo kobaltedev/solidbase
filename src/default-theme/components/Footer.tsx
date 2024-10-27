@@ -1,9 +1,9 @@
+import { For, Show } from "solid-js";
+
 import styles from "./Footer.module.css";
 
-import { solidBaseConfig } from "virtual:solidbase";
-import { For, Show } from "solid-js";
-import type { SocialLink } from "../../config";
-import { useSolidBaseContext } from "../context";
+import type { SocialLink } from "..";
+import { useRouteConfig } from "../utils";
 
 const logos: Partial<Record<SocialLink["type"], string>> = {
 	discord:
@@ -15,7 +15,7 @@ const logos: Partial<Record<SocialLink["type"], string>> = {
 };
 
 export default function Footer() {
-	const { config } = useSolidBaseContext();
+	const config = useRouteConfig();
 
 	return (
 		<footer class={styles.footer}>
@@ -26,34 +26,36 @@ export default function Footer() {
 				{config().description}
 			</div>
 
-			<Show when={config().socialLinks}>
-				<div>
-					<span>Community</span>
-					<div class={styles.socials}>
-						<For each={Object.keys(config().socialLinks!)}>
-							{(social) => {
-								const preset = Object.hasOwn(logos, social);
+			<Show when={config().themeConfig?.socialLinks}>
+				{(links) => (
+					<div>
+						<span>Community</span>
+						<div class={styles.socials}>
+							<For each={Object.keys(links())}>
+								{(social) => {
+									const preset = Object.hasOwn(logos, social);
 
-								const data = (): SocialLink => {
-									const data = preset
-										? {
-												type: social as SocialLink["type"],
-												// @ts-ignore
-												link: config().socialLinks[social],
-											}
-										: // @ts-ignore
-											config().socialLinks[social];
+									const data = (): SocialLink => {
+										const data = preset
+											? {
+													type: social as SocialLink["type"],
+													// @ts-ignore
+													link: config().socialLinks[social],
+												}
+											: // @ts-ignore
+												config().socialLinks[social];
 
-									if (!preset) data.type = "custom";
+										if (!preset) data.type = "custom";
 
-									return data;
-								};
+										return data;
+									};
 
-								return <SocialLinkView {...data()} />;
-							}}
-						</For>
+									return <SocialLinkView {...data()} />;
+								}}
+							</For>
+						</div>
 					</div>
-				</div>
+				)}
 			</Show>
 		</footer>
 	);

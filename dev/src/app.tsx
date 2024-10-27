@@ -1,17 +1,13 @@
-import { SolidBaseApp } from "@kobalte/solidbase/client";
-import { Title } from "@solidjs/meta";
+import { SolidBaseRoot } from "@kobalte/solidbase/client";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
 
 import "./app.css";
 
 export default function App() {
 	return (
-		<SolidBaseApp
-			root={(props) => (
-				<>
-					{props.children}
-					<Title>I am the captain now</Title>
-				</>
-			)}
-		/>
+		<Router root={SolidBaseRoot}>
+			<FileRoutes />
+		</Router>
 	);
 }

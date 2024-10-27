@@ -1,17 +1,18 @@
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { PluginOption } from "vite";
 
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import type { SolidBaseConfig } from "../config";
+import type { SolidBaseConfig, ThemeDefinition } from "../";
 import { loadVirtual, transformMdxModule } from "./virtual";
 
 const virtualModuleId = "virtual:solidbase";
 const resolvedVirtualModuleId = `\0${virtualModuleId}`;
 
 export default function solidBaseVitePlugin(
+	theme: ThemeDefinition<any>,
 	startConfig: SolidStartInlineConfig,
-	solidBaseConfig: Partial<SolidBaseConfig>,
+	solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ): PluginOption {
 	return [
 		{
@@ -24,7 +25,7 @@ export default function solidBaseVitePlugin(
 			},
 			async load(id) {
 				if (id === resolvedVirtualModuleId) {
-					return loadVirtual(startConfig, solidBaseConfig);
+					return loadVirtual(theme, startConfig, solidBaseConfig);
 				}
 			},
 			transform(code, id) {

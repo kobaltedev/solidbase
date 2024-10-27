@@ -1,20 +1,20 @@
-import { Dialog } from "@kobalte/core/dialog";
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
-import { useSolidBaseContext } from "../context";
+
+import { useCurrentPageData } from "../../client/page-data";
+import { useThemeComponents } from "../context";
 import { mobileLayout } from "../globals";
-import { useCurrentPageData } from "../page-data";
 import { usePrevNext } from "../sidebar";
+import { useSolidBaseContext } from "../utils";
+
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
-	const {
-		components: { TableOfContents, Link, LastUpdated, Footer },
-		tocOpen,
-		setTocOpen,
-	} = useSolidBaseContext();
+	const { config } = useSolidBaseContext();
+
+	const { TableOfContents, Link, LastUpdated, Footer } = useThemeComponents();
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -64,7 +64,6 @@ export default function Article(props: ParentProps) {
 	};
 
 	const prevNext = usePrevNext();
-	const { config } = useSolidBaseContext();
 
 	return (
 		<>
@@ -109,7 +108,7 @@ export default function Article(props: ParentProps) {
 						</nav>
 					</Show>
 
-					<Show when={config().footer}>
+					<Show when={config().themeConfig?.footer}>
 						<Footer />
 					</Show>
 				</div>

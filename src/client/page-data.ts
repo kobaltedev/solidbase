@@ -24,13 +24,13 @@ export function useCurrentPageData() {
 	const context = useContext(CurrentPageDataContext);
 
 	if (context === undefined) {
-		return getPageData();
+		return createPageData();
 	}
 
 	return context;
 }
 
-function getPageData() {
+function createPageData() {
 	const matches = useCurrentMatches();
 
 	const [pageData] = createResource(

@@ -1,5 +1,5 @@
 import { usePrefersDark } from "@solid-primitives/media";
-import { createEffect, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 import { isServer } from "solid-js/web";
 import { getCookie as getServerCookie } from "vinxi/server";
 

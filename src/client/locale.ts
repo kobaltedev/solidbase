@@ -2,21 +2,22 @@ import { solidBaseConfig } from "virtual:solidbase";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
+
 import type { LocaleConfig } from "../config";
 
 export const DEFAULT_LANG_CODE = "en-US";
 export const DEFAULT_LANG_LABEL = "English";
 
-export interface ResolvedLocale {
+export interface ResolvedLocale<ThemeConfig> {
 	code: string;
 	isRoot?: boolean;
-	config: LocaleConfig;
+	config: LocaleConfig<ThemeConfig>;
 }
 
 const locales = (() => {
 	let rootHandled = false;
 
-	const array: Array<ResolvedLocale> = Object.entries(
+	const array: Array<ResolvedLocale<any>> = Object.entries(
 		solidBaseConfig.locales ?? {},
 	).map(([locale, config]) => {
 		if (locale === "root") {
@@ -65,7 +66,7 @@ export function useLocale() {
 	return {
 		locales,
 		currentLocale,
-		setLocale: (locale: ResolvedLocale) => {
+		setLocale: (locale: ResolvedLocale<any>) => {
 			const searchValue = getLocaleLink(locale);
 
 			startTransition(() =>
@@ -90,7 +91,7 @@ export function useLocale() {
 	};
 }
 
-export const getLocaleLink = (locale: ResolvedLocale) =>
+export const getLocaleLink = (locale: ResolvedLocale<any>) =>
 	locale.config?.link ?? `/${locale.isRoot ? "" : `${locale.code}/`}`;
 
 export function getLocale() {

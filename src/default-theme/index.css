@@ -1,0 +1,50 @@
+@import "./reset.css";
+@import "./variables.css";
+
+html {
+	--font-headings: Lexend, Segoe UI, Roboto, sans-serif;
+	--font-text: Inter, Segoe UI, Roboto, sans-serif;
+	--font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+
+	background: var(--background-color);
+	font-optical-sizing: auto;
+	font-family: var(--font-text);
+}
+
+code {
+	font-family: var(--font-mono) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-headings);
+}
+
+article *[id] {
+	scroll-margin-top: 5rem;
+}
+
+@media screen and (max-width: 1100px) {
+	article *[id] {
+		scroll-margin-top: 7.5rem;
+	}
+}
+
+.expressive-code.expressive-code figure {
+	--code-background: var(--code-background-color);
+	box-shadow: none;
+	border-radius: var(--border-radius);
+	cursor: text;
+
+	& pre {
+		border: none;
+	}
+
+	& .copy {
+		margin-top: 0.2rem;
+	}
+}

@@ -1,11 +1,11 @@
-import { createEventListener } from "@solid-primitives/event-listener";
-import { useMatch } from "@solidjs/router";
-import { For, Show, createEffect, createSignal, lazy, onMount } from "solid-js";
-
 import { Dialog } from "@kobalte/core/dialog";
-import { useSolidBaseContext } from "../context";
-import { mobileLayout } from "../globals";
-import { getLocaleLink } from "../locale";
+import { useMatch } from "@solidjs/router";
+import { For, Show, createSignal, lazy } from "solid-js";
+
+import type { DefaultThemeConfig } from "..";
+import { getLocaleLink } from "../../client/locale";
+import { useDefaultThemeContext, useThemeComponents } from "../context";
+import { useRouteConfig, useSolidBaseContext } from "../utils";
 import styles from "./Header.module.css";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 
@@ -13,20 +13,17 @@ const DocSearch = lazy(() => import("./DocSearch"));
 
 const BUFFER_MULT = 3;
 
-interface HeaderProps {}
-
-export default function Header(props: HeaderProps) {
+export default function Header() {
 	const [ref, setRef] = createSignal<HTMLElement>();
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 
-	const {
-		components: { ThemeSelector, LocaleSelector, TableOfContents },
-		setSidebarOpen,
-		setTocOpen,
-		tocOpen,
-	} = useSolidBaseContext();
+	const { ThemeSelector, LocaleSelector, TableOfContents } =
+		useThemeComponents();
 
-	const { config, locale } = useSolidBaseContext();
+	const { tocOpen, setTocOpen, setSidebarOpen } = useDefaultThemeContext();
+
+	const config = useRouteConfig();
+	const { locale } = useSolidBaseContext();
 
 	return (
 		<Dialog open={tocOpen()} onOpenChange={setTocOpen} modal={false}>
@@ -41,8 +38,10 @@ export default function Header(props: HeaderProps) {
 						</Show>
 					</a>
 					<div class={styles.selectors}>
-						{config().search?.provider === "algolia" && <DocSearch />}
-						<Show when={config().nav}>
+						{config().themeConfig?.search?.provider === "algolia" && (
+							<DocSearch />
+						)}
+						<Show when={config().themeConfig?.nav}>
 							{(nav) => (
 								<For each={nav()}>
 									{(item) => {
@@ -65,7 +64,7 @@ export default function Header(props: HeaderProps) {
 								</For>
 							)}
 						</Show>
-						<LocaleSelector />
+						<LocaleSelector<DefaultThemeConfig> />
 						<ThemeSelector />
 					</div>
 				</div>
