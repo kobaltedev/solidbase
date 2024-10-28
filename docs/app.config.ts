@@ -39,7 +39,7 @@ export default defineConfig(
 							},
 						],
 						sidebar: {
-							"/": {
+							"/guide": {
 								items: [
 									{
 										title: "Aperçu",
@@ -118,7 +118,7 @@ export default defineConfig(
 					},
 				],
 				sidebar: {
-					"/": {
+					"/guide": {
 						items: [
 							{
 								title: "Overview",
