@@ -51,8 +51,7 @@ export async function loadVirtual(
 	}
 
 	template += `
-		import { lazy } from "solid-js";
-		export const Layout = lazy(() => import("${themePaths[themePaths.length - 1]}/Layout"));
+		export { default as Layout } from "${themePaths[themePaths.length - 1]}/Layout";
 
 		${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.path}";\n`).join("")}
 		export const mdxComponents = {
