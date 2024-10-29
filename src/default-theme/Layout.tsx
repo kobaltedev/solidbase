@@ -116,6 +116,7 @@ interface NavigationProps {
 }
 const Navigation = (props: NavigationProps) => {
 	const { locale } = useSolidBaseContext();
+	const { setSidebarOpen } = useDefaultThemeContext();
 
 	return (
 		<nav class={styles["sidenav-links"]}>
@@ -135,6 +136,7 @@ const Navigation = (props: NavigationProps) => {
 													(item as { link: string }).link,
 												)}
 												end
+												onClick={() => setSidebarOpen(false)}
 											>
 												{item.title}
 											</A>

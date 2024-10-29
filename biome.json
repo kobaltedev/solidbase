@@ -30,5 +30,10 @@
 				"noBannedTypes": "off"
 			}
 		}
+	},
+	"css": {
+		"parser": {
+			"cssModules": true
+		}
 	}
 }

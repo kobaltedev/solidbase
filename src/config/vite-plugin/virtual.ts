@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 
 import type { Theme } from "..";
-import type { SolidBaseConfig } from "../../config";
 import { getGitTimestamp } from "../git";
+import type { SolidBaseConfig } from "../index";
 import { SolidBaseTOC } from "../remark-plugins";
 
 export async function loadVirtual(
@@ -30,8 +30,6 @@ export async function loadVirtual(
 
 		return paths;
 	})();
-
-	console.log(themePaths);
 
 	const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
 

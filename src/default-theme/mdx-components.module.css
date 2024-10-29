@@ -135,6 +135,15 @@ a[data-footnote-ref] {
 	}
 }
 
+.ul:global(.contains-task-list) {
+	list-style: none;
+	padding: 0;
+
+	& .li > input:first-child {
+		margin-right: .5em;
+	}
+}
+
 .code {
 	font-size: 0.9em;
 	color: var(--code-text-color);
@@ -142,6 +151,11 @@ a[data-footnote-ref] {
 	padding: 0.2em 0.4em;
 	border-radius: var(--border-radius);
 	overflow-wrap: break-word;
+}
+
+.table td > .code {
+	background: none;
+	font-size: 1em;
 }
 
 .blockquote {

@@ -145,7 +145,7 @@
 	height: 0;
 	width: 100dvw;
 	left: -1rem;
-	top: 1px;
+	top: 0;
 	position: relative;
 	overflow: visible;
 	flex: 0 !important;
@@ -163,8 +163,9 @@
 	animation: contentHide 50ms ease-out forwards;
 	transform-origin: top;
 	padding: 1rem;
-	border-bottom: 1px solid
-		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	border: 1px solid color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	border-left: none;
+	border-right: none;
 
 	&[data-expanded] {
 		animation: contentShow 50ms ease-out forwards;

@@ -46,8 +46,12 @@ export default defineConfig(
 								collapsed: false,
 								items: [
 									{
-										title: "Test",
+										title: "Index",
 										link: "/",
+									},
+									{
+										title: "About",
+										link: "/about",
 									},
 								],
 							},
@@ -56,24 +60,8 @@ export default defineConfig(
 								collapsed: false,
 								items: [
 									{
-										title: "MDX",
-										link: "/about",
-									},
-									{
-										title: "Code copy",
-										link: "/about",
-									},
-									{
-										title: "Good styles",
-										link: "/about",
-									},
-									{
-										title: "Cool team 8)",
-										link: "/about",
-									},
-									{
-										title: "CLI",
-										link: "/about",
+										title: "What are we missing?",
+										link: "/dave",
 									},
 								],
 							},
