@@ -53,10 +53,6 @@ export default defineConfig(
 												title: "Qu'est-ce que SolidBase ?",
 												link: "/about",
 											},
-											{
-												title: "Que nous manque-t-il ?",
-												link: "/dave",
-											},
 										],
 									},
 									{
@@ -133,6 +129,10 @@ export default defineConfig(
 										link: "/about",
 									},
 									{
+										title: "Getting Started",
+										link: "/getting-started",
+									},
+									{
 										title: "What are we missing?",
 										link: "/dave",
 									},
@@ -144,23 +144,19 @@ export default defineConfig(
 								items: [
 									{
 										title: "MDX",
-										link: "/about",
-									},
-									{
-										title: "Code copy",
-										link: "/about",
+										link: "/md-extensions",
 									},
 									{
 										title: "Good styles",
-										link: "/about",
+										link: "/customization",
 									},
 									{
 										title: "Cool team 8)",
 										link: "/about",
 									},
 									{
-										title: "CLI",
-										link: "/about",
+										title: "Dev",
+										link: "/dev",
 									},
 								],
 							},

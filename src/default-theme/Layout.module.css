@@ -97,6 +97,7 @@
 .sidenav-links {
 	width: 100%;
 	color: var(--text-color);
+	padding: 1rem 0;
 
 	& ul {
 		list-style-type: none;

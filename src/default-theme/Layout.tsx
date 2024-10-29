@@ -112,7 +112,7 @@ function Layout(props: RouteSectionProps) {
 }
 
 interface NavigationProps {
-	sidebar: Sidebar;
+	sidebar: Sidebar & { prefix: string };
 }
 const Navigation = (props: NavigationProps) => {
 	const { locale } = useSolidBaseContext();
@@ -133,7 +133,7 @@ const Navigation = (props: NavigationProps) => {
 												class={`${styles["sidenav-link"]}`}
 												activeClass={styles.active}
 												href={locale.applyPathPrefix(
-													(item as { link: string }).link,
+													`${props.sidebar.prefix}${(item as { link: string }).link}`,
 												)}
 												end
 												onClick={() => setSidebarOpen(false)}
