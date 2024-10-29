@@ -46,7 +46,7 @@
 		top: 0;
 		height: 100dvh;
 		z-index: 51;
-		width: 70dvw;
+		width: min(20rem, 70dvw);
 		background: var(--background-color);
 		animation: contentHide 300ms ease-out forwards;
 
