@@ -77,7 +77,7 @@ export function useLocale() {
 		},
 		applyPathPrefix: (path: string) => {
 			const link = getLocaleLink(currentLocale());
-			if (link === "/") return path;
+			if (link === "/") return path.startsWith("/") ? path.slice(1) : path;
 			let p = path;
 			if (p.startsWith("/")) p = p.slice(1);
 			return `${link}${p}`;
