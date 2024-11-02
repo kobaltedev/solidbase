@@ -109,6 +109,7 @@ const customContainers = new Set([
 	"danger",
 	"caution",
 	"details",
+	"code-group",
 ]);
 
 export function remarkGithubAlertsToDirectives() {
@@ -163,11 +164,24 @@ export function remarkCustomContainers() {
 				attributes.type = node.name;
 				attributes.title = labelText;
 
+				const isCodeGroup = node.name === "code-group";
+
+				const tabs = [];
+				if (isCodeGroup) {
+					attributes.type = "code-group";
+
+					for (const child of node.children) {
+						if (child.type !== "code") continue;
+						tabs.push(child.meta);
+					}
+				}
+
 				data.hName = "$$SolidBase_CustomContainer";
-				data.hProperties = h(
-					"$$SolidBase_CustomContainer",
-					attributes,
-				).properties;
+				const element = h("$$SolidBase_CustomContainer", attributes);
+				data.hProperties = element.properties;
+				if (isCodeGroup) {
+					data.hProperties.tabNames = tabs.join("$$BASE$$");
+				}
 			}
 		});
 	};

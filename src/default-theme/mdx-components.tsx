@@ -1,10 +1,13 @@
 import {
+	children,
 	type ComponentProps,
+	For,
 	type ParentProps,
 	Show,
 	splitProps,
 } from "solid-js";
 import styles from "./mdx-components.module.css";
+import { Tabs } from "@kobalte/core";
 
 export function h1(props: ComponentProps<"h1">) {
 	return <h1 class={styles.h1} {...props} />;
@@ -92,10 +95,44 @@ export function CustomContainer(
 			| "warning"
 			| "danger"
 			| "caution"
-			| "details";
+			| "details"
+			| "code-group";
 		title?: string;
+		tabNames?: string;
 	} & ParentProps,
 ) {
+	const _children = children(() => props.children).toArray();
+
+	if (props.type === "code-group" && props.tabNames) {
+		const resolvedNames = props.tabNames.split("$$BASE$$");
+		return (
+			<Tabs.Root class={styles["tabs-container"]}>
+				<Tabs.List class={styles["tabs-list"]}>
+					{resolvedNames.map((title) => {
+						return (
+							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
+								{title}
+							</Tabs.Trigger>
+						);
+					})}
+					<Tabs.Indicator class={styles["tabs-indicator"]} />
+				</Tabs.List>
+
+				<For each={resolvedNames}>
+					{(title, i) => (
+						<Tabs.Content
+							value={title}
+							forceMount={true}
+							class={styles["tabs-content"]}
+						>
+							<div>{_children[i()]}</div>
+						</Tabs.Content>
+					)}
+				</For>
+			</Tabs.Root>
+		);
+	}
+
 	if (props.type === "details") {
 		return (
 			<details
@@ -103,7 +140,7 @@ export function CustomContainer(
 				data-custom-container="details"
 			>
 				<summary>{props.title ?? props.type}</summary>
-				{props.children}
+				{_children}
 			</details>
 		);
 	}
@@ -113,7 +150,7 @@ export function CustomContainer(
 			<Show when={props.title !== "_"}>
 				<span>{props.title ?? props.type}</span>
 			</Show>
-			{props.children}
+			{_children}
 		</div>
 	);
 }
