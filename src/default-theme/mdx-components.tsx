@@ -1,13 +1,13 @@
+import { Tabs } from "@kobalte/core";
 import {
-	children,
 	type ComponentProps,
 	For,
 	type ParentProps,
 	Show,
+	children,
 	splitProps,
 } from "solid-js";
 import styles from "./mdx-components.module.css";
-import { Tabs } from "@kobalte/core";
 
 export function h1(props: ComponentProps<"h1">) {
 	return <h1 class={styles.h1} {...props} />;
