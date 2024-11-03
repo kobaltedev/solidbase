@@ -85,7 +85,7 @@ export function ol(props: ComponentProps<"ol">) {
   return <ol class={styles.ol} {...props} />;
 }
 
-export function CustomContainer(
+export function DirectiveContainer(
   props: {
     type:
       | "info"

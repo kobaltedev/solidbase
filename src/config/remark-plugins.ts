@@ -109,18 +109,6 @@ export function remarkIssueAutolink(issueAutolink: IssueAutoLinkConfig) {
   };
 }
 
-const customContainers = new Set([
-  "info",
-  "note",
-  "tip",
-  "important",
-  "warning",
-  "danger",
-  "caution",
-  "details",
-  "code-group",
-]);
-
 export function remarkGithubAlertsToDirectives() {
   return (tree: any) => {
     visit(tree, (node) => {
@@ -145,15 +133,14 @@ export function remarkGithubAlertsToDirectives() {
   };
 }
 
-export function remarkCustomContainers() {
+export function remarkDirectiveContainers() {
   return (tree: any) => {
-    visit(tree, (node) => {
+    visit(tree, (node, index, parent) => {
       if (
         node.type === "containerDirective" ||
         node.type === "leafDirective" ||
         node.type === "textDirective"
       ) {
-        if (!customContainers.has(node.name)) return;
         const maybeLabel = node.children[0];
         const hasLabel = maybeLabel.data?.directiveLabel;
 
@@ -166,8 +153,6 @@ export function remarkCustomContainers() {
             (node.children as any[]).shift();
           }
         }
-
-        const data = node.data || (node.data = {});
 
         const attributes = node.attributes || {};
         attributes.type = node.name;
@@ -185,12 +170,14 @@ export function remarkCustomContainers() {
           }
         }
 
-        data.hName = "$$SolidBase_CustomContainer";
-        const element = h("$$SolidBase_CustomContainer", attributes);
-        data.hProperties = element.properties;
-        if (isCodeGroup) {
-          data.hProperties.tabNames = tabs.join("$$BASE$$");
-        }
+        parent.children[index!] = {
+          type: "mdxJsxFlowElement",
+          name: "DirectiveContainer",
+          children: node.children,
+          attributes: Object.entries(attributes)
+            .map(([name, value]) => ({ type: "mdxJsxAttribute", name, value }))
+            .filter((v) => v.value !== undefined),
+        };
       }
     });
   };
