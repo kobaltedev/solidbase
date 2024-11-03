@@ -1,0 +1,3 @@
+[submodule "solid-docs"]
+    path = examples/solid-docs
+    url = https://github.com/brendonovich/solid-docs-next
