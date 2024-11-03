@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
+    "@solid-mediakit/og": "^0.2.6",
     "@solidjs/router": "^0.14.10",
     "@solidjs/start": "^1.0.9",
     "@vinxi/plugin-mdx": "^3.7.2",

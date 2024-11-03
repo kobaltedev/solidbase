@@ -1,3 +1,4 @@
+import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
 import { defineConfig } from "@solidjs/start/config";
 
 import { createWithSolidBase, defineTheme } from "../src/config";
@@ -16,6 +17,9 @@ export default defineConfig(
 				prerender: {
 					crawlLinks: true,
 				},
+			},
+			vite: {
+				plugins: [OGPlugin()],
 			},
 		},
 		{

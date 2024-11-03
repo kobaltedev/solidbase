@@ -1,7 +1,7 @@
 import { Layout, mdxComponents } from "virtual:solidbase";
-import { MetaProvider, useHead } from "@solidjs/meta";
+import { MetaProvider, Title, useHead } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
-import { Suspense, createEffect, createUniqueId } from "solid-js";
+import { Show, Suspense, createEffect, createUniqueId } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteConfig } from "./config";
@@ -25,15 +25,24 @@ export function SolidBaseRoot(props: RouteSectionProps) {
 	const config = useRouteConfig();
 	const pageData = useCurrentPageData();
 
+	const title = () => {
+		const t = pageData().frontmatter?.title;
+		if (!t) return config().title;
+
+		return (config().titleTemplate ?? ":title").replace(":title", t);
+	};
+
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
 			<MetaProvider>
+				<Title>{title()}</Title>
+
 				<MDXProvider
 					components={renameCustomMdxComponents({
 						...mdxComponents,
 					})}
 				>
-					<SolidBaseContext.Provider value={{ locale, config }}>
+					<SolidBaseContext.Provider value={{ locale, config, title }}>
 						<Inner {...props} />
 					</SolidBaseContext.Provider>
 				</MDXProvider>
