@@ -2,7 +2,6 @@ import { Dialog } from "@kobalte/core/dialog";
 import { A, type RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
-import { useCurrentPageData } from "../client/page-data";
 import {
   DefaultThemeContextProvider,
   useDefaultThemeContext,
