@@ -1,7 +1,6 @@
 import { fromJs } from "esast-util-from-js";
-import { h } from "hastscript";
-import type { PhrasingContent } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
+import type { PhrasingContent } from "mdast-util-find-and-replace/lib";
 import { toc } from "mdast-util-toc";
 import { u } from "unist-builder";
 import { visit } from "unist-util-visit";
@@ -59,6 +58,7 @@ export function remarkTOC() {
 
 			findAndReplace(tree, [["[[toc]]", () => map]]);
 
+			// @ts-ignore: not sure what the correct type is
 			value = JSON.stringify(map.children.map(mapNode));
 		}
 
