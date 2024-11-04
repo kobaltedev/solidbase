@@ -17,6 +17,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import type { SolidBaseResolvedConfig } from ".";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins";
 import {
+	remarkAddClass,
 	remarkDirectiveContainers,
 	remarkGithubAlertsToDirectives,
 	remarkIssueAutolink,
@@ -67,6 +68,7 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 			remarkRelativeImports,
 			remarkTOC,
 			remarkDirectiveContainers,
+			remarkAddClass,
 			[remarkIssueAutolink, sbConfig.issueAutolink],
 			...(sbConfig.markdown?.remarkPlugins ?? []),
 		],
