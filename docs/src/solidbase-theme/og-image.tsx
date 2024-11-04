@@ -27,6 +27,7 @@ export function OGImage() {
 					</div>
 
 					<img
+						alt="n/a"
 						tw="ml-8"
 						src="https://raw.githubusercontent.com/kobaltedev/solidbase/refs/heads/main/.github/solidbase.png"
 						width="450"

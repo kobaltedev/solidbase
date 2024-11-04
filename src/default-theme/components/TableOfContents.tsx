@@ -1,7 +1,7 @@
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { For, type JSX, Show, createEffect, createSignal } from "solid-js";
 import {
-	type TableOfContentData,
+	type TableOfContentsItemData,
 	useCurrentPageData,
 } from "../../client/page-data";
 import styles from "./TableOfContents.module.css";
@@ -9,9 +9,9 @@ import styles from "./TableOfContents.module.css";
 export default function TableOfContents(props: {}) {
 	const toc = () => useCurrentPageData()().toc;
 
-	const [currentSection, setCurrentSection] = createSignal<string | undefined>(
-		toc()?.url,
-	);
+	const [currentSection, setCurrentSection] = createSignal<
+		string | undefined
+	>();
 
 	const scroll = useWindowScrollPosition();
 
@@ -20,14 +20,15 @@ export default function TableOfContents(props: {}) {
 	>([]);
 
 	createEffect(() => {
-		if (!toc()) return [];
+		const t = toc();
+		if (!t) return [];
 		setHeadingPositions(
-			flattenData(toc()!).map((url) => {
-				const el = document.getElementById(url.slice(1));
+			t.flatMap(flattenData).map((href) => {
+				const el = document.getElementById(href.slice(1));
 
 				if (!el) {
 					return {
-						url,
+						url: href,
 						top: undefined,
 					};
 				}
@@ -39,7 +40,7 @@ export default function TableOfContents(props: {}) {
 					window.scrollY + el.getBoundingClientRect().top - scrollMt - 50;
 
 				return {
-					url,
+					url: href,
 					top,
 				};
 			}),
@@ -65,18 +66,24 @@ export default function TableOfContents(props: {}) {
 
 	return (
 		<Show when={toc()}>
-			<nav class={styles.toc}>
-				<span>On This Page</span>
-				<ol>
-					<TableOfContentsItem data={toc()!} current={currentSection()} />
-				</ol>
-			</nav>
+			{(toc) => (
+				<nav class={styles.toc}>
+					<span>On This Page</span>
+					<ol>
+						<For each={toc()}>
+							{(toc) => (
+								<TableOfContentsItem data={toc} current={currentSection()} />
+							)}
+						</For>
+					</ol>
+				</nav>
+			)}
 		</Show>
 	);
 }
 
 function TableOfContentsItem(props: {
-	data: TableOfContentData;
+	data: TableOfContentsItemData;
 	current: string | undefined;
 }) {
 	const [ref, setRef] = createSignal<HTMLElement>();
@@ -96,7 +103,7 @@ function TableOfContentsItem(props: {
 	createEffect(() => {
 		const header = document.querySelector("header") as HTMLElement | undefined;
 		header?.setAttribute("data-scrolling-to-header", "");
-		if (props.data.url === props.current && !elementInViewport(ref()!)) {
+		if (props.data.href === props.current && !elementInViewport(ref()!)) {
 			ref()?.scrollIntoView({ behavior: "smooth" });
 		}
 		setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
@@ -107,8 +114,8 @@ function TableOfContentsItem(props: {
 			<a
 				ref={setRef}
 				onClick={handleClick}
-				href={props.data.url}
-				class={props.data.url === props.current ? styles.active : undefined}
+				href={props.data.href}
+				class={props.data.href === props.current ? styles.active : undefined}
 			>
 				{props.data.title}
 			</a>
@@ -125,8 +132,8 @@ function TableOfContentsItem(props: {
 	);
 }
 
-function flattenData(data: TableOfContentData): Array<string> {
-	return [data?.url, ...(data?.children ?? []).flatMap(flattenData)].filter(
+function flattenData(data: TableOfContentsItemData): Array<string> {
+	return [data?.href, ...(data?.children ?? []).flatMap(flattenData)].filter(
 		Boolean,
 	);
 }

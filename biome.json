@@ -1,7 +1,12 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": ["./tsconfig.json", "*/netlify/*", "**/package.json"]
+		"ignore": [
+			"./tsconfig.json",
+			"*/netlify/*",
+			"**/package.json",
+			"./examples/solid-docs"
+		]
 	},
 	"vcs": {
 		"enabled": true,
@@ -28,6 +33,9 @@
 			},
 			"complexity": {
 				"noBannedTypes": "off"
+			},
+			"correctness": {
+				"useJsxKeyInIterable": "off"
 			}
 		}
 	},

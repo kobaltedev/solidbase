@@ -1,78 +1,78 @@
 import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
 import { createContext, createResource, useContext } from "solid-js";
 
-export interface TableOfContentData {
-  title: string;
-  url: string;
-  children: Array<TableOfContentData>;
+export interface TableOfContentsItemData {
+	title: string;
+	href: string;
+	children: Array<TableOfContentsItemData>;
 }
 
 interface CurrentPageData {
-  frontmatter: Record<string, any>;
-  toc?: TableOfContentData;
-  editLink?: string;
-  lastUpdated?: number;
+	frontmatter: Record<string, any>;
+	toc?: Array<TableOfContentsItemData>;
+	editLink?: string;
+	lastUpdated?: number;
 }
 
 const defaultPageData: CurrentPageData = {
-  frontmatter: {},
+	frontmatter: {},
 };
 
 export const CurrentPageDataContext = createContext<() => CurrentPageData>();
 
 export function useCurrentPageData() {
-  const context = useContext(CurrentPageDataContext);
+	const context = useContext(CurrentPageDataContext);
 
-  if (context === undefined) {
-    return createPageData();
-  }
+	if (context === undefined) {
+		return createPageData();
+	}
 
-  return context;
+	return context;
 }
 
 function createPageData() {
-  const matches = useCurrentMatches();
+	const matches = useCurrentMatches();
 
-  const [pageData] = createResource(
-    matches,
-    async (m: RouteMatch[]): Promise<CurrentPageData> => {
-      const key = m[m.length - 1]?.route.key as { $component: any } | undefined;
-      if (!key) return { frontmatter: {} };
+	const [pageData] = createResource(
+		matches,
+		async (m: RouteMatch[]): Promise<CurrentPageData> => {
+			const key = m[m.length - 1]?.route.key as { $component: any } | undefined;
+			if (!key) return { frontmatter: {} };
 
-      const component = key.$component;
+			const component = key.$component;
 
-      let mod: any;
+			let mod: any;
 
-      // modelled after Start's lazyRoute
-      // https://github.com/solidjs/solid-start/blob/main/packages/start/src/router/lazyRoute.ts
-      if (import.meta.env.DEV) {
-        if (
-          typeof window !== "undefined" &&
-          // @ts-ignore
-          typeof window.$$SolidBase_page_data !== "undefined" &&
-          // @ts-ignore
-          typeof window.$$SolidBase_page_data[component.src.split("?")[0]] !==
-            "undefined"
-        ) {
-          // @ts-ignore
-          return window.$$SolidBase_page_data[
-            component.src.split("?")[0]
-          ] as CurrentPageData;
-        }
+			// modelled after Start's lazyRoute
+			// https://github.com/solidjs/solid-start/blob/main/packages/start/src/router/lazyRoute.ts
+			if (import.meta.env.DEV) {
+				if (
+					typeof window !== "undefined" &&
+					// @ts-ignore
+					typeof window.$$SolidBase_page_data !== "undefined" &&
+					// @ts-ignore
+					typeof window.$$SolidBase_page_data[component.src.split("?")[0]] !==
+						"undefined"
+				) {
+					// @ts-ignore
+					return window.$$SolidBase_page_data[
+						component.src.split("?")[0]
+					] as CurrentPageData;
+				}
 
-        const manifest = import.meta.env.SSR
-          ? import.meta.env.MANIFEST.ssr
-          : import.meta.env.MANIFEST.client;
+				const manifest = import.meta.env.SSR
+					? import.meta.env.MANIFEST.ssr
+					: import.meta.env.MANIFEST.client;
 
-        mod = await manifest.inputs[component.src]?.import();
-      } else {
-        mod = await component.import();
-      }
+				mod = await manifest.inputs[component.src]?.import();
+			} else {
+				mod = await component.import();
+			}
 
-      return (mod?.$$SolidBase_page_data ?? defaultPageData) as CurrentPageData;
-    },
-    { initialValue: defaultPageData },
-  );
+			return (mod?.$$SolidBase_page_data ?? defaultPageData) as CurrentPageData;
+		},
+		{ initialValue: defaultPageData },
+	);
 
-  return pageData;
+	return pageData;
 }

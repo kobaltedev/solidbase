@@ -6,3 +6,4 @@
 *.cjs
 *.css
 pnpm-lock.yaml
+examples/solid-docs
