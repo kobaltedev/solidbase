@@ -21,6 +21,7 @@ export type SolidBaseConfig<ThemeConfig> = {
   lastUpdated?: Intl.DateTimeFormatOptions | false;
   markdown?: {
     expressiveCode?: RehypeExpressiveCodeOptions;
+    toc?: TOCOptions;
     remarkPlugins?: PluggableList;
     rehypePlugins?: PluggableList;
   };
@@ -125,7 +126,7 @@ export function createWithSolidBase<ThemeConfig>(
 import { dirname, parse } from "node:path";
 import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
 import type { PluggableList } from "unified";
-import type { IssueAutoLinkConfig } from "./remark-plugins";
+import type { IssueAutoLinkConfig, TOCOptions } from "./remark-plugins";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
   return def;
 }

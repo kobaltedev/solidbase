@@ -38,6 +38,11 @@
       "solid": "./src/default-theme/index.ts",
       "import": "./src/default-theme/index.ts",
       "types": "./src/default-theme/index.ts"
+    },
+    "./default-theme/*": {
+      "solid": "./src/default-theme/*",
+      "import": "./src/default-theme/*",
+      "types": "./src/default-theme/*"
     }
   },
   "files": [
