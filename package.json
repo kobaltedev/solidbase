@@ -2,10 +2,11 @@
   "name": "@kobalte/solidbase",
   "version": "0.0.1",
   "description": "Solid Start Powered Static Site Generator",
-  "module": "true",
+  "type": "module",
   "scripts": {
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
+    "build": "tsc",
     "check": "biome check",
     "format": "biome check --write && prettier . --write",
     "typecheck": "tsc --noEmit"
@@ -37,26 +38,46 @@
       "solid": "./src/default-theme/index.ts",
       "import": "./src/default-theme/index.ts",
       "types": "./src/default-theme/index.ts"
-    },
-    "./*": {
-      "solid": "./src/*",
-      "import": "./src/*",
-      "types": "./src/*"
+    }
+  },
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./client": {
+        "solid": "./src/client/index.tsx",
+        "import": "./src/client/index.tsx",
+        "types": "./src/client/index.tsx"
+      },
+      "./server": {
+        "solid": "./src/server.ts",
+        "import": "./src/server.ts",
+        "types": "./src/server.ts"
+      },
+      "./config": {
+        "solid": "./dist/config/index.js",
+        "import": "./dist/config/index.js",
+        "types": "./dist/config/index.d.ts"
+      },
+      "./default-theme": {
+        "solid": "./dist/default-theme/index.js",
+        "import": "./dist/default-theme/index.js",
+        "types": "./dist/default-theme/index.d.ts"
+      }
     }
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
-    "mdast": "^3.0.0",
     "prettier": "4.0.0-alpha.8",
     "solid-js": "^1.9.3",
     "typescript": "^5.6.3",
     "vinxi": "^0.4.3",
     "vite": "^5.4.10"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "peerDependencies": {
     "@solidjs/start": "^1.0.8",

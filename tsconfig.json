@@ -15,6 +15,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "declaration": true,
     "sourceMap": true,
     "lib": ["dom", "esnext"],
     "types": ["solid-js", "vite", "vinxi/types/client", "vite/client"],
