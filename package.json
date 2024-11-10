@@ -7,6 +7,7 @@
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
+    "build": "tsc",
     "format": "biome check --write && prettier . --write",
     "typecheck": "tsc --noEmit"
   },
@@ -45,7 +46,8 @@
     }
   },
   "files": [
-    "/src"
+    "/src",
+    "/dist"
   ],
   "publishConfig": {
     "access": "public",
