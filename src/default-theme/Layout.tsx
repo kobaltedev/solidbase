@@ -105,6 +105,7 @@ function Layout(props: RouteSectionProps) {
 interface NavigationProps {
 	sidebar: Sidebar & { prefix: string };
 }
+
 const Navigation = (props: NavigationProps) => {
 	const { locale } = useSolidBaseContext();
 	const { setSidebarOpen } = useDefaultThemeContext();

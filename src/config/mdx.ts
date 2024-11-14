@@ -1,4 +1,5 @@
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
+import { pluginFrames } from "@expressive-code/plugin-frames";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { nodeTypes } from "@mdx-js/mdx";
 // @ts-expect-error
@@ -49,7 +50,11 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 					themes: ["github-dark", "github-light"],
 					themeCSSSelector: (theme: ExpressiveCodeTheme) =>
 						`[data-theme="${theme.name.split("-")[1]}"]`,
-					plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
+					plugins: [
+						pluginLineNumbers(),
+						pluginCollapsibleSections(),
+						pluginFrames(),
+					],
 					defaultProps: {
 						showLineNumbers: false,
 					},
