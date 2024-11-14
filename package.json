@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Solid Start Powered Static Site Generator",
   "type": "module",
   "scripts": {
@@ -9,7 +9,9 @@
     "check": "biome check",
     "build": "tsc",
     "format": "biome check --write && prettier . --write",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
+    "publish:release": "pnpm i && pnpm build && pnpm publish"
   },
   "keywords": [
     "solid",
