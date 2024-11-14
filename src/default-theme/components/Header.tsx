@@ -4,6 +4,7 @@ import { For, Show, createSignal, lazy } from "solid-js";
 
 import type { DefaultThemeConfig } from "..";
 import { getLocaleLink } from "../../client/locale";
+import { useCurrentPageData } from "../../client/page-data";
 import { useDefaultThemeContext, useThemeComponents } from "../context";
 import { useRouteConfig, useSolidBaseContext } from "../utils";
 import styles from "./Header.module.css";
@@ -21,6 +22,7 @@ export default function Header() {
 		useThemeComponents();
 
 	const { tocOpen, setTocOpen, setSidebarOpen } = useDefaultThemeContext();
+	const pageData = useCurrentPageData();
 
 	const config = useRouteConfig();
 	const { locale } = useSolidBaseContext();
@@ -64,7 +66,7 @@ export default function Header() {
 								</For>
 							)}
 						</Show>
-						<LocaleSelector<DefaultThemeConfig> />
+						<LocaleSelector />
 						<ThemeSelector />
 					</div>
 				</div>
@@ -77,13 +79,15 @@ export default function Header() {
 					>
 						<MenuLeftIcon /> Menu
 					</button>
-					<Dialog.Trigger
-						type="button"
-						class={styles["mobile-menu"]}
-						aria-label="Open table of contents"
-					>
-						On this page <ArrowDownIcon />
-					</Dialog.Trigger>
+					<Show when={pageData().layout.toc !== false}>
+						<Dialog.Trigger
+							type="button"
+							class={styles["mobile-menu"]}
+							aria-label="Open table of contents"
+						>
+							On this page <ArrowDownIcon />
+						</Dialog.Trigger>
+					</Show>
 				</div>
 
 				<div ref={setTocRef} class={styles["toc-container"]} />

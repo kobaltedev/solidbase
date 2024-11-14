@@ -13,6 +13,7 @@ import { useRouteConfig, useSolidBaseContext } from "./utils";
 
 import "./index.css";
 import type { Sidebar } from ".";
+import { useCurrentPageData } from "../client";
 import styles from "./Layout.module.css";
 // font css is imported by theme vite plugin
 
@@ -25,6 +26,7 @@ export default (props: RouteSectionProps) => (
 function Layout(props: RouteSectionProps) {
 	const { Header, Article, Link } = useThemeComponents();
 	const { sidebarOpen, setSidebarOpen } = useDefaultThemeContext();
+	const pageData = useCurrentPageData();
 	const config = useRouteConfig();
 
 	const sidebar = useSidebar();
@@ -52,8 +54,12 @@ function Layout(props: RouteSectionProps) {
 				<Header />
 
 				<Show
-					when={sidebar() && sidebar()!.items?.length > 0}
-					fallback={<div />}
+					when={
+						sidebar() &&
+						sidebar()!.items?.length > 0 &&
+						pageData().layout.sidebar !== false
+					}
+					fallback={<div class="_e" />}
 				>
 					<Show
 						when={mobileLayout()}

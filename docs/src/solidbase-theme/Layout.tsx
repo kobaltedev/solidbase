@@ -20,6 +20,7 @@ export default function (props: ComponentProps<typeof Layout>) {
 					Article: (props) => (
 						<Article {...props}>
 							<img src={BetaImage} alt="Beta" />
+							<br />
 							{props.children}
 						</Article>
 					),

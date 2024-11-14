@@ -7,15 +7,47 @@ export interface TableOfContentsItemData {
 	children: Array<TableOfContentsItemData>;
 }
 
+export type RelativePageConfig =
+	| string
+	| false
+	| {
+			text?: string;
+			link?: string;
+	  };
+
+interface LayoutOptions {
+	sidebar: boolean;
+	footer: boolean;
+	toc: boolean;
+	prev?: RelativePageConfig;
+	next?: RelativePageConfig;
+	editLink: boolean;
+	lastUpdated: boolean;
+}
+
+interface FrontmatterData extends Partial<LayoutOptions> {
+	title?: string;
+	layout?: "home";
+}
+
 interface CurrentPageData {
-	frontmatter: Record<string, any>;
+	frontmatter: FrontmatterData &
+		Omit<Record<string, any>, keyof FrontmatterData>;
 	toc?: Array<TableOfContentsItemData>;
 	editLink?: string;
 	lastUpdated?: number;
+	layout: LayoutOptions;
 }
 
 const defaultPageData: CurrentPageData = {
 	frontmatter: {},
+	layout: {
+		sidebar: true,
+		footer: true,
+		toc: true,
+		editLink: true,
+		lastUpdated: true,
+	},
 };
 
 export const CurrentPageDataContext = createContext<() => CurrentPageData>();
@@ -37,7 +69,7 @@ function createPageData() {
 		matches,
 		async (m: RouteMatch[]): Promise<CurrentPageData> => {
 			const key = m[m.length - 1]?.route.key as { $component: any } | undefined;
-			if (!key) return { frontmatter: {} };
+			if (!key) return defaultPageData;
 
 			const component = key.$component;
 
@@ -69,7 +101,26 @@ function createPageData() {
 				mod = await component.import();
 			}
 
-			return (mod?.$$SolidBase_page_data ?? defaultPageData) as CurrentPageData;
+			const pd = (mod?.$$SolidBase_page_data ??
+				defaultPageData) as CurrentPageData;
+
+			// @ts-ignore
+			pd.layout ??= {};
+
+			pd.layout.prev = pd.frontmatter.prev;
+			pd.layout.next = pd.frontmatter.next;
+
+			switch (pd.frontmatter.layout) {
+				case "home":
+					pd.layout.editLink ??= false;
+					pd.layout.lastUpdated ??= false;
+					pd.layout.next ??= false;
+					pd.layout.prev ??= false;
+					pd.layout.sidebar ??= false;
+					pd.layout.toc ??= false;
+			}
+
+			return pd;
 		},
 		{ initialValue: defaultPageData },
 	);
