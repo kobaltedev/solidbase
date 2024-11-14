@@ -1,7 +1,7 @@
 {
   "name": "@kobalte/solidbase",
   "version": "0.0.2",
-  "description": "Solid Start Powered Static Site Generator",
+  "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
     "dev": "pnpm -F @kobalte/solidbase-dev dev",

@@ -80,7 +80,7 @@ export function createWithSolidBase<ThemeConfig>(
 
     const sbConfig: SolidBaseResolvedConfig<ThemeConfig> = {
       title: "SolidBase",
-      description: "Solid Start Powered Static Site Generator",
+      description: "Fully featured, fully customisable static site generation for SolidStart",
       lang: "en-US",
       issueAutolink: false,
       lastUpdated: { dateStyle: "short", timeStyle: "short" },

@@ -6,7 +6,7 @@
 
 <div align="center">
 
-Your [Solid](https://www.solidjs.com) knowledgebase.
+Fully featured, fully customisable static site generation for [SolidStart](https://start.solidjs.com)
 
 [![license](https://img.shields.io/badge/license-MIT-1890ff.svg)](https://github.com/kobaltedev/solidbase/blob/main/LICENSE)
 [![checks](https://img.shields.io/github/checks-status/kobaltedev/solidbase/main)](https://github.com/kobaltedev/solidbase/actions)

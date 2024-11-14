@@ -20,7 +20,7 @@ export default defineConfig(
     },
     {
       title: "SolidBase",
-      description: "Solid Start Powered Static Site Generator",
+      description: "Fully featured, fully customisable static site generation for SolidStart",
       titleTemplate: ":title – SolidBase",
       issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
       editPath:
