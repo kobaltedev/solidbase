@@ -134,8 +134,8 @@ export default defineConfig(
 										link: "/getting-started",
 									},
 									{
-										title: "What are we missing?",
-										link: "/dave",
+										title: "Deploy",
+										link: "/deploy",
 									},
 								],
 							},
