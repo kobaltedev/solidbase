@@ -169,6 +169,10 @@ export default defineConfig(
 										title: "Custom Themes",
 										link: "/custom-themes",
 									},
+									{
+										title: "Extending Themes",
+										link: "/extending-themes",
+									},
 								],
 							},
 						],

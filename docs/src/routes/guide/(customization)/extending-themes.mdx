@@ -3,3 +3,109 @@ title: Extending Themes
 ---
 
 # Extending Themes
+
+If you'd like to customise an existing theme,
+you can define a custom theme that extends it.
+The custom theme's `Layout` should render the original theme's `Layout` component,
+but apart from that you can treat it as a regular theme.
+
+:::info
+The theme used for these docs
+[extends the default theme](https://github.com/kobaltedev/solidbase/blob/main/docs/app.config.ts#L7)
+to add [OpenGraph](https://ogp.me) tags!
+:::
+
+## Creating Extended Themes
+
+These examples will extend the default theme as an example.
+
+Define a custom theme with `defineTheme` and provide the original theme's definition to `extends`:
+
+```ts
+<!-- app.config.ts -->
+import { defineTheme } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+
+const customTheme = defineTheme<CustomThemeConfig>({
+  componentsPath: import.meta.resolve("./custom-theme"),
+  extends: defaultTheme
+});
+```
+
+Add a `Layout` file inside the `componentsPath` folder that renders the original theme's `Layout`:
+
+```tsx
+<!-- Layout.tsx -->
+import { Layout } from "@kobalte/solidbase/default-theme/Layout";
+
+export default function (props: ComponentProps<typeof Layout>) {
+	// do whatever and render whatever you want as long as `Layout` gets rendered
+
+	return <Layout {...props} />
+}
+```
+
+## Extending the Default Theme
+
+The default theme provides multiple methods of customisation,
+which we'd recommend configuring with a custom theme that extends it.
+
+### Customising CSS
+
+The default theme's CSS can be customised using CSS variables:
+
+```tsx
+<!-- Layout.tsx -->
+import Layout from "@kobalte/solidbase/default-theme/Layout";
+// this import must be below the Layout import
+import "./custom.css";
+
+export default function () { ... };
+```
+
+<br />
+
+```css
+<!-- custom.css -- > html {
+  --sb-background-color: white;
+}
+
+html[data-theme="dark"] {
+  --sb-background-color: black;
+}
+```
+
+The full list of overridable CSS variables is in the
+[default theme's source code](https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/variables.css).
+
+### Using Different Fonts
+
+The default theme uses a few fonts:
+
+- [Lexend](https://www.lexend.com) for headings
+- [Inter](https://rsms.me/inter) for text
+- [JetBrains Mono](https://www.jetbrains.com/lp/mono/) for code
+
+To stop these fonts from being loaded, set `themeConfig.fonts` to `false`:
+
+```ts
+<!-- app.config.ts -->
+export default defineConfig(withSolidBase(
+	...,
+	{
+		themeConfig: {
+			fonts: false
+		}
+	}
+))
+```
+
+You can then provide your own fonts:
+
+```css
+<!-- custom.css -- > html {
+  --sb-font-headings: "Comic Sans";
+  --sb-font-text: "Comic Sans";
+  --sb-font-mono: "Comic Sans";
+}
+```

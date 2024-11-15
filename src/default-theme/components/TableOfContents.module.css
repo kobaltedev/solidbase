@@ -1,10 +1,10 @@
 .toc {
-	font-size: .9em;
+	font-size: 0.9em;
 
 	& > span {
-		font-family: var(--font-headings);
-		color: var(--heading-color);
-		margin-bottom: .75rem;
+		font-family: var(--sb-font-headings);
+		color: var(--sb-heading-color);
+		margin-bottom: 0.75rem;
 		display: block;
 		font-weight: 500;
 	}
@@ -50,13 +50,13 @@
 
 	& > a {
 		text-decoration: none;
-		color: var(--text-color);
-		padding: .5rem 1rem;
+		color: var(--sb-text-color);
+		padding: 0.5rem 1rem;
 		display: block;
 		line-height: 1.75;
 		transition-property: background-color, opacity, color;
-		transition-timing-function: var(--transition-timing);
-		transition-duration: .15s;
+		transition-timing-function: var(--sb-transition-timing);
+		transition-duration: 0.15s;
 		opacity: 0.5;
 		min-width: 12rem;
 		outline: none;
@@ -65,15 +65,15 @@
 		&:focus-visible {
 			background: color-mix(
 				in hsl,
-				var(--link-underline-color) 20%,
+				var(--sb-link-underline-color) 20%,
 				transparent
 			);
-			border-radius: var(--border-radius);
-			color: var(--heading-color);
+			border-radius: var(--sb-border-radius);
+			color: var(--sb-heading-color);
 		}
 
 		&.active {
-			color: var(--active-link-color);
+			color: var(--sb-active-link-color);
 			opacity: 1;
 		}
 	}

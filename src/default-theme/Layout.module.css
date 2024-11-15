@@ -12,10 +12,10 @@
 	left: 0;
 	background: black;
 	color: white;
-	border-bottom-right-radius: .375rem;
-	padding: .5rem .75rem;
+	border-bottom-right-radius: 0.375rem;
+	padding: 0.5rem 0.75rem;
 	transform: translateY(-100%);
-	transition: transform .3s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 	z-index: 2147483647;
 
 	&:focus-within {
@@ -25,14 +25,14 @@
 
 .sidenav {
 	min-width: 14rem;
-	height: calc(100dvh - var(--header-height));
+	height: calc(100dvh - var(--sb-header-height));
 	position: sticky;
-	top: var(--header-height);
+	top: var(--sb-header-height);
 	left: 0;
 	display: flex;
 	flex-direction: row;
 	padding: 1rem;
-	transition: transform .3s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 }
 
 :global(div._e + main) {
@@ -51,7 +51,7 @@
 		height: 100dvh;
 		z-index: 51;
 		width: min(20rem, 70dvw);
-		background: var(--background-color);
+		background: var(--sb-background-color);
 		animation: contentHide 300ms ease-out forwards;
 
 		&[data-expanded] {
@@ -93,14 +93,14 @@
 
 .logo-link {
 	text-decoration: none;
-	color: var(--heading-color);
-	font-family: var(--font-headings);
+	color: var(--sb-heading-color);
+	font-family: var(--sb-font-headings);
 	font-size: 1.25em;
 }
 
 .sidenav-links {
 	width: 100%;
-	color: var(--text-color);
+	color: var(--sb-text-color);
 	padding: 1rem 0;
 
 	& ul {
@@ -126,7 +126,7 @@
 	}
 
 	h2 {
-		color: var(--heading-color);
+		color: var(--sb-heading-color);
 		font-size: 0.85rem;
 		font-weight: 500;
 	}
@@ -134,28 +134,28 @@
 	.sidenav-link {
 		display: flex;
 		width: 100%;
-		color: var(--text-color);
+		color: var(--sb-text-color);
 		text-decoration: none;
 		outline: none;
 		padding: 0.5rem;
-		border-radius: var(--border-radius);
+		border-radius: var(--sb-border-radius);
 		font-size: 0.85rem;
 		transition-property: background-color, color;
-		transition-timing-function: var(--transition-timing);
-		transition-duration: .15s;
+		transition-timing-function: var(--sb-transition-timing);
+		transition-duration: 0.15s;
 
 		&:hover,
 		&:focus-visible {
-			color: var(--heading-color);
+			color: var(--sb-heading-color);
 			background: color-mix(
 				in hsl,
-				var(--link-underline-color) 20%,
+				var(--sb-link-underline-color) 20%,
 				transparent
 			);
 		}
 
 		&.active {
-			color: var(--active-link-color);
+			color: var(--sb-active-link-color);
 		}
 	}
 }

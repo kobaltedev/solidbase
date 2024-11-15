@@ -2,17 +2,17 @@
 	position: sticky;
 	top: 0;
 	width: 100dvw;
-	height: var(--header-height);
+	height: var(--sb-header-height);
 	z-index: 50;
 	display: flex;
 	align-items: stretch;
 	flex-direction: column;
 	padding: 0 1.5rem;
-	background: var(--background-color);
+	background: var(--sb-background-color);
 	border-bottom: 2px solid #e4e4e7;
 	grid-column-start: span 2;
 	border-bottom: 1px solid
-		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 	font-size: 14px;
 
 	& > div {
@@ -30,7 +30,7 @@
 	}
 
 	html {
-		--header-height: 6.5rem !important;
+		--sb-header-height: 6.5rem !important;
 	}
 }
 
@@ -48,8 +48,8 @@
 
 .logo-link {
 	text-decoration: none;
-	color: var(--heading-color);
-	font-family: var(--font-headings);
+	color: var(--sb-heading-color);
+	font-family: var(--sb-font-headings);
 	font-size: 1.25em;
 }
 
@@ -58,28 +58,32 @@
 	outline: none;
 	border: none;
 	background: transparent;
-	border-radius: var(--border-radius);
-	color: var(--text-color);
+	border-radius: var(--sb-border-radius);
+	color: var(--sb-text-color);
 	font-size: 0.8rem;
 	padding: 0.5rem;
-	cursor: var(--button-cursor);
+	cursor: var(--sb-button-cursor);
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 	margin: 0 -0.5rem;
 	text-decoration: none;
 	transition-property: background-color, color;
-	transition-timing-function: var(--transition-timing);
+	transition-timing-function: var(--sb-transition-timing);
 	transition-duration: 0.15s;
 
 	&:hover,
 	&:focus-visible {
-		color: var(--heading-color);
-		background: color-mix(in hsl, var(--link-underline-color) 20%, transparent);
+		color: var(--sb-heading-color);
+		background: color-mix(
+			in hsl,
+			var(--sb-link-underline-color) 20%,
+			transparent
+		);
 	}
 
 	&.active {
-		color: var(--active-link-color);
+		color: var(--sb-active-link-color);
 	}
 
 	& svg {
@@ -89,7 +93,7 @@
 
 	& > svg {
 		transition-property: transform;
-		transition-timing-function: var(--transition-timing);
+		transition-timing-function: var(--sb-transition-timing);
 		transition-duration: 0.15s;
 	}
 
@@ -110,23 +114,23 @@
 	padding: 0.5rem;
 	border: none;
 	outline: none;
-	color: var(--text-color);
-	border-radius: var(--border-radius);
-	cursor: var(--button-cursor);
+	color: var(--sb-text-color);
+	border-radius: var(--sb-border-radius);
+	cursor: var(--sb-button-cursor);
 	font-weight: 500;
 
 	&:hover {
-		background: color-mix(in hsl, var(--text-color) 10%, transparent);
+		background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
 	}
 
 	&[data-matched] {
-		color: color-mix(in hsl, var(--active-link-color) 70%, white);
+		color: color-mix(in hsl, var(--sb-active-link-color) 70%, white);
 
 		&:hover {
-			color: var(--text-color);
+			color: var(--sb-text-color);
 			background-color: color-mix(
 				in hsl,
-				var(--active-link-color) 50%,
+				var(--sb-active-link-color) 50%,
 				transparent
 			);
 		}
@@ -136,7 +140,7 @@
 .mobile-bar {
 	flex: none !important;
 	border-top: 1px solid
-		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 	margin: 0 -4rem;
 	padding: 0.25rem 4rem;
 }
@@ -153,17 +157,18 @@
 
 .toc-popup {
 	position: sticky;
-	top: calc(var(--header-height) + var(--header-offset));
+	top: calc(var(--sb-header-height) + var(--sb-header-offset));
 	left: 0;
 	z-index: 51;
 	width: 100dvw;
 	max-height: 100dvh;
-	background: var(--background-color);
+	background: var(--sb-background-color);
 	overflow-y: auto;
 	animation: contentHide 50ms ease-out forwards;
 	transform-origin: top;
 	padding: 1rem;
-	border: 1px solid color-mix(in hsl, var(--decoration-color) 15%, transparent);
+	border: 1px solid
+		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 	border-left: none;
 	border-right: none;
 

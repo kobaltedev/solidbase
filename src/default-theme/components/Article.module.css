@@ -11,8 +11,8 @@
 
 .aside {
 	position: sticky;
-	top: calc(var(--header-height) + 2rem);
-	max-height: calc(100dvh - var(--header-height) - 4rem);
+	top: calc(var(--sb-header-height) + 2rem);
+	max-height: calc(100dvh - var(--sb-header-height) - 4rem);
 	width: 12rem;
 	right: 0;
 	transition: transform 0.3s ease-in-out;
@@ -33,7 +33,7 @@
 	justify-content: space-between;
 	white-space: nowrap;
 	flex-wrap: wrap;
-	gap: .5rem;
+	gap: 0.5rem;
 }
 
 .related {
@@ -44,12 +44,12 @@
 	font-size: 0.9em;
 	padding: 2rem 0 0;
 	border-top: 1px solid
-		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 }
 
 .prev,
 .next {
-	color: var(--text-color);
+	color: var(--sb-text-color);
 	text-decoration: none;
 	display: flex;
 	flex-direction: column;
@@ -57,14 +57,14 @@
 	outline: none;
 
 	& > span {
-		font-family: var(--font-headings);
-		color: var(--heading-color);
+		font-family: var(--sb-font-headings);
+		color: var(--sb-heading-color);
 		font-size: 0.625em;
 	}
 
 	&:hover,
 	&:focus {
-		color: var(--heading-color);
+		color: var(--sb-heading-color);
 	}
 }
 

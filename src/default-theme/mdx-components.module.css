@@ -1,5 +1,5 @@
 .h1 {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	font-size: 2.25em;
 	margin-top: 0;
@@ -9,7 +9,7 @@
 
 .h2,
 h2[id="footnote-label"] {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	font-size: 1.5em;
 	margin-top: 2em;
@@ -18,7 +18,7 @@ h2[id="footnote-label"] {
 }
 
 .h3 {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	font-size: 1.25em;
 	margin-top: 1.6em;
@@ -27,7 +27,7 @@ h2[id="footnote-label"] {
 }
 
 .h4 {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	margin-top: 1.5em;
 	margin-bottom: 0.5em;
@@ -35,7 +35,7 @@ h2[id="footnote-label"] {
 }
 
 .h5 {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	margin-top: 1.33em;
 	margin-bottom: 0.4em;
@@ -43,7 +43,7 @@ h2[id="footnote-label"] {
 }
 
 .h6 {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	font-weight: 400;
 	margin-top: 1.2em;
 	margin-bottom: 0.2em;
@@ -51,25 +51,25 @@ h2[id="footnote-label"] {
 }
 
 :global(.sb-kbd) {
-	border-radius: var(--border-radius);
-	border: 1px solid var(--decoration-color);
+	border-radius: var(--sb-border-radius);
+	border: 1px solid var(--sb-decoration-color);
 	border-bottom-width: 3px;
-	background: color-mix(in hsl, var(--decoration-color) 10%, transparent);
-	color: var(--heading-color);
+	background: color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
+	color: var(--sb-heading-color);
 	padding: 0.1em 0.4em;
 }
 
 .a,
 a[data-footnote-backref],
 a[data-footnote-ref] {
-	color: var(--heading-color);
+	color: var(--sb-heading-color);
 	text-decoration: none;
-	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
+	box-shadow: var(--sb-link-underline-color) 0 -2px 0 0 inset;
 	outline: none;
 
 	&:hover,
 	&:focus {
-		box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
+		box-shadow: var(--sb-link-underline-color) 0 -6px 0 0 inset;
 	}
 }
 
@@ -85,7 +85,7 @@ a[data-footnote-ref] {
 
 .p {
 	margin: 1.25em 0;
-	color: var(--text-color);
+	color: var(--sb-text-color);
 }
 
 .h1,
@@ -104,7 +104,7 @@ a[data-footnote-ref] {
 .hr {
 	margin: 2rem 0;
 	border-top: 1px solid
-		color-mix(in hsl, var(--decoration-color) 15%, transparent);
+		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 	color: transparent;
 }
 
@@ -130,11 +130,11 @@ a[data-footnote-ref] {
 .li {
 	padding-left: 0.375em;
 	margin: 0.5em 0;
-	color: var(--text-color);
+	color: var(--sb-text-color);
 
 	&::marker {
 		font-weight: 400;
-		color: var(--decoration-color);
+		color: var(--sb-decoration-color);
 	}
 
 	& .p,
@@ -155,10 +155,10 @@ a[data-footnote-ref] {
 
 .code {
 	font-size: 0.9em;
-	color: var(--code-text-color);
-	background: var(--highlight-background-color);
+	color: var(--sb-code-text-color);
+	background: var(--sb-highlight-background-color);
 	padding: 0.1em 0.3em;
-	border-radius: var(--border-radius);
+	border-radius: var(--sb-border-radius);
 	overflow-wrap: break-word;
 }
 
@@ -168,18 +168,18 @@ a[data-footnote-ref] {
 }
 
 .blockquote {
-	border-left: 0.15em solid var(--decoration-color);
+	border-left: 0.15em solid var(--sb-decoration-color);
 	padding-left: 1em;
 }
 
 .custom-container {
 	padding: 1em 1.25em;
-	border-radius: var(--border-radius);
+	border-radius: var(--sb-border-radius);
 	margin: 1.25em 0;
 
 	& > span:first-child {
 		text-transform: capitalize;
-		font-family: var(--font-headings);
+		font-family: var(--sb-font-headings);
 		font-weight: 400;
 		margin-bottom: 0.5em;
 		line-height: 1.5;
@@ -206,10 +206,10 @@ a[data-footnote-ref] {
 
 	& > summary {
 		text-transform: capitalize;
-		font-family: var(--font-headings);
+		font-family: var(--sb-font-headings);
 		font-weight: 400;
 		line-height: 1.5;
-		cursor: var(--button-cursor);
+		cursor: var(--sb-button-cursor);
 		user-select: none;
 
 		& + .p,
@@ -222,29 +222,29 @@ a[data-footnote-ref] {
 	&[data-custom-container="info"],
 	&[data-custom-container="note"],
 	&[data-custom-container="details"] {
-		background: var(--info-background-color);
-		color: var(--info-text-color);
+		background: var(--sb-info-background-color);
+		color: var(--sb-info-text-color);
 	}
 
 	&[data-custom-container="tip"] {
-		background: var(--tip-background-color);
-		color: var(--tip-text-color);
+		background: var(--sb-tip-background-color);
+		color: var(--sb-tip-text-color);
 	}
 
 	&[data-custom-container="important"] {
-		background: var(--important-background-color);
-		color: var(--important-text-color);
+		background: var(--sb-important-background-color);
+		color: var(--sb-important-text-color);
 	}
 
 	&[data-custom-container="warning"] {
-		background: var(--warning-background-color);
-		color: var(--warning-text-color);
+		background: var(--sb-warning-background-color);
+		color: var(--sb-warning-text-color);
 	}
 
 	&[data-custom-container="danger"],
 	&[data-custom-container="caution"] {
-		background: var(--danger-background-color);
-		color: var(--danger-text-color);
+		background: var(--sb-danger-background-color);
+		color: var(--sb-danger-text-color);
 	}
 }
 
@@ -262,13 +262,13 @@ a[data-footnote-ref] {
 		border-collapse: collapse;
 
 		& > thead {
-			color: var(--heading-color);
-			font-family: var(--font-headings);
-			border-bottom: 1px solid var(--decoration-color);
+			color: var(--sb-heading-color);
+			font-family: var(--sb-font-headings);
+			border-bottom: 1px solid var(--sb-decoration-color);
 		}
 
 		& tr {
-			color: var(--text-color);
+			color: var(--sb-text-color);
 
 			& > * {
 				padding: 0.5rem;
@@ -285,7 +285,7 @@ a[data-footnote-ref] {
 
 		& > tbody tr {
 			border-bottom: 1px solid
-				color-mix(in hsl, var(--decoration-color) 20%, transparent);
+				color-mix(in hsl, var(--sb-decoration-color) 20%, transparent);
 		}
 	}
 }
@@ -299,15 +299,16 @@ a[data-footnote-ref] {
 .tabs-list {
 	position: relative;
 	display: flex;
-	border-bottom: 2px solid color-mix(in hsl, var(--text-color) 15%, transparent);
+	border-bottom: 2px solid
+		color-mix(in hsl, var(--sb-text-color) 15%, transparent);
 }
 
 .tabs-indicator {
 	position: absolute;
 	height: 100%;
-	border-top-right-radius: var(--border-radius);
-	border-top-left-radius: var(--border-radius);
-	background: var(--info-background-color);
+	border-top-right-radius: var(--sb-border-radius);
+	border-top-left-radius: var(--sb-border-radius);
+	background: var(--sb-info-background-color);
 	transition: transform 150ms, width 50ms;
 	z-index: 1;
 }
@@ -319,10 +320,10 @@ a[data-footnote-ref] {
 	border: none;
 	padding: 4px 12px;
 	z-index: 2;
-	color: color-mix(in hsl, var(--text-color) 45%, transparent);
+	color: color-mix(in hsl, var(--sb-text-color) 45%, transparent);
 
 	&[data-selected] {
-		color: var(--info-text-color);
+		color: var(--sb-info-text-color);
 	}
 }
 

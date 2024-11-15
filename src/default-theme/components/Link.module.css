@@ -1,11 +1,11 @@
 .link {
-	color: var(--text-color);
+	color: var(--sb-text-color);
 	text-decoration: none;
-	box-shadow: var(--link-underline-color) 0 -2px 0 0 inset;
+	box-shadow: var(--sb-link-underline-color) 0 -2px 0 0 inset;
 	outline: none;
 
 	&:hover,
 	&:focus {
-		box-shadow: var(--link-underline-color) 0 -6px 0 0 inset;
+		box-shadow: var(--sb-link-underline-color) 0 -6px 0 0 inset;
 	}
 }

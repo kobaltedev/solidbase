@@ -2,31 +2,31 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
-	color: var(--text-color);
+	color: var(--sb-text-color);
 	margin: 4rem 0;
 	align-content: center;
 	justify-content: center;
 
 	.feature {
 		padding: 1rem 1.5rem;
-		background: color-mix(in hsl, var(--text-color) 10%, transparent);
-		border-radius: var(--border-radius);
-		width: max(calc(25% - .8rem), 12rem);
-		font-size: .9rem;
+		background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
+		border-radius: var(--sb-border-radius);
+		width: max(calc(25% - 0.8rem), 12rem);
+		font-size: 0.9rem;
 
 		.icon {
-			border-radius: var(--border-radius);
-			background: color-mix(in hsl, var(--text-color) 10%, transparent);
-			padding: .5rem;
+			border-radius: var(--sb-border-radius);
+			background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
+			padding: 0.5rem;
 			font-size: 1.5rem;
 			display: inline-block;
 		}
 
 		.title {
 			font-size: 1rem;
-			font-family: var(--font-headings);
+			font-family: var(--sb-font-headings);
 			font-weight: 500;
-			margin: 1rem 0 .5rem;
+			margin: 1rem 0 0.5rem;
 		}
 	}
 }

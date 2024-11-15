@@ -4,7 +4,7 @@ title: Getting Started
 
 # Getting Started
 
-SolidBase wraps your SolidStart config rather than wrapping SolidStart itself,
+SolidBase wraps your SolidStart config rather than wrapping Start itself,
 so you can add SolidBase to most existing Start projects or create a new one.
 
 ## Creating a New Project
@@ -22,16 +22,17 @@ In your project's `app.config`, wrap the config being passed to `defineConfig` w
 This will configure SolidBase with the default theme.
 
 ```ts
+<!-- app.config.ts -->
 import { defineConfig } from "@solidjs/start/config";
 import { withSolidBase } from "@kobalte/solidbase/config";
 
 export default defineConfig(withSolidBase(/* your SolidStart config */));
 ```
 
-Lastly, add the `SolidBaseRoot` component to the `root` of your project's `Router`.
+Add the `SolidBaseRoot` component to the `root` of your project's `Router`.
 
 ```tsx
-<!-- app.config.ts -->
+<!-- app.tsx -->
 import { SolidBaseRoot } from "@kobalte/solidbase/client";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
@@ -56,5 +57,32 @@ If your router already has a `root` component, you can wrap it with `SolidBaseRo
   <FileRoutes />
 </Router>
 ```
+
+To provide the `lang` and `data-theme` attributes to the `html` element during SSR,
+spread `getHtmlProps()` onto it in `entry-server`:
+
+```tsx
+<!-- entry-server.tsx -->
+// @refresh reload
+import { StartServer, createHandler } from "@solidjs/start/server";
+import { getHtmlProps } from "@kobalte/solidbase/server";
+
+export default createHandler(() => (
+	<StartServer
+		document={({ assets, children, scripts }) => (
+			<html {...getHtmlProps()}>
+				...
+			</html>
+		)}
+	/>
+));
+```
+
+:::note
+SolidBase prerenders your pages by default,
+so `data-theme` will probably be incorrect in the initial HTML.
+To account for this,
+a small script will automatically be injected to correct the theme before the page is rendered.
+:::
 
 Your project is now setup with the default SolidBase theme!

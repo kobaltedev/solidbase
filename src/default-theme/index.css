@@ -2,17 +2,13 @@
 @import "./variables.css";
 
 html {
-	--font-headings: Lexend, Segoe UI, Roboto, sans-serif;
-	--font-text: Inter, Segoe UI, Roboto, sans-serif;
-	--font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
-
-	background: var(--background-color);
+	background: var(--sb-background-color);
 	font-optical-sizing: auto;
-	font-family: var(--font-text);
+	font-family: var(--sb-font-text);
 }
 
 code {
-	font-family: var(--font-mono) !important;
+	font-family: var(--sb-font-mono) !important;
 }
 
 h1,
@@ -21,7 +17,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: var(--font-headings);
+	font-family: var(--sb-font-headings);
 }
 
 article *[id] {
@@ -35,18 +31,18 @@ article *[id] {
 }
 
 .expressive-code.expressive-code figure {
-	--code-background: var(--code-background-color);
-	--ec-frm-edActTabBg: var(--code-background-color);
-	--ec-frm-edTabBarBrdCol: var(--code-background-color);
-	--ec-frm-edTabBarBg: var(--background-color);
-	--ec-frm-edActTabIndTopCol: var(--active-link-color);
-	--ec-frm-edActTabIndBtmCol: var(--background-color);
-	--ec-frm-edTabBarBrdBtmCol: var(--background-color);
-	--ec-frm-edActTabFg: var(--text-color);
-	--header-border-radius: var(--border-radius);
-	--ec-brdRad: var(--border-radius);
+	--code-background: var(--sb-code-background-color);
+	--ec-frm-edActTabBg: var(--sb-code-background-color);
+	--ec-frm-edTabBarBrdCol: var(--sb-code-background-color);
+	--ec-frm-edTabBarBg: var(--sb-background-color);
+	--ec-frm-edActTabIndTopCol: var(--sb-active-link-color);
+	--ec-frm-edActTabIndBtmCol: var(--sb-background-color);
+	--ec-frm-edTabBarBrdBtmCol: var(--sb-background-color);
+	--ec-frm-edActTabFg: var(--sb-text-color);
+	--header-border-radius: var(--sb-border-radius);
+	--ec-brdRad: var(--sb-border-radius);
 	box-shadow: none;
-	border-radius: var(--border-radius);
+	border-radius: var(--sb-border-radius);
 	cursor: text;
 
 	& pre {
