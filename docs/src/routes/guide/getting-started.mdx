@@ -4,28 +4,59 @@ title: Getting Started
 
 # Getting Started
 
-To create a project use the Solid cli:
+SolidBase wraps your SolidStart config rather than wrapping SolidStart itself,
+so you can add SolidBase to most existing Start projects or create a new one.
 
-```bash
-pnpm create solid
+## Creating a New Project
+
+Follow Start's [getting started guide](https://docs.solidjs.com/solid-start/getting-started)
+to create a new project.
+We'd recommend using the `basic` preset as it includes `@solidjs/router`,
+and recommend against the `with-mdx` preset as SolidBase will provide MDX spport for you.
+
+## Adding SolidBase to Your Project
+
+Install `@kobalte/solidbase` using your preferred package manager.
+
+In your project's `app.config`, wrap the config being passed to `defineConfig` with `withSolidBase`.
+This will configure SolidBase with the default theme.
+
+```ts
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
+
+export default defineConfig(
+	withSolidBase(/* your SolidStart config */)
+);
 ```
 
-:::warning[_]
-We recommend using the `bare` template with `typescript`. Others have not been tested, but should work with some modifications.
-:::
+Lastly, add the `SolidBaseRoot` component to the `root` of your project's `Router`.
 
-```bash
-│
-◇  Project Name
-│  solidbase-project
-│
-◇  Is this a SolidStart project?
-│  Yes
-│
-◇  Which template would you like to use?
-│  bare
-│
-◇  Use Typescript?
-│  Yes
-│
+```tsx
+<!-- app.config.ts -->
+import { SolidBaseRoot } from "@kobalte/solidbase/client";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+
+export default function App() {
+	return (
+		<Router root={SolidBaseRoot}>
+			<FileRoutes />
+		</Router>
+	);
+}
 ```
+
+If your router already has a `root` component, you can wrap it with `SolidBaseRoot`.
+
+```tsx
+<Router
+  root={(props) => {
+    return <SolidBaseRoot>{props.children}</SolidBaseRoot>;
+  }}
+>
+  <FileRoutes />
+</Router>
+```
+
+Your project is now setup with the default SolidBase theme!
