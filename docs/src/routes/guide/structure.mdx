@@ -1,0 +1,60 @@
+---
+title: Project Structure
+---
+
+# Project Structure
+
+## SolidBase Entry
+
+SolidBase is injected from you config file:
+
+```ts
+<!-- app.config.ts -->
+import { defineConfig } from "@solidjs/start/config";
+
+import { createWithSolidBase } from "@kobalte/solidbase";
+
+
+export default defineConfig(
+	createWithSolidBase(theme)(
+		/* SolidStart options */
+		{
+			ssr: true,
+			server: {
+				prerender: {
+					crawlLinks: true,
+				},
+			},
+			...
+		},
+		/* SolidBase options */
+		{
+			title: "SolidBase",
+			description: "Fully featured, fully customisable static site generation for SolidStart",
+			...
+    }
+  )
+);
+
+```
+
+## Routing
+
+SolidBase supports all the same routing features as SolidStart.
+Using file based routing is recommended for management and performance reasons.
+
+The basic structure looks like:
+
+```
+.
+├─ src
+│  ├─ routes
+│  │  ├─ index.mdx
+│  │  └─ about.mdx
+│  ├─ app.tsx
+│  ├─ entry-client.tsx
+│  └─ entry-server.tsx
+└─ app.config.ts
+```
+
+Full documentation and reference can be found in the [SolidStart docs](https://docs.solidjs.com/solid-start/building-your-application/routing);

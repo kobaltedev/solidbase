@@ -137,6 +137,10 @@ export default defineConfig(
 										title: "Deploy",
 										link: "/deploy",
 									},
+									{
+										title: "Project Structure",
+										link: "/structure",
+									},
 								],
 							},
 							{
@@ -146,14 +150,6 @@ export default defineConfig(
 									{
 										title: "Markdown Extentions",
 										link: "/markdown",
-									},
-									{
-										title: "Good styles",
-										link: "/customization",
-									},
-									{
-										title: "Cool team 8)",
-										link: "/about",
 									},
 									{
 										title: "Dev",
