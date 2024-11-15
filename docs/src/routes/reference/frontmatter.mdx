@@ -7,3 +7,29 @@ title: Frontmatter Config
 TODO
 
 https://github.com/kobaltedev/solidbase/blob/528eeb758f061a0e05afca1ff4a0b50843b86f07/src/client/page-data.ts#L56
+
+## Title
+
+The page title is assigned from the `title` value:
+
+```md
+---
+title: Tab Title
+---
+
+# Page Title
+```
+
+The title is formatted from the config:
+
+```ts
+<!-- app.config.ts -->
+/* SolidBase options */
+{
+	titleTemplate: ":title – SolidBase",
+}
+```
+
+## Layout
+
+More options such as `layout` are available in the [Default Theme](./default-theme) reference.

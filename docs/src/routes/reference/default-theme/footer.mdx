@@ -1,0 +1,57 @@
+---
+title: Footer
+---
+
+# Footer
+
+The footer has multiple options available.
+
+## Social Links
+
+```ts
+<!-- app.config.ts -->
+import { defineConfig } from "@solidjs/start/config";
+
+import { createWithSolidBase } from "@kobalte/solidbase";
+
+
+export default defineConfig(
+	createWithSolidBase(theme)(
+		/* SolidStart options */
+		{
+			...
+		},
+		/* SolidBase options */
+		{
+			...
+			themeConfig: {
+				socialLinks: {
+					github: "https://github.com/kobaltedev/solidbase",
+					discord: "https://discord.com/invite/solidjs",
+				},
+				...
+			},
+			...
+    }
+  )
+);
+
+```
+
+SolidBase supports `github`, `discord` and `opencollective` out of the box.
+Custom links can be configured as:
+
+```ts
+socialLinks: {
+  twitter: {
+    link: "https://...",
+    logo: "data:...", // Base64 encoded image
+    label: "Twitter", // Text label
+  },
+  other: {
+    link: "https://...",
+    logo: "data:...", // Base64 encoded image
+    label: "Other Link", // Text label
+  },
+},
+```

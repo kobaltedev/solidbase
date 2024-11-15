@@ -1,0 +1,91 @@
+---
+title: Sidebar
+---
+
+# Sidebar
+
+The sidebar for the default theme is configured in the app config:
+
+```ts
+<!-- app.config.ts -->
+import { defineConfig } from "@solidjs/start/config";
+
+import { createWithSolidBase } from "@kobalte/solidbase";
+
+
+export default defineConfig(
+	createWithSolidBase(theme)(
+		/* SolidStart options */
+		{
+			...
+		},
+		/* SolidBase options */
+		{
+			...
+			themeConfig: {
+				...
+				sidebar: {
+					"/guide": { // Route matching prefix
+						items: [
+							{
+								title: "Overview", // Group
+								collapsed: false,
+								items: [
+									{
+										title: "What is SolidBase?", // Item
+										link: "/",
+									},
+									{
+										title: "Getting Started",
+										link: "/getting-started",
+									},
+									...
+								],
+							},
+							{
+								title: "Features", // Second Group
+								collapsed: false,
+								items: [
+									{
+										title: "Markdown Extentions",
+										link: "/markdown",
+									},
+									...
+								],
+							},
+							...
+						],
+					},
+					"/reference": {
+						items: [
+							{
+								title: "Reference",
+								collapsed: false,
+								items: [
+									{
+										title: "Frontmatter Config",
+										link: "/frontmatter",
+									},
+								],
+							},
+							{
+								title: "Default Theme",
+								collapsed: false,
+								items: [
+									{
+										title: "Overview",
+										link: "/default-theme",
+									},
+									...
+								],
+							},
+						],
+					},
+				},
+			},
+			...
+    }
+  )
+);
+
+```

@@ -51,12 +51,8 @@ export default defineConfig(
 										collapsed: false,
 										items: [
 											{
-												title: "Introduction",
-												link: "/",
-											},
-											{
 												title: "Qu'est-ce que SolidBase ?",
-												link: "/about",
+												link: "/",
 											},
 										],
 									},
@@ -65,24 +61,8 @@ export default defineConfig(
 										collapsed: false,
 										items: [
 											{
-												title: "MDX",
-												link: "/about",
-											},
-											{
-												title: "Copie de code",
-												link: "/about",
-											},
-											{
-												title: "Bons styles",
-												link: "/about",
-											},
-											{
-												title: "Équipe cool 8)",
-												link: "/about",
-											},
-											{
-												title: "CLI",
-												link: "/about",
+												title: "Extensions Markdown",
+												link: "/markdown",
 											},
 										],
 									},
@@ -156,13 +136,17 @@ export default defineConfig(
 										link: "/i18n",
 									},
 									{
+										title: "Sitemap Generation",
+										link: "/sitemap",
+									},
+									{
 										title: "Dev",
 										link: "/dev",
 									},
 								],
 							},
 							{
-								title: "Customizaiton",
+								title: "Customisation",
 								collapsed: false,
 								items: [
 									{
@@ -186,6 +170,32 @@ export default defineConfig(
 									{
 										title: "Frontmatter Config",
 										link: "/frontmatter",
+									},
+								],
+							},
+							{
+								title: "Default Theme",
+								collapsed: false,
+								items: [
+									{
+										title: "Overview",
+										link: "/default-theme",
+									},
+									{
+										title: "Sidebar",
+										link: "/default-theme/sidebar",
+									},
+									{
+										title: "Article",
+										link: "/default-theme/article",
+									},
+									{
+										title: "Footer",
+										link: "/default-theme/footer",
+									},
+									{
+										title: "Landing",
+										link: "/default-theme/landing",
 									},
 								],
 							},
