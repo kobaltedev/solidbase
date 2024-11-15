@@ -75,9 +75,10 @@ export function useLocale() {
 				document.documentElement.lang = locale.code;
 			});
 		},
-		applyPathPrefix: (path: string) => {
+		applyPathPrefix: (path: string): `/${string}` => {
 			const link = getLocaleLink(currentLocale());
-			if (link === "/") return path.startsWith("/") ? path.slice(1) : path;
+			if (link === "/")
+				return path.startsWith("/") ? path : (`/${path}` as any);
 			let p = path;
 			if (p.startsWith("/")) p = p.slice(1);
 			return `${link}${p}`;
@@ -91,8 +92,8 @@ export function useLocale() {
 	};
 }
 
-export const getLocaleLink = (locale: ResolvedLocale<any>) =>
-	locale.config?.link ?? `/${locale.isRoot ? "" : `${locale.code}/`}`;
+export const getLocaleLink = (locale: ResolvedLocale<any>): `/${string}` =>
+	locale.config?.link ?? (`/${locale.isRoot ? "" : `${locale.code}/`}` as any);
 
 export function getLocale() {
 	let path: string;
