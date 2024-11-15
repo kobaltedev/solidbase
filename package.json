@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
