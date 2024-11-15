@@ -70,25 +70,37 @@ export default function Header() {
 						<ThemeSelector />
 					</div>
 				</div>
-				<div class={styles["mobile-bar"]}>
-					<button
-						type="button"
-						class={styles["mobile-menu"]}
-						onClick={() => setSidebarOpen((p) => !p)}
-						aria-label="Open navigation"
-					>
-						<MenuLeftIcon /> Menu
-					</button>
-					<Show when={pageData().layout.toc !== false}>
-						<Dialog.Trigger
-							type="button"
-							class={styles["mobile-menu"]}
-							aria-label="Open table of contents"
+				<Show
+					when={
+						pageData().layout?.sidebar !== false ||
+						pageData().layout?.toc !== false
+					}
+				>
+					<div class={styles["mobile-bar"]}>
+						<Show
+							when={pageData().layout?.sidebar !== false}
+							fallback={<div />}
 						>
-							On this page <ArrowDownIcon />
-						</Dialog.Trigger>
-					</Show>
-				</div>
+							<button
+								type="button"
+								class={styles["mobile-menu"]}
+								onClick={() => setSidebarOpen((p) => !p)}
+								aria-label="Open navigation"
+							>
+								<MenuLeftIcon /> Menu
+							</button>
+						</Show>
+						<Show when={pageData().layout?.toc !== false}>
+							<Dialog.Trigger
+								type="button"
+								class={styles["mobile-menu"]}
+								aria-label="Open table of contents"
+							>
+								On this page <ArrowDownIcon />
+							</Dialog.Trigger>
+						</Show>
+					</div>
+				</Show>
 
 				<div ref={setTocRef} class={styles["toc-container"]} />
 			</header>
