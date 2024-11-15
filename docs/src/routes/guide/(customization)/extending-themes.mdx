@@ -103,9 +103,44 @@ export default defineConfig(withSolidBase(
 You can then provide your own fonts:
 
 ```css
-<!-- custom.css -- > html {
+<!-- custom.css -->
+html {
   --sb-font-headings: "Comic Sans";
   --sb-font-text: "Comic Sans";
   --sb-font-mono: "Comic Sans";
+}
+```
+
+### Overriding Components
+
+In addition to using a custom `mdx-components` file to override the components available in markdown files,
+the components [listed here](https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/context.tsx)
+can be overriden using `ComponentsProvider`.
+Most of these components are used as part of the layout, rather than inside your markdown files.
+
+```tsx
+<!-- Layout.tsx -->
+import Layout from "@kobalte/solidbase/default-theme/Layout";
+import ComponentsProvider from "@kobalte/solidbase/default-theme/context";
+import Article from "@kobalte/solidbase/default-theme/components/Article";
+
+export default function (props: ComponentProps<typeof Layout>) {
+	return (
+		<ComponentsProvider
+			components={{ Article: CustomArticle }}
+		>
+			<Layout {...props} />
+		</ComponentsProvider>
+	)
+}
+
+function CustomArticle(props: ComponentProps<typeof Article>) {
+	return (
+		<Article {...props}>
+			{/* Will appear inside the page's <article>, above markdown content */}
+			<span>We love SolidBase!</span>
+			{props.children}
+		</Article>
+	)
 }
 ```
