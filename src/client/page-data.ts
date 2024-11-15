@@ -134,21 +134,25 @@ function createPageData() {
 			const pd = (mod?.$$SolidBase_page_data ??
 				defaultPageData) as CurrentPageData;
 
-			// @ts-ignore
-			pd.layout ??= {};
+			pd.layout = defaultPageData.layout;
 
 			pd.layout!.prev = pd.frontmatter.prev;
 			pd.layout!.next = pd.frontmatter.next;
 
 			switch (pd.frontmatter.layout) {
 				case "home":
-					pd.layout!.editLink ??= false;
-					pd.layout!.lastUpdated ??= false;
-					pd.layout!.next ??= false;
-					pd.layout!.prev ??= false;
-					pd.layout!.sidebar ??= false;
-					pd.layout!.toc ??= false;
-					pd.layout!.footer ??= true;
+					pd.layout!.editLink = false;
+					pd.layout!.lastUpdated = false;
+					pd.layout!.next = false;
+					pd.layout!.prev = false;
+					pd.layout!.sidebar = false;
+					pd.layout!.toc = false;
+					pd.layout!.footer = true;
+			}
+
+			for (const k in Object.keys(pd.layout ?? {})) {
+				// @ts-ignore
+				if (pd.frontmatter[k]) pd.layout[k] = pd.frontmatter[k];
 			}
 
 			return pd;

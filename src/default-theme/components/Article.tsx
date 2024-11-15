@@ -153,7 +153,7 @@ export default function Article(props: ParentProps) {
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && pageData().layout?.toc}>
+				<Show when={!mobileLayout() && (pageData().layout?.toc ?? true)}>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>
