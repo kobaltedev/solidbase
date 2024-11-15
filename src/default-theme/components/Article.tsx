@@ -17,7 +17,8 @@ import styles from "./Article.module.css";
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
 
-	const { TableOfContents, Link, LastUpdated, Footer } = useThemeComponents();
+	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
+		useThemeComponents();
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -69,11 +70,11 @@ export default function Article(props: ParentProps) {
 	const prevNext = usePrevNext();
 
 	const hasPrev = () =>
-		(prevNext.prevLink() && pageData().layout.prev !== false) ||
-		pageData().layout.prev;
+		(prevNext.prevLink() && pageData().layout?.prev !== false) ||
+		pageData().layout?.prev;
 	const hasNext = () =>
-		(prevNext.nextLink() && pageData().layout.next !== false) ||
-		pageData().layout.next;
+		(prevNext.nextLink() && pageData().layout?.next !== false) ||
+		pageData().layout?.next;
 	const customTitle = (r: RelativePageConfig) =>
 		typeof r === "string" ? r : typeof r === "object" ? r.text : undefined;
 	const customLink = (r: RelativePageConfig) =>
@@ -85,22 +86,24 @@ export default function Article(props: ParentProps) {
 
 			<article class={styles.article}>
 				<div ref={setContentRef} class={styles.content}>
+					<Show when={pageData().frontmatter.hero}>
+						<Hero />
+					</Show>
+					<Show when={pageData().frontmatter.features}>
+						<Features />
+					</Show>
+
 					{props.children}
 
 					<div class={styles.info}>
 						<Show
-							when={pageData().editLink && pageData().layout.editLink !== false}
+							when={pageData().editLink && pageData().layout.editLink}
 							fallback={<div />}
 						>
 							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
 						</Show>
 
-						<Show
-							when={
-								pageData().lastUpdated &&
-								pageData().layout.lastUpdated !== false
-							}
-						>
+						<Show when={pageData().layout.lastUpdated}>
 							<LastUpdated />
 						</Show>
 					</div>
@@ -142,15 +145,14 @@ export default function Article(props: ParentProps) {
 
 					<Show
 						when={
-							(config().themeConfig?.footer ?? true) &&
-							pageData().layout.footer !== false
+							(config().themeConfig?.footer ?? true) && pageData().layout.footer
 						}
 					>
 						<Footer />
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && pageData().layout.toc !== false}>
+				<Show when={!mobileLayout() && pageData().layout.toc}>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>

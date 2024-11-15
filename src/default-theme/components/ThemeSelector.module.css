@@ -19,6 +19,9 @@
 	color: var(--text-color);
 	border-radius: var(--border-radius);
 	cursor: var(--button-cursor);
+	transition-property: background-color, opacity, color;
+	transition-timing-function: var(--transition-timing);
+	transition-duration: .15s;
 
 	&:hover,
 	&:focus,

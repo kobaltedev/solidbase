@@ -1,6 +1,6 @@
 import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
-import type { ComponentProps } from "solid-js";
+import { type ComponentProps, Show } from "solid-js";
 
 import { useSolidBaseContext } from "../../../src/client/context";
 import { useCurrentPageData } from "../../../src/client/page-data";
@@ -12,6 +12,8 @@ import BetaImage from "../../assets/beta.png";
 import { OGImage } from "./og-image";
 
 export default function (props: ComponentProps<typeof Layout>) {
+	const pageData = useCurrentPageData();
+
 	return (
 		<>
 			<OpenGraph />
@@ -19,8 +21,10 @@ export default function (props: ComponentProps<typeof Layout>) {
 				components={{
 					Article: (props) => (
 						<Article {...props}>
-							<img src={BetaImage} alt="Beta" />
-							<br />
+							<Show when={pageData().frontmatter.layout !== "home"}>
+								<img src={BetaImage} alt="Beta" />
+								<br />
+							</Show>
 							{props.children}
 						</Article>
 					),

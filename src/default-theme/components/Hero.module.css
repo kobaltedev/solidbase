@@ -1,0 +1,120 @@
+.hero {
+	display: flex;
+	align-items: stretch;
+
+	&:has(.image) {
+		& > div:first-child {
+			align-items: stretch;
+		}
+	}
+
+	& > div:first-child {
+		flex-grow: 1;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		margin: 2rem 0;
+
+		h1 {
+			font-size: 4rem;
+			background: var(--solidbase-hero-name-background);
+			background-clip: text;
+			color: transparent;
+			width: max-content;
+			line-height: 1;
+		}
+
+		& > p {
+			font-size: 3rem;
+			font-weight: 700;
+			color: var(--text-color);
+			line-height: 1;
+
+			&.tagline {
+				font-size: 2rem;
+				font-weight: 500;
+			}
+		}
+
+		& .actions {
+			display: flex;
+			gap: 1.25rem;
+			margin: 1rem 0;
+
+			.action {
+				padding: .5rem .75rem;
+				background: var(--active-link-color);
+				color: var(--text-color);
+				border-radius: var(--border-radius);
+				text-decoration: none;
+				transition-property: background-color, opacity, color;
+				transition-timing-function: var(--transition-timing);
+				transition-duration: .15s;
+
+				&:hover,
+				&:focus {
+					background: color-mix(in hsl, var(--active-link-color) 90%, black);
+				}
+
+				&:global(.alt) {
+					background: color-mix(in hsl, var(--text-color) 10%, transparent);
+
+					&:hover,
+					&:focus {
+						background: color-mix(in hsl, var(--text-color) 20%, transparent);
+					}
+				}
+			}
+		}
+	}
+
+	.image {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		margin-top: -1rem;
+
+		img {
+			height: 25rem;
+			position: relative;
+			z-index: 2;
+			object-fit: contain;
+		}
+
+		.image-bg {
+			position: absolute;
+			inset: 0;
+			border-radius: 50%;
+			margin: 20%;
+			background-image: var(--solidbase-hero-background);
+			filter: var(--solidbase-hero-filter);
+		}
+	}
+}
+
+article:has(.hero) > div {
+	max-width: min(calc(100dvw - 2.5rem), 72rem) !important;
+}
+
+:root {
+	--solidbase-hero-background: linear-gradient(
+		-45deg,
+		hsl(200, 98%, 39%) 50%,
+		hsl(199, 95%, 74%) 50%
+	);
+	--solidbase-hero-filter: blur(68px);
+	--solidbase-hero-name-background: linear-gradient(
+		-20deg,
+		hsl(200, 98%, 39%) 30%,
+		hsl(199, 95%, 74%)
+	);
+}
+
+@media screen and (max-width: 1000px) {
+	.hero {
+		flex-direction: column-reverse;
+	}
+}

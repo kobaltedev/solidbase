@@ -30,9 +30,34 @@ interface LayoutOptions {
 	lastUpdated: boolean;
 }
 
+interface HeroActionConfig {
+	theme?: string;
+	text?: string;
+	link?: string;
+}
+
+interface HeroConfig {
+	name?: string;
+	text?: string;
+	tagline?: string;
+	image?: {
+		src: string;
+		alt?: string;
+	};
+	actions?: Array<HeroActionConfig>;
+}
+
+interface FeaturesConfig {
+	icon?: string;
+	title?: string;
+	details?: string;
+}
+
 interface FrontmatterData extends Partial<LayoutOptions> {
 	title?: string;
 	layout?: "home";
+	hero?: HeroConfig;
+	features?: Array<FeaturesConfig>;
 }
 
 interface CurrentPageData {
@@ -123,6 +148,7 @@ function createPageData() {
 					pd.layout.prev ??= false;
 					pd.layout.sidebar ??= false;
 					pd.layout.toc ??= false;
+					pd.layout.footer ??= true;
 			}
 
 			return pd;

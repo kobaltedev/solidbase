@@ -7,8 +7,10 @@ import {
 } from "solid-js";
 
 import Article from "./components/Article";
+import Features from "./components/Features";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Hero from "./components/Hero";
 import LastUpdated from "./components/LastUpdated";
 import Link from "./components/Link";
 import LocaleSelector from "./components/LocaleSelector";
@@ -24,6 +26,8 @@ const defaultComponents = {
 	LocaleSelector,
 	TableOfContents,
 	ThemeSelector,
+	Hero,
+	Features,
 };
 
 export type ThemeComponents = typeof defaultComponents;
