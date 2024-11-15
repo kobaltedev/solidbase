@@ -73,6 +73,11 @@
         "solid": "./dist/default-theme/index.js",
         "import": "./dist/default-theme/index.js",
         "types": "./dist/default-theme/index.d.ts"
+      },
+      "./default-theme/*": {
+        "solid": "./dist/default-theme/*",
+        "import": "./dist/default-theme/*",
+        "types": "./dist/default-theme/*"
       }
     }
   },
