@@ -115,12 +115,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.prev}
 										href={
-											customLink(pageData().layout.prev) ??
+											customLink(pageData().layout?.prev) ??
 											prevNext.prevLink().link
 										}
 									>
 										<span>Previous</span>
-										{customTitle(pageData().layout.prev) ??
+										{customTitle(pageData().layout?.prev) ??
 											prevNext.prevLink().title}
 									</a>
 								</Show>
@@ -130,12 +130,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.next}
 										href={
-											customLink(pageData().layout.next) ??
+											customLink(pageData().layout?.next) ??
 											prevNext.nextLink().link
 										}
 									>
 										<span>Next</span>
-										{customLink(pageData().layout.next) ??
+										{customLink(pageData().layout?.next) ??
 											prevNext.nextLink().title}
 									</a>
 								</Show>
