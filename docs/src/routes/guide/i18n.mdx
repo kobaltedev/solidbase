@@ -1,0 +1,46 @@
+---
+title: Internationalisation
+---
+
+# Internationalisation
+
+SolidBase has built-in i18n support which can be configured in the root config:
+
+```ts
+export default defineConfig(
+	createWithSolidBase(theme)(
+		/* SolidStart options */
+		{
+			...
+		},
+		/* SolidBase options */
+		{
+			...
+			lang: "en", // default lang without route prefix
+			locales: {
+				fr: {
+					label: "Français",
+					themeConfig: {
+						...
+					},
+				},
+			},
+			...
+    }
+  )
+);
+```
+
+When the language is switched, the path will have a locale prefixed applied.
+The following route structure is recommended:
+
+```
+.
+└─ src
+   └─ routes
+      ├─ fr
+      │  ├─ index.mdx
+      │  └─ about.mdx
+      ├─ index.mdx
+      └─ about.mdx
+```

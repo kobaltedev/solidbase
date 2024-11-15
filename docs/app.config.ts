@@ -152,6 +152,10 @@ export default defineConfig(
 										link: "/markdown",
 									},
 									{
+										title: "Internationalisation",
+										link: "/i18n",
+									},
+									{
 										title: "Dev",
 										link: "/dev",
 									},
