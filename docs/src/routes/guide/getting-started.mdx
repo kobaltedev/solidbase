@@ -25,9 +25,7 @@ This will configure SolidBase with the default theme.
 import { defineConfig } from "@solidjs/start/config";
 import { withSolidBase } from "@kobalte/solidbase/config";
 
-export default defineConfig(
-	withSolidBase(/* your SolidStart config */)
-);
+export default defineConfig(withSolidBase(/* your SolidStart config */));
 ```
 
 Lastly, add the `SolidBaseRoot` component to the `root` of your project's `Router`.
