@@ -1,0 +1,116 @@
+---
+title: Runtime API
+---
+
+# Runtime API
+
+SolidBase provides multiple primitives for accessing runtime data.
+These are the same primitives used to build the default theme.
+
+## Route Data
+
+### `useSolidBaseContext`
+
+Provides access to the SolidBase config, locale, and page title.
+The config will have the locale's `themeConfig` spread onto its own `themeConfig`.
+
+```ts
+function useSolidBaseContext<ThemeConfig>(): SolidBaseContextValue<ThemeConfig>;
+
+interface SolidBaseContextValue<ThemeConfig> {
+  config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
+  locale: ReturnType<typeof useLocale>;
+  title: Accessor<string>;
+}
+```
+
+### `useCurrentPageData`
+
+Provides access to the data for the current page,
+including frontmatter, table of contents, and `lastUpdated`.
+
+```ts
+interface CurrentPageData {
+  frontmatter: Record<string, any>;
+  toc?: Array<TableOfContentsItem>;
+  editLink?: string;
+  lastUpdated?: number;
+}
+
+interface TableOfContentsItem {
+  title: string;
+  href: string;
+  children: Array<TableOfContentsItem>;
+}
+```
+
+## Theme
+
+### `getTheme`
+
+Returns the current theme as determined by the theme cookie and system preferences.
+
+```ts
+function getTheme(): "light" | "dark";
+```
+
+### `setTheme`
+
+Updates the current theme.
+
+```
+function setTheme(theme: "light" | "dark" | "system"): void;
+```
+
+### `getThemVariant`
+
+Similar to `getTheme`, but indicates whether the theme is being derived from system preferences.
+This is intended to be used in theme switchers.
+
+```ts
+function getThemeVariant(): "light" | "dark" | "system";
+```
+
+## Locale
+
+### `useLocale`
+
+Allows reading and updating the current locale,
+and provides utilities for managing paths that don't include the locale.
+
+```ts
+interface UseLocale {
+  locales: Array<ResolvedLocale<any>>;
+  currentLocale: Accessor<ResolvedLocale<any>>;
+  setLocale(locale: ResolvedLocale<any>): void;
+  // Applies the current locale's path prefix (if there is one) to the given path
+  applyPathPrefix(path: string): `/${string}`;
+  // The current path without the locale prefix
+  routePath: Accessor<`/${string}`>;
+}
+
+interface ResolvedLocale<ThemeConfig> {
+  code: string;
+  isRoot?: boolean;
+  config: LocaleConfig<ThemeConfig>;
+}
+```
+
+### `getLocale`
+
+```ts
+function getLocale(path?: string): ResolvedLocale<any>;
+```
+
+Returns the locale for the provided or path.
+If `path` is not provided then on the server the request `pathname` will be used,
+and on the client `location.pathname` will be used.
+This is mostly intended for `getHtmlProps`.
+
+### `getLocaleLink`
+
+```ts
+function getLocaleLink(locale: ResolvedLocale<any>): `/${string}`;
+```
+
+Returns the root path for the provided locale.

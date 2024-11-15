@@ -171,6 +171,10 @@ export default defineConfig(
 										title: "Frontmatter Config",
 										link: "/frontmatter",
 									},
+									{
+										title: "Runtime API",
+										link: "/runtime-api",
+									},
 								],
 							},
 							{

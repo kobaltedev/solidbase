@@ -95,16 +95,17 @@ export function useLocale() {
 export const getLocaleLink = (locale: ResolvedLocale<any>): `/${string}` =>
 	locale.config?.link ?? (`/${locale.isRoot ? "" : `${locale.code}/`}` as any);
 
-export function getLocale() {
-	let path: string;
+export function getLocale(_path?: string) {
+	let path = _path;
+	if (path === undefined) {
+		if (isServer) {
+			const e = getRequestEvent();
+			if (!e) throw new Error("getLang must be called in a request context");
 
-	if (isServer) {
-		const e = getRequestEvent();
-		if (!e) throw new Error("getLang must be called in a request context");
-
-		path = new URL(e.request.url).pathname;
-	} else {
-		path = location.pathname;
+			path = new URL(e.request.url).pathname;
+		} else {
+			path = location.pathname;
+		}
 	}
 
 	return getLocaleForPath(path);

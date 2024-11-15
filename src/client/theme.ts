@@ -21,7 +21,7 @@ function getThemeCookie(): RawThemeType {
 
 const [theme, _setTheme] = createSignal<ThemeType | "system">();
 
-export function getRawTheme(): RawThemeType {
+function getRawTheme(): RawThemeType {
 	if (isServer) return getThemeCookie() as RawThemeType;
 
 	const prefersDark = usePrefersDark();

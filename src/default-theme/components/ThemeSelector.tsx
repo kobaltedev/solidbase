@@ -2,8 +2,8 @@ import { Select } from "@kobalte/core/select";
 import { isServer } from "solid-js/web";
 import {
 	type ThemeType,
-	getRawTheme,
 	getTheme,
+	getThemeVariant,
 	setTheme,
 } from "../../client/theme";
 import styles from "./ThemeSelector.module.css";
@@ -30,8 +30,8 @@ const THEME_OPTIONS: ThemeOption[] = [
 
 export default function ThemeSelector() {
 	if (!isServer) {
-		let theme: string = getRawTheme();
-		if (theme.startsWith("s")) theme = "system";
+		let theme: string = getThemeVariant();
+		if (theme === "system") theme = "system";
 		setTheme(theme as ThemeType);
 	}
 
