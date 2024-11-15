@@ -75,9 +75,9 @@ export default function Article(props: ParentProps) {
 	const hasNext = () =>
 		(prevNext.nextLink() && pageData().layout?.next !== false) ||
 		pageData().layout?.next;
-	const customTitle = (r: RelativePageConfig) =>
+	const customTitle = (r?: RelativePageConfig) =>
 		typeof r === "string" ? r : typeof r === "object" ? r.text : undefined;
-	const customLink = (r: RelativePageConfig) =>
+	const customLink = (r?: RelativePageConfig) =>
 		typeof r === "object" ? r.link : undefined;
 
 	return (
@@ -97,13 +97,13 @@ export default function Article(props: ParentProps) {
 
 					<div class={styles.info}>
 						<Show
-							when={pageData().editLink && pageData().layout.editLink}
+							when={pageData().editLink && pageData().layout?.editLink}
 							fallback={<div />}
 						>
 							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
 						</Show>
 
-						<Show when={pageData().layout.lastUpdated}>
+						<Show when={pageData().layout?.lastUpdated}>
 							<LastUpdated />
 						</Show>
 					</div>
@@ -145,14 +145,15 @@ export default function Article(props: ParentProps) {
 
 					<Show
 						when={
-							(config().themeConfig?.footer ?? true) && pageData().layout.footer
+							(config().themeConfig?.footer ?? true) &&
+							pageData().layout?.footer
 						}
 					>
 						<Footer />
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && pageData().layout.toc}>
+				<Show when={!mobileLayout() && pageData().layout?.toc}>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>

@@ -66,6 +66,10 @@
 						background: color-mix(in hsl, var(--text-color) 20%, transparent);
 					}
 				}
+
+				&:global(.brand) {
+					color: hsl(240, 5%, 85%);
+				}
 			}
 		}
 	}

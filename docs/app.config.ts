@@ -31,7 +31,7 @@ export default defineConfig(
 			lang: "en",
 			locales: {
 				fr: {
-					label: "French",
+					label: "Français",
 					themeConfig: {
 						nav: [
 							{

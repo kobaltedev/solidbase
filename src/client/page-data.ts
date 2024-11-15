@@ -66,7 +66,7 @@ interface CurrentPageData {
 	toc?: Array<TableOfContentsItemData>;
 	editLink?: string;
 	lastUpdated?: number;
-	layout: LayoutOptions;
+	layout?: LayoutOptions;
 }
 
 const defaultPageData: CurrentPageData = {
@@ -137,18 +137,18 @@ function createPageData() {
 			// @ts-ignore
 			pd.layout ??= {};
 
-			pd.layout.prev = pd.frontmatter.prev;
-			pd.layout.next = pd.frontmatter.next;
+			pd.layout!.prev = pd.frontmatter.prev;
+			pd.layout!.next = pd.frontmatter.next;
 
 			switch (pd.frontmatter.layout) {
 				case "home":
-					pd.layout.editLink ??= false;
-					pd.layout.lastUpdated ??= false;
-					pd.layout.next ??= false;
-					pd.layout.prev ??= false;
-					pd.layout.sidebar ??= false;
-					pd.layout.toc ??= false;
-					pd.layout.footer ??= true;
+					pd.layout!.editLink ??= false;
+					pd.layout!.lastUpdated ??= false;
+					pd.layout!.next ??= false;
+					pd.layout!.prev ??= false;
+					pd.layout!.sidebar ??= false;
+					pd.layout!.toc ??= false;
+					pd.layout!.footer ??= true;
 			}
 
 			return pd;

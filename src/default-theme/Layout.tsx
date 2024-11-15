@@ -57,7 +57,7 @@ function Layout(props: RouteSectionProps) {
 					when={
 						sidebar() &&
 						sidebar()!.items?.length > 0 &&
-						pageData().layout.sidebar !== false
+						pageData().layout?.sidebar !== false
 					}
 					fallback={<div class="_e" />}
 				>

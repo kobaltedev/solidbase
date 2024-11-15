@@ -23,7 +23,7 @@ export default function Hero() {
 						<For each={hero().actions!}>
 							{(action) => (
 								<a
-									class={`${styles.action} ${action.theme !== "brand" ? action.theme : ""}`}
+									class={`${styles.action} ${action.theme ?? "brand"}`}
 									href={action.link}
 									target={
 										action.link!.startsWith("http") ? "_blank" : undefined
