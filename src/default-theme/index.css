@@ -36,6 +36,15 @@ article *[id] {
 
 .expressive-code.expressive-code figure {
 	--code-background: var(--code-background-color);
+	--ec-frm-edActTabBg: var(--code-background-color);
+	--ec-frm-edTabBarBrdCol: var(--code-background-color);
+	--ec-frm-edTabBarBg: var(--background-color);
+	--ec-frm-edActTabIndTopCol: var(--active-link-color);
+	--ec-frm-edActTabIndBtmCol: var(--background-color);
+	--ec-frm-edTabBarBrdBtmCol: var(--background-color);
+	--ec-frm-edActTabFg: var(--text-color);
+	--header-border-radius: var(--border-radius);
+	--ec-brdRad: var(--border-radius);
 	box-shadow: none;
 	border-radius: var(--border-radius);
 	cursor: text;
