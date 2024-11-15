@@ -116,10 +116,12 @@ function createPageData() {
 					typeof window.$$SolidBase_page_data[component.src.split("?")[0]] !==
 						"undefined"
 				) {
-					// @ts-ignore
-					return window.$$SolidBase_page_data[
-						component.src.split("?")[0]
-					] as CurrentPageData;
+					return computeLayout(
+						// @ts-ignore
+						window.$$SolidBase_page_data[
+							component.src.split("?")[0]
+						] as CurrentPageData,
+					);
 				}
 
 				const manifest = import.meta.env.SSR
@@ -134,31 +136,35 @@ function createPageData() {
 			const pd = (mod?.$$SolidBase_page_data ??
 				defaultPageData) as CurrentPageData;
 
-			pd.layout = defaultPageData.layout;
-
-			pd.layout!.prev = pd.frontmatter.prev;
-			pd.layout!.next = pd.frontmatter.next;
-
-			switch (pd.frontmatter.layout) {
-				case "home":
-					pd.layout!.editLink = false;
-					pd.layout!.lastUpdated = false;
-					pd.layout!.next = false;
-					pd.layout!.prev = false;
-					pd.layout!.sidebar = false;
-					pd.layout!.toc = false;
-					pd.layout!.footer = true;
-			}
-
-			for (const k in Object.keys(pd.layout ?? {})) {
-				// @ts-ignore
-				if (pd.frontmatter[k]) pd.layout[k] = pd.frontmatter[k];
-			}
-
-			return pd;
+			return computeLayout(pd);
 		},
 		{ initialValue: defaultPageData },
 	);
 
 	return pageData;
+}
+
+function computeLayout(pd: CurrentPageData): CurrentPageData {
+	pd.layout = structuredClone(defaultPageData.layout);
+
+	pd.layout!.prev = pd.frontmatter.prev;
+	pd.layout!.next = pd.frontmatter.next;
+
+	switch (pd.frontmatter.layout) {
+		case "home":
+			pd.layout!.editLink = false;
+			pd.layout!.lastUpdated = false;
+			pd.layout!.next = false;
+			pd.layout!.prev = false;
+			pd.layout!.sidebar = false;
+			pd.layout!.toc = false;
+			pd.layout!.footer = true;
+	}
+
+	for (const k in Object.keys(pd.layout ?? {})) {
+		// @ts-ignore
+		if (pd.frontmatter[k]) pd.layout[k] = pd.frontmatter[k];
+	}
+
+	return pd;
 }
