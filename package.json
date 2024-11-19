@@ -7,7 +7,7 @@
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
-    "build": "tsc",
+    "build": "tsc && node scripts/build.js",
     "format": "biome check --write && prettier . --write",
     "typecheck": "tsc --noEmit",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
@@ -36,15 +36,30 @@
       "import": "./src/server.ts",
       "types": "./src/server.ts"
     },
+    "./config": {
+      "solid": "./src/config/index.ts",
+      "import": "./src/config/index.ts",
+      "types": "./src/config/index.ts"
+    },
     "./default-theme": {
       "solid": "./src/default-theme/index.ts",
       "import": "./src/default-theme/index.ts",
       "types": "./src/default-theme/index.ts"
     },
+    "./default-theme/components": {
+      "solid": "./src/default-theme/components",
+      "import": "./src/default-theme/components",
+      "types": "./src/default-theme/components"
+    },
     "./default-theme/*": {
-      "solid": "./src/default-theme/*",
-      "import": "./src/default-theme/*",
-      "types": "./src/default-theme/*"
+      "solid": "./src/default-theme/*.ts",
+      "import": "./src/default-theme/*.ts",
+      "types": "./src/default-theme/*.ts"
+    },
+    "./default-theme/components/*": {
+      "solid": "./src/default-theme/components/*.tsx",
+      "import": "./src/default-theme/components/*.tsx",
+      "types": "./src/default-theme/components/*.tsx"
     }
   },
   "files": [
@@ -55,14 +70,14 @@
     "access": "public",
     "exports": {
       "./client": {
-        "solid": "./src/client/index.tsx",
-        "import": "./src/client/index.tsx",
-        "types": "./src/client/index.tsx"
+        "solid": "./dist/client/index.jsx",
+        "import": "./dist/client/index.jsx",
+        "types": "./dist/client/index.d.ts"
       },
       "./server": {
-        "solid": "./src/server.ts",
-        "import": "./src/server.ts",
-        "types": "./src/server.ts"
+        "solid": "./dist/server.js",
+        "import": "./dist/server.js",
+        "types": "./dist/server.d.ts"
       },
       "./config": {
         "solid": "./dist/config/index.js",
@@ -74,10 +89,20 @@
         "import": "./dist/default-theme/index.js",
         "types": "./dist/default-theme/index.d.ts"
       },
+      "./default-theme/components": {
+        "solid": "./dist/default-theme/components",
+        "import": "./dist/default-theme/components",
+        "types": "./dist/default-theme/components"
+      },
       "./default-theme/*": {
-        "solid": "./dist/default-theme/*",
-        "import": "./dist/default-theme/*",
-        "types": "./dist/default-theme/*"
+        "solid": "./dist/default-theme/*.js",
+        "import": "./dist/default-theme/*.js",
+        "types": "./dist/default-theme/*.d.ts"
+      },
+      "./default-theme/components/*": {
+        "solid": "./dist/default-theme/components/*.jsx",
+        "import": "./dist/default-theme/components/*.jsx",
+        "types": "./dist/default-theme/components/*.d.ts"
       }
     }
   },
@@ -85,6 +110,7 @@
     "@biomejs/biome": "^1.9.4",
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
+    "glob": "^10.4.5",
     "prettier": "4.0.0-alpha.8",
     "solid-js": "^1.9.3",
     "typescript": "^5.6.3",

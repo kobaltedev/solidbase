@@ -36,7 +36,7 @@ Add a `Layout` file inside the `componentsPath` folder that renders the original
 
 ```tsx
 <!-- Layout.tsx -->
-import { Layout } from "@kobalte/solidbase/default-theme/Layout";
+import { Layout } from "@kobalte/solidbase/default-theme/components/Layout";
 
 export default function (props: ComponentProps<typeof Layout>) {
 	// do whatever and render whatever you want as long as `Layout` gets rendered
@@ -56,7 +56,7 @@ The default theme's CSS can be customised using CSS variables:
 
 ```tsx
 <!-- Layout.tsx -->
-import Layout from "@kobalte/solidbase/default-theme/Layout";
+import Layout from "@kobalte/solidbase/default-theme/components/Layout";
 // this import must be below the Layout import
 import "./custom.css";
 
@@ -123,7 +123,7 @@ Most of these components are used as part of the layout, rather than inside your
 
 ```tsx
 <!-- Layout.tsx -->
-import Layout from "@kobalte/solidbase/default-theme/Layout";
+import Layout from "@kobalte/solidbase/default-theme/components/Layout";
 import ComponentsProvider from "@kobalte/solidbase/default-theme/context";
 import Article from "@kobalte/solidbase/default-theme/components/Article";
 

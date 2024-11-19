@@ -126,6 +126,9 @@ importers:
       '@types/cross-spawn':
         specifier: ^6.0.6
         version: 6.0.6
+      glob:
+        specifier: ^10.4.5
+        version: 10.4.5
       prettier:
         specifier: 4.0.0-alpha.8
         version: 4.0.0-alpha.8
