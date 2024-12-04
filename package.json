@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
@@ -113,13 +113,16 @@
     "glob": "^10.4.5",
     "prettier": "4.0.0-alpha.8",
     "solid-js": "^1.9.3",
+    "solid-mdx": "^0.0.7",
     "typescript": "^5.6.3",
     "vinxi": "^0.4.3",
     "vite": "^5.4.10"
   },
   "peerDependencies": {
     "@solidjs/start": "^1.0.8",
+    "@solidjs/router": "^14 | ^15",
     "solid-js": "^1.9.1",
+    "solid-mdx": "^0.0.7",
     "vinxi": "^0.4.3",
     "vite": "^5.4.8"
   },
@@ -157,7 +160,6 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
-    "solid-mdx": "^0.0.7",
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"

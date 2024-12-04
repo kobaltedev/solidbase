@@ -12,7 +12,7 @@ const theme = defineTheme({
 export default defineConfig(
   createWithSolidBase(theme)(
     {
-      ssr: true,
+      ssr: false,
       server: {
         prerender: {
           crawlLinks: true,

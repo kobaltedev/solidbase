@@ -59,6 +59,8 @@ export async function loadVirtual(
 		};
 	`;
 
+  console.log(template);
+
   return template;
 }
 
