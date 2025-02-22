@@ -1,4 +1,4 @@
-import { Layout, mdxComponents } from "virtual:solidbase";
+import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { MetaProvider, Title, useHead } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
 import { Suspense, createEffect, createUniqueId } from "solid-js";

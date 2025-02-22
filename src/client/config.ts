@@ -1,4 +1,4 @@
-import { solidBaseConfig } from "virtual:solidbase";
+import { solidBaseConfig } from "virtual:solidbase/config";
 import { type Accessor, createMemo } from "solid-js";
 
 import type { SolidBaseResolvedConfig } from "../config";

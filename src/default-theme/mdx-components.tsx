@@ -35,7 +35,7 @@ export function h6(props: ComponentProps<"h6">) {
 }
 
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
-	const outbound = () => (props.href ?? "").includes("://");
+	const outbound = () => (props.href ?? "").includes("//");
 	const autoHeading = () => props["data-auto-heading"] === "";
 
 	return (

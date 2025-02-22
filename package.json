@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
     "build": "tsc",
-    "format": "biome check --write && prettier . --write",
+    "format": "biome check --write #&& prettier . --write",
     "typecheck": "tsc --noEmit",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
     "publish:release": "pnpm i && pnpm build && pnpm publish"
@@ -47,49 +47,51 @@
       "types": "./src/default-theme/*"
     }
   },
+  "publishConfig": {
+	  "access":"public",
+	  "exports": {
+	    "./client": {
+	      "solid": "./dist/client/index.jsx",
+	      "import": "./dist/client/index.jsx",
+	      "types": "./dist/client/index.d.ts"
+	    },
+	    "./config": {
+	      "solid": "./dist/config/index.js",
+	      "import": "./dist/config/index.js",
+	      "types": "./dist/config/index.d.ts"
+	    },
+	    "./server": {
+	      "solid": "./dist/server.js",
+	      "import": "./dist/server.js",
+	      "types": "./dist/server.d.ts"
+	    },
+	    "./default-theme": {
+	      "solid": "./dist/default-theme/index.js",
+	      "import": "./dist/default-theme/index.js",
+	      "types": "./dist/default-theme/index.d.ts"
+	    },
+	    "./default-theme/*": {
+	      "solid": "./dist/default-theme/*",
+	      "import": "./dist/default-theme/*",
+	      "types": "./dist/default-theme/*"
+	    }
+	  }
+  },
   "files": [
     "/src",
     "/dist"
   ],
-  "publishConfig": {
-    "access": "public",
-    "exports": {
-      "./client": {
-        "solid": "./src/client/index.tsx",
-        "import": "./src/client/index.tsx",
-        "types": "./src/client/index.tsx"
-      },
-      "./server": {
-        "solid": "./src/server.ts",
-        "import": "./src/server.ts",
-        "types": "./src/server.ts"
-      },
-      "./config": {
-        "solid": "./dist/config/index.js",
-        "import": "./dist/config/index.js",
-        "types": "./dist/config/index.d.ts"
-      },
-      "./default-theme": {
-        "solid": "./dist/default-theme/index.js",
-        "import": "./dist/default-theme/index.js",
-        "types": "./dist/default-theme/index.d.ts"
-      },
-      "./default-theme/*": {
-        "solid": "./dist/default-theme/*",
-        "import": "./dist/default-theme/*",
-        "types": "./dist/default-theme/*"
-      }
-    }
-  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
-    "prettier": "4.0.0-alpha.8",
-    "solid-js": "^1.9.3",
+    "@types/mdast": "^4.0.4",
+    "mdast": "^3.0.0",
+    "prettier": "4.0.0-alpha.10",
+    "solid-js": "^1.9.5",
     "typescript": "^5.6.3",
-    "vinxi": "^0.4.3",
-    "vite": "^5.4.10"
+    "vinxi": "^0.5.3",
+    "vite": "^6.1.1"
   },
   "peerDependencies": {
     "@solidjs/start": "^1.0.8",
@@ -114,7 +116,7 @@
     "@solid-primitives/platform": "^0.1.2",
     "@solid-primitives/scroll": "^2.0.23",
     "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.14.10",
+    "@solidjs/router": "^0.15.3",
     "@vinxi/plugin-mdx": "^3.7.2",
     "cross-spawn": "^7.0.3",
     "esast-util-from-js": "^2.0.1",
@@ -135,5 +137,12 @@
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"
+  },
+
+"pnpm": {
+  "patchedDependencies": {
+    "@solid-mediakit/og@0.3.1": "patches/@solid-mediakit__og@0.3.1.patch"
   }
+}
+
 }

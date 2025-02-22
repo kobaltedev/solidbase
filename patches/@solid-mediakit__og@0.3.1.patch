@@ -1,0 +1,60 @@
+diff --git a/dist/compiler.js b/dist/compiler.js
+index 61f1530addc360278431553a4d7eaaf9c61d3afb..65d10d295c0e2f6c5dbad557c8d980a4a17e0e94 100644
+--- a/dist/compiler.js
++++ b/dist/compiler.js
+@@ -66,14 +66,14 @@ var addDynamicImages = (images, t, path) => {
+   for (let i = 0; i < images.length; i++) {
+     const image = images[i];
+     const template2 = babel.template(
+-      `const %%compName%% = (props)=>{
+-      const img = (...args)=>{
++      `const %%serverFnName%% = (...args)=>{
+           'use server';
+           %%args%%
+           return createOpenGraphImage(%%jsx%%);
+       };
++      const %%compName%% = (props)=>{
+       const url = createMemo(()=>{
+-          return img.url.replace("_server", "_server/") + \`&args=\${encodeURIComponent(JSON.stringify(props.values))}\`
++          return %%serverFnName%%.url.replace("_server", "_server/") + \`&args=\${encodeURIComponent(JSON.stringify(props.values))}\`
+       });
+       return url;
+   };`,
+@@ -89,6 +89,7 @@ var addDynamicImages = (images, t, path) => {
+     babelUtils.pushStmts(
+       template2({
+         compName: `DynamicImage${i + 1}`,
++        serverFnName: `DynamicImage${i + 1}ServerFunction`,
+         jsx: image.element,
+         args: argsDecl
+       }),
+diff --git a/dist/unplugin.js b/dist/unplugin.js
+index dde322e60898cbffca842def7c52fc764e5b7dc7..a5445b0b3e607632ab93c2c91468aa29c7a694a3 100644
+--- a/dist/unplugin.js
++++ b/dist/unplugin.js
+@@ -70,14 +70,14 @@ var addDynamicImages = (images, t, path) => {
+   for (let i = 0; i < images.length; i++) {
+     const image = images[i];
+     const template2 = babel.template(
+-      `const %%compName%% = (props)=>{
+-      const img = (...args)=>{
++      `const %%serverFnName%% = (...args)=>{
+           'use server';
+           %%args%%
+           return createOpenGraphImage(%%jsx%%);
+       };
++      const %%compName%% = (props)=>{
+       const url = createMemo(()=>{
+-          return img.url.replace("_server", "_server/") + \`&args=\${encodeURIComponent(JSON.stringify(props.values))}\`
++          return %%serverFnName%%.url.replace("_server", "_server/") + \`&args=\${encodeURIComponent(JSON.stringify(props.values))}\`
+       });
+       return url;
+   };`,
+@@ -93,6 +93,7 @@ var addDynamicImages = (images, t, path) => {
+     babelUtils.pushStmts(
+       template2({
+         compName: `DynamicImage${i + 1}`,
++        serverFnName: `DynamicImage${i + 1}ServerFunction`,
+         jsx: image.element,
+         args: argsDecl
+       }),
