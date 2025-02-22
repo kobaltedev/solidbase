@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
-    "@solid-mediakit/og": "^0.2.6",
-    "@solidjs/router": "^0.14.10",
-    "@solidjs/start": "^1.0.9",
+    "@solid-mediakit/og": "^0.3.1",
+    "@solidjs/router": "^0.15.3",
+    "@solidjs/start": "^1.1.1",
     "@vinxi/plugin-mdx": "^3.7.2",
-    "solid-js": "^1.9.3",
+    "solid-js": "^1.9.5",
     "solid-mdx": "^0.0.7",
-    "vinxi": "^0.4.3"
+    "vinxi": "^0.5.3"
   },
   "engines": {
     "node": ">=18"

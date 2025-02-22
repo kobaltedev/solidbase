@@ -1,4 +1,4 @@
-import { solidBaseConfig } from "virtual:solidbase";
+import { solidBaseConfig } from "virtual:solidbase/config";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";

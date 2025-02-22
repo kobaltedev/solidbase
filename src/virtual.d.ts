@@ -1,5 +1,8 @@
-declare module "virtual:solidbase" {
+declare module "virtual:solidbase/config" {
 	export const solidBaseConfig: import("./config").SolidBaseResolvedConfig<any>;
+}
+
+declare module "virtual:solidbase/components" {
 	export const Layout: import("solid-js").Component<
 		import("@solidjs/router").RouteSectionProps
 	>;

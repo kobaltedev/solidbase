@@ -4,10 +4,7 @@ import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { PluginOption } from "vite";
 
 import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
-import { loadVirtual, transformMdxModule } from "./virtual.js";
-
-const virtualModuleId = "virtual:solidbase";
-const resolvedVirtualModuleId = `\0${virtualModuleId}`;
+import { componentsModule, configModule, transformMdxModule } from "./virtual.js";
 
 export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
@@ -19,14 +16,16 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:pre",
 			enforce: "pre",
 			resolveId(id) {
-				if (id === virtualModuleId) {
-					return resolvedVirtualModuleId;
-				}
+				if (id === configModule.id)
+					return configModule.resolvedId;
+				 else if (id === componentsModule.id)
+					return componentsModule.resolvedId;
 			},
 			async load(id) {
-				if (id === resolvedVirtualModuleId) {
-					return loadVirtual(theme, startConfig, solidBaseConfig);
-				}
+				if (id === configModule.resolvedId)
+					return configModule.load(solidBaseConfig);
+				else if (id === componentsModule.resolvedId)
+					return await componentsModule.load(theme);
 			},
 			transform(code, id) {
 				if (isMarkdown(id)) {
@@ -46,6 +45,7 @@ export default function solidBaseVitePlugin(
 					isMarkdown(id)
 				)
 					return transformMdxModule(code, id, startConfig, solidBaseConfig);
+
 			},
 		},
 	];

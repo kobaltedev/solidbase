@@ -1,6 +1,6 @@
 import { fromJs } from "esast-util-from-js";
 import { findAndReplace } from "mdast-util-find-and-replace";
-import type { PhrasingContent } from "mdast-util-find-and-replace/lib";
+import type { PhrasingContent } from "mdast";
 import { toc } from "mdast-util-toc";
 import type { SearchOptions } from "mdast-util-toc/lib/search";
 import { u } from "unist-builder";
