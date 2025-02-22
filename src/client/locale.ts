@@ -75,13 +75,15 @@ export function useLocale() {
 				document.documentElement.lang = locale.code;
 			});
 		},
-		applyPathPrefix: (path: string): `/${string}` => {
+		applyPathPrefix: (_path: string): `/${string}` => {
+			let path = _path;
 			const link = getLocaleLink(currentLocale());
+
 			if (link === "/")
 				return path.startsWith("/") ? path : (`/${path}` as any);
-			let p = path;
-			if (p.startsWith("/")) p = p.slice(1);
-			return `${link}${p}`;
+
+			if (path.startsWith("/")) path = path.slice(1);
+			return `${link}${path}`;
 		},
 		routePath: () => {
 			const rest = match()?.params.rest;

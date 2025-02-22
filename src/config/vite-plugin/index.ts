@@ -21,12 +21,12 @@ export default function solidBaseVitePlugin(
 			enforce: "pre",
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
-				else if (id === componentsModule.id) return componentsModule.resolvedId;
+				if (id === componentsModule.id) return componentsModule.resolvedId;
 			},
 			async load(id) {
 				if (id === configModule.resolvedId)
 					return configModule.load(solidBaseConfig);
-				else if (id === componentsModule.resolvedId)
+				if (id === componentsModule.resolvedId)
 					return await componentsModule.load(theme);
 			},
 			transform(code, id) {

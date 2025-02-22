@@ -125,7 +125,7 @@ const Navigation = (props: NavigationProps) => {
 												class={`${styles["sidenav-link"]}`}
 												activeClass={styles.active}
 												href={locale.applyPathPrefix(
-													`${props.sidebar.prefix}${(item as { link: string }).link}`,
+													`${props.sidebar.prefix === "/" ? "" : props.sidebar.prefix}${(item as { link: string }).link}`,
 												)}
 												end
 												onClick={() => setSidebarOpen(false)}
