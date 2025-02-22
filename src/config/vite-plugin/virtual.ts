@@ -11,60 +11,57 @@ import { SolidBaseTOC } from "../remark-plugins.js";
 export const configModule = {
 	id: "virtual:solidbase/config",
 	resolvedId: "\0virtual:solidlidbase/config",
-	load: (solidBaseConfig: Partial<SolidBaseConfig<any>>) => `export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`
-}
+	load: (solidBaseConfig: Partial<SolidBaseConfig<any>>) =>
+		`export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`,
+};
 
 export const componentsModule = {
 	id: "virtual:solidbase/components",
 	resolvedId: "\0virtual:solidlidbase/components",
-	load: async (
-		theme: Theme<any>,
-	) => {
-			const themePaths = (() => {
-				let t: Theme<any> | undefined = theme;
-				const paths: Array<string> = [];
+	load: async (theme: Theme<any>) => {
+		const themePaths = (() => {
+			let t: Theme<any> | undefined = theme;
+			const paths: Array<string> = [];
 
-				while (t !== undefined) {
-					paths.push(fileURLToPath(t.componentsPath));
-					t = t.extends;
-				}
-
-				paths.reverse();
-
-				return paths;
-			})();
-
-			const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
-
-			for (let i = 0; i < themePaths.length; i++) {
-				const themePath = themePaths[i]!;
-
-				const dir: string[] = await readdir(themePath).catch(() => []);
-
-				const mdxComponentsFile = dir.find((url) => {
-					const name = parse(url).name;
-					return name === "mdx-components";
-				});
-
-				if (mdxComponentsFile)
-					mdxComponentFiles.push({
-						importName: `mdxComponents${i}`,
-						path: `${themePath}/mdx-components`,
-					});
+			while (t !== undefined) {
+				paths.push(fileURLToPath(t.componentsPath));
+				t = t.extends;
 			}
 
-			return `
+			paths.reverse();
+
+			return paths;
+		})();
+
+		const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
+
+		for (let i = 0; i < themePaths.length; i++) {
+			const themePath = themePaths[i]!;
+
+			const dir: string[] = await readdir(themePath).catch(() => []);
+
+			const mdxComponentsFile = dir.find((url) => {
+				const name = parse(url).name;
+				return name === "mdx-components";
+			});
+
+			if (mdxComponentsFile)
+				mdxComponentFiles.push({
+					importName: `mdxComponents${i}`,
+					path: `${themePath}/mdx-components`,
+				});
+		}
+
+		return `
 export { default as Layout } from "${themePaths[themePaths.length - 1]}/Layout";
 
 ${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.path}";\n`).join("")}
 
 export const mdxComponents = {
 ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
-};`
-		}
-}
-
-
+};`;
+	},
+};
 
 export async function transformMdxModule(
 	code: string,

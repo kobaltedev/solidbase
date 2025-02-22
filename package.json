@@ -27,30 +27,55 @@
   "license": "MIT",
   "exports": {
     "./client": {
-      "solid": "./dist/client/index.jsx",
-      "import": "./dist/client/index.jsx",
-      "types": "./dist/client/index.d.ts"
-    },
-    "./config": {
-      "solid": "./dist/config/index.js",
-      "import": "./dist/config/index.js",
-      "types": "./dist/config/index.d.ts"
+      "solid": "./src/client/index.tsx",
+      "import": "./src/client/index.tsx",
+      "types": "./src/client/index.tsx"
     },
     "./server": {
-      "solid": "./dist/server.js",
-      "import": "./dist/server.js",
-      "types": "./dist/server.d.ts"
+      "solid": "./src/server.ts",
+      "import": "./src/server.ts",
+      "types": "./src/server.ts"
     },
     "./default-theme": {
-      "solid": "./dist/default-theme/index.js",
-      "import": "./dist/default-theme/index.js",
-      "types": "./dist/default-theme/index.d.ts"
+      "solid": "./src/default-theme/index.ts",
+      "import": "./src/default-theme/index.ts",
+      "types": "./src/default-theme/index.ts"
     },
     "./default-theme/*": {
-      "solid": "./dist/default-theme/*",
-      "import": "./dist/default-theme/*",
-      "types": "./dist/default-theme/*"
+      "solid": "./src/default-theme/*",
+      "import": "./src/default-theme/*",
+      "types": "./src/default-theme/*"
     }
+  },
+  "publishConfig": {
+	  "access":"public",
+	  "exports": {
+	    "./client": {
+	      "solid": "./dist/client/index.jsx",
+	      "import": "./dist/client/index.jsx",
+	      "types": "./dist/client/index.d.ts"
+	    },
+	    "./config": {
+	      "solid": "./dist/config/index.js",
+	      "import": "./dist/config/index.js",
+	      "types": "./dist/config/index.d.ts"
+	    },
+	    "./server": {
+	      "solid": "./dist/server.js",
+	      "import": "./dist/server.js",
+	      "types": "./dist/server.d.ts"
+	    },
+	    "./default-theme": {
+	      "solid": "./dist/default-theme/index.js",
+	      "import": "./dist/default-theme/index.js",
+	      "types": "./dist/default-theme/index.d.ts"
+	    },
+	    "./default-theme/*": {
+	      "solid": "./dist/default-theme/*",
+	      "import": "./dist/default-theme/*",
+	      "types": "./dist/default-theme/*"
+	    }
+	  }
   },
   "files": [
     "/src",
