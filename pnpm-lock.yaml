@@ -138,8 +138,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       prettier:
-        specifier: 4.0.0-alpha.7
-        version: 4.0.0-alpha.7
+        specifier: 4.0.0-alpha.10
+        version: 4.0.0-alpha.10
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
@@ -922,6 +922,9 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
+  '@iarna/toml@2.2.5':
+    resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+
   '@internationalized/date@3.7.0':
     resolution: {integrity: sha512-VJ5WS3fcVx0bejE/YHfbDKR/yawZgKqn/if+oEeLqNwBtPzVB06olkfcnojTmEMX+gTpH+FlQ69SHNitJ8/erQ==}
 
@@ -1100,8 +1103,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@prettier/cli@0.2.2':
-    resolution: {integrity: sha512-WRlsHtsrNICeQOTfrdniHtg4rtliU/1zWEMvyQjHGqgf9y2C37ck8fhP4HqxLeI02QJB453r3ymXYAOFespswA==}
+  '@prettier/cli@0.6.0':
+    resolution: {integrity: sha512-kPQDTB+FPjvj23SmBH4T9uGCxMVS1cyJSY9dbOHGOC29nL9gR5gwZ4b4uMj4QRB0uE5K9c7avbAo+gvUbcZb4Q==}
     hasBin: true
     peerDependencies:
       prettier: ^3.1.0 || ^4.0.0
@@ -2229,6 +2232,9 @@ packages:
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
 
+  function-once@3.0.1:
+    resolution: {integrity: sha512-bE3E8REk4jANDot3l0sLFkXgywBwzFKsmbwdnVHLJUnt/3kV6dNG0oJJqoRBuS1Z9Lr4ZoQgwV0ZNLDgWDbv7Q==}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -2615,6 +2621,9 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+
+  lomemo@1.0.1:
+    resolution: {integrity: sha512-g8CnVp7UYypeQKpXpMzyrJoDzhOoqVQYSJApoq/cFI3vGxXoHQ+6lH5cApW9XwzVy5SL9/Owil7/JxbKckw0Lg==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -3095,8 +3104,8 @@ packages:
   preact@10.26.2:
     resolution: {integrity: sha512-0gNmv4qpS9HaN3+40CLBAnKe0ZfyE4ZWo5xKlC1rVrr0ckkEvJvAQqKaHANdFKsGstoxrY4AItZ7kZSGVoVjgg==}
 
-  prettier@4.0.0-alpha.7:
-    resolution: {integrity: sha512-z5E8dsa4XKpPQOmoxbr8uuBlaDwaW+oxH8ESGbnIpQsXJlwzZe3iUPJSMgwzNUSqSbyPj4WNSKAZZG5rQkZRZA==}
+  prettier@4.0.0-alpha.10:
+    resolution: {integrity: sha512-auyI68pnS9LmLRQCRuRBQaoqWU3Jnrifbhc+patuIGd1gzB/5h2CW1fa3Lub45R03ah+wzxbB2DNV1S1wzz9QQ==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -3119,6 +3128,9 @@ packages:
 
   promise-make-naked@3.0.2:
     resolution: {integrity: sha512-B+b+kQ1YrYS7zO7P7bQcoqqMUizP06BOyNSBEnB5VJKDSWo8fsVuDkfSmwdjF0JsRtaNh83so5MMFJ95soH5jg==}
+
+  promise-resolve-timeout@2.0.1:
+    resolution: {integrity: sha512-90Qzzu5SmR+ksmTPsc79121NZGtEiPvKACQLCl6yofknRx5xJI9kNj3oDVSX6dVTneF8Ju6+xpVFdDSzb7cNcg==}
 
   property-information@6.5.0:
     resolution: {integrity: sha512-PgTgs/BlvHxOu8QuEN7wi5A0OmXaBcHpmCSTehcs6Uuu9IkDIEo13Hy7n898RHfrQ49vKCoGeWZSaAK01nwVig==}
@@ -3948,6 +3960,9 @@ packages:
   yoga-wasm-web@0.3.3:
     resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
 
+  zeptomatch-escape@1.0.0:
+    resolution: {integrity: sha512-S77F6/wOoqSab7LpM6rARN3iGCqpL00VY1nB88OKKmomvZVI4gc0VriF+6z/xA1oMWDsy3rDwwA/50T2jpaM4g==}
+
   zeptomatch-explode@1.0.0:
     resolution: {integrity: sha512-2UDdxJqvrMixdwfYFA9cDGKetkVph8PPa1ooyUvmEoJJMs6w+0ijk1oA82Ff3wNs6yHeb849TjPvyrx9tgkZZg==}
 
@@ -3959,6 +3974,9 @@ packages:
 
   zeptomatch@1.2.2:
     resolution: {integrity: sha512-0ETdzEO0hdYmT8aXHHf5aMjpX+FHFE61sG4qKFAoJD2Umt3TWdCmH7ADxn2oUiWTlqBGC+SGr8sYMfr+37J8pQ==}
+
+  zeptomatch@2.0.0:
+    resolution: {integrity: sha512-xjsIq0tpg7dNtJcbl0tNf4d4It4UK1ujSYJZXvGygse3GNgX44v/b2FRbM8sCGZS2qh4o983u8+1CBNNF+106g==}
 
   zip-stream@6.0.1:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
@@ -4577,6 +4595,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@iarna/toml@2.2.5': {}
+
   '@internationalized/date@3.7.0':
     dependencies:
       '@swc/helpers': 0.5.15
@@ -4784,26 +4804,32 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prettier/cli@0.2.2(prettier@4.0.0-alpha.7)':
+  '@prettier/cli@0.6.0(prettier@4.0.0-alpha.10)':
     dependencies:
+      '@iarna/toml': 2.2.5
       atomically: 2.0.3
       fast-ignore: 1.1.3
       find-up-json: 2.0.5
+      function-once: 3.0.1
       import-meta-resolve: 4.1.0
       is-binary-path: 2.1.0
       js-yaml: 4.1.0
       json-sorted-stringify: 1.0.1
       json5: 2.2.3
       kasi: 1.1.1
+      lomemo: 1.0.1
       pioppo: 1.2.1
-      prettier: 4.0.0-alpha.7
+      prettier: 4.0.0-alpha.10
+      promise-resolve-timeout: 2.0.1
       specialist: 1.4.5
       tiny-editorconfig: 1.0.0
       tiny-jsonc: 1.0.2
       tiny-readdir-glob: 1.23.1
       tiny-spinner: 2.0.5
       worktank: 2.7.3
-      zeptomatch: 1.2.2
+      zeptomatch: 2.0.0
+      zeptomatch-escape: 1.0.0
+      zeptomatch-is-static: 1.0.0
 
   '@redocly/ajv@8.11.2':
     dependencies:
@@ -6032,6 +6058,8 @@ snapshots:
 
   function-bind@1.1.2: {}
 
+  function-once@3.0.1: {}
+
   gensync@1.0.0-beta.2: {}
 
   get-caller-file@2.0.5: {}
@@ -6524,6 +6552,8 @@ snapshots:
   lodash.isarguments@3.1.0: {}
 
   lodash@4.17.21: {}
+
+  lomemo@1.0.1: {}
 
   longest-streak@3.1.0: {}
 
@@ -7381,9 +7411,9 @@ snapshots:
 
   preact@10.26.2: {}
 
-  prettier@4.0.0-alpha.7:
+  prettier@4.0.0-alpha.10:
     dependencies:
-      '@prettier/cli': 0.2.2(prettier@4.0.0-alpha.7)
+      '@prettier/cli': 0.6.0(prettier@4.0.0-alpha.10)
 
   pretty-bytes@6.1.1: {}
 
@@ -7398,6 +7428,8 @@ snapshots:
   promise-make-naked@2.1.2: {}
 
   promise-make-naked@3.0.2: {}
+
+  promise-resolve-timeout@2.0.1: {}
 
   property-information@6.5.0: {}
 
@@ -8439,6 +8471,8 @@ snapshots:
 
   yoga-wasm-web@0.3.3: {}
 
+  zeptomatch-escape@1.0.0: {}
+
   zeptomatch-explode@1.0.0: {}
 
   zeptomatch-is-static@1.0.0: {}
@@ -8446,6 +8480,10 @@ snapshots:
   zeptomatch-unescape@1.0.0: {}
 
   zeptomatch@1.2.2:
+    dependencies:
+      grammex: 3.1.10
+
+  zeptomatch@2.0.0:
     dependencies:
       grammex: 3.1.10
 
