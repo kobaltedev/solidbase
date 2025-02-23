@@ -71,7 +71,7 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 			remarkGithubAlertsToDirectives,
 			remarkDirective,
 			remarkRelativeImports,
-			remarkTOC,
+			[remarkTOC, sbConfig.markdown?.toc],
 			remarkDirectiveContainers,
 			remarkAddClass,
 			[remarkIssueAutolink, sbConfig.issueAutolink],
