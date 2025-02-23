@@ -1,30 +1,33 @@
-name: Release
+name: Typecheck
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
 
 jobs:
-  Release:
-    name: Release
+  typescript:
+    name: Typescript
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js 22.14.0
+      - name: Setup Node.js 21.6.1
         uses: actions/setup-node@v4
         with:
-          node-version: 22.14.0
+          node-version: 21.6.1
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Release
-        run: pnpm release
+      - name: Typecheck
+        run: pnpm typecheck

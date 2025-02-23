@@ -8,7 +8,7 @@ if (!execSync("git --version").includes("git version")) {
 }
 
 // @ts-ignore
-const DRY_RUN = !process.env.GITHUB_ACTIONS;
+const DRY_RUN = true;//!process.env.GITHUB_ACTIONS;
 
 if (DRY_RUN) console.log("DRY RUN\n");
 else console.log("LIVE RUN (GITHUB ACTION)")
