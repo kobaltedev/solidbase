@@ -23,14 +23,9 @@ const allVersionGitTags = execSync(`git tag -l "v*.*.*"`).toString().trim()
 const releasesTags = allVersionGitTags.filter(s => !s.includes("-"));
 const previewTags = allVersionGitTags.filter(s => s.includes("-"));
 
-
-
 const latestReleaseHash = execSync(`git log -1 v${releasesTags[0]} --pretty=format:%H`).toString().trim();
 
-
-
 const rawCommitsSinceLatestRelease = execSync(`git log ${latestReleaseHash}^.. --pretty=format:%s[body]%b[!body]`).toString().trim().split("[!body]\n");
-
 
 interface CommitData {
     message: string;
@@ -57,9 +52,9 @@ const shouldRelease = commitDatas[0].type === "chore" && commitDatas[0].message.
 
 console.log({shouldRelease, r: commitDatas[0].message})
 
-if (shouldRelease) {
-    let nextVersion;
+let nextVersion;
 
+if (shouldRelease) {
     if (commitDatas[0].message.replace("release ", "").match(/\d+\.\d+\.\d+/)) {
         nextVersion = commitDatas[0].message.replace("release ", "");
     } else {
@@ -69,7 +64,18 @@ if (shouldRelease) {
         nextVersion = incVersion(releasesTags[0], major, minor);
     }
 
-    console.log("NEXT", nextVersion, DRY_RUN ? "DRY RUN" : "LIVE RUN");
+    console.log(`Changes found, publishing release ${nextVersion}...`, DRY_RUN ? "DRY RUN" : "");
+} else {
+    const latestPreviewVersion = previewTags[0].split("-next.")[0];
+    const laterPreviewNumber = Number(previewTags[0].split("-next.")[1]);
+
+    if (latestPreviewVersion === releasesTags[0]) {
+        nextVersion = `${latestPreviewVersion}-next.${laterPreviewNumber + 1}`;
+    } else {
+        nextVersion = `${releasesTags[0]}-next.0`;
+    }
+
+    console.log(`No release changes, publishing preview ${nextVersion}...`, DRY_RUN ? "DRY RUN" : "");
 }
 
 
