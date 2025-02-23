@@ -46,25 +46,21 @@ const commitDatas: CommitData[] = rawCommitsSinceLatestRelease.map(s => {
 
 console.log({commitDatas});
 
+const majorChanges = commitDatas.some(c => c.breaking);
+const minorChanges = commitDatas.some(c => c.type === "feat");
 
 
 const shouldRelease = commitDatas[0].type === "chore" && commitDatas[0].message.match(/^release( \d+\.\d+\.\d+)?/);
 
-console.log({shouldRelease, r: commitDatas[0].message})
-
 let nextVersion;
-
-if (shouldRelease) {
+if (shouldRelease || minorChanges || majorChanges) {
     if (commitDatas[0].message.replace("release ", "").match(/\d+\.\d+\.\d+/)) {
         nextVersion = commitDatas[0].message.replace("release ", "");
     } else {
-        const major = commitDatas.some(c => c.breaking);
-        const minor = commitDatas.some(c => c.type === "feat");
-
-        nextVersion = incVersion(releasesTags[0], major, minor);
+        nextVersion = incVersion(releasesTags[0], majorChanges, minorChanges);
     }
 
-    console.log(`Changes found, publishing release ${nextVersion}...`, DRY_RUN ? "DRY RUN" : "");
+    console.log(`Changes found, publishing release ${nextVersion}...`, DRY_RUN ? "[DRY RUN]" : "");
 } else {
     const latestPreviewVersion = previewTags[0].split("-next.")[0];
     const laterPreviewNumber = Number(previewTags[0].split("-next.")[1]);
@@ -75,7 +71,7 @@ if (shouldRelease) {
         nextVersion = `${releasesTags[0]}-next.0`;
     }
 
-    console.log(`No release changes, publishing preview ${nextVersion}...`, DRY_RUN ? "DRY RUN" : "");
+    console.log(`No release changes, publishing preview ${nextVersion}...`, DRY_RUN ? "[DRY RUN]" : "");
 }
 
 
