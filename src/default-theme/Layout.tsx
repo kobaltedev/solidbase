@@ -1,4 +1,5 @@
 import { Dialog } from "@kobalte/core/dialog";
+import { Title } from "@solidjs/meta";
 import { A, type RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
@@ -11,9 +12,9 @@ import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
 import { useRouteConfig, useSolidBaseContext } from "./utils";
 
-import "./index.css";
 import type { Sidebar } from ".";
 import { useCurrentPageData } from "../client";
+import "./index.css";
 import styles from "./Layout.module.css";
 // font css is imported by theme vite plugin
 
@@ -33,6 +34,8 @@ function Layout(props: RouteSectionProps) {
 
 	return (
 		<>
+			<Title>{config().title}</Title>
+
 			<div class={styles.skipnav}>
 				<Link
 					href="#main-content"

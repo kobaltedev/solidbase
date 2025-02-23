@@ -1,13 +1,13 @@
 {
-  "name": "@brendonovich/kobalte__solidbase",
-  "version": "0.0.31",
+  "name": "@kobalte/solidbase",
+  "version": "0.0.34",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
-    "build": "tsc",
+    "build": "tsc && node scripts/build.js",
     "format": "biome check --write #&& prettier . --write",
     "typecheck": "tsc --noEmit",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
@@ -48,34 +48,34 @@
     }
   },
   "publishConfig": {
-	  "access":"public",
-	  "exports": {
-	    "./client": {
-	      "solid": "./dist/client/index.jsx",
-	      "import": "./dist/client/index.jsx",
-	      "types": "./dist/client/index.d.ts"
-	    },
-	    "./config": {
-	      "solid": "./dist/config/index.js",
-	      "import": "./dist/config/index.js",
-	      "types": "./dist/config/index.d.ts"
-	    },
-	    "./server": {
-	      "solid": "./dist/server.js",
-	      "import": "./dist/server.js",
-	      "types": "./dist/server.d.ts"
-	    },
-	    "./default-theme": {
-	      "solid": "./dist/default-theme/index.js",
-	      "import": "./dist/default-theme/index.js",
-	      "types": "./dist/default-theme/index.d.ts"
-	    },
-	    "./default-theme/*": {
-	      "solid": "./dist/default-theme/*",
-	      "import": "./dist/default-theme/*",
-	      "types": "./dist/default-theme/*"
-	    }
-	  }
+    "access": "public",
+    "exports": {
+      "./client": {
+        "solid": "./dist/client/index.jsx",
+        "import": "./dist/client/index.jsx",
+        "types": "./dist/client/index.d.ts"
+      },
+      "./config": {
+        "solid": "./dist/config/index.js",
+        "import": "./dist/config/index.js",
+        "types": "./dist/config/index.d.ts"
+      },
+      "./server": {
+        "solid": "./dist/server.js",
+        "import": "./dist/server.js",
+        "types": "./dist/server.d.ts"
+      },
+      "./default-theme": {
+        "solid": "./dist/default-theme/index.js",
+        "import": "./dist/default-theme/index.js",
+        "types": "./dist/default-theme/index.d.ts"
+      },
+      "./default-theme/*": {
+        "solid": "./dist/default-theme/*",
+        "import": "./dist/default-theme/*",
+        "types": "./dist/default-theme/*"
+      }
+    }
   },
   "files": [
     "/src",
@@ -86,6 +86,7 @@
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
     "@types/mdast": "^4.0.4",
+    "glob": "^11.0.1",
     "mdast": "^3.0.0",
     "prettier": "4.0.0-alpha.10",
     "solid-js": "^1.9.5",
@@ -138,11 +139,9 @@
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   },
-
-"pnpm": {
-  "patchedDependencies": {
-    "@solid-mediakit/og@0.3.1": "patches/@solid-mediakit__og@0.3.1.patch"
+  "pnpm": {
+    "patchedDependencies": {
+      "@solid-mediakit/og@0.3.1": "patches/@solid-mediakit__og@0.3.1.patch"
+    }
   }
-}
-
 }
