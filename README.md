@@ -14,9 +14,4 @@ Fully featured, fully customisable static site generation for [SolidStart](https
 
 </div>
 
-> [!IMPORTANT]
-> This project has been submitted to [SolidHack2024](https://hack.solidjs.com/), to align with regulations no changes will be made from `Nov 14 23:59 EST` till end of voting.
->
-> If you like this project please give us your vote at https://hack.solidjs.com/.
-
-Full documentation available at https://solidbase.netlify.app.
+Full documentation available at https://solidbase.kobalte.dev.
