@@ -10,7 +10,7 @@ if (!execSync("git --version").includes("git version")) {
 // @ts-ignore
 const DRY_RUN = !process.env.GITHUB_ACTIONS;
 
-if (DRY_RUN) console.log("DRY RUN");
+if (DRY_RUN) console.log("DRY RUN\n");
 else console.log("LIVE RUN (GITHUB ACTION)")
 
 
@@ -45,7 +45,6 @@ const commitDatas: CommitData[] = rawCommitsSinceLatestRelease.map(s => {
     };
 })
 
-console.log({commitDatas});
 
 const majorChanges = commitDatas.some(c => c.breaking);
 const minorChanges = commitDatas.some(c => c.type === "feat");
@@ -72,11 +71,12 @@ if (shouldRelease) {
         nextVersion = `${releasesTags[0]}-next.0`;
     }
 
-    console.log(`No release changes, publishing preview ${nextVersion}...`, DRY_RUN ? "[DRY RUN]" : "");
+    console.log(`${DRY_RUN ? "[DRY RUN] " : ""}No release changes, publishing preview ${nextVersion}...`);
 }
 
 const currentHash = execSync(`git log -1 --pretty=format:%H`).toString().trim();
 
+console.log();
 console.log(`Creating tag v${nextVersion}`);
 
 if (!DRY_RUN) {
@@ -93,17 +93,21 @@ if (!DRY_RUN) {
         object: currentHash,
         type: 'commit',
     });
-} else console.log(`GitHub tag v${nextVersion} for hash ${currentHash} [DRY RUN]`);
+} else console.log(`[DRY RUN] GitHub tag v${nextVersion} for hash ${currentHash}`);
 
+console.log();
 console.log(`Setting version ${nextVersion}...`);
 runAction(`pnpm version ${nextVersion} --no-git-tag-version`);
 
+console.log();
 console.log("Running build...");
 runAction("pnpm build", {stdio: 'inherit'});
 
+console.log();
 console.log(`Publishing ${nextVersion} with tag ${shouldRelease ? "latest" : "next"}`);
 runAction(`pnpm publish ${shouldRelease ? "" : "--tag next"}`, {stdio: 'inherit'});
 
+console.log();
 console.log("DONE!");
 
 
@@ -117,7 +121,7 @@ console.log("DONE!");
 
 function runAction(s, opt = {}) {
     if (DRY_RUN) {
-        console.log("Would run \"", s, "\" [DRY RUN]");
+        console.log(`[DRY RUN] "${s}"`);
         return "";
     }
     return execSync(s, opt).toString();
