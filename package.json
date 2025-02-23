@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.34",
+  "version": "0.0.0-dev",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
@@ -84,6 +84,7 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@octokit/core": "^6.1.4",
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
     "@types/mdast": "^4.0.4",

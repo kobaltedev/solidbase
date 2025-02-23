@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import {Octokit} from "@octokit/core";
 
 if (!execSync("git --version").includes("git version")) {
     console.error("Git not installed");
@@ -50,10 +51,10 @@ const majorChanges = commitDatas.some(c => c.breaking);
 const minorChanges = commitDatas.some(c => c.type === "feat");
 
 
-const shouldRelease = commitDatas[0].type === "chore" && commitDatas[0].message.match(/^release( \d+\.\d+\.\d+)?/);
+const shouldRelease = (commitDatas[0].type === "chore" && commitDatas[0].message.match(/^release( \d+\.\d+\.\d+)?/)) || minorChanges || majorChanges;
 
 let nextVersion;
-if (shouldRelease || minorChanges || majorChanges) {
+if (shouldRelease) {
     if (commitDatas[0].message.replace("release ", "").match(/\d+\.\d+\.\d+/)) {
         nextVersion = commitDatas[0].message.replace("release ", "");
     } else {
@@ -74,6 +75,36 @@ if (shouldRelease || minorChanges || majorChanges) {
     console.log(`No release changes, publishing preview ${nextVersion}...`, DRY_RUN ? "[DRY RUN]" : "");
 }
 
+const currentHash = execSync(`git log -1 --pretty=format:%H`).toString().trim();
+
+console.log(`Creating tag v${nextVersion}`);
+
+if (!DRY_RUN) {
+    const octokit = new Octokit({
+        // @ts-ignore
+        auth: process.env.GITHUB_TOKEN
+      });
+
+    octokit.request('POST /repos/{owner}/{repo}/git/tags', {
+        owner: 'kobaltedev',
+        repo: 'solidbase',
+        tag: `v${nextVersion}`,
+        message: `v${nextVersion}`,
+        object: currentHash,
+        type: 'commit',
+    });
+} else console.log(`GitHub tag v${nextVersion} for hash ${currentHash} [DRY RUN]`);
+
+console.log(`Setting version ${nextVersion}...`);
+runAction(`pnpm version ${nextVersion} --no-git-tag-version`);
+
+console.log("Running build...");
+runAction("pnpm build", {stdio: 'inherit'});
+
+console.log(`Publishing ${nextVersion} with tag ${shouldRelease ? "latest" : "next"}`);
+runAction(`pnpm publish ${shouldRelease ? "" : "--tag next"}`, {stdio: 'inherit'});
+
+console.log("DONE!");
 
 
 
@@ -84,7 +115,13 @@ if (shouldRelease || minorChanges || majorChanges) {
 
 
 
-
+function runAction(s, opt = {}) {
+    if (DRY_RUN) {
+        console.log("Would run \"", s, "\" [DRY RUN]");
+        return "";
+    }
+    return execSync(s, opt).toString();
+}
 
 
 function incVersion(version: string, _major: boolean, _minor: boolean) {
