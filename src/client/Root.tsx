@@ -1,5 +1,5 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
-import { MetaProvider, Title, useHead } from "@solidjs/meta";
+import { MetaProvider, useHead } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
 import { Suspense, createEffect, createUniqueId } from "solid-js";
 import { MDXProvider } from "solid-mdx";
@@ -25,8 +25,6 @@ export function SolidBaseRoot(props: RouteSectionProps) {
 	return (
 		<CurrentPageDataContext.Provider value={pageData}>
 			<MetaProvider>
-				<Title>{title()}</Title>
-
 				<MDXProvider components={mdxComponents}>
 					<SolidBaseContext.Provider value={{ locale, config, title }}>
 						<Inner {...props} />
