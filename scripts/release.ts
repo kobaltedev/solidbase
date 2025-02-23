@@ -6,6 +6,13 @@ if (!execSync("git --version").includes("git version")) {
     process.exit(1);
 }
 
+// @ts-ignore
+const DRY_RUN = !process.env.GITHUB_ACTIONS;
+
+if (DRY_RUN) console.log("DRY RUN");
+else console.log("LIVE RUN (GITHUB ACTION)")
+
+
 const allVersionGitTags = execSync(`git tag -l "v*.*.*"`).toString().trim()
     .split("\n")
     .map(s => s.slice(1))
@@ -17,19 +24,13 @@ const releasesTags = allVersionGitTags.filter(s => !s.includes("-"));
 const previewTags = allVersionGitTags.filter(s => s.includes("-"));
 
 
-console.log({allVersionGitTags, releasesTags, previewTags});
-
 
 const latestReleaseHash = execSync(`git log -1 v${releasesTags[0]} --pretty=format:%H`).toString().trim();
 
 
-console.log({latestReleaseHash})
-
 
 const rawCommitsSinceLatestRelease = execSync(`git log ${latestReleaseHash}^.. --pretty=format:%s[body]%b[!body]`).toString().trim().split("[!body]\n");
 
-
-console.log({rawCommitsSinceLatestRelease})
 
 interface CommitData {
     message: string;
@@ -56,7 +57,7 @@ const shouldRelease = commitDatas[0].type === "chore" && commitDatas[0].message.
 
 console.log({shouldRelease, r: commitDatas[0].message})
 
-if (shouldRelease || true) {
+if (shouldRelease) {
     let nextVersion;
 
     if (commitDatas[0].message.replace("release ", "").match(/\d+\.\d+\.\d+/)) {
@@ -68,7 +69,7 @@ if (shouldRelease || true) {
         nextVersion = incVersion(releasesTags[0], major, minor);
     }
 
-    console.log("NEXT", nextVersion);
+    console.log("NEXT", nextVersion, DRY_RUN ? "DRY RUN" : "LIVE RUN");
 }
 
 
@@ -115,7 +116,7 @@ function getCommitType(commit: string): CommitData["type"] {
     if (commit.match(/^fix(\(.*\))?!?:/)) return "fix";
     if (commit.match(/^perf(\(.*\))?!?:/)) return "perf";
     if (commit.match(/^chore(\(.*\))?!?:/)) return "chore";
-    return "unkown";
+    return "unknown";
 }
 
 function isCommitBreaking(commit: string, body: string): boolean {
