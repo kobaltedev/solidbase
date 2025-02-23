@@ -1,5 +1,3 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import type { SolidStartInlineConfig } from "@solidjs/start/config";
 import type { PluginOption } from "vite";
 
@@ -42,10 +40,7 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:post",
 			enforce: "post",
 			transform(code, id) {
-				if (
-					id.startsWith(dirname(fileURLToPath(import.meta.url))) &&
-					isMarkdown(id)
-				)
+				if (isMarkdown(id))
 					return transformMdxModule(code, id, startConfig, solidBaseConfig);
 			},
 		},
