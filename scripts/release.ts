@@ -42,7 +42,7 @@ const commitDatas: CommitData[] = rawCommitsSinceLatestRelease.map(s => {
     const type = getCommitType(message);
 
     return {
-        message: type === "unknown" ? message : message.split(":").slice(1).join(":"),
+        message: type === "unknown" ? message.trim() : message.split(":").slice(1).join(":").trim(),
         type,
         breaking: isCommitBreaking(message, s),
     };
@@ -54,7 +54,7 @@ console.log({commitDatas});
 
 const shouldRelease = commitDatas[0].type === "chore" && commitDatas[0].message.match(/^release( \d+\.\d+\.\d+)?/);
 
-console.log({shouldRelease})
+console.log({shouldRelease, r: commitDatas[0].message})
 
 if (shouldRelease || true) {
     let nextVersion;
