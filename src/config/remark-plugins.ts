@@ -148,10 +148,15 @@ export function remarkDirectiveContainers() {
 				let labelText = undefined;
 
 				if (hasLabel) {
-					const maybeLabelElement = maybeLabel.children[0];
-					if (maybeLabelElement.type === "text") {
-						labelText = maybeLabelElement.value;
+					if (maybeLabel.children.length === 0) {
+						labelText = " ";
 						(node.children as any[]).shift();
+					} else {
+						const maybeLabelElement = maybeLabel.children[0];
+						if (maybeLabelElement.type === "text") {
+							labelText = maybeLabelElement.value;
+							(node.children as any[]).shift();
+						}
 					}
 				}
 

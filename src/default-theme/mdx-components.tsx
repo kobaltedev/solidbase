@@ -149,7 +149,7 @@ export function DirectiveContainer(
 
 	return (
 		<div class={styles["custom-container"]} data-custom-container={props.type}>
-			<Show when={props.title !== "_"}>
+			<Show when={props.title !== " "}>
 				<span>{props.title ?? props.type}</span>
 			</Show>
 			{_children}
