@@ -105,13 +105,11 @@ if (!DRY_RUN) {
 		auth: process.env.GITHUB_TOKEN,
 	});
 
-	octokit.request("POST /repos/{owner}/{repo}/git/tags", {
+	octokit.request("POST /repos/{owner}/{repo}/git/refs", {
 		owner: "kobaltedev",
 		repo: "solidbase",
-		tag: `v${nextVersion}`,
-		message: `v${nextVersion}`,
-		object: currentHash,
-		type: "commit",
+		ref: `refs/tags/v${nextVersion}`,
+		sha: currentHash,
 	});
 } else
 	console.log(`[DRY RUN] GitHub tag v${nextVersion} for hash ${currentHash}`);
