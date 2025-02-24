@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.34",
+  "version": "0.0.0-dev",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "scripts": {
@@ -11,7 +11,8 @@
     "format": "biome check --write #&& prettier . --write",
     "typecheck": "tsc --noEmit",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
-    "publish:release": "pnpm i && pnpm build && pnpm publish"
+    "publish:release": "pnpm i && pnpm build && pnpm publish",
+    "release": "pnpm tsx scripts/release.ts"
   },
   "keywords": [
     "solid",
@@ -83,6 +84,7 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@octokit/core": "^6.1.4",
     "@solidjs/start": "^1.0.9",
     "@types/cross-spawn": "^6.0.6",
     "@types/mdast": "^4.0.4",
@@ -90,6 +92,7 @@
     "mdast": "^3.0.0",
     "prettier": "4.0.0-alpha.10",
     "solid-js": "^1.9.5",
+    "tsx": "^4.19.3",
     "typescript": "^5.6.3",
     "vinxi": "^0.5.3",
     "vite": "^6.1.1"
@@ -100,7 +103,7 @@
     "vinxi": "^0.4.3",
     "vite": "^5.4.8"
   },
-  "packageManager": "pnpm@9.12.1",
+  "packageManager": "pnpm@10.4.1",
   "dependencies": {
     "@docsearch/css": "^3.6.2",
     "@docsearch/js": "^3.6.2",
