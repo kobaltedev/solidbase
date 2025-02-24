@@ -102,7 +102,7 @@ console.log(`Creating tag v${nextVersion} for hash ${currentHash}`);
 if (!DRY_RUN) {
 	const octokit = new Octokit({
 		// @ts-ignore
-		auth: process.env.GITHUB_TOKEN,
+		auth: process.env.RELEASE_TAG_TOKEN,
 	});
 
 	await octokit.request("POST /repos/{owner}/{repo}/git/refs", {
