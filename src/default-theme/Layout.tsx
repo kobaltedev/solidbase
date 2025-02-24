@@ -1,39 +1,34 @@
+// @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
-import { MetaProvider, Title } from "@solidjs/meta";
+import { Title } from "@solidjs/meta";
 import { A, type RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
 import {
-	DefaultThemeContextProvider,
-	useDefaultThemeContext,
-	useThemeComponents,
+	DefaultThemeStateProvider,
+	useDefaultThemeState,
+	useDefaultThemeComponents,
 } from "./context";
 import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
 import { useRouteConfig } from "./utils";
-import type { Sidebar } from ".";
-import { useCurrentPageData } from "../client";
+import type { Sidebar, SidebarLink } from ".";
 import { useThemeListener } from "../client/theme";
+import { useLocale } from "../client/locale";
 
 import "./index.css";
 import styles from "./Layout.module.css";
-import { LocaleContextProvider, useLocale } from "../client/locale";
 // font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (
-	<MetaProvider>
-		<LocaleContextProvider>
-			<DefaultThemeContextProvider>
-				<Layout {...props} />
-			</DefaultThemeContextProvider>
-		</LocaleContextProvider>
-	</MetaProvider>
+	<DefaultThemeStateProvider>
+		<Layout {...props} />
+	</DefaultThemeStateProvider>
 );
 
 function Layout(props: RouteSectionProps) {
-	const { Header, Article, Link } = useThemeComponents();
-	const { sidebarOpen, setSidebarOpen } = useDefaultThemeContext();
-	const pageData = useCurrentPageData();
+	const { Header, Article, Link } = useDefaultThemeComponents();
+	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
 
 	const sidebar = useSidebar();
@@ -42,8 +37,6 @@ function Layout(props: RouteSectionProps) {
 
 	return (
 		<>
-			<Title>{config().title}</Title>
-
 			<div class={styles.skipnav}>
 				<Link
 					href="#main-content"
@@ -66,43 +59,47 @@ function Layout(props: RouteSectionProps) {
 
 				<Show
 					when={
-						sidebar() &&
-						sidebar()!.items?.length > 0 &&
-						pageData()?.layout?.sidebar !== false
+						(() => {
+							const s = sidebar();
+							if (!s || s.items.length <= 0 || frontmatter()?.sidebar === false) return;
+							return s;
+						})()
 					}
 					fallback={<div class="_e" />}
 				>
-					<Show
-						when={mobileLayout()}
-						fallback={
-							<aside class={styles.sidenav}>
-								<div class={styles["sidenav-content"]}>
-									<Navigation sidebar={sidebar()!} />
-								</div>
-							</aside>
-						}
-					>
-						<Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
-							<Dialog.Portal>
-								<Dialog.Overlay class={styles["sidenav-overlay"]} />
-								<Dialog.Content class={styles.sidenav}>
+					{sidebar => (
+						<Show
+							when={mobileLayout()}
+							fallback={
+								<aside class={styles.sidenav}>
 									<div class={styles["sidenav-content"]}>
-										<div class={styles["sidenav-header"]}>
-											<a href="/" class={styles["logo-link"]}>
-												<Show
-													when={config().logo}
-													fallback={<span>{config().title}</span>}
-												>
-													<img src={config().logo} alt={config().title} />
-												</Show>
-											</a>
-										</div>
-										<Navigation sidebar={sidebar()!} />
+										<Navigation sidebar={sidebar()} />
 									</div>
-								</Dialog.Content>
-							</Dialog.Portal>
-						</Dialog>
-					</Show>
+								</aside>
+							}
+						>
+							<Dialog open={sidebarOpen()} onOpenChange={setSidebarOpen}>
+								<Dialog.Portal>
+									<Dialog.Overlay class={styles["sidenav-overlay"]} />
+									<Dialog.Content class={styles.sidenav}>
+										<div class={styles["sidenav-content"]}>
+											<div class={styles["sidenav-header"]}>
+												<a href="/" class={styles["logo-link"]}>
+													<Show
+														when={config().logo}
+														fallback={<span>{config().title}</span>}
+													>
+														<img src={config().logo} alt={config().title} />
+													</Show>
+												</a>
+											</div>
+											<Navigation sidebar={sidebar()} />
+										</div>
+									</Dialog.Content>
+								</Dialog.Portal>
+							</Dialog>
+						</Show>
+					)}
 				</Show>
 
 				<main id="main-content">
@@ -117,10 +114,10 @@ interface NavigationProps {
 	sidebar: Sidebar & { prefix: string };
 }
 
-const Navigation = (props: NavigationProps) => {
+function Navigation(props: NavigationProps) {
 	const locale = useLocale();
 
-	const { setSidebarOpen } = useDefaultThemeContext();
+	const { setSidebarOpen } = useDefaultThemeState();
 
 	return (
 		<nav class={styles["sidenav-links"]}>
@@ -131,21 +128,26 @@ const Navigation = (props: NavigationProps) => {
 							<h2>{section.title}</h2>
 							<ul>
 								<For each={section.items}>
-									{(item) => (
-										<li>
-											<A
-												class={`${styles["sidenav-link"]}`}
-												activeClass={styles.active}
-												href={locale.applyPathPrefix(
-													`${props.sidebar.prefix === "/" ? "" : props.sidebar.prefix}${(item as { link: string }).link}`,
-												)}
-												end
-												onClick={() => setSidebarOpen(false)}
-											>
-												{item.title}
-											</A>
-										</li>
-									)}
+									{(item) => {
+										const link = () => (item as SidebarLink).link;
+										const prefix = () => props.sidebar.prefix;
+
+										return (
+											<li>
+												<A
+													class={`${styles["sidenav-link"]}`}
+													activeClass={styles.active}
+													href={locale.applyPathPrefix(
+														`${prefix() === "/" ? "" : prefix()}${link() === "/" ? "" : link()}`,
+													)}
+													end
+													onClick={() => setSidebarOpen(false)}
+												>
+													{item.title}
+												</A>
+											</li>
+										)
+									}}
 								</For>
 							</ul>
 						</li>

@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@solid-mediakit/og@0.3.1':
-    hash: o23byidi2hui7vwa2cv2fercjy
+    hash: 7satoney4oehcfj2r6hpo5kjyq
     path: patches/@solid-mediakit__og@0.3.1.patch
 
 importers:
@@ -184,7 +184,7 @@ importers:
         version: link:..
       '@solid-mediakit/og':
         specifier: ^0.3.1
-        version: 0.3.1(patch_hash=o23byidi2hui7vwa2cv2fercjy)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
+        version: 0.3.1(patch_hash=7satoney4oehcfj2r6hpo5kjyq)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
@@ -203,6 +203,13 @@ importers:
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@vercel/og':
+        specifier: ^0.6.5
+        version: 0.6.5
+      vite-plugin-arraybuffer:
+        specifier: ^0.0.8
+        version: 0.0.8
 
 packages:
 
@@ -3847,6 +3854,9 @@ packages:
     resolution: {integrity: sha512-4sL2SMrRzdzClapP44oXdGjCE1oq7/DagsbjY5A09EibmoIO4LP8ScRVdh03lfXxKRk7nCWK7n7dqKvm+fp/9w==}
     hasBin: true
 
+  vite-plugin-arraybuffer@0.0.8:
+    resolution: {integrity: sha512-F+InDQuxd93YDVRdXTjBr3lydgjyVHSpgRZS4izK/i85Anl5kmbvf2NwJ//XHAccHh1TScfX70MFJfBx/rf3cg==}
+
   vite-plugin-solid@2.11.2:
     resolution: {integrity: sha512-/OXVasW5OIRSFXnqzMgm8X3hPvf+JTbGecjQhmk7QnbDFq4hqdLssuYAWw9GsJGfzUPiMHM3ME2Y2XHPsTWmkw==}
     peerDependencies:
@@ -5042,7 +5052,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/og@0.3.1(patch_hash=o23byidi2hui7vwa2cv2fercjy)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
+  '@solid-mediakit/og@0.3.1(patch_hash=7satoney4oehcfj2r6hpo5kjyq)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
     dependencies:
       '@babel/core': 7.25.2
       '@solid-mediakit/shared': 0.0.6(rollup@4.34.8)
@@ -8417,6 +8427,8 @@ snapshots:
       - uploadthing
       - xml2js
       - yaml
+
+  vite-plugin-arraybuffer@0.0.8: {}
 
   vite-plugin-solid@2.11.2(solid-js@1.9.5)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(yaml@2.7.0)):
     dependencies:

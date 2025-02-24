@@ -12,6 +12,8 @@ import LocaleSelector from "./components/LocaleSelector";
 import TableOfContents from "./components/TableOfContents";
 import ThemeSelector from "./components/ThemeSelector";
 
+import { useDefaultThemeFrontmatter } from "./frontmatter";
+
 const defaultComponents = {
 	Article,
 	Footer,
@@ -27,14 +29,30 @@ const defaultComponents = {
 
 export type ThemeComponents = typeof defaultComponents;
 
-export const [ComponentsProvider, useThemeComponents] = createContextProvider((props: {components?: Partial<ThemeComponents>}) => {
+const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] = createContextProvider((props: {components?: Partial<ThemeComponents>}) => {
 	return {...defaultComponents, ...props.components}
 });
 
-export const [DefaultThemeContextProvider, useDefaultThemeContext] =
+export function useDefaultThemeComponents() {
+	return useDefaultThemeComponentsContext() ?? (() => {
+		throw new Error("useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider");
+	})()
+}
+
+const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
 	createContextProvider(() => {
 		const [sidebarOpen, setSidebarOpen] = createSignal(false);
 		const [tocOpen, setTocOpen] = createSignal(false);
+		const frontmatter = useDefaultThemeFrontmatter();
 
-		return { sidebarOpen, setSidebarOpen, tocOpen, setTocOpen };
-	}, null!);
+		return { sidebarOpen, setSidebarOpen, tocOpen, setTocOpen, frontmatter };
+	});
+
+export function useDefaultThemeState() {
+	return useDefaultThemeStateContext() ?? (() => {
+		throw new Error("useDefaultThemeContext must be used within a DefaultThemeContextProvider");
+	})()
+}
+
+
+export { DefaultThemeComponentsProvider, DefaultThemeStateProvider }

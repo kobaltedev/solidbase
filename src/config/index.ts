@@ -10,9 +10,9 @@ import solidBaseVitePlugin from "./vite-plugin/index.js";
 
 export type SolidBaseConfig<ThemeConfig> = {
 	title?: string;
+	titleTemplate?: string;
 	description?: string;
 	logo?: string;
-	titleTemplate?: string;
 	issueAutolink?: IssueAutoLinkConfig;
 	lang?: string;
 	locales?: Record<string, LocaleConfig<ThemeConfig>>;

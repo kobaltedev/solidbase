@@ -1,15 +1,13 @@
 import { For, Show } from "solid-js";
-import { useCurrentPageData } from "../../client";
+
+import { FeaturesConfig } from "../frontmatter";
+
 import styles from "./Features.module.css";
 
-export default function Features() {
-	const pageData = useCurrentPageData();
-
-	const features = () => pageData()?.frontmatter.features!;
-
+export default function Features(props: { features: FeaturesConfig[] }) {
 	return (
 		<div class={styles.features}>
-			<For each={features()}>
+			<For each={props.features}>
 				{(feature) => (
 					<div class={styles.feature}>
 						<Show when={feature.icon}>

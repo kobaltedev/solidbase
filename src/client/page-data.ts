@@ -8,61 +8,17 @@ export interface TableOfContentsItemData {
 	children: Array<TableOfContentsItemData>;
 }
 
-export type RelativePageConfig =
-	| string
-	| false
-	| {
-			text?: string;
-			link?: string;
-	  };
-
-interface LayoutOptions {
-	sidebar: boolean;
-	footer: boolean;
-	toc: boolean;
-	prev?: RelativePageConfig;
-	next?: RelativePageConfig;
-	editLink: boolean;
-	lastUpdated: boolean;
-}
-
-interface HeroActionConfig {
-	theme?: string;
-	text?: string;
-	link?: string;
-}
-
-interface HeroConfig {
-	name?: string;
-	text?: string;
-	tagline?: string;
-	image?: {
-		src: string;
-		alt?: string;
-	};
-	actions?: Array<HeroActionConfig>;
-}
-
-interface FeaturesConfig {
-	icon?: string;
+export interface BaseFrontmatter {
 	title?: string;
-	details?: string;
-}
-
-interface FrontmatterData extends Partial<LayoutOptions> {
-	title?: string;
-	layout?: "home";
-	hero?: HeroConfig;
-	features?: Array<FeaturesConfig>;
+	titleTemplate?: string;
+	description?: string;
 }
 
 interface CurrentPageData {
-	frontmatter: FrontmatterData &
-		Omit<Record<string, any>, keyof FrontmatterData>;
+	frontmatter: BaseFrontmatter,
 	toc?: Array<TableOfContentsItemData>;
 	editLink?: string;
 	lastUpdated?: number;
-	layout?: LayoutOptions;
 }
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] = createContextProvider((props: { deferStream?: boolean }) => {
@@ -108,7 +64,7 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] = createContextProvid
 			if (!mod) throw new Error("Failed to get page data: module not found");
 			return mod.$$SolidBase_page_data;
 		},
-		{ get deferStream() { return props.deferStream } }
+		{ get deferStream() { return props.deferStream ?? true } }
 	);
 
 	return () => pageData();

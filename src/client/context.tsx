@@ -4,7 +4,7 @@ import type { SolidBaseResolvedConfig } from "../config";
 
 export interface SolidBaseContextValue<ThemeConfig> {
 	config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
-	title: Accessor<string>;
+	metaTitle: Accessor<string>;
 }
 
 export const SolidBaseContext = createContext<SolidBaseContextValue<any>>();

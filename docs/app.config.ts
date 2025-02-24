@@ -1,5 +1,6 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
 import { defineConfig } from "@solidjs/start/config";
+import arraybuffer from "vite-plugin-arraybuffer";
 
 import { createWithSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
@@ -17,16 +18,17 @@ export default defineConfig(
 				prerender: {
 					crawlLinks: true,
 				},
+				esbuild: { options: { target: "es2022"}}
 			},
 			vite: {
-				plugins: [OGPlugin()],
+				plugins: [OGPlugin(), arraybuffer()],
+				server: { allowedHosts: ["5046-159-196-132-71.ngrok-free.app"] }
 			},
 		},
 		{
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
-			titleTemplate: ":title – SolidBase",
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			locales: {
