@@ -97,7 +97,7 @@ if (shouldRelease) {
 const currentHash = execSync("git log -1 --pretty=format:%H").toString().trim();
 
 console.log();
-console.log(`Creating tag v${nextVersion}`);
+console.log(`Creating tag v${nextVersion} for hash ${currentHash}`);
 
 if (!DRY_RUN) {
 	const octokit = new Octokit({
