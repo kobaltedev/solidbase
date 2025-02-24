@@ -8,6 +8,7 @@
     "start": "vinxi start"
   },
   "dependencies": {
+    "@fontsource/lexend": "^5.1.2",
     "@kobalte/solidbase": "workspace:*",
     "@solid-mediakit/og": "^0.3.1",
     "@solidjs/router": "^0.15.3",

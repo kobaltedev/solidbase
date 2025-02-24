@@ -1,4 +1,5 @@
-import { fileURLToPath } from "node:url";
+import Unfonts from "unplugin-fonts/vite"
+
 import { type ThemeDefinition, defineTheme } from "../config/index.js";
 
 export type DefaultThemeConfig = {
@@ -14,18 +15,18 @@ export type DefaultThemeConfig = {
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 	componentsPath: import.meta.resolve("@kobalte/solidbase/default-theme"),
-	vite(config) {
-		const rootPath = fileURLToPath(
-			import.meta.resolve("@kobalte/solidbase/default-theme/context.tsx"),
-		);
-
-		return {
-			transform(code, path) {
-				if (path === rootPath && (config.themeConfig?.fonts ?? true)) {
-					return `import "./fonts/index.css";\n${code}`;
+	vite() {
+		return [
+			Unfonts({
+				google: {
+					families: [
+						{ name: "Inter", styles: "ital,wght@0,100..900" },
+						{ name: "Lexend", styles: "wght@100..900" },
+						{ name: "JetBrains+Mono", styles: "ital,wght@0,100..900" },
+					]
 				}
-			},
-		};
+			})
+		];
 	},
 });
 export default defaultTheme;

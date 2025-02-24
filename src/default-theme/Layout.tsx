@@ -16,9 +16,9 @@ import type { Sidebar, SidebarLink } from ".";
 import { useThemeListener } from "../client/theme";
 import { useLocale } from "../client/locale";
 
+import 'unfonts.css'
 import "./index.css";
 import styles from "./Layout.module.css";
-// font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (
 	<DefaultThemeStateProvider>

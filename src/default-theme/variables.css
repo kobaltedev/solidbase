@@ -1,6 +1,6 @@
 html {
-	--sb-font-headings: Lexend, Segoe UI, Roboto, sans-serif;
-	--sb-font-text: Inter, Segoe UI, Roboto, sans-serif;
+	--sb-font-headings: "Variable", Segoe UI, Roboto, sans-serif;
+	--sb-font-text: "Variable", Segoe UI, Roboto, sans-serif;
 	--sb-font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
 
 	--sb-button-cursor: pointer;

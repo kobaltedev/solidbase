@@ -107,6 +107,9 @@
     "@expressive-code/plugin-collapsible-sections": "^0.37.1",
     "@expressive-code/plugin-frames": "^0.38.3",
     "@expressive-code/plugin-line-numbers": "^0.37.1",
+    "@fontsource-variable/inter": "^5.1.1",
+    "@fontsource-variable/jetbrains-mono": "^5.1.2",
+    "@fontsource-variable/lexend": "^5.1.2",
     "@kobalte/core": "^0.13.7",
     "@mdx-js/mdx": "^3.1.0",
     "@solid-primitives/clipboard": "^1.5.10",
@@ -124,6 +127,7 @@
     "estree-util-value-to-estree": "^3.1.2",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",
+    "lexend": "link:@fontsource/variable/lexend",
     "mdast-util-find-and-replace": "^3.0.1",
     "mdast-util-toc": "^7.1.0",
     "rehype-autolink-headings": "^7.1.0",
@@ -137,7 +141,8 @@
     "solid-mdx": "^0.0.7",
     "unified": "^11.0.5",
     "unist-builder": "^4.0.0",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "unplugin-fonts": "^1.3.1"
   },
   "pnpm": {
     "patchedDependencies": {
