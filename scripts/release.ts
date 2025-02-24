@@ -115,7 +115,7 @@ if (!DRY_RUN) {
 	console.log(`[DRY RUN] GitHub tag v${nextVersion} for hash ${currentHash}`);
 
 console.log();
-console.log(`Setting version ${nextVersion}...`);
+console.log(`Setting version ${nextVersion}`);
 runAction(`pnpm version ${nextVersion} --no-git-tag-version`);
 
 console.log();
@@ -136,9 +136,9 @@ console.log("DONE!");
 function runAction(s, opt = {}) {
 	if (DRY_RUN) {
 		console.log(`[DRY RUN] "${s}"`);
-		return "";
+		return;
 	}
-	return execSync(s, opt).toString();
+	return execSync(s, opt);
 }
 
 function incVersion(version: string, _major: boolean, _minor: boolean) {
