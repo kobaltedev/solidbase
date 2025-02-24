@@ -1,5 +1,5 @@
 [build]
-command = "VITE_ORIGIN=$DEPLOY_PRIME_URL && pnpm --filter @kobalte/solidbase-docs... run build"
+command = "VITE_ORIGIN=$DEPLOY_URL pnpm --filter @kobalte/solidbase-docs... run build"
 publish = "docs/dist/"
 
 [functions]
