@@ -7,7 +7,7 @@ import {
 import styles from "./TableOfContents.module.css";
 
 export default function TableOfContents(props: {}) {
-	const toc = () => useCurrentPageData()().toc;
+	const toc = () => useCurrentPageData()()?.toc;
 
 	const [currentSection, setCurrentSection] = createSignal<
 		string | undefined

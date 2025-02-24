@@ -5,12 +5,12 @@ import styles from "./Hero.module.css";
 export default function Hero() {
 	const pageData = useCurrentPageData();
 
-	const hero = () => pageData().frontmatter.hero!;
+	const hero = () => pageData()?.frontmatter.hero!;
 
 	return (
 		<div class={styles.hero}>
 			<div>
-				<h1>{hero().name ?? pageData().frontmatter.title}</h1>
+				<h1>{hero().name ?? pageData()?.frontmatter.title}</h1>
 				<Show when={hero().text}>
 					<p>{hero().text}</p>
 				</Show>

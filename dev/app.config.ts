@@ -25,7 +25,7 @@ export default defineConfig(
 			titleTemplate: ":title – SolidBase",
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			editPath:
-				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
+				"https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				socialLinks: {
 					github: "https://github.com/kobaltedev/solidbase",

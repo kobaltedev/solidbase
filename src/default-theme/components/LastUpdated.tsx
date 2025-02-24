@@ -16,16 +16,16 @@ export default function LastUpdated() {
 	const date = createMemo(
 		() =>
 			new Date(
-				Number.isNaN(pageData().lastUpdated)
+				Number.isNaN(pageData()?.lastUpdated)
 					? 0
-					: (pageData().lastUpdated ?? 0),
+					: (pageData()?.lastUpdated ?? 0),
 			),
 	);
 
 	return (
 		<p class={styles["last-updated"]}>
 			Last updated:{" "}
-			<Show when={!Number.isNaN(pageData().lastUpdated)} fallback="?">
+			<Show when={!Number.isNaN(pageData()?.lastUpdated)} fallback="?">
 				{formatter().format(date())}
 			</Show>
 		</p>

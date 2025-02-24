@@ -3,7 +3,7 @@ import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
 import type { DefaultThemeConfig } from "..";
-import { getLocaleLink } from "../../client/locale";
+import { getLocaleLink, useLocale } from "../../client/locale";
 import { useCurrentPageData } from "../../client/page-data";
 import { useDefaultThemeContext, useThemeComponents } from "../context";
 import { useRouteConfig, useSolidBaseContext } from "../utils";
@@ -25,7 +25,7 @@ export default function Header() {
 	const pageData = useCurrentPageData();
 
 	const config = useRouteConfig();
-	const { locale } = useSolidBaseContext();
+	const locale = useLocale()
 
 	return (
 		<Dialog open={tocOpen()} onOpenChange={setTocOpen} modal={false}>
@@ -72,13 +72,13 @@ export default function Header() {
 				</div>
 				<Show
 					when={
-						pageData().layout?.sidebar !== false ||
-						pageData().layout?.toc !== false
+						pageData()?.layout?.sidebar !== false ||
+						pageData()?.layout?.toc !== false
 					}
 				>
 					<div class={styles["mobile-bar"]}>
 						<Show
-							when={pageData().layout?.sidebar !== false}
+							when={pageData()?.layout?.sidebar !== false}
 							fallback={<div />}
 						>
 							<button
@@ -90,7 +90,7 @@ export default function Header() {
 								<MenuLeftIcon /> Menu
 							</button>
 						</Show>
-						<Show when={pageData().layout?.toc !== false}>
+						<Show when={pageData()?.layout?.toc !== false}>
 							<Dialog.Trigger
 								type="button"
 								class={styles["mobile-menu"]}

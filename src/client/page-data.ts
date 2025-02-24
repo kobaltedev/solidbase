@@ -1,10 +1,6 @@
-import { type RouteMatch, useCurrentMatches } from "@solidjs/router";
-import {
-	createContext,
-	createEffect,
-	createResource,
-	useContext,
-} from "solid-js";
+import { useCurrentMatches } from "@solidjs/router";
+import { createResource } from "solid-js";
+import { createContextProvider } from "@solid-primitives/context"
 
 export interface TableOfContentsItemData {
 	title: string;
@@ -69,37 +65,14 @@ interface CurrentPageData {
 	layout?: LayoutOptions;
 }
 
-const defaultPageData: CurrentPageData = {
-	frontmatter: {},
-	layout: {
-		sidebar: true,
-		footer: true,
-		toc: true,
-		editLink: true,
-		lastUpdated: true,
-	},
-};
-
-export const CurrentPageDataContext = createContext<() => CurrentPageData>();
-
-export function useCurrentPageData() {
-	const context = useContext(CurrentPageDataContext);
-
-	if (context === undefined) {
-		return createPageData();
-	}
-
-	return context;
-}
-
-function createPageData() {
+const [CurrentPageDataProvider, useCurrentPageDataContext] = createContextProvider((props: { deferStream?: boolean }) => {
 	const matches = useCurrentMatches();
 
 	const [pageData] = createResource(
 		matches,
-		async (m: RouteMatch[]): Promise<CurrentPageData> => {
+		async (m): Promise<CurrentPageData> => {
 			const key = m[m.length - 1]?.route.key as { $component: any } | undefined;
-			if (!key) return defaultPageData;
+			if (!key) throw new Error("Failed to get page data: no key found");
 
 			const component = key.$component;
 
@@ -116,12 +89,11 @@ function createPageData() {
 					typeof window.$$SolidBase_page_data[component.src.split("?")[0]] !==
 						"undefined"
 				) {
-					return computeLayout(
-						// @ts-ignore
-						window.$$SolidBase_page_data[
-							component.src.split("?")[0]
-						] as CurrentPageData,
-					);
+					const pageData = (window as Record<string, any>).$$SolidBase_page_data[
+						component.src.split("?")[0]
+					];
+					if (!pageData) throw new Error("Failed to get page data: no page data");
+					return pageData;
 				}
 
 				const manifest = import.meta.env.SSR
@@ -133,38 +105,25 @@ function createPageData() {
 				mod = await component.import();
 			}
 
-			const pd = (mod?.$$SolidBase_page_data ??
-				defaultPageData) as CurrentPageData;
-
-			return computeLayout(pd);
+			if (!mod) throw new Error("Failed to get page data: module not found");
+			return mod.$$SolidBase_page_data;
 		},
-		{ initialValue: defaultPageData },
+		{ get deferStream() { return props.deferStream } }
 	);
 
-	return pageData;
+	return () => pageData();
+});
+
+export { CurrentPageDataProvider };
+
+export function useCurrentPageData() {
+	return useCurrentPageDataContext() ?? (() => {
+		throw new Error("useCurrentPageData must be called underneath a CurrentPageDataProvider");
+ 	})();
 }
 
-function computeLayout(pd: CurrentPageData): CurrentPageData {
-	pd.layout = structuredClone(defaultPageData.layout);
+export function useFrontmatter<T extends Record<string, any>>() {
+	const pageData = useCurrentPageData();
 
-	pd.layout!.prev = pd.frontmatter.prev;
-	pd.layout!.next = pd.frontmatter.next;
-
-	switch (pd.frontmatter.layout) {
-		case "home":
-			pd.layout!.editLink = false;
-			pd.layout!.lastUpdated = false;
-			pd.layout!.next = false;
-			pd.layout!.prev = false;
-			pd.layout!.sidebar = false;
-			pd.layout!.toc = false;
-			pd.layout!.footer = true;
-	}
-
-	for (const k in Object.keys(pd.layout ?? {})) {
-		// @ts-ignore
-		if (pd.frontmatter[k]) pd.layout[k] = pd.frontmatter[k];
-	}
-
-	return pd;
+	return () => pageData()?.frontmatter as T | undefined
 }

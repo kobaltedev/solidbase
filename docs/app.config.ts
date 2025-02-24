@@ -82,7 +82,7 @@ export default defineConfig(
 				},
 			},
 			editPath:
-				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
+				"https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				socialLinks: {
 					github: "https://github.com/kobaltedev/solidbase",

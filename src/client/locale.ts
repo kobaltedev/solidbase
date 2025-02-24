@@ -2,6 +2,7 @@ import { solidBaseConfig } from "virtual:solidbase/config";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
+import { createContextProvider } from "@solid-primitives/context";
 
 import type { LocaleConfig } from "../config";
 
@@ -55,7 +56,7 @@ function getLocaleForPath(path: string) {
 	return locales.find((l) => l.isRoot)!;
 }
 
-export function useLocale() {
+const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 	const location = useLocation();
 	const navigate = useNavigate();
 
@@ -92,6 +93,14 @@ export function useLocale() {
 			return `/${rest}`;
 		},
 	};
+})
+
+export { LocaleContextProvider }
+
+export function useLocale() {
+	return useLocaleContext() ?? (() => {
+		throw new Error("useLocale must be called underneath a LocaleContextProvider");
+	})();
 }
 
 export const getLocaleLink = (locale: ResolvedLocale<any>): `/${string}` =>

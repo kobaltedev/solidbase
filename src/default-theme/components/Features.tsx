@@ -5,7 +5,7 @@ import styles from "./Features.module.css";
 export default function Features() {
 	const pageData = useCurrentPageData();
 
-	const features = () => pageData().frontmatter.features!;
+	const features = () => pageData()?.frontmatter.features!;
 
 	return (
 		<div class={styles.features}>

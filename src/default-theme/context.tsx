@@ -1,10 +1,5 @@
 import { createContextProvider } from "@solid-primitives/context";
-import {
-	type ParentProps,
-	createContext,
-	createSignal,
-	useContext,
-} from "solid-js";
+import { createSignal } from "solid-js";
 
 import Article from "./components/Article";
 import Features from "./components/Features";
@@ -32,21 +27,9 @@ const defaultComponents = {
 
 export type ThemeComponents = typeof defaultComponents;
 
-const ComponentsContext = createContext<ThemeComponents>(defaultComponents);
-
-export function ComponentsProvider(
-	props: ParentProps & { components?: Partial<ThemeComponents> },
-) {
-	return (
-		<ComponentsContext.Provider
-			value={{ ...defaultComponents, ...props.components }}
-		>
-			{props.children}
-		</ComponentsContext.Provider>
-	);
-}
-
-export const useThemeComponents = () => useContext(ComponentsContext);
+export const [ComponentsProvider, useThemeComponents] = createContextProvider((props: {components?: Partial<ThemeComponents>}) => {
+	return {...defaultComponents, ...props.components}
+});
 
 export const [DefaultThemeContextProvider, useDefaultThemeContext] =
 	createContextProvider(() => {

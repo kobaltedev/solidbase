@@ -1,5 +1,5 @@
 import { Dialog } from "@kobalte/core/dialog";
-import { Title } from "@solidjs/meta";
+import { MetaProvider, Title } from "@solidjs/meta";
 import { A, type RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
@@ -10,18 +10,24 @@ import {
 } from "./context";
 import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
-import { useRouteConfig, useSolidBaseContext } from "./utils";
-
+import { useRouteConfig } from "./utils";
 import type { Sidebar } from ".";
 import { useCurrentPageData } from "../client";
+import { useThemeListener } from "../client/theme";
+
 import "./index.css";
 import styles from "./Layout.module.css";
+import { LocaleContextProvider, useLocale } from "../client/locale";
 // font css is imported by theme vite plugin
 
 export default (props: RouteSectionProps) => (
-	<DefaultThemeContextProvider>
-		<Layout {...props} />
-	</DefaultThemeContextProvider>
+	<MetaProvider>
+		<LocaleContextProvider>
+			<DefaultThemeContextProvider>
+				<Layout {...props} />
+			</DefaultThemeContextProvider>
+		</LocaleContextProvider>
+	</MetaProvider>
 );
 
 function Layout(props: RouteSectionProps) {
@@ -31,6 +37,8 @@ function Layout(props: RouteSectionProps) {
 	const config = useRouteConfig();
 
 	const sidebar = useSidebar();
+
+	useThemeListener();
 
 	return (
 		<>
@@ -60,7 +68,7 @@ function Layout(props: RouteSectionProps) {
 					when={
 						sidebar() &&
 						sidebar()!.items?.length > 0 &&
-						pageData().layout?.sidebar !== false
+						pageData()?.layout?.sidebar !== false
 					}
 					fallback={<div class="_e" />}
 				>
@@ -110,7 +118,8 @@ interface NavigationProps {
 }
 
 const Navigation = (props: NavigationProps) => {
-	const { locale } = useSolidBaseContext();
+	const locale = useLocale();
+
 	const { setSidebarOpen } = useDefaultThemeContext();
 
 	return (

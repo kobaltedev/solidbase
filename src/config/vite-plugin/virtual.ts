@@ -66,19 +66,14 @@ ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
 export async function transformMdxModule(
 	code: string,
 	id: string,
-	startConfig: SolidStartInlineConfig,
 	solidBaseConfig: Partial<SolidBaseConfig<any>>,
 ) {
-	const rootPath = join(
-		dirname(fileURLToPath(import.meta.url)),
-		startConfig?.appRoot ?? "./src",
-		"routes",
-	);
+	const rootPath = process.env.PWD!;
 
 	const modulePath = id.split("?")[0];
 
 	let modulePathLink = "";
-	if (solidBaseConfig.editPath) {
+	if (solidBaseConfig.editPath && modulePath.startsWith(rootPath)) {
 		const path = modulePath.slice(rootPath.length).replace(/^\//, "");
 
 		if (typeof solidBaseConfig.editPath === "string")

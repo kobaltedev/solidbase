@@ -70,11 +70,11 @@ export default function Article(props: ParentProps) {
 	const prevNext = usePrevNext();
 
 	const hasPrev = () =>
-		(prevNext.prevLink() && pageData().layout?.prev !== false) ||
-		pageData().layout?.prev;
+		(prevNext.prevLink() && pageData()?.layout?.prev !== false) ||
+		pageData()?.layout?.prev;
 	const hasNext = () =>
-		(prevNext.nextLink() && pageData().layout?.next !== false) ||
-		pageData().layout?.next;
+		(prevNext.nextLink() && pageData()?.layout?.next !== false) ||
+		pageData()?.layout?.next;
 	const customTitle = (r?: RelativePageConfig) =>
 		typeof r === "string" ? r : typeof r === "object" ? r.text : undefined;
 	const customLink = (r?: RelativePageConfig) =>
@@ -86,10 +86,10 @@ export default function Article(props: ParentProps) {
 
 			<article class={styles.article}>
 				<div ref={setContentRef} class={styles.content}>
-					<Show when={pageData().frontmatter.hero}>
+					<Show when={pageData()?.frontmatter.hero}>
 						<Hero />
 					</Show>
-					<Show when={pageData().frontmatter.features}>
+					<Show when={pageData()?.frontmatter.features}>
 						<Features />
 					</Show>
 
@@ -97,13 +97,13 @@ export default function Article(props: ParentProps) {
 
 					<div class={styles.info}>
 						<Show
-							when={pageData().editLink && pageData().layout?.editLink}
+							when={pageData()?.editLink && pageData()?.layout?.editLink}
 							fallback={<div />}
 						>
-							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
+							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
 						</Show>
 
-						<Show when={pageData().layout?.lastUpdated}>
+						<Show when={pageData()?.layout?.lastUpdated}>
 							<LastUpdated />
 						</Show>
 					</div>
@@ -115,12 +115,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.prev}
 										href={
-											customLink(pageData().layout?.prev) ??
+											customLink(pageData()?.layout?.prev) ??
 											prevNext.prevLink().link
 										}
 									>
 										<span>Previous</span>
-										{customTitle(pageData().layout?.prev) ??
+										{customTitle(pageData()?.layout?.prev) ??
 											prevNext.prevLink().title}
 									</a>
 								</Show>
@@ -130,12 +130,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.next}
 										href={
-											customLink(pageData().layout?.next) ??
+											customLink(pageData()?.layout?.next) ??
 											prevNext.nextLink().link
 										}
 									>
 										<span>Next</span>
-										{customLink(pageData().layout?.next) ??
+										{customLink(pageData()?.layout?.next) ??
 											prevNext.nextLink().title}
 									</a>
 								</Show>
@@ -146,14 +146,14 @@ export default function Article(props: ParentProps) {
 					<Show
 						when={
 							(config().themeConfig?.footer ?? true) &&
-							pageData().layout?.footer
+							pageData()?.layout?.footer
 						}
 					>
 						<Footer />
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && (pageData().layout?.toc ?? true)}>
+				<Show when={!mobileLayout() && (pageData()?.layout?.toc ?? true)}>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>
