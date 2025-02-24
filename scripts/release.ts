@@ -126,7 +126,7 @@ console.log();
 console.log(
 	`Publishing ${nextVersion} with tag ${shouldRelease ? "latest" : "next"}`,
 );
-runAction(`pnpm publish ${shouldRelease ? "" : "--tag next"}`, {
+runAction(`pnpm publish ${shouldRelease ? "" : "--tag next"} --no-git-checks`, {
 	stdio: "inherit",
 });
 
