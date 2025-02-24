@@ -105,11 +105,14 @@ if (!DRY_RUN) {
 		auth: process.env.GITHUB_TOKEN,
 	});
 
-	octokit.request("POST /repos/{owner}/{repo}/git/refs", {
+	await octokit.request("POST /repos/{owner}/{repo}/git/refs", {
 		owner: "kobaltedev",
 		repo: "solidbase",
 		ref: `refs/tags/v${nextVersion}`,
 		sha: currentHash,
+		headers: {
+			"X-GitHub-Api-Version": "2022-11-28",
+		},
 	});
 } else
 	console.log(`[DRY RUN] GitHub tag v${nextVersion} for hash ${currentHash}`);
