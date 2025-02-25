@@ -17,8 +17,8 @@ import { useThemeListener } from "../client/theme";
 import { useLocale } from "../client/locale";
 
 import 'unfonts.css'
-import "./index.css";
 import styles from "./Layout.module.css";
+import "./index.css";
 
 export default (props: RouteSectionProps) => (
 	<DefaultThemeStateProvider>
@@ -37,6 +37,8 @@ function Layout(props: RouteSectionProps) {
 
 	return (
 		<>
+			<Title>{config().title}</Title>
+
 			<div class={styles.skipnav}>
 				<Link
 					href="#main-content"

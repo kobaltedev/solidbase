@@ -1,4 +1,5 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
+import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
 import { createMemo, Suspense } from "solid-js";
 import { MDXProvider } from "solid-mdx";
@@ -32,7 +33,6 @@ export function SolidBaseRoot(props: RouteSectionProps & {
 
 import { CurrentPageDataProvider, useCurrentPageData } from "./page-data";
 import { LocaleContextProvider } from "./locale";
-import { Meta, MetaProvider, Title } from "@solidjs/meta";
 
 export function Inner(props: RouteSectionProps) {
 	const config = useRouteSolidBaseConfig();

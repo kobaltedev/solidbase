@@ -8,9 +8,8 @@ import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.js";
 import { useDefaultThemeFrontmatter } from "@kobalte/solidbase/default-theme/frontmatter.js";
 
+import { mdxComponents } from "virtual:solidbase/components";
 import { OGImage } from "./og-image";
-
-import BetaImage from "../../assets/beta.png";
 
 export default function (props: ComponentProps<typeof Layout>) {
 	const frontmatter = useDefaultThemeFrontmatter();
@@ -23,7 +22,13 @@ export default function (props: ComponentProps<typeof Layout>) {
 					Article: (props) => (
 						<Article {...props}>
 							<Show when={frontmatter()?.layout !== "home"}>
-								<img src={BetaImage} alt="Beta" />
+								<mdxComponents.DirectiveContainer
+									type= "warning"
+									title= "SolidBase is currently in Beta!"
+								>
+								<p>
+									Some options may not fully work or be documented.</p>
+								</mdxComponents.DirectiveContainer>
 								<br />
 							</Show>
 							{props.children}
