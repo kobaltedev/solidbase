@@ -8,6 +8,7 @@ import Layout from "../../../src/default-theme/Layout";
 import Article from "../../../src/default-theme/components/Article";
 import { ComponentsProvider } from "../../../src/default-theme/context";
 
+import { mdxComponents } from "virtual:solidbase/components";
 import BetaImage from "../../assets/beta.png";
 import { OGImage } from "./og-image";
 
@@ -22,7 +23,14 @@ export default function (props: ComponentProps<typeof Layout>) {
 					Article: (props) => (
 						<Article {...props}>
 							<Show when={pageData().frontmatter.layout !== "home"}>
-								<img src={BetaImage} alt="Beta" />
+								{mdxComponents.DirectiveContainer({
+									type: "warning",
+									title: "SolidBase is currently in Beta!",
+									children: mdxComponents.p({
+										children:
+											"Some options may not fully work or be documented.",
+									}),
+								})}
 								<br />
 							</Show>
 							{props.children}

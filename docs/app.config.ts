@@ -128,7 +128,7 @@ export default defineConfig(
 								collapsed: false,
 								items: [
 									{
-										title: "Markdown Extentions",
+										title: "Markdown Extensions",
 										link: "/markdown",
 									},
 									{
