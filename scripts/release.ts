@@ -102,7 +102,7 @@ console.log(`Creating tag v${nextVersion} for hash ${currentHash}`);
 if (!DRY_RUN) {
 	const octokit = new Octokit({
 		// @ts-ignore
-		auth: process.env.RELEASE_TAG_TOKEN,
+		auth: process.env.GITHUB_TOKEN,
 	});
 
 	await octokit.request("POST /repos/{owner}/{repo}/git/refs", {
@@ -136,12 +136,13 @@ runAction(`pnpm publish ${shouldRelease ? "" : "--tag next"} --no-git-checks`, {
 console.log();
 console.log("DONE!");
 
-function runAction(s, opt = {}) {
+function runAction(cmd: string, opt = {}) {
 	if (DRY_RUN) {
-		console.log(`[DRY RUN] "${s}"`);
+		console.log(`[DRY RUN] > ${cmd}`);
 		return;
 	}
-	return execSync(s, opt);
+	console.log(`> ${cmd}`);
+	return execSync(cmd, opt);
 }
 
 function incVersion(version: string, _major: boolean, _minor: boolean) {
@@ -154,8 +155,8 @@ function incVersion(version: string, _major: boolean, _minor: boolean) {
 	}
 
 	const v = {
-		major: Number(version.split(".")[0]) + major,
-		minor: Number(version.split(".")[1]) + minor,
+		major: Number(version.split(".")[0]) + (major ? 1 : 0),
+		minor: Number(version.split(".")[1]) + (minor ? 1 : 0),
 		patch: Number(version.split(".")[2]) + 1,
 	};
 
@@ -183,11 +184,11 @@ function isCommitBreaking(commit: string, body: string): boolean {
 	return body.split("\n").slice(-1)[0].startsWith("BREAKING CHANGE:");
 }
 
-function sortSemver(a, b) {
-	const major = (s) => Number(s.split(".")[0]);
-	const minor = (s) => Number(s.split(".")[1]);
-	const patch = (s) => Number(s.split(".")[2].split("-")[0]);
-	const preview = (s) => {
+function sortSemver(a: string, b: string) {
+	const major = (s: string) => Number(s.split(".")[0]);
+	const minor = (s: string) => Number(s.split(".")[1]);
+	const patch = (s: string) => Number(s.split(".")[2].split("-")[0]);
+	const preview = (s: string) => {
 		const fullPatch = s.split(".")[2];
 		if (!fullPatch.includes("-")) return 0;
 		return Number(fullPatch.split("-next.")[1]);
