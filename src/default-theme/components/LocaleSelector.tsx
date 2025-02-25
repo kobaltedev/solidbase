@@ -1,7 +1,7 @@
 import { Select } from "@kobalte/core/select";
 import { Show } from "solid-js";
 
-import { type ResolvedLocale, useLocale } from "../../client/locale";
+import { type ResolvedLocale, useLocale } from "../../client";
 import styles from "./ThemeSelector.module.css";
 
 export default function LocaleSelector<ThemeConfig>() {

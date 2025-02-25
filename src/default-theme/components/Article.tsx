@@ -3,22 +3,21 @@ import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
 
-import {
-	type RelativePageConfig,
-	useCurrentPageData,
-} from "../../client/page-data";
-import { useThemeComponents } from "../context";
+import { useCurrentPageData } from "../../client";
 import { mobileLayout } from "../globals";
 import { usePrevNext } from "../sidebar";
 import { useSolidBaseContext } from "../utils";
 
+import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
+import type { RelativePageConfig } from "../frontmatter";
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
+	const { frontmatter } = useDefaultThemeState();
 
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
-		useThemeComponents();
+		useDefaultThemeComponents();
 
 	const [contentRef, setContentRef] = createSignal<HTMLElement>();
 
@@ -70,11 +69,11 @@ export default function Article(props: ParentProps) {
 	const prevNext = usePrevNext();
 
 	const hasPrev = () =>
-		(prevNext.prevLink() && pageData().layout?.prev !== false) ||
-		pageData().layout?.prev;
+		(prevNext.prevLink() && frontmatter()?.prev !== false) ||
+		frontmatter()?.prev;
 	const hasNext = () =>
-		(prevNext.nextLink() && pageData().layout?.next !== false) ||
-		pageData().layout?.next;
+		(prevNext.nextLink() && frontmatter()?.next !== false) ||
+		frontmatter()?.next;
 	const customTitle = (r?: RelativePageConfig) =>
 		typeof r === "string" ? r : typeof r === "object" ? r.text : undefined;
 	const customLink = (r?: RelativePageConfig) =>
@@ -86,24 +85,24 @@ export default function Article(props: ParentProps) {
 
 			<article class={styles.article}>
 				<div ref={setContentRef} class={styles.content}>
-					<Show when={pageData().frontmatter.hero}>
-						<Hero />
+					<Show when={frontmatter()?.hero}>
+						{(data) => <Hero data={data()} />}
 					</Show>
-					<Show when={pageData().frontmatter.features}>
-						<Features />
+					<Show when={frontmatter()?.features}>
+						{(data) => <Features features={data()} />}
 					</Show>
 
 					{props.children}
 
 					<div class={styles.info}>
 						<Show
-							when={pageData().editLink && pageData().layout?.editLink}
+							when={pageData()?.editLink && frontmatter()?.editLink}
 							fallback={<div />}
 						>
-							<Link href={pageData().editLink}>Edit this page on GitHub</Link>
+							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
 						</Show>
 
-						<Show when={pageData().layout?.lastUpdated}>
+						<Show when={frontmatter()?.lastUpdated}>
 							<LastUpdated />
 						</Show>
 					</div>
@@ -115,12 +114,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.prev}
 										href={
-											customLink(pageData().layout?.prev) ??
+											customLink(frontmatter()?.prev) ??
 											prevNext.prevLink().link
 										}
 									>
 										<span>Previous</span>
-										{customTitle(pageData().layout?.prev) ??
+										{customTitle(frontmatter()?.prev) ??
 											prevNext.prevLink().title}
 									</a>
 								</Show>
@@ -130,12 +129,12 @@ export default function Article(props: ParentProps) {
 									<a
 										class={styles.next}
 										href={
-											customLink(pageData().layout?.next) ??
+											customLink(frontmatter()?.next) ??
 											prevNext.nextLink().link
 										}
 									>
 										<span>Next</span>
-										{customLink(pageData().layout?.next) ??
+										{customLink(frontmatter()?.next) ??
 											prevNext.nextLink().title}
 									</a>
 								</Show>
@@ -145,15 +144,19 @@ export default function Article(props: ParentProps) {
 
 					<Show
 						when={
-							(config().themeConfig?.footer ?? true) &&
-							pageData().layout?.footer
+							(config().themeConfig?.footer ?? true) && frontmatter()?.footer
 						}
 					>
 						<Footer />
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && (pageData().layout?.toc ?? true)}>
+				<Show
+					when={
+						!mobileLayout() &&
+						(frontmatter()?.toc ?? frontmatter()?.layout !== "home")
+					}
+				>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>

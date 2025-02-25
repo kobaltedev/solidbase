@@ -1,4 +1,6 @@
-import { fileURLToPath } from "node:url";
+import Unfonts from "unplugin-fonts/vite";
+
+import type { Options } from "unplugin-fonts/types";
 import { type ThemeDefinition, defineTheme } from "../config/index.js";
 
 export type DefaultThemeConfig = {
@@ -9,23 +11,33 @@ export type DefaultThemeConfig = {
 	nav?: Array<NavItem>;
 	sidebar?: Sidebar | Record<`/${string}`, Sidebar>;
 	search?: SearchConfig;
-	fonts?: boolean;
+	unfonts?: Options;
 };
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 	componentsPath: import.meta.resolve("@kobalte/solidbase/default-theme"),
 	vite(config) {
-		const rootPath = fileURLToPath(
-			import.meta.resolve("@kobalte/solidbase/default-theme/context.tsx"),
-		);
-
-		return {
-			transform(code, path) {
-				if (path === rootPath && (config.themeConfig?.fonts ?? true)) {
-					return `import "./fonts/index.css";\n${code}`;
-				}
+		return [
+			{
+				name: "solidbase-unfonts-workaround",
+				enforce: "pre",
+				resolveId(id) {
+					if (id.startsWith("\0unfonts.css")) {
+						return id.slice("\0".length);
+					}
+				},
 			},
-		};
+			Unfonts({
+				fontsource: {
+					families: [
+						"Inter Variable",
+						"Lexend Variable",
+						"JetBrains Mono Variable",
+					],
+				},
+				...config?.themeConfig?.unfonts,
+			}),
+		];
 	},
 });
 export default defaultTheme;

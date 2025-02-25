@@ -4,7 +4,7 @@ import { type Accessor, createMemo } from "solid-js";
 import type { SolidBaseResolvedConfig } from "../config";
 import { useLocale } from "./locale";
 
-export function useRouteConfig<ThemeConfig>(): Accessor<
+export function useRouteSolidBaseConfig<ThemeConfig>(): Accessor<
 	SolidBaseResolvedConfig<ThemeConfig>
 > {
 	const { currentLocale } = useLocale();

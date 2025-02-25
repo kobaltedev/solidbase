@@ -1,5 +1,6 @@
 import { usePrefersDark } from "@solid-primitives/media";
-import { createSignal } from "solid-js";
+import { useHead } from "@solidjs/meta";
+import { createEffect, createSignal, createUniqueId } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
 export type ThemeType = "light" | "dark";
@@ -52,3 +53,19 @@ export function getThemeVariant() {
 }
 
 export const setTheme = _setTheme;
+
+import readThemeCookieScript from "./read-theme-cookie.js?raw";
+
+export function useThemeListener() {
+	createEffect(() => {
+		document.documentElement.setAttribute("data-theme", getTheme());
+		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
+	});
+
+	useHead({
+		tag: "script",
+		id: createUniqueId(),
+		props: { children: readThemeCookieScript },
+		setting: { close: true },
+	});
+}

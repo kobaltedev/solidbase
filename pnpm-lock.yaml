@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@solid-mediakit/og@0.3.1':
-    hash: 658061e506ca82541bfa599ebecf472d68f5be9c04c85cf472ae39ea51e75b0a
+    hash: 1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf
     path: patches/@solid-mediakit__og@0.3.1.patch
 
 importers:
@@ -28,6 +28,15 @@ importers:
       '@expressive-code/plugin-line-numbers':
         specifier: ^0.37.1
         version: 0.37.1
+      '@fontsource-variable/inter':
+        specifier: ^5.1.1
+        version: 5.1.1
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@fontsource-variable/lexend':
+        specifier: ^5.1.2
+        version: 5.1.2
       '@kobalte/core':
         specifier: ^0.13.7
         version: 0.13.9(solid-js@1.9.5)
@@ -79,6 +88,9 @@ importers:
       hastscript:
         specifier: ^9.0.0
         version: 9.0.1
+      lexend:
+        specifier: link:@fontsource/variable/lexend
+        version: link:@fontsource/variable/lexend
       mdast-util-find-and-replace:
         specifier: ^3.0.1
         version: 3.0.2
@@ -121,6 +133,9 @@ importers:
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
+      unplugin-fonts:
+        specifier: ^1.3.1
+        version: 1.3.1(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.9.4
@@ -185,12 +200,15 @@ importers:
 
   docs:
     dependencies:
+      '@fontsource/lexend':
+        specifier: ^5.1.2
+        version: 5.1.2
       '@kobalte/solidbase':
         specifier: workspace:*
         version: link:..
       '@solid-mediakit/og':
         specifier: ^0.3.1
-        version: 0.3.1(patch_hash=658061e506ca82541bfa599ebecf472d68f5be9c04c85cf472ae39ea51e75b0a)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
+        version: 0.3.1(patch_hash=1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
@@ -209,6 +227,13 @@ importers:
       vinxi:
         specifier: ^0.5.3
         version: 0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0)
+    devDependencies:
+      '@vercel/og':
+        specifier: ^0.6.5
+        version: 0.6.5
+      vite-plugin-arraybuffer:
+        specifier: ^0.0.8
+        version: 0.0.8
 
 packages:
 
@@ -1080,6 +1105,18 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fontsource-variable/inter@5.1.1':
+    resolution: {integrity: sha512-OpXFTmiH6tHkYijMvQTycFKBLK4X+SRV6tet1m4YOUH7SzIIlMqDja+ocDtiCA72UthBH/vF+3ZtlMr2rN/wIw==}
+
+  '@fontsource-variable/jetbrains-mono@5.1.2':
+    resolution: {integrity: sha512-syGEJ/N4FFisAXegxtbe1etYpo2T630dqCbYufPf7Dli/hMKSoSUIm3wK4q5RsGFRxWno1WecfnsgZA1jRK0EQ==}
+
+  '@fontsource-variable/lexend@5.1.2':
+    resolution: {integrity: sha512-5gY4aYZXvhCNrpqa7f/JmRnUyRMAPqGdE0IXicbqvusj+jEwuj1JuiLPl61hTbGntQP+sMZsDHECBhlrEY/8iQ==}
+
+  '@fontsource/lexend@5.1.2':
+    resolution: {integrity: sha512-ee4+mnk4Nu2C6QI78dO7zENRcVNE7oiLdaKm36/aI6tx4I/YNm69UJL2EYkwg8Pt0oQe7PPT2qXggvgRX8aruw==}
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
@@ -3934,9 +3971,22 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
+  unplugin-fonts@1.3.1:
+    resolution: {integrity: sha512-GmaJWPAWH6lBI4fP8xKdbMZJwTgsnr8PGJOfQE52jlod8QkqSO4M529Nox2L8zYapjB5hox2wCu4N3c/LOal/A==}
+    peerDependencies:
+      '@nuxt/kit': ^3.0.0
+      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+
   unplugin@1.16.1:
     resolution: {integrity: sha512-4/u/j4FrCKdi17jaxuJA0jClGxB1AvU2hw/IuayPc4ay1XGaJs/rbb4v5WKwAjNifjmXK9PIFyuPiaK8azyR9w==}
     engines: {node: '>=14.0.0'}
+
+  unplugin@2.0.0-beta.1:
+    resolution: {integrity: sha512-2qzQo5LN2DmUZXkWDHvGKLF5BP0WN+KthD6aPnPJ8plRBIjv4lh5O07eYcSxgO2znNw9s4MNhEO1sB+JDllDbQ==}
+    engines: {node: '>=18.12.0'}
 
   unplugin@2.2.0:
     resolution: {integrity: sha512-m1ekpSwuOT5hxkJeZGRxO7gXbXT3gF26NjQ7GdVHoLoF8/nopLcd/QfPigpCy7i51oFHiRJg/CyHhj4vs2+KGw==}
@@ -4057,6 +4107,9 @@ packages:
   vinxi@0.5.3:
     resolution: {integrity: sha512-4sL2SMrRzdzClapP44oXdGjCE1oq7/DagsbjY5A09EibmoIO4LP8ScRVdh03lfXxKRk7nCWK7n7dqKvm+fp/9w==}
     hasBin: true
+
+  vite-plugin-arraybuffer@0.0.8:
+    resolution: {integrity: sha512-F+InDQuxd93YDVRdXTjBr3lydgjyVHSpgRZS4izK/i85Anl5kmbvf2NwJ//XHAccHh1TScfX70MFJfBx/rf3cg==}
 
   vite-plugin-solid@2.11.2:
     resolution: {integrity: sha512-/OXVasW5OIRSFXnqzMgm8X3hPvf+JTbGecjQhmk7QnbDFq4hqdLssuYAWw9GsJGfzUPiMHM3ME2Y2XHPsTWmkw==}
@@ -4905,6 +4958,14 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@fontsource-variable/inter@5.1.1': {}
+
+  '@fontsource-variable/jetbrains-mono@5.1.2': {}
+
+  '@fontsource-variable/lexend@5.1.2': {}
+
+  '@fontsource/lexend@5.1.2': {}
+
   '@iarna/toml@2.2.5': {}
 
   '@internationalized/date@3.7.0':
@@ -5369,7 +5430,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/og@0.3.1(patch_hash=658061e506ca82541bfa599ebecf472d68f5be9c04c85cf472ae39ea51e75b0a)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
+  '@solid-mediakit/og@0.3.1(patch_hash=1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
     dependencies:
       '@babel/core': 7.25.2
       '@solid-mediakit/shared': 0.0.6(rollup@4.34.8)
@@ -8606,7 +8667,18 @@ snapshots:
 
   universalify@2.0.1: {}
 
+  unplugin-fonts@1.3.1(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)):
+    dependencies:
+      fast-glob: 3.3.3
+      unplugin: 2.0.0-beta.1
+      vite: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
+
   unplugin@1.16.1:
+    dependencies:
+      acorn: 8.14.0
+      webpack-virtual-modules: 0.6.2
+
+  unplugin@2.0.0-beta.1:
     dependencies:
       acorn: 8.14.0
       webpack-virtual-modules: 0.6.2
@@ -8791,6 +8863,8 @@ snapshots:
       - uploadthing
       - xml2js
       - yaml
+
+  vite-plugin-arraybuffer@0.0.8: {}
 
   vite-plugin-solid@2.11.2(solid-js@1.9.5)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)):
     dependencies:

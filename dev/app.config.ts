@@ -24,8 +24,7 @@ export default defineConfig(
 				"Fully featured, fully customisable static site generation for SolidStart",
 			titleTemplate: ":title – SolidBase",
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
-			editPath:
-				"https://github.com/kobaltedev/solidbase/edit/main/docs/src/routes/:path",
+			editPath: "https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				socialLinks: {
 					github: "https://github.com/kobaltedev/solidbase",

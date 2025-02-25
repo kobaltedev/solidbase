@@ -2,34 +2,30 @@ import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
-import type { DefaultThemeConfig } from "..";
-import { getLocaleLink } from "../../client/locale";
-import { useCurrentPageData } from "../../client/page-data";
-import { useDefaultThemeContext, useThemeComponents } from "../context";
-import { useRouteConfig, useSolidBaseContext } from "../utils";
-import styles from "./Header.module.css";
+import { getLocaleLink, useLocale } from "../../client";
+import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
+import { useRouteConfig } from "../utils";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
+
+import styles from "./Header.module.css";
 
 const DocSearch = lazy(() => import("./DocSearch"));
 
-const BUFFER_MULT = 3;
-
 export default function Header() {
-	const [ref, setRef] = createSignal<HTMLElement>();
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 
 	const { ThemeSelector, LocaleSelector, TableOfContents } =
-		useThemeComponents();
+		useDefaultThemeComponents();
 
-	const { tocOpen, setTocOpen, setSidebarOpen } = useDefaultThemeContext();
-	const pageData = useCurrentPageData();
+	const { tocOpen, setTocOpen, setSidebarOpen, frontmatter } =
+		useDefaultThemeState();
 
 	const config = useRouteConfig();
-	const { locale } = useSolidBaseContext();
+	const locale = useLocale();
 
 	return (
 		<Dialog open={tocOpen()} onOpenChange={setTocOpen} modal={false}>
-			<header class={styles.header} ref={setRef}>
+			<header class={styles.header}>
 				<div>
 					<a
 						href={getLocaleLink(locale.currentLocale())}
@@ -72,15 +68,11 @@ export default function Header() {
 				</div>
 				<Show
 					when={
-						pageData().layout?.sidebar !== false ||
-						pageData().layout?.toc !== false
+						frontmatter()?.sidebar !== false || frontmatter()?.toc !== false
 					}
 				>
 					<div class={styles["mobile-bar"]}>
-						<Show
-							when={pageData().layout?.sidebar !== false}
-							fallback={<div />}
-						>
+						<Show when={frontmatter()?.sidebar !== false} fallback={<div />}>
 							<button
 								type="button"
 								class={styles["mobile-menu"]}
@@ -90,7 +82,7 @@ export default function Header() {
 								<MenuLeftIcon /> Menu
 							</button>
 						</Show>
-						<Show when={pageData().layout?.toc !== false}>
+						<Show when={frontmatter()?.toc !== false}>
 							<Dialog.Trigger
 								type="button"
 								class={styles["mobile-menu"]}

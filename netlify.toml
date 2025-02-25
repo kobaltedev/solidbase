@@ -1,5 +1,6 @@
 [build]
-  publish = "docs/dist/"
+command = "VITE_ORIGIN=$DEPLOY_URL pnpm --filter @kobalte/solidbase-docs... run build"
+publish = "docs/dist/"
 
 [functions]
-  directory = "docs/.netlify/functions-internal/"
+directory = "docs/.netlify/functions-internal/"

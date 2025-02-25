@@ -1,13 +1,10 @@
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { For, type JSX, Show, createEffect, createSignal } from "solid-js";
-import {
-	type TableOfContentsItemData,
-	useCurrentPageData,
-} from "../../client/page-data";
+import { type TableOfContentsItemData, useCurrentPageData } from "../../client";
 import styles from "./TableOfContents.module.css";
 
 export default function TableOfContents(props: {}) {
-	const toc = () => useCurrentPageData()().toc;
+	const toc = () => useCurrentPageData()()?.toc;
 
 	const [currentSection, setCurrentSection] = createSignal<
 		string | undefined

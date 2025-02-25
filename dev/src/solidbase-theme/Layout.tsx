@@ -1,7 +1,7 @@
 import { Title } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
 
-import Layout from "../../../src/default-theme/Layout";
+import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 
 export default function (props: RouteSectionProps) {
 	return (

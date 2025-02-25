@@ -1,12 +1,10 @@
 import { type Accessor, createContext, useContext } from "solid-js";
 
 import type { SolidBaseResolvedConfig } from "../config";
-import type { useLocale } from "./locale";
 
 export interface SolidBaseContextValue<ThemeConfig> {
 	config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
-	locale: ReturnType<typeof useLocale>;
-	title: Accessor<string>;
+	metaTitle: Accessor<string>;
 }
 
 export const SolidBaseContext = createContext<SolidBaseContextValue<any>>();

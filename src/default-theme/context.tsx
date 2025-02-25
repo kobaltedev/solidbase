@@ -1,10 +1,5 @@
 import { createContextProvider } from "@solid-primitives/context";
-import {
-	type ParentProps,
-	createContext,
-	createSignal,
-	useContext,
-} from "solid-js";
+import { createSignal } from "solid-js";
 
 import Article from "./components/Article";
 import Features from "./components/Features";
@@ -16,6 +11,8 @@ import Link from "./components/Link";
 import LocaleSelector from "./components/LocaleSelector";
 import TableOfContents from "./components/TableOfContents";
 import ThemeSelector from "./components/ThemeSelector";
+
+import { useDefaultThemeFrontmatter } from "./frontmatter";
 
 const defaultComponents = {
 	Article,
@@ -32,26 +29,45 @@ const defaultComponents = {
 
 export type ThemeComponents = typeof defaultComponents;
 
-const ComponentsContext = createContext<ThemeComponents>(defaultComponents);
+const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
+	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
+		const parent = useDefaultThemeComponentsContext() as any;
+		return {
+			...defaultComponents,
+			...parent,
+			...props.components,
+		} as ThemeComponents;
+	});
 
-export function ComponentsProvider(
-	props: ParentProps & { components?: Partial<ThemeComponents> },
-) {
+export function useDefaultThemeComponents() {
 	return (
-		<ComponentsContext.Provider
-			value={{ ...defaultComponents, ...props.components }}
-		>
-			{props.children}
-		</ComponentsContext.Provider>
+		useDefaultThemeComponentsContext() ??
+		(() => {
+			throw new Error(
+				"useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider",
+			);
+		})()
 	);
 }
 
-export const useThemeComponents = () => useContext(ComponentsContext);
-
-export const [DefaultThemeContextProvider, useDefaultThemeContext] =
+const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
 	createContextProvider(() => {
 		const [sidebarOpen, setSidebarOpen] = createSignal(false);
 		const [tocOpen, setTocOpen] = createSignal(false);
+		const frontmatter = useDefaultThemeFrontmatter();
 
-		return { sidebarOpen, setSidebarOpen, tocOpen, setTocOpen };
-	}, null!);
+		return { sidebarOpen, setSidebarOpen, tocOpen, setTocOpen, frontmatter };
+	});
+
+export function useDefaultThemeState() {
+	return (
+		useDefaultThemeStateContext() ??
+		(() => {
+			throw new Error(
+				"useDefaultThemeContext must be used within a DefaultThemeContextProvider",
+			);
+		})()
+	);
+}
+
+export { DefaultThemeComponentsProvider, DefaultThemeStateProvider };

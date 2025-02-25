@@ -1,58 +1,74 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
-import { MetaProvider, useHead } from "@solidjs/meta";
+import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
-import { Suspense, createEffect, createUniqueId } from "solid-js";
+import { Suspense, createMemo } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
-import { useRouteConfig } from "./config";
+import { useRouteSolidBaseConfig } from "./config";
 import { SolidBaseContext } from "./context";
-import { useLocale } from "./locale";
-import { CurrentPageDataContext, useCurrentPageData } from "./page-data";
-import { getRawTheme, getTheme } from "./theme";
 
-export function SolidBaseRoot(props: RouteSectionProps) {
-	const locale = useLocale();
-	const config = useRouteConfig();
-	const pageData = useCurrentPageData();
-
-	const title = () => {
-		const t = pageData().frontmatter?.title;
-		if (!t) return config().title;
-
-		return (config().titleTemplate ?? ":title").replace(":title", t);
-	};
-
-	return (
-		<CurrentPageDataContext.Provider value={pageData}>
-			<MetaProvider>
-				<MDXProvider components={mdxComponents}>
-					<SolidBaseContext.Provider value={{ locale, config, title }}>
+export function SolidBaseRoot(
+	props: RouteSectionProps & {
+		currentPageData?: { deferStream?: boolean };
+		meta?: {
+			// allows diabling MetaProvider for cases where you've already got one
+			provider?: boolean;
+		};
+	},
+) {
+	const base = () => (
+		<Suspense>
+			<LocaleContextProvider>
+				<CurrentPageDataProvider {...props.currentPageData}>
+					<MDXProvider components={mdxComponents}>
 						<Inner {...props} />
-					</SolidBaseContext.Provider>
-				</MDXProvider>
-			</MetaProvider>
-		</CurrentPageDataContext.Provider>
+					</MDXProvider>
+				</CurrentPageDataProvider>
+			</LocaleContextProvider>
+		</Suspense>
 	);
+
+	const withMeta = () =>
+		(props.meta?.provider ?? true) ? (
+			<MetaProvider>{base()}</MetaProvider>
+		) : (
+			<>{base()}</>
+		);
+
+	return <>{withMeta()}</>;
 }
 
-import readThemeCookieScript from "./read-theme-cookie.js?raw";
+import { LocaleContextProvider } from "./locale";
+import { CurrentPageDataProvider, useCurrentPageData } from "./page-data";
 
 export function Inner(props: RouteSectionProps) {
-	createEffect(() => {
-		document.documentElement.setAttribute("data-theme", getTheme());
-		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
+	const config = useRouteSolidBaseConfig();
+	const pageData = useCurrentPageData();
+
+	const metaTitle = createMemo(() => {
+		const titleTemplate =
+			pageData()?.frontmatter.titleTemplate ?? config().titleTemplate;
+
+		const title = pageData()?.frontmatter?.title;
+		if (!title) {
+			const title = config().title;
+			if (titleTemplate) return `${title} - ${titleTemplate}`;
+			return title;
+		}
+
+		if (titleTemplate?.includes(":title"))
+			return titleTemplate.replace(":title", title);
+		return `${title} - ${titleTemplate ?? config().title}`;
 	});
 
-	useHead({
-		tag: "script",
-		id: createUniqueId(),
-		props: { children: readThemeCookieScript },
-		setting: { close: true },
-	});
+	const description = () =>
+		pageData()?.frontmatter?.description ?? config().description;
 
 	return (
-		<Suspense>
+		<SolidBaseContext.Provider value={{ config, metaTitle }}>
+			<Title>{metaTitle()}</Title>
+			{description() && <Meta name="description" content={description()} />}
 			<Layout {...props} />
-		</Suspense>
+		</SolidBaseContext.Provider>
 	);
 }
