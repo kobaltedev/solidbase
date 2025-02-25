@@ -1,6 +1,5 @@
 import type { DefaultThemeConfig } from ".";
-import { useRouteSolidBaseConfig as _useRouteConfig } from "../client/config";
-import { useSolidBaseContext as _useSolidBaseContext } from "../client/context";
+import { useRouteSolidBaseConfig as _useRouteConfig, useSolidBaseContext as _useSolidBaseContext } from "../client";
 
 export function useSolidBaseContext() {
 	return _useSolidBaseContext<DefaultThemeConfig>();

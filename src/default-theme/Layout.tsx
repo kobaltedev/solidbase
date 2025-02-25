@@ -13,8 +13,7 @@ import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
 import { useRouteConfig } from "./utils";
 import type { Sidebar, SidebarLink } from ".";
-import { useThemeListener } from "../client/theme";
-import { useLocale } from "../client/locale";
+import { useLocale, useThemeListener } from "../client";
 
 import 'unfonts.css'
 import styles from "./Layout.module.css";

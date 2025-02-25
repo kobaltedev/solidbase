@@ -5,7 +5,7 @@ import {
 	getTheme,
 	getThemeVariant,
 	setTheme,
-} from "../../client/theme";
+} from "../../client";
 import styles from "./ThemeSelector.module.css";
 
 interface ThemeOption {

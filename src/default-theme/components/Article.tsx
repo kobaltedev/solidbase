@@ -3,7 +3,7 @@ import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
 
-import { useCurrentPageData } from "../../client/page-data";
+import { useCurrentPageData } from "../../client";
 import { mobileLayout } from "../globals";
 import { usePrevNext } from "../sidebar";
 import { useSolidBaseContext } from "../utils";

@@ -3,7 +3,7 @@ import { For, type JSX, Show, createEffect, createSignal } from "solid-js";
 import {
 	type TableOfContentsItemData,
 	useCurrentPageData,
-} from "../../client/page-data";
+} from "../../client";
 import styles from "./TableOfContents.module.css";
 
 export default function TableOfContents(props: {}) {

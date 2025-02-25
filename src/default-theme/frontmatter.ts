@@ -1,4 +1,4 @@
-import { BaseFrontmatter, useFrontmatter } from "../client/page-data";
+import { BaseFrontmatter, useFrontmatter } from "../client";
 
 export function useDefaultThemeFrontmatter() {
 	return useFrontmatter<DefaultThemeFrontmatter>();

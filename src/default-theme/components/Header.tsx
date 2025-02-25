@@ -2,7 +2,7 @@ import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
-import { getLocaleLink, useLocale } from "../../client/locale";
+import { getLocaleLink, useLocale } from "../../client";
 import { useDefaultThemeState, useDefaultThemeComponents } from "../context";
 import { useRouteConfig } from "../utils";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
