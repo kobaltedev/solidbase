@@ -7,7 +7,7 @@ import { For, Show } from "solid-js";
 import type { Sidebar, SidebarLink } from ".";
 import { useLocale, useThemeListener } from "../client";
 import {
-    DefaultThemeComponentsProvider,
+	DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
 	useDefaultThemeComponents,
 	useDefaultThemeState,

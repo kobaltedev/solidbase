@@ -32,7 +32,11 @@ export type ThemeComponents = typeof defaultComponents;
 const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
 	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
 		const parent = useDefaultThemeComponentsContext() as any;
-		return { ...defaultComponents, ...parent, ...props.components } as Partial<ThemeComponents>;
+		return {
+			...defaultComponents,
+			...parent,
+			...props.components,
+		} as ThemeComponents;
 	});
 
 export function useDefaultThemeComponents() {
