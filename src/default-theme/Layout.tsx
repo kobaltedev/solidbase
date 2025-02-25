@@ -7,6 +7,7 @@ import { For, Show } from "solid-js";
 import type { Sidebar, SidebarLink } from ".";
 import { useLocale, useThemeListener } from "../client";
 import {
+    DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
 	useDefaultThemeComponents,
 	useDefaultThemeState,
@@ -21,7 +22,9 @@ import "./index.css";
 
 export default (props: RouteSectionProps) => (
 	<DefaultThemeStateProvider>
-		<Layout {...props} />
+		<DefaultThemeComponentsProvider>
+			<Layout {...props} />
+		</DefaultThemeComponentsProvider>
 	</DefaultThemeStateProvider>
 );
 
