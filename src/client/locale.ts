@@ -1,8 +1,8 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
+import { createContextProvider } from "@solid-primitives/context";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
-import { createContextProvider } from "@solid-primitives/context";
 
 import type { LocaleConfig } from "../config";
 
@@ -93,14 +93,19 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			return `/${rest}`;
 		},
 	};
-})
+});
 
-export { LocaleContextProvider }
+export { LocaleContextProvider };
 
 export function useLocale() {
-	return useLocaleContext() ?? (() => {
-		throw new Error("useLocale must be called underneath a LocaleContextProvider");
-	})();
+	return (
+		useLocaleContext() ??
+		(() => {
+			throw new Error(
+				"useLocale must be called underneath a LocaleContextProvider",
+			);
+		})()
+	);
 }
 
 export const getLocaleLink = (locale: ResolvedLocale<any>): `/${string}` =>

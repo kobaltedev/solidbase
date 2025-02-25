@@ -18,11 +18,11 @@ export default defineConfig(
 				prerender: {
 					crawlLinks: true,
 				},
-				esbuild: { options: { target: "es2022"}}
+				esbuild: { options: { target: "es2022" } },
 			},
 			vite: {
 				plugins: [OGPlugin(), arraybuffer()],
-				server: { allowedHosts: ["5046-159-196-132-71.ngrok-free.app"] }
+				server: { allowedHosts: ["5046-159-196-132-71.ngrok-free.app"] },
 			},
 		},
 		{
@@ -83,8 +83,7 @@ export default defineConfig(
 					},
 				},
 			},
-			editPath:
-				"https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
+			editPath: "https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				socialLinks: {
 					github: "https://github.com/kobaltedev/solidbase",

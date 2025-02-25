@@ -4,18 +4,18 @@ import { Title } from "@solidjs/meta";
 import { A, type RouteSectionProps } from "@solidjs/router";
 import { For, Show } from "solid-js";
 
+import type { Sidebar, SidebarLink } from ".";
+import { useLocale, useThemeListener } from "../client";
 import {
 	DefaultThemeStateProvider,
-	useDefaultThemeState,
 	useDefaultThemeComponents,
+	useDefaultThemeState,
 } from "./context";
 import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
 import { useRouteConfig } from "./utils";
-import type { Sidebar, SidebarLink } from ".";
-import { useLocale, useThemeListener } from "../client";
 
-import 'unfonts.css'
+import "unfonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
 
@@ -59,16 +59,15 @@ function Layout(props: RouteSectionProps) {
 				<Header />
 
 				<Show
-					when={
-						(() => {
-							const s = sidebar();
-							if (!s || s.items.length <= 0 || frontmatter()?.sidebar === false) return;
-							return s;
-						})()
-					}
+					when={(() => {
+						const s = sidebar();
+						if (!s || s.items.length <= 0 || frontmatter()?.sidebar === false)
+							return;
+						return s;
+					})()}
 					fallback={<div class="_e" />}
 				>
-					{sidebar => (
+					{(sidebar) => (
 						<Show
 							when={mobileLayout()}
 							fallback={
@@ -147,7 +146,7 @@ function Navigation(props: NavigationProps) {
 													{item.title}
 												</A>
 											</li>
-										)
+										);
 									}}
 								</For>
 							</ul>
@@ -157,4 +156,4 @@ function Navigation(props: NavigationProps) {
 			</ul>
 		</nav>
 	);
-};
+}

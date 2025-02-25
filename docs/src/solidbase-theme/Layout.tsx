@@ -3,7 +3,11 @@ import { useLocation } from "@solidjs/router";
 import { type ComponentProps, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
-import { useLocale, useSolidBaseContext, mdxComponents } from "@kobalte/solidbase/client";
+import {
+	mdxComponents,
+	useLocale,
+	useSolidBaseContext,
+} from "@kobalte/solidbase/client";
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.js";
@@ -22,7 +26,8 @@ export default function (props: ComponentProps<typeof Layout>) {
 					Article: (props) => (
 						<Article {...props}>
 							<Show when={frontmatter()?.layout !== "home"}>
-								<Dynamic component={mdxComponents.DirectiveContainer}
+								<Dynamic
+									component={mdxComponents.DirectiveContainer}
 									type="warning"
 									title="SolidBase is currently in Beta!"
 								>
@@ -56,14 +61,10 @@ function OpenGraph() {
 			<Meta
 				name="og:description"
 				content={
-					frontmatter()?.description ??
-					solidBaseCtx.config().description
+					frontmatter()?.description ?? solidBaseCtx.config().description
 				}
 			/>
-			<Meta
-				name="og:locale"
-				content={locale.currentLocale().code}
-			/>
+			<Meta name="og:locale" content={locale.currentLocale().code} />
 			<Meta
 				name="og:url"
 				content={new URL(

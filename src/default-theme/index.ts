@@ -1,7 +1,7 @@
-import Unfonts from "unplugin-fonts/vite"
+import Unfonts from "unplugin-fonts/vite";
 
-import { type ThemeDefinition, defineTheme } from "../config/index.js";
 import type { Options } from "unplugin-fonts/types";
+import { type ThemeDefinition, defineTheme } from "../config/index.js";
 
 export type DefaultThemeConfig = {
 	footer?: boolean;
@@ -11,7 +11,7 @@ export type DefaultThemeConfig = {
 	nav?: Array<NavItem>;
 	sidebar?: Sidebar | Record<`/${string}`, Sidebar>;
 	search?: SearchConfig;
-	unfonts?: Options
+	unfonts?: Options;
 };
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
@@ -19,17 +19,23 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 	vite(config) {
 		return [
 			{
-				name: 'solidbase-unfonts-workaround',
+				name: "solidbase-unfonts-workaround",
 				enforce: "pre",
 				resolveId(id) {
 					if (id.startsWith("\0unfonts.css")) {
-						return id.slice("\0".length)
+						return id.slice("\0".length);
 					}
 				},
 			},
 			Unfonts({
-				fontsource: { "families": ["Inter Variable", "Lexend Variable", "JetBrains Mono Variable"] },
-				...config?.themeConfig?.unfonts
+				fontsource: {
+					families: [
+						"Inter Variable",
+						"Lexend Variable",
+						"JetBrains Mono Variable",
+					],
+				},
+				...config?.themeConfig?.unfonts,
 			}),
 		];
 	},

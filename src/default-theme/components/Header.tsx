@@ -3,7 +3,7 @@ import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
 import { getLocaleLink, useLocale } from "../../client";
-import { useDefaultThemeState, useDefaultThemeComponents } from "../context";
+import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 
@@ -17,10 +17,11 @@ export default function Header() {
 	const { ThemeSelector, LocaleSelector, TableOfContents } =
 		useDefaultThemeComponents();
 
-	const { tocOpen, setTocOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
+	const { tocOpen, setTocOpen, setSidebarOpen, frontmatter } =
+		useDefaultThemeState();
 
 	const config = useRouteConfig();
-	const locale = useLocale()
+	const locale = useLocale();
 
 	return (
 		<Dialog open={tocOpen()} onOpenChange={setTocOpen} modal={false}>
@@ -67,15 +68,11 @@ export default function Header() {
 				</div>
 				<Show
 					when={
-						frontmatter()?.sidebar !== false ||
-						frontmatter()?.toc !== false
+						frontmatter()?.sidebar !== false || frontmatter()?.toc !== false
 					}
 				>
 					<div class={styles["mobile-bar"]}>
-						<Show
-							when={frontmatter()?.sidebar !== false}
-							fallback={<div />}
-						>
+						<Show when={frontmatter()?.sidebar !== false} fallback={<div />}>
 							<button
 								type="button"
 								class={styles["mobile-menu"]}

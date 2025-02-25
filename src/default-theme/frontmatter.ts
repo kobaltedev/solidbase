@@ -1,4 +1,4 @@
-import { BaseFrontmatter, useFrontmatter } from "../client";
+import { type BaseFrontmatter, useFrontmatter } from "../client";
 
 export function useDefaultThemeFrontmatter() {
 	return useFrontmatter<DefaultThemeFrontmatter>();
@@ -51,4 +51,6 @@ interface HomeLayoutFrontmatter {
 	features?: Array<FeaturesConfig>;
 }
 
-export type DefaultThemeFrontmatter = (BaseFrontmatter & DefaultThemeBaseFrontmatter) & HomeLayoutFrontmatter;
+export type DefaultThemeFrontmatter = (BaseFrontmatter &
+	DefaultThemeBaseFrontmatter) &
+	HomeLayoutFrontmatter;

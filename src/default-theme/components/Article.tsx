@@ -8,9 +8,9 @@ import { mobileLayout } from "../globals";
 import { usePrevNext } from "../sidebar";
 import { useSolidBaseContext } from "../utils";
 
+import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
+import type { RelativePageConfig } from "../frontmatter";
 import styles from "./Article.module.css";
-import { useDefaultThemeState, useDefaultThemeComponents } from "../context";
-import { RelativePageConfig } from "../frontmatter";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
@@ -86,10 +86,10 @@ export default function Article(props: ParentProps) {
 			<article class={styles.article}>
 				<div ref={setContentRef} class={styles.content}>
 					<Show when={frontmatter()?.hero}>
-						{data => <Hero data={data()} />}
+						{(data) => <Hero data={data()} />}
 					</Show>
 					<Show when={frontmatter()?.features}>
-						{data =>	<Features features={data()} />}
+						{(data) => <Features features={data()} />}
 					</Show>
 
 					{props.children}
@@ -144,15 +144,19 @@ export default function Article(props: ParentProps) {
 
 					<Show
 						when={
-							(config().themeConfig?.footer ?? true) &&
-							frontmatter()?.footer
+							(config().themeConfig?.footer ?? true) && frontmatter()?.footer
 						}
 					>
 						<Footer />
 					</Show>
 				</div>
 
-				<Show when={!mobileLayout() && (frontmatter()?.toc ?? frontmatter()?.layout !== "home")}>
+				<Show
+					when={
+						!mobileLayout() &&
+						(frontmatter()?.toc ?? frontmatter()?.layout !== "home")
+					}
+				>
 					<aside class={styles.aside}>
 						<TableOfContents />
 					</aside>

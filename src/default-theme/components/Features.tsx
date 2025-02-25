@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import { FeaturesConfig } from "../frontmatter";
+import type { FeaturesConfig } from "../frontmatter";
 
 import styles from "./Features.module.css";
 

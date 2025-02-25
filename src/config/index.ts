@@ -107,7 +107,7 @@ export function createWithSolidBase<ThemeConfig>(
 			while (t !== undefined) {
 				if (t.vite) {
 					const contents = t.vite(sbConfig);
-					if(contents) plugins.push(contents);
+					if (contents) plugins.push(contents);
 				}
 
 				t = t.extends;

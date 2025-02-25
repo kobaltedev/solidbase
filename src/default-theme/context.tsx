@@ -29,14 +29,20 @@ const defaultComponents = {
 
 export type ThemeComponents = typeof defaultComponents;
 
-const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] = createContextProvider((props: {components?: Partial<ThemeComponents>}) => {
-	return {...defaultComponents, ...props.components}
-});
+const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
+	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
+		return { ...defaultComponents, ...props.components };
+	});
 
 export function useDefaultThemeComponents() {
-	return useDefaultThemeComponentsContext() ?? (() => {
-		throw new Error("useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider");
-	})()
+	return (
+		useDefaultThemeComponentsContext() ??
+		(() => {
+			throw new Error(
+				"useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider",
+			);
+		})()
+	);
 }
 
 const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
@@ -49,10 +55,14 @@ const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
 	});
 
 export function useDefaultThemeState() {
-	return useDefaultThemeStateContext() ?? (() => {
-		throw new Error("useDefaultThemeContext must be used within a DefaultThemeContextProvider");
-	})()
+	return (
+		useDefaultThemeStateContext() ??
+		(() => {
+			throw new Error(
+				"useDefaultThemeContext must be used within a DefaultThemeContextProvider",
+			);
+		})()
+	);
 }
 
-
-export { DefaultThemeComponentsProvider, DefaultThemeStateProvider }
+export { DefaultThemeComponentsProvider, DefaultThemeStateProvider };
