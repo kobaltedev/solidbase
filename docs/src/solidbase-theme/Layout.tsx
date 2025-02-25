@@ -1,6 +1,7 @@
 import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
 import { type ComponentProps, Show } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
 import { useLocale, useSolidBaseContext, mdxComponents } from "@kobalte/solidbase/client";
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
@@ -21,13 +22,12 @@ export default function (props: ComponentProps<typeof Layout>) {
 					Article: (props) => (
 						<Article {...props}>
 							<Show when={frontmatter()?.layout !== "home"}>
-								<mdxComponents.DirectiveContainer
-									type= "warning"
-									title= "SolidBase is currently in Beta!"
+								<Dynamic component={mdxComponents.DirectiveContainer}
+									type="warning"
+									title="SolidBase is currently in Beta!"
 								>
-								<p>
-									Some options may not fully work or be documented.</p>
-								</mdxComponents.DirectiveContainer>
+									<p>Some options may not fully work or be documented.</p>
+								</Dynamic>
 								<br />
 							</Show>
 							{props.children}

@@ -4,4 +4,4 @@ export { SolidBaseRoot } from "./Root";
 export { useCurrentPageData, useFrontmatter, type BaseFrontmatter, type TableOfContentsItemData } from "./page-data";
 export { useSolidBaseContext } from "./context";
 export { useRouteSolidBaseConfig } from "./config"
-export * as mdxComponents from "virtual:solidbase/components";
+export { mdxComponents } from "virtual:solidbase/components";
