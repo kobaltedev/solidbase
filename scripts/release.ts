@@ -60,12 +60,16 @@ const commitDatas: CommitData[] = rawCommitsSinceLatestRelease.map((s) => {
 
 const majorChanges = commitDatas.some((c) => c.breaking);
 const minorChanges = commitDatas.some((c) => c.type === "feat");
+const patchChanges = commitDatas.some(
+	(c) => c.type === "fix" || c.type === "perf",
+);
 
 const shouldRelease =
 	(commitDatas[0].type === "chore" &&
 		commitDatas[0].message.match(/^release( \d+\.\d+\.\d+)?/)) ||
 	minorChanges ||
-	majorChanges;
+	majorChanges ||
+	patchChanges;
 
 let nextVersion: string;
 if (shouldRelease) {
