@@ -50,11 +50,7 @@ export default function ThemeSelector() {
 			)}
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
-				<Select.Value<ThemeOption>>
-					<RefreshOnMount>
-						SO BAD {JSON.stringify(THEME_OPTIONS.find((t) => t.value === getThemeVariant())?.label)}
-					</RefreshOnMount>
-				</Select.Value>
+				<Select.Value<ThemeOption>>WHAT</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
 				<Select.Content class={styles.content}>
