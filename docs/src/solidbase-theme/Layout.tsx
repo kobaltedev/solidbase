@@ -31,7 +31,9 @@ export default function (props: ComponentProps<typeof Layout>) {
 									type="warning"
 									title="SolidBase is currently in Beta!"
 								>
-									<p>Some options may not fully work or be documented.</p>
+									<Dynamic component={mdxComponents.p}>
+										Some options may not fully work or be documented.
+									</Dynamic>
 								</Dynamic>
 								<br />
 							</Show>
