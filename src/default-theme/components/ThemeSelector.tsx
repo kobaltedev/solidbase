@@ -32,9 +32,8 @@ const THEME_OPTIONS: ThemeOption[] = [
 export default function ThemeSelector() {
 	// undefined on server with no runtime, set on render to avoid blank label.
 	const [refreshLabel, setRefreshLabel] = createSignal(false);
-
 	onMount(() => {
-		setRefreshLabel(true);
+		setTimeout(() => setRefreshLabel(true));
 	});
 
 	return (
