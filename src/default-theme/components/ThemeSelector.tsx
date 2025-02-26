@@ -78,8 +78,8 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 	console.log("children", resolved());
 
 	return (
-		<Show when={refresh()} fallback={resolved()} keyed>
-			{resolved() || "DARK"}
+		<Show when={refresh()} fallback={resolved() || "DARK"} keyed>
+			{resolved() || "DARK_"}
 		</Show>
 	);
 }
