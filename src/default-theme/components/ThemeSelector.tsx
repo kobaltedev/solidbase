@@ -51,7 +51,9 @@ export default function ThemeSelector() {
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
-					{(state) => state.selectedOption().label}
+					{(state) => (
+						<RefreshOnMount>{state.selectedOption().label}</RefreshOnMount>
+					)}
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
