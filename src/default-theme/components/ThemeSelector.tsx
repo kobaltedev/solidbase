@@ -30,6 +30,15 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
+	// undefined on server with no runtime, set on render to avoid blank label.
+	const [refreshLabel, setRefreshLabel] = createSignal(false);
+	onMount(() => {
+		setTimeout(() => {
+			console.log("refreshing");
+			setRefreshLabel(true);
+		});
+	});
+
 	return (
 		<Select<ThemeOption>
 			class={styles.root}
@@ -53,7 +62,10 @@ export default function ThemeSelector() {
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
 					<Show
-						when={THEME_OPTIONS.find((t) => t.value === getTheme())}
+						when={
+							refreshLabel() &&
+							THEME_OPTIONS.find((t) => t.value === getTheme())
+						}
 						fallback={"Light"}
 						keyed
 					>
