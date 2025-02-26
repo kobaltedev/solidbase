@@ -1,5 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { isServer } from "solid-js/web";
+import {type JSX, Show, children, createSignal, onMount, createEffect} from "solid-js";
 import {
 	type ThemeType,
 	getTheme,
@@ -29,18 +29,13 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
-	if (!isServer) {
-		const theme: string = getThemeVariant();
-		setTheme(theme as ThemeType);
-	}
-
 	return (
 		<Select<ThemeOption>
 			class={styles.root}
 			options={THEME_OPTIONS}
 			optionValue="value"
 			optionTextValue="label"
-			value={THEME_OPTIONS.find((t) => t.value === getTheme())}
+			value={THEME_OPTIONS.find((t) => t.value === getThemeVariant())}
 			onChange={(option) => {
 				setTheme(option?.value);
 			}}
@@ -56,7 +51,9 @@ export default function ThemeSelector() {
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
-					{THEME_OPTIONS.find((t) => t.value === getTheme())?.label}
+					{(state) => (
+						<RefreshOnMount>{state.selectedOption().label}</RefreshOnMount>
+					)}
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
@@ -65,5 +62,28 @@ export default function ThemeSelector() {
 				</Select.Content>
 			</Select.Portal>
 		</Select>
+	);
+}
+
+function RefreshOnMount(props: { children: JSX.Element }) {
+	const resolved = children(() => props.children);
+
+	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
+	const [refresh, setRefresh] = createSignal(false);
+	onMount(() => {
+		console.log("refreshing");
+		setRefresh(true);
+		setTimeout(() => console.log("children refreshed", resolved()), 1);
+	});
+	console.trace("children", resolved(), getThemeVariant());
+
+	createEffect(() => {
+		console.log("THEMEMMEME", getThemeVariant());
+	})
+
+	return (
+		<Show when={refresh()} fallback={resolved() || "U"} keyed>
+			{resolved() || "U_"}
+		</Show>
 	);
 }

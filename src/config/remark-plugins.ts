@@ -215,7 +215,7 @@ export function remarkRelativeImports() {
 export function remarkAddClass() {
 	return (tree: any) => {
 		visit(tree, (node) => {
-			if (node.type !== "mdxJsxTextElement" && node.name !== "kbd") return;
+			if (node.type !== "mdxJsxTextElement" || node.name !== "kbd") return;
 
 			node.attributes ??= [];
 

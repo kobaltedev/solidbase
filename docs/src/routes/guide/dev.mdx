@@ -24,6 +24,10 @@ _Italic_
 Highlights information that users should take into account, even when skimming.
 :::
 
+:::note[]
+Highlights information that users should take into account, even when skimming.
+:::
+
 :::tip
 Optional information to help a user be more successful.
 :::
@@ -52,27 +56,6 @@ This is a details block.
 > [!CAUTION]
 > **(GitHub Alert)** Negative potential consequences of an action.
 
-:::code-group
-
-```tsx HTML
-<Tabs.Root>
-  <Tabs.List>
-    <Tabs.Trigger value="o">Hello O </Tabs.Trigger>
-    <Tabs.Trigger value="r">Hello R</Tabs.Trigger>
-    <Tabs.Trigger value="p">Hello P</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="o">Custom tab content O </Tabs.Content>
-  <Tabs.Content value="r">Custom tab content R</Tabs.Content>
-  <Tabs.Content value="p">Custom tab content P</Tabs.Content>
-</Tabs.Root>
-```
-
-```tsx CSS
-<Tabs.Root></Tabs.Root>
-```
-
-:::
-
 - List item
 
 1. Numbered list item
@@ -81,7 +64,7 @@ www.example.com
 
 [Link Outbound](https://www.example.com)
 
-[Link internal /about](./about)
+[Link internal /about](/about)
 
 #20 also #4 but no \\#20
 
@@ -109,18 +92,7 @@ pnpm create solid
 
 <br />
 
-```tsx
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-<br />
-
-```tsx
-<!-- index.tsx -->
+```tsx {4}
 import { SolidBaseApp } from "@kobalte/solidbase";
 
 export default function App() {
@@ -131,5 +103,7 @@ export default function App() {
 ## Table of Contents
 
 [[toc]]
+
+---
 
 Title as defined by frontmatter: {frontmatter.title}
