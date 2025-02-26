@@ -1,5 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { type JSX, createSignal, onMount } from "solid-js";
+import { type JSX, Show, createSignal, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import {
 	type ThemeType,
@@ -30,12 +30,6 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
-	// undefined on server with no runtime, set on render to avoid blank label.
-	const [refreshLabel, setRefreshLabel] = createSignal(false);
-	onMount(() => {
-		setTimeout(() => setRefreshLabel(true));
-	});
-
 	return (
 		<Select<ThemeOption>
 			class={styles.root}
@@ -58,15 +52,13 @@ export default function ThemeSelector() {
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
-					{
-						(() => () => {
-							refreshLabel();
-							return (
-								THEME_OPTIONS.find((t) => t.value === getTheme())?.label ??
-								"Light"
-							);
-						}) as unknown as JSX.Element
-					}
+					<Show
+						when={THEME_OPTIONS.find((t) => t.value === getTheme())}
+						fallback={"Light"}
+						keyed
+					>
+						{(theme) => theme.label}
+					</Show>
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
