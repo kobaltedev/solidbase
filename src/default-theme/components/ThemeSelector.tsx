@@ -1,5 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { createSignal, onMount } from "solid-js";
+import { type JSX, createSignal, onMount } from "solid-js";
 import { isServer } from "solid-js/web";
 import {
 	type ThemeType,
@@ -58,13 +58,15 @@ export default function ThemeSelector() {
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
-					{() => {
-						refreshLabel();
-						return (
-							THEME_OPTIONS.find((t) => t.value === getTheme())?.label ??
-							"Light"
-						);
-					}}
+					{
+						(() => () => {
+							refreshLabel();
+							return (
+								THEME_OPTIONS.find((t) => t.value === getTheme())?.label ??
+								"Light"
+							);
+						}) as unknown as JSX.Element
+					}
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
