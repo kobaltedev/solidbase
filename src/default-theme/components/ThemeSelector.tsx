@@ -52,7 +52,7 @@ export default function ThemeSelector() {
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
 					<RefreshOnMount>
-						{THEME_OPTIONS.find((t) => t.value === getTheme())?.label}
+						{THEME_OPTIONS.find((t) => t.value === getThemeVariant())?.label}
 					</RefreshOnMount>
 				</Select.Value>
 			</Select.Trigger>
@@ -73,13 +73,13 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 	onMount(() => {
 		console.log("refreshing");
 		setRefresh(true);
-		setTimeout(() => console.log("children", resolved()), 1);
+		setTimeout(() => console.log("children refreshed", resolved()), 1);
 	});
-	console.log("children", resolved());
+	console.trace("children", resolved());
 
 	return (
-		<Show when={refresh()} fallback={resolved() || "DARK"} keyed>
-			{resolved() || "DARK_"}
+		<Show when={refresh()} fallback={resolved() || "U"} keyed>
+			{resolved() || "U_"}
 		</Show>
 	);
 }

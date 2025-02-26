@@ -16,7 +16,7 @@ function getThemeCookie(): RawThemeType {
 	if (isServer) {
 		const e = getRequestEvent()!;
 		return (getCookie("theme", e.request.headers.get("cookie")!) ??
-			"dark") as RawThemeType;
+			"system") as RawThemeType;
 	}
 	return getCookie("theme", document.cookie) as RawThemeType;
 }
