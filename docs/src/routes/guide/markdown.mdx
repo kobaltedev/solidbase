@@ -141,6 +141,10 @@ This is a details block.
 Highlights information that users should take into account, even when skimming.
 :::
 
+:::warning[]
+This is a warning with no title.
+:::
+
 :::details[Click me to view]
 This is a details block.
 :::
@@ -333,7 +337,7 @@ TODO: broken
 **Input**
 
 ````
-```ts{4}
+```ts {4}
 export default {
   data () {
     return {
@@ -346,7 +350,7 @@ export default {
 
 **Output**
 
-```ts{4}
+```ts {4}
 export default {
   data () {
     return {
@@ -365,7 +369,7 @@ In addition to a single line, you can also specify multiple single lines, ranges
 **Input**
 
 ````
-```js{1, 4, 6-8}
+```js {1, 4, 6-8}
 export default { // Highlighted
   data () {
     return {
@@ -382,7 +386,7 @@ export default { // Highlighted
 
 **Output**
 
-```js{1, 4, 6-8}
+```js {1, 4, 6-8}
 export default { // Highlighted
   data () {
     return {
