@@ -34,7 +34,11 @@ export default function ThemeSelector() {
 	const [refreshLabel, setRefreshLabel] = createSignal(false);
 	onMount(() => {
 		setTimeout(() => {
-			console.log("refreshing");
+			console.log("refreshing timeout");
+			setRefreshLabel(true);
+		}, 1);
+		queueMicrotask(() => {
+			console.log("refreshing micro");
 			setRefreshLabel(true);
 		});
 	});
