@@ -73,7 +73,7 @@ export default function ThemeSelector() {
 						fallback={"Light"}
 						keyed
 					>
-						{(theme) => theme.label}
+						{(theme) => JSON.stringify({label: theme.label})}
 					</Show>
 				</Select.Value>
 			</Select.Trigger>
