@@ -37,9 +37,6 @@ importers:
       '@fontsource-variable/lexend':
         specifier: ^5.1.2
         version: 5.1.2
-      '@iconify-json/lucide':
-        specifier: ^1.2.26
-        version: 1.2.26
       '@kobalte/core':
         specifier: ^0.13.7
         version: 0.13.9(solid-js@1.9.5)
@@ -1135,9 +1132,6 @@ packages:
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
-
-  '@iconify-json/lucide@1.2.26':
-    resolution: {integrity: sha512-arD/8mK0lRxFY2LgLf345NhWVWiOtV8sOxJuLnq4QRz3frMiOwVwGxEgp5Xe/bRGzxO2CxxCBok0bPRpCkYZQQ==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -5054,10 +5048,6 @@ snapshots:
   '@fontsource/lexend@5.1.2': {}
 
   '@iarna/toml@2.2.5': {}
-
-  '@iconify-json/lucide@1.2.26':
-    dependencies:
-      '@iconify/types': 2.0.0
 
   '@iconify/types@2.0.0': {}
 
