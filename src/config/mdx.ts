@@ -49,10 +49,7 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 					themes: ["github-dark", "github-light"],
 					themeCSSSelector: (theme: ExpressiveCodeTheme) =>
 						`[data-theme="${theme.name.split("-")[1]}"]`,
-					plugins: [
-						pluginLineNumbers(),
-						pluginCollapsibleSections(),
-					],
+					plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
 					defaultProps: {
 						showLineNumbers: false,
 					},
