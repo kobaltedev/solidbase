@@ -62,7 +62,7 @@ export default function ThemeSelector() {
 						[
 							refreshLabel(),
 							THEME_OPTIONS.find((t) => t.value === getTheme())?.label,
-						][1]
+						].join(", ")
 					}
 				</Select.Value>
 			</Select.Trigger>
