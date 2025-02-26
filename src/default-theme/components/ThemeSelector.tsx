@@ -1,6 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { type JSX, Show, createSignal, onMount } from "solid-js";
-import { isServer } from "solid-js/web";
+import { type JSX, Show, children, createSignal, onMount } from "solid-js";
 import {
 	type ThemeType,
 	getTheme,
@@ -67,16 +66,20 @@ export default function ThemeSelector() {
 }
 
 function RefreshOnMount(props: { children: JSX.Element }) {
+	const resolved = children(() => props.children);
+
 	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
 	const [refresh, setRefresh] = createSignal(false);
 	onMount(() => {
 		console.log("refreshing");
 		setRefresh(true);
+		setTimeout(() => console.log("children", resolved()), 1);
 	});
+	console.log("children", resolved());
 
 	return (
-		<Show when={refresh()} fallback={props.children} keyed>
-			{props.children}
+		<Show when={refresh()} fallback={resolved()} keyed>
+			{resolved() || "DARK"}
 		</Show>
 	);
 }
