@@ -16,18 +16,9 @@ export type DefaultThemeConfig = {
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 	componentsPath: import.meta.resolve("@kobalte/solidbase/default-theme"),
-	vite(config) {
-		return [
-			{
-				name: "solidbase-unfonts-workaround",
-				enforce: "pre",
-				resolveId(id) {
-					if (id.startsWith("\0unfonts.css")) {
-						return id.slice("\0".length);
-					}
-				},
-			},
-			Unfonts({
+	config(config) {
+		if (config.fonts === undefined)
+			config.fonts = {
 				fontsource: {
 					families: [
 						"Inter Variable",
@@ -35,9 +26,7 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 						"JetBrains Mono Variable",
 					],
 				},
-				...config?.themeConfig?.unfonts,
-			}),
-		];
+			};
 	},
 });
 export default defaultTheme;

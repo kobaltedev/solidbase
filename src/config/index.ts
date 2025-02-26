@@ -2,7 +2,10 @@ import type {
 	SolidStartInlineConfig,
 	ViteCustomizableConfig,
 } from "@solidjs/start/config";
-import type { Plugin, PluginOption } from "vite";
+import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
+import type { Options as FontsOptions } from "unplugin-fonts/types";
+import type { Options as IconsOptions } from "unplugin-icons/types";
+import type { PluginOption } from "vite";
 
 import defaultTheme from "../default-theme/index.js";
 import { solidBaseMdx } from "./mdx.js";
@@ -25,6 +28,13 @@ export type SolidBaseConfig<ThemeConfig> = {
 		remarkPlugins?: PluggableList;
 		rehypePlugins?: PluggableList;
 	};
+	// enabled by default
+	fonts?: FontsOptions | false;
+	icons?: Omit<IconsOptions, "compiler"> | false;
+	// disabled by default
+	autoImport?:
+		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+		| true;
 };
 
 type ResolvedConfigKeys =
@@ -50,7 +60,8 @@ export type LocaleConfig<ThemeConfig> = {
 export type ThemeDefinition<Config> = {
 	componentsPath: string;
 	extends?: ThemeDefinition<Config>;
-	vite?(config: SolidBaseResolvedConfig<Config>): PluginOption;
+	config?(config: SolidBaseResolvedConfig<Config>): void;
+	vite?(config: SolidBaseResolvedConfig<Config>): PluginOption | undefined;
 };
 
 export const withSolidBase = createWithSolidBase(defaultTheme);
@@ -88,6 +99,12 @@ export function createWithSolidBase<ThemeConfig>(
 			...solidBaseConfig,
 		};
 
+		let t: ThemeDefinition<any> | undefined = theme;
+		while (t !== undefined) {
+			if (t.config) t.config(sbConfig);
+			t = t.extends;
+		}
+
 		const vite = config.vite;
 
 		config.vite = (options) => {
@@ -100,7 +117,7 @@ export function createWithSolidBase<ThemeConfig>(
 
 			viteConfig.plugins = [...(viteConfig.plugins ?? [])];
 			viteConfig.plugins.push(solidBaseMdx(sbConfig));
-			viteConfig.plugins.push(solidBaseVitePlugin(theme, config, sbConfig));
+			viteConfig.plugins.push(solidBaseVitePlugin(theme, sbConfig));
 
 			let t: ThemeDefinition<any> | undefined = theme;
 			const plugins: Array<PluginOption> = [];
@@ -126,6 +143,7 @@ export function createWithSolidBase<ThemeConfig>(
 import { dirname, parse } from "node:path";
 import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
 import type { PluggableList } from "unified";
+import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
 import type { IssueAutoLinkConfig, TOCOptions } from "./remark-plugins";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
