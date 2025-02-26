@@ -26,6 +26,14 @@ const THEME_OPTIONS: ThemeOption[] = [
 		value: "system",
 		label: "System",
 	},
+	{
+		value: undefined,
+		label: "???",
+	},
+	{
+		value: null,
+		label: "!!!",
+	}
 ];
 
 export default function ThemeSelector() {
