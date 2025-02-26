@@ -78,19 +78,12 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
 	const [refresh, setRefresh] = createSignal(false);
 	onMount(() => {
-		console.log("refreshing");
 		setRefresh(true);
-		setTimeout(() => console.log("children refreshed", resolved()), 1);
-	});
-	console.log("children", resolved(), getThemeVariant());
-
-	createEffect(() => {
-		console.log("THEMEMMEME", getThemeVariant());
 	});
 
 	return (
-		<Show when={refresh()} fallback={resolved()} keyed>
-			<span>{resolved()}</span>
+		<Show when={refresh()} fallback={<div>resolved()</div>} keyed>
+			<div>{resolved()}</div>
 		</Show>
 	);
 }
