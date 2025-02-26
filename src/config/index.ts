@@ -33,7 +33,8 @@ export type SolidBaseConfig<ThemeConfig> = {
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
-		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false }) | true;
+		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+		| true;
 };
 
 type ResolvedConfigKeys =

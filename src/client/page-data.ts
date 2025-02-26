@@ -44,8 +44,9 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 						// @ts-ignore
 						typeof window.$$SolidBase_page_data !== "undefined" &&
 						// @ts-ignore
-						typeof window.$$SolidBase_page_data[$component.src.split("?")[0]] !==
-							"undefined"
+						typeof window.$$SolidBase_page_data[
+							$component.src.split("?")[0]
+						] !== "undefined"
 					) {
 						const pageData = (window as Record<string, any>)
 							.$$SolidBase_page_data[$component.src.split("?")[0]];
