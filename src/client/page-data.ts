@@ -27,13 +27,12 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 
 		const [pageData] = createResource(
 			matches,
-			async (m): Promise<CurrentPageData> => {
-				const key = m[m.length - 1]?.route.key as
-					| { $component: any }
-					| undefined;
-				if (!key) throw new Error("Failed to get page data: no key found");
+			async (m): Promise<CurrentPageData | undefined> => {
+				const lastMatch = m[m.length - 1];
+				// if there's no matches that's not an us problem
+				if (!lastMatch) return;
 
-				const component = key.$component;
+				const { $component } = lastMatch.route.key as { $component: any };
 
 				let mod: any;
 
@@ -49,7 +48,7 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 							"undefined"
 					) {
 						const pageData = (window as Record<string, any>)
-							.$$SolidBase_page_data[component.src.split("?")[0]];
+							.$$SolidBase_page_data[$component.src.split("?")[0]];
 						if (!pageData)
 							throw new Error("Failed to get page data: no page data");
 						return pageData;
@@ -59,10 +58,8 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 						? import.meta.env.MANIFEST.ssr
 						: import.meta.env.MANIFEST.client;
 
-					mod = await manifest.inputs[component.src]?.import();
-				} else {
-					mod = await component.import();
-				}
+					mod = await manifest.inputs[$component.src]?.import();
+				} else mod = await $component.import();
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;
