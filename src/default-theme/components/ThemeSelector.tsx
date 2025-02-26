@@ -1,5 +1,5 @@
 import { Select } from "@kobalte/core/select";
-import { type JSX, Show, children, createSignal, onMount } from "solid-js";
+import {type JSX, Show, children, createSignal, onMount, createEffect} from "solid-js";
 import {
 	type ThemeType,
 	getTheme,
@@ -76,6 +76,10 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 		setTimeout(() => console.log("children refreshed", resolved()), 1);
 	});
 	console.trace("children", resolved(), getThemeVariant());
+
+	createEffect(() => {
+		console.log("THEMEMMEME", getThemeVariant());
+	})
 
 	return (
 		<Show when={refresh()} fallback={resolved() || "U"} keyed>
