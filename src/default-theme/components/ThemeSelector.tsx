@@ -75,7 +75,7 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 		setRefresh(true);
 		setTimeout(() => console.log("children refreshed", resolved()), 1);
 	});
-	console.trace("children", resolved());
+	console.trace("children", resolved(), getThemeVariant());
 
 	return (
 		<Show when={refresh()} fallback={resolved() || "U"} keyed>
