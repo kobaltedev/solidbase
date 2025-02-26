@@ -30,19 +30,6 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
-	// undefined on server with no runtime, set on render to avoid blank label.
-	const [refreshLabel, setRefreshLabel] = createSignal(false);
-	onMount(() => {
-		setTimeout(() => {
-			console.log("refreshing timeout");
-			setRefreshLabel(true);
-		}, 1);
-		queueMicrotask(() => {
-			console.log("refreshing micro");
-			setRefreshLabel(true);
-		});
-	});
-
 	return (
 		<Select<ThemeOption>
 			class={styles.root}
@@ -65,16 +52,9 @@ export default function ThemeSelector() {
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
 				<Select.Value<ThemeOption>>
-					<Show
-						when={
-							refreshLabel() &&
-							THEME_OPTIONS.find((t) => t.value === getTheme())
-						}
-						fallback={"Light"}
-						keyed
-					>
-						{(theme) => JSON.stringify({label: theme.label})}
-					</Show>
+					<RefreshOnMount>
+						{THEME_OPTIONS.find((t) => t.value === getTheme())?.label}
+					</RefreshOnMount>
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
@@ -83,5 +63,20 @@ export default function ThemeSelector() {
 				</Select.Content>
 			</Select.Portal>
 		</Select>
+	);
+}
+
+function RefreshOnMount(props: { children: JSX.Element }) {
+	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
+	const [refresh, setRefresh] = createSignal(false);
+	onMount(() => {
+		console.log("refreshing");
+		setRefresh(true);
+	});
+
+	return (
+		<Show when={refresh()} fallback={props.children} keyed>
+			{props.children}
+		</Show>
 	);
 }
