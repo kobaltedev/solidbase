@@ -26,14 +26,6 @@ const THEME_OPTIONS: ThemeOption[] = [
 		value: "system",
 		label: "System",
 	},
-	{
-		value: undefined,
-		label: "???",
-	},
-	{
-		value: null,
-		label: "!!!",
-	}
 ];
 
 export default function ThemeSelector() {
@@ -43,7 +35,7 @@ export default function ThemeSelector() {
 			options={THEME_OPTIONS}
 			optionValue="value"
 			optionTextValue="label"
-			value={THEME_OPTIONS.find((t) => t.value === getTheme())}
+			value={THEME_OPTIONS.find((t) => t.value === getThemeVariant())}
 			onChange={(option) => {
 				setTheme(option?.value);
 			}}
@@ -58,7 +50,7 @@ export default function ThemeSelector() {
 			)}
 		>
 			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
-				<Select.Value<ThemeOption>>WHAT</Select.Value>
+				WHAT
 			</Select.Trigger>
 			<Select.Portal>
 				<Select.Content class={styles.content}>
