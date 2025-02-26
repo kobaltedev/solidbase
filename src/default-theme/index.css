@@ -7,17 +7,16 @@ html {
 	font-family: var(--sb-font-text);
 	overflow-x: hidden;
 
-	--mix-color: black;
 	scrollbar-color: color-mix(
 			in hsl,
 			var(--sb-background-color) 50%,
-			var(--mix-color)
+			var(--sb-tint-color-opposite)
 		)
-		color-mix(in hsl, var(--sb-background-color) 95%, var(--mix-color));
-
-	&[data-theme="dark"] {
-		--mix-color: white;
-	}
+		color-mix(
+			in hsl,
+			var(--sb-background-color) 95%,
+			var(--sb-tint-color-opposite)
+		);
 }
 
 code {

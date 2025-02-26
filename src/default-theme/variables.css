@@ -8,7 +8,7 @@ html {
 	--sb-heading-color: hsl(240, 6%, 10%);
 	--sb-text-color: hsl(240, 5%, 26%);
 	--sb-link-underline-color: hsl(199, 95%, 74%);
-	--sb-active-link-color: hsl(201, 96%, 32%);
+	--sb-active-link-color: hsl(200, 98%, 39%);
 	--sb-code-text-color: hsl(201, 90%, 27%);
 	--sb-highlight-background-color: hsl(204, 94%, 94%);
 	--sb-decoration-color: hsl(240, 5%, 54%);
@@ -17,6 +17,9 @@ html {
 	--sb-header-height: 3.5rem;
 
 	--sb-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+	--sb-tint-color: white;
+	--sb-tint-color-opposite: black;
 
 	--sb-code-background-color: hsl(0, 0%, 98%);
 
@@ -49,11 +52,12 @@ html {
 }
 
 html[data-theme="dark"] {
+	--sb-tint-color: black;
+	--sb-tint-color-opposite: white;
 	--sb-background-color: hsl(240, 6%, 10%);
 	--sb-heading-color: hsl(0, 0%, 100%);
 	--sb-text-color: hsl(240, 5%, 85%);
 	--sb-link-underline-color: hsl(201, 90%, 27%);
-	--sb-active-link-color: hsl(200, 98%, 39%);
 	--sb-code-text-color: hsl(199, 95%, 74%);
 	--sb-highlight-background-color: hsl(202, 80%, 24%);
 

@@ -1,5 +1,6 @@
 import { Select } from "@kobalte/core/select";
 import {
+	type ComponentProps,
 	type JSX,
 	Show,
 	children,
@@ -15,23 +16,37 @@ import {
 } from "../../client";
 import styles from "./ThemeSelector.module.css";
 
+import IconMoonFill from "~icons/ri/moon-fill";
+import IconMoonLine from "~icons/ri/moon-line";
+import IconSunFill from "~icons/ri/sun-fill";
+import IconSunLine from "~icons/ri/sun-line";
+
 interface ThemeOption {
 	value: ThemeType | "system";
 	label: string;
+	icon: () => JSX.Element;
 }
 
 const THEME_OPTIONS: ThemeOption[] = [
 	{
 		value: "light",
 		label: "Light",
+		icon: () => <IconSunFill class={styles.icon} aria-hidden />,
 	},
 	{
 		value: "dark",
 		label: "Dark",
+		icon: () => <IconMoonFill class={styles.icon} aria-hidden />,
 	},
 	{
 		value: "system",
 		label: "System",
+		icon: () => (
+			<>
+				<IconSunLine class={styles["system-light"]} aria-hidden />
+				<IconMoonLine class={styles["system-dark"]} aria-hidden />
+			</>
+		),
 	},
 ];
 
@@ -52,14 +67,18 @@ export default function ThemeSelector() {
 			placement="bottom"
 			itemComponent={(props) => (
 				<Select.Item class={styles.item} item={props.item}>
-					<Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
+					<Select.ItemLabel>
+						{props.item.rawValue.icon()} {props.item.rawValue.label}
+					</Select.ItemLabel>
 				</Select.Item>
 			)}
 		>
-			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
+			<Select.Trigger class={styles.trigger} aria-label="Change theme mode">
 				<Select.Value<ThemeOption>>
 					{(state) => (
-						<RefreshOnMount>{state.selectedOption().label}</RefreshOnMount>
+						<RefreshOnMount aria-label={state.selectedOption().label}>
+							{state.selectedOption().icon()}
+						</RefreshOnMount>
 					)}
 				</Select.Value>
 			</Select.Trigger>
@@ -72,7 +91,7 @@ export default function ThemeSelector() {
 	);
 }
 
-function RefreshOnMount(props: { children: JSX.Element }) {
+function RefreshOnMount(props: ComponentProps<"div">) {
 	const resolved = children(() => props.children);
 
 	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
@@ -82,8 +101,8 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 	});
 
 	return (
-		<Show when={refresh()} fallback={<div>{resolved()}</div>} keyed>
-			<div>{resolved()}</div>
+		<Show when={refresh()} fallback={<div {...props}>{resolved()}</div>} keyed>
+			<div {...props}>{resolved()}</div>
 		</Show>
 	);
 }
