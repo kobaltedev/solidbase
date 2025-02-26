@@ -29,9 +29,9 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
-	
 	// undefined on server with no runtime, set on render to avoid blank label.
 	function getLabel(override?: string) {
+		console.log("wha");
 		return override ?? "WHAT";
 	}
 
