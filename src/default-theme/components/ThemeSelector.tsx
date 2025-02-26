@@ -75,7 +75,7 @@ function RefreshOnMount(props: { children: JSX.Element }) {
 		setRefresh(true);
 		setTimeout(() => console.log("children refreshed", resolved()), 1);
 	});
-	console.trace("children", resolved(), getThemeVariant());
+	console.log("children", resolved(), getThemeVariant());
 
 	createEffect(() => {
 		console.log("THEMEMMEME", getThemeVariant());
