@@ -89,6 +89,7 @@ export default function solidBaseVitePlugin(
 		plugins.push(
 			Icons({
 				compiler: "solid",
+				autoInstall: true,
 				...solidBaseConfig.icons,
 			}),
 		);

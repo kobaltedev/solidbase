@@ -15,7 +15,8 @@ function getCookie(name: string, cookieString: string) {
 function getThemeCookie(): RawThemeType {
 	if (isServer) {
 		const e = getRequestEvent()!;
-		return getCookie("theme", e.request.headers.get("cookie")!) as RawThemeType;
+		return (getCookie("theme", e.request.headers.get("cookie")!) ??
+			"system") as RawThemeType;
 	}
 	return getCookie("theme", document.cookie) as RawThemeType;
 }

@@ -22,6 +22,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@iconify-json/ri": "^1.2.5",
     "@vercel/og": "^0.6.5",
     "vite-plugin-arraybuffer": "^0.0.8"
   }

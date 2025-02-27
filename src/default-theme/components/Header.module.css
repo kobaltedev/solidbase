@@ -118,13 +118,16 @@
 	border-radius: var(--sb-border-radius);
 	cursor: var(--sb-button-cursor);
 	font-weight: 500;
+	transition-property: background-color, opacity, color;
+	transition-timing-function: var(--sb-transition-timing);
+	transition-duration: 0.15s;
 
 	&:hover {
-		background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
+		background: color-mix(in hsl, var(--sb-text-color) 7.5%, transparent);
 	}
 
 	&[data-matched] {
-		color: color-mix(in hsl, var(--sb-active-link-color) 70%, white);
+		color: var(--sb-active-link-color);
 
 		&:hover {
 			color: var(--sb-text-color);

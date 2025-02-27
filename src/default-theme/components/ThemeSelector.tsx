@@ -1,5 +1,13 @@
 import { Select } from "@kobalte/core/select";
-import { isServer } from "solid-js/web";
+import {
+	type ComponentProps,
+	type JSX,
+	Show,
+	children,
+	createEffect,
+	createSignal,
+	onMount,
+} from "solid-js";
 import {
 	type ThemeType,
 	getTheme,
@@ -8,39 +16,48 @@ import {
 } from "../../client";
 import styles from "./ThemeSelector.module.css";
 
+import IconMoonFill from "~icons/ri/moon-fill";
+import IconMoonLine from "~icons/ri/moon-line";
+import IconSunFill from "~icons/ri/sun-fill";
+import IconSunLine from "~icons/ri/sun-line";
+
 interface ThemeOption {
 	value: ThemeType | "system";
 	label: string;
+	icon: () => JSX.Element;
 }
 
 const THEME_OPTIONS: ThemeOption[] = [
 	{
 		value: "light",
 		label: "Light",
+		icon: () => <IconSunFill class={styles.icon} aria-hidden />,
 	},
 	{
 		value: "dark",
 		label: "Dark",
+		icon: () => <IconMoonFill class={styles.icon} aria-hidden />,
 	},
 	{
 		value: "system",
 		label: "System",
+		icon: () => (
+			<div>
+				<IconSunLine class={styles["system-light"]} aria-hidden />
+				<IconMoonLine class={styles["system-dark"]} aria-hidden />
+			</div>
+		),
 	},
 ];
 
 export default function ThemeSelector() {
-	if (!isServer) {
-		const theme: string = getThemeVariant();
-		setTheme(theme as ThemeType);
-	}
-
 	return (
 		<Select<ThemeOption>
 			class={styles.root}
 			options={THEME_OPTIONS}
 			optionValue="value"
 			optionTextValue="label"
-			value={THEME_OPTIONS.find((t) => t.value === getTheme())}
+			value={THEME_OPTIONS.find((t) => t.value === getThemeVariant())}
 			onChange={(option) => {
 				setTheme(option?.value);
 			}}
@@ -50,13 +67,19 @@ export default function ThemeSelector() {
 			placement="bottom"
 			itemComponent={(props) => (
 				<Select.Item class={styles.item} item={props.item}>
-					<Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
+					<Select.ItemLabel>
+						{props.item.rawValue.icon()} {props.item.rawValue.label}
+					</Select.ItemLabel>
 				</Select.Item>
 			)}
 		>
-			<Select.Trigger class={styles.trigger} aria-label="toggle color mode">
+			<Select.Trigger class={styles.trigger} aria-label="Change theme mode">
 				<Select.Value<ThemeOption>>
-					{THEME_OPTIONS.find((t) => t.value === getTheme())?.label}
+					{(state) => (
+						<RefreshOnMount aria-label={state.selectedOption().label}>
+							{state.selectedOption().icon()}
+						</RefreshOnMount>
+					)}
 				</Select.Value>
 			</Select.Trigger>
 			<Select.Portal>
@@ -65,5 +88,21 @@ export default function ThemeSelector() {
 				</Select.Content>
 			</Select.Portal>
 		</Select>
+	);
+}
+
+function RefreshOnMount(props: ComponentProps<"div">) {
+	const resolved = children(() => props.children);
+
+	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
+	const [refresh, setRefresh] = createSignal(false);
+	onMount(() => {
+		setRefresh(true);
+	});
+
+	return (
+		<Show when={refresh()} fallback={<div {...props}>{resolved()}</div>} keyed>
+			<div {...props}>{resolved()}</div>
+		</Show>
 	);
 }
