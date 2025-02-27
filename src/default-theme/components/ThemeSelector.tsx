@@ -42,10 +42,10 @@ const THEME_OPTIONS: ThemeOption[] = [
 		value: "system",
 		label: "System",
 		icon: () => (
-			<>
+			<div>
 				<IconSunLine class={styles["system-light"]} aria-hidden />
 				<IconMoonLine class={styles["system-dark"]} aria-hidden />
-			</>
+			</div>
 		),
 	},
 ];
