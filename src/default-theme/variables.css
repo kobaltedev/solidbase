@@ -49,6 +49,8 @@ html {
 		hsl(200, 98%, 39%) 30%,
 		hsl(199, 95%, 74%)
 	);
+
+	--bprogress-color: var(--sb-active-link-color);
 }
 
 html[data-theme="dark"] {

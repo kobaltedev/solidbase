@@ -13,6 +13,9 @@ importers:
 
   .:
     dependencies:
+      '@bprogress/core':
+        specifier: ^1.1.18
+        version: 1.1.18
       '@docsearch/css':
         specifier: ^3.6.2
         version: 3.9.0
@@ -475,6 +478,9 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@bprogress/core@1.1.18':
+    resolution: {integrity: sha512-+khsDSJ7jv1L9LU34jnEsNqY6tXViSZDOeoxd09Ws8zVXzFjatRzWwBpiDQqTqyVZc0nlOxkkumFDtAgDJwY2A==}
 
   '@cloudflare/kv-asset-handler@0.3.4':
     resolution: {integrity: sha512-YLPHc8yASwjNkmcDMQMY35yiWjoKAKnhUbPRszBRS0YgH+IXtsMp61j+yTcnCE3oO2DgP0U3iejLC8FTtKDC8Q==}
@@ -4656,6 +4662,8 @@ snapshots:
 
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
+
+  '@bprogress/core@1.1.18': {}
 
   '@cloudflare/kv-asset-handler@0.3.4':
     dependencies:
