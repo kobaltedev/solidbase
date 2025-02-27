@@ -17,6 +17,10 @@
 	& svg {
 		margin-right: .15rem;
 	}
+
+	& div {
+		display: inline-block;
+	}
 }
 
 .trigger {
