@@ -1,7 +1,5 @@
-import Unfonts from "unplugin-fonts/vite";
-
 import type { Options } from "unplugin-fonts/types";
-import { type ThemeDefinition, defineTheme } from "../config/index.js";
+import { type ThemeDefinition, defineTheme } from "../config";
 
 export type DefaultThemeConfig = {
 	footer?: boolean;

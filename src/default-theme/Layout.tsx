@@ -1,9 +1,10 @@
 // @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
-import { A, type RouteSectionProps } from "@solidjs/router";
-import { For, Show } from "solid-js";
+import { A, type RouteSectionProps, useIsRouting } from "@solidjs/router";
+import { For, Show, createEffect } from "solid-js";
 
+import { BProgress } from "@bprogress/core";
 import type { Sidebar, SidebarLink } from ".";
 import { useLocale, useThemeListener } from "../client";
 import {
@@ -19,6 +20,7 @@ import { useRouteConfig } from "./utils";
 import "unfonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
+import "@bprogress/core/css";
 
 export default (props: RouteSectionProps) => (
 	<DefaultThemeStateProvider>
@@ -34,8 +36,24 @@ function Layout(props: RouteSectionProps) {
 	const config = useRouteConfig();
 
 	const sidebar = useSidebar();
+	const isRouting = useIsRouting();
 
 	useThemeListener();
+
+	BProgress.configure({
+		showSpinner: false,
+	});
+
+	let paceTimeoutId: number | undefined;
+
+	createEffect(() => {
+		if (isRouting()) {
+			paceTimeoutId = window.setTimeout(() => BProgress.start(), 100);
+		} else {
+			clearTimeout(paceTimeoutId);
+			BProgress.done();
+		}
+	});
 
 	return (
 		<>
