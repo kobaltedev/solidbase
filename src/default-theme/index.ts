@@ -24,7 +24,6 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 						"JetBrains Mono Variable",
 					],
 				},
-				preload: true,
 			};
 	},
 });
