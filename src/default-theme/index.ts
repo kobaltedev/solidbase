@@ -1,5 +1,5 @@
 import type { Options } from "unplugin-fonts/types";
-import { type ThemeDefinition, defineTheme } from "../config";
+import { type ThemeDefinition, defineTheme } from "../config/index.js";
 
 export type DefaultThemeConfig = {
 	footer?: boolean;
