@@ -8,6 +8,7 @@
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
     "build": "tsc && node scripts/build.js",
+    "build:docs": "pnpm -F @kobalte/solidbase-docs build",
     "format": "biome check --write #&& prettier . --write",
     "typecheck": "tsc --noEmit",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",

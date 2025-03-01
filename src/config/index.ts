@@ -13,8 +13,8 @@ import solidBaseVitePlugin from "./vite-plugin/index.js";
 
 export interface SolidBaseFontOptions extends FontsOptions {
 	fontsource: FontsOptions["fontsource"] & {
-		preload?: boolean;
-	};
+			preload?: string[] | false;
+		};
 }
 
 export interface SolidBaseConfig<ThemeConfig> {

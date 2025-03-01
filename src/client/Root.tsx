@@ -1,7 +1,7 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
-import { Suspense, createMemo } from "solid-js";
+import {Suspense, createMemo, Show} from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteSolidBaseConfig } from "./config";
@@ -11,7 +11,7 @@ export function SolidBaseRoot(
 	props: RouteSectionProps & {
 		currentPageData?: { deferStream?: boolean };
 		meta?: {
-			// allows diabling MetaProvider for cases where you've already got one
+			// allows disabling MetaProvider for cases where you've already got one
 			provider?: boolean;
 		};
 	},
@@ -67,7 +67,9 @@ export function Inner(props: RouteSectionProps) {
 	return (
 		<SolidBaseContext.Provider value={{ config, metaTitle }}>
 			<Title>{metaTitle()}</Title>
-			{description() && <Meta name="description" content={description()} />}
+			<Show when={description()}>
+				{(description) => <Meta name="description" content={description()} />}
+			</Show>
 			<Layout {...props} />
 		</SolidBaseContext.Provider>
 	);

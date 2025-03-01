@@ -12,8 +12,6 @@ import {
 	transformMdxModule,
 } from "./virtual.js";
 
-const unfontsUrls = new Set<string>();
-
 export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
 	solidBaseConfig: Partial<SolidBaseConfig<any>>,
@@ -43,48 +41,11 @@ export default function solidBaseVitePlugin(
 			},
 		},
 		{
-			name: "solidbase:inter",
-			transform(code, id) {
-				if (id === "\0unfonts.css") {
-					//					console.log("unfonts.css", "=".repeat(40));
-					//					console.log(code);
-					//					console.log("^^^^^^^^^^^", "=".repeat(40));
-
-					console.log("MATCHES >>");
-
-					for (const url of extractUnfontsUrls(code)) {
-						unfontsUrls.add(url);
-						console.log("   ", url);
-					}
-				}
-			},
-		},
-		{
 			name: "solidbase:post",
 			enforce: "post",
 			transform(code, id) {
 				if (isMarkdown(id))
 					return transformMdxModule(code, id, solidBaseConfig);
-			},
-			transformIndexHtml: {
-				order: "post",
-				handler: () => {
-					if (solidBaseConfig.icons !== false) {
-						console.log("INJECTING", unfontsUrls);
-
-						return [...unfontsUrls].map((url) => ({
-							tag: "link",
-							injectTo: "head-prepend",
-							attrs: {
-								rel: "preload",
-								as: "font",
-								type: `font/${url.split(".").slice(-1)[0]}`,
-								href: url,
-								crossorigin: "anonymous",
-							},
-						}));
-					}
-				},
 			},
 		},
 	];
