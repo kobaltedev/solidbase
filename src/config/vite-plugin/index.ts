@@ -121,8 +121,3 @@ function VinxiAutoImport(options: Options): PluginOption {
 		},
 	};
 }
-
-function extractUnfontsUrls(code: string): string[] {
-	const matches = code.match(/src: url\((\/|\w|@|\.|-|\+)+\)/g) ?? [];
-	return matches.map((s) => s.slice(9, -1));
-}
