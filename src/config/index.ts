@@ -11,7 +11,7 @@ import defaultTheme from "../default-theme/index.js";
 import { solidBaseMdx } from "./mdx.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
 
-export type SolidBaseConfig<ThemeConfig> = {
+export interface SolidBaseConfig<ThemeConfig> {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
@@ -35,7 +35,7 @@ export type SolidBaseConfig<ThemeConfig> = {
 	autoImport?:
 		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
 		| true;
-};
+}
 
 type ResolvedConfigKeys =
 	| "title"
