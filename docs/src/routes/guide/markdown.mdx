@@ -130,6 +130,10 @@ You can set a custom title between square brackets `[]` after the "type" of the 
 Highlights information that users should take into account, even when skimming.
 :::
 
+:::tip[]
+This is a tip with no title.
+:::
+
 :::details[Click me to view]
 This is a details block.
 :::
@@ -141,8 +145,8 @@ This is a details block.
 Highlights information that users should take into account, even when skimming.
 :::
 
-:::warning[]
-This is a warning with no title.
+:::tip[]
+This is a tip with no title.
 :::
 
 :::details[Click me to view]
@@ -332,8 +336,6 @@ A [list of valid languages](https://github.com/antfu/textmate-grammars-themes/bl
 
 ## Line Highlighting in Code Blocks
 
-TODO: broken
-
 **Input**
 
 ````
@@ -341,7 +343,7 @@ TODO: broken
 export default {
   data () {
     return {
-      msg: 'Highlighted!'
+      msg: "Highlighted!"
     }
   }
 }
@@ -354,7 +356,7 @@ export default {
 export default {
   data () {
     return {
-      msg: 'Highlighted!'
+      msg: "Highlighted!"
     }
   }
 }
@@ -362,9 +364,9 @@ export default {
 
 In addition to a single line, you can also specify multiple single lines, ranges, or both:
 
-- Line ranges: for example `{5-8}`, `{3-10}`, `{10-17}`
-- Multiple single lines: for example `{4, 7, 9}`
-- Line ranges and single lines: for example `{4, 7-13, 16, 23-27, 40}`
+- Line ranges: for example `{1-4}`, `{6-10}`, `{12-20}`
+- Multiple single lines: for example `{4, 6, 10}`
+- Line ranges and single lines: for example `{4, 6-10, 15, 20-24, 40}`
 
 **Input**
 
@@ -373,11 +375,11 @@ In addition to a single line, you can also specify multiple single lines, ranges
 export default { // Highlighted
   data () {
     return {
-      msg: `Highlighted!
-      This line isn't highlighted,
-      but this and the next 2 are.`,
-      motd: 'VitePress is awesome',
-      lorem: 'ipsum'
+      msg: "Highlighted!"
+      other: "Not highlighted",
+      f: `But
+      we
+      are`,
     }
   }
 }
@@ -390,11 +392,11 @@ export default { // Highlighted
 export default { // Highlighted
   data () {
     return {
-      msg: `Highlighted!
-      This line isn't highlighted,
-      but this and the next 2 are.`,
-      motd: 'VitePress is awesome',
-      lorem: 'ipsum',
+      msg: "Highlighted!"
+      other: "Not highlighted",
+      f: `But
+      we
+      are`,
     }
   }
 }
@@ -402,21 +404,19 @@ export default { // Highlighted
 
 ## Line Numbers
 
-TODO: broken
-
 You can enable line numbers for each code block by adding `showLineNumbers` after the language.
 
 **Input**
 
 ````md
 ```ts
-// line-numbers is disabled by default
+// line numbers are disabled by default
 const line2 = "This is line 2";
 const line3 = "This is line 3";
 ```
 
 ```ts showLineNumbers
-// line-numbers is enabled
+// line numbers are enabled
 const line2 = "This is line 2";
 const line3 = "This is line 3";
 ```
@@ -425,14 +425,26 @@ const line3 = "This is line 3";
 **Output**
 
 ```ts
-// line-numbers is disabled by default
+// line numbers are disabled by default
 const line2 = "This is line 2";
 const line3 = "This is line 3";
 ```
 
 <br />
-```ts showLineNumbers // line-numbers is enabled const line2 = 'This is line 2' const
-line3 = 'This is line 3' ```
+
+```ts showLineNumbers
+// line numbers are enabled
+const line2 = 'This is line 2'
+const line3 = 'This is line 3'
+```
+
+## Collapsible
+
+// TODO
+
+## Twoslash
+
+// TODO
 
 ## Advanced Configuration
 

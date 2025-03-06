@@ -57,15 +57,25 @@ article *[id] {
 	border-radius: var(--sb-border-radius);
 	cursor: text;
 
-	& pre {
+	pre {
 		border: none;
 	}
 
-	& .copy {
+	.copy {
 		margin-top: 0.2rem;
 	}
 
 	.ln[aria-hidden="true"]::selection {
 		background: transparent;
+	}
+
+	&:has(.ec-line.highlight) .ec-line:not(.highlight) {
+		opacity: 0.7;
+		transition: opacity .1s var(--sb-transition-timing);
+	}
+
+	&:hover .ec-line,
+	&:focus-within .ec-line {
+		opacity: 1 !important;
 	}
 }

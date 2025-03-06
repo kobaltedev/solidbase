@@ -6,7 +6,7 @@ import mdx from "@vinxi/plugin-mdx";
 import ecTwoSlash from "expressive-code-twoslash";
 import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode, {
-    RehypeExpressiveCodeOptions,
+	type RehypeExpressiveCodeOptions,
 	type ExpressiveCodeTheme,
 } from "rehype-expressive-code";
 import rehypeRaw from "rehype-raw";

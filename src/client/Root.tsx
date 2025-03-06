@@ -17,8 +17,10 @@ export function SolidBaseRoot(
 	},
 ) {
 	onMount(() => {
-		const { $$SolidBase } = window as { $$SolidBase?: { initTwoslashPopups?(): void } };
-		$$SolidBase?.initTwoslashPopups?.()
+		const { $$SolidBase } = window as {
+			$$SolidBase?: { initTwoslashPopups?(): void };
+		};
+		$$SolidBase?.initTwoslashPopups?.();
 	});
 
 	const base = () => (
