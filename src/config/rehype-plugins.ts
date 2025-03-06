@@ -14,9 +14,14 @@ export function rehypeFixExpressiveCodeJsx() {
 				);
 				if (!dangerouslySetInnerHtmlAttribute || index === undefined) return;
 
-				const innerHTML =
+
+				let innerHTML: string =
 					dangerouslySetInnerHtmlAttribute.value.data.estree.body[0].expression
 						.properties[0].value.value;
+
+				innerHTML = innerHTML.replace('initTwoslashPopups(document);', `
+if(typeof window.$$$$SolidBase==="undefined") window.$$$$SolidBase = {};
+window.$$$$SolidBase.initTwoslashPopups = () => initTwoslashPopups(document);`)
 
 				parent.children[index] = {
 					type: "element",

@@ -129,7 +129,7 @@
     "cross-spawn": "^7.0.3",
     "esast-util-from-js": "^2.0.1",
     "estree-util-value-to-estree": "^3.1.2",
-    "expressive-code-twoslash": "^0.4.0",
+    "expressive-code-twoslash": "=0.4.0",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",
     "lexend": "link:@fontsource/variable/lexend",

@@ -1,7 +1,7 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import type { RouteSectionProps } from "@solidjs/router";
-import { Suspense, createMemo } from "solid-js";
+import { Suspense, createMemo, onMount } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteSolidBaseConfig } from "./config";
@@ -16,6 +16,11 @@ export function SolidBaseRoot(
 		};
 	},
 ) {
+	onMount(() => {
+		const { $$SolidBase } = window as { $$SolidBase?: { initTwoslashPopups?(): void } };
+		$$SolidBase?.initTwoslashPopups?.()
+	});
+
 	const base = () => (
 		<Suspense>
 			<LocaleContextProvider>
