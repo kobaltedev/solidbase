@@ -9,13 +9,13 @@ export function rehypeFixExpressiveCodeJsx() {
 			tree,
 			"mdxJsxFlowElement",
 			(node: { attributes?: any[]; name: string }, index, parent) => {
-				const dangrouslySetInnerHtmlAttribute = node.attributes?.find(
+				const dangerouslySetInnerHtmlAttribute = node.attributes?.find(
 					(a) => a.name === DANGEROUSLY_SET_INNER_HTML,
 				);
-				if (!dangrouslySetInnerHtmlAttribute || index === undefined) return;
+				if (!dangerouslySetInnerHtmlAttribute || index === undefined) return;
 
 				const innerHTML =
-					dangrouslySetInnerHtmlAttribute.value.data.estree.body[0].expression
+					dangerouslySetInnerHtmlAttribute.value.data.estree.body[0].expression
 						.properties[0].value.value;
 
 				parent.children[index] = {

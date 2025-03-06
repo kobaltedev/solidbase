@@ -64,4 +64,8 @@ article *[id] {
 	& .copy {
 		margin-top: 0.2rem;
 	}
+
+	.ln[aria-hidden="true"]::selection {
+		background: transparent;
+	}
 }

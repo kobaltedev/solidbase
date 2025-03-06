@@ -53,6 +53,10 @@ export default defineConfig(
 										title: "About",
 										link: "/about",
 									},
+									{
+										title: "Expressive Code",
+										link: "/ec",
+									},
 								],
 							},
 							{

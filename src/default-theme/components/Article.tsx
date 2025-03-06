@@ -1,7 +1,7 @@
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
-import { type ParentProps, Show, createSignal } from "solid-js";
+import { ErrorBoundary, type ParentProps, Show, createSignal } from "solid-js";
 
 import { useCurrentPageData } from "../../client";
 import { mobileLayout } from "../globals";

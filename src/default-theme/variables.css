@@ -54,6 +54,8 @@ html {
 }
 
 html[data-theme="dark"] {
+	color-scheme: dark;
+
 	--sb-tint-color: black;
 	--sb-tint-color-opposite: white;
 	--sb-background-color: hsl(240, 6%, 10%);
