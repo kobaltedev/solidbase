@@ -2,11 +2,12 @@ import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
-import { getLocaleLink, useLocale } from "../../client";
+import { getLocaleLink, useCurrentPageData, useLocale } from "../../client";
 import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 
+import { useSidebar } from "../sidebar";
 import styles from "./Header.module.css";
 
 const DocSearch = lazy(() => import("./DocSearch"));
@@ -22,6 +23,15 @@ export default function Header() {
 
 	const config = useRouteConfig();
 	const locale = useLocale();
+	const sidebar = useSidebar();
+	const tocContent = () => useCurrentPageData()()?.toc;
+
+	const hasSidebar = () =>
+		frontmatter()?.sidebar !== false &&
+		sidebar() &&
+		sidebar()!.items.length > 0;
+	const hasToc = () =>
+		frontmatter()?.toc !== false && tocContent() && tocContent()!.length > 0;
 
 	return (
 		<Dialog open={tocOpen()} onOpenChange={setTocOpen} modal={false}>
@@ -66,13 +76,9 @@ export default function Header() {
 						<ThemeSelector />
 					</div>
 				</div>
-				<Show
-					when={
-						frontmatter()?.sidebar !== false || frontmatter()?.toc !== false
-					}
-				>
+				<Show when={hasSidebar() || hasToc()}>
 					<div class={styles["mobile-bar"]}>
-						<Show when={frontmatter()?.sidebar !== false} fallback={<div />}>
+						<Show when={hasSidebar()} fallback={<div />}>
 							<button
 								type="button"
 								class={styles["mobile-menu"]}
@@ -82,7 +88,7 @@ export default function Header() {
 								<MenuLeftIcon /> Menu
 							</button>
 						</Show>
-						<Show when={frontmatter()?.toc !== false}>
+						<Show when={hasToc()}>
 							<Dialog.Trigger
 								type="button"
 								class={styles["mobile-menu"]}
