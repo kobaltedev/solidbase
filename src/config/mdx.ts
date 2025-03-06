@@ -6,6 +6,7 @@ import mdx from "@vinxi/plugin-mdx";
 import ecTwoSlash from "expressive-code-twoslash";
 import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode, {
+    RehypeExpressiveCodeOptions,
 	type ExpressiveCodeTheme,
 } from "rehype-expressive-code";
 import rehypeRaw from "rehype-raw";
@@ -38,7 +39,7 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 				rehypeExpressiveCode,
 				{
 					themes: ["github-dark", "github-light"],
-					themeCSSSelector: (theme: ExpressiveCodeTheme) =>
+					themeCssSelector: (theme: ExpressiveCodeTheme) =>
 						`[data-theme="${theme.type}"]`,
 					plugins: [
 						pluginLineNumbers(),
@@ -65,7 +66,7 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 						collapseStyle: "collapsible-auto",
 					},
 					...sbConfig.markdown?.expressiveCode,
-				},
+				} satisfies RehypeExpressiveCodeOptions,
 			],
 			rehypeFixExpressiveCodeJsx,
 			[rehypeRaw, { passThrough: nodeTypes }],
