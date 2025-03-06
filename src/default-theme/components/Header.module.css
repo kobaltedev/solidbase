@@ -29,8 +29,8 @@
 		padding: 0 1rem;
 	}
 
-	html {
-		--sb-header-height: 6.5rem !important;
+	html:has(.header .mobile-bar) {
+		--sb-header-height: 6.25rem !important;
 	}
 }
 
