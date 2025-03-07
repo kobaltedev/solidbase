@@ -1,7 +1,6 @@
-import { access, readdir } from "node:fs/promises";
-import { dirname, join, parse } from "node:path";
+import { readdir } from "node:fs/promises";
+import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { SolidStartInlineConfig } from "@solidjs/start/config";
 
 import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
@@ -24,7 +23,7 @@ export const componentsModule = {
 			const paths: Array<string> = [];
 
 			while (t !== undefined) {
-				paths.push(fileURLToPath(t.componentsPath));
+				paths.push(fileURLToPath(t.componentsPath).replaceAll("\\", "/"));
 				t = t.extends;
 			}
 
