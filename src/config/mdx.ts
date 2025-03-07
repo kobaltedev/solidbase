@@ -8,6 +8,7 @@ import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode, {
 	type RehypeExpressiveCodeOptions,
 	type ExpressiveCodeTheme,
+	ExpressiveCodePlugin,
 } from "rehype-expressive-code";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
@@ -34,33 +35,50 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 		jsxImportSource: "solid-js",
 		providerImportSource: "solid-mdx",
 		stylePropertyNameCase: "css",
-		rehypePlugins: [
+		rehypePlugins: getRehypePlugins(sbConfig),
+		remarkPlugins: getRemarkPlugins(sbConfig),
+	});
+}
+
+function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
+	const rehypePlugins: any[] = [];
+
+	if(sbConfig.markdown?.expressiveCode !== false) {
+		const plugins: (ExpressiveCodePlugin | ExpressiveCodePlugin[])[] = [
+			pluginLineNumbers(),
+			pluginCollapsibleSections(),
+		];
+
+		if(sbConfig.markdown?.expressiveCode?.twoSlash !== false) {
+			plugins.push(
+				ecTwoSlash({
+					twoslashOptions: {
+						compilerOptions: convertCompilerOptionsFromJson(
+							{
+								allowSyntheticDefaultImports: true,
+								esModuleInterop: true,
+								target: "ESNext",
+								module: "ESNext",
+								lib: ["dom", "esnext"],
+								jsxImportSource: "solid-js",
+								jsx: "preserve",
+							},
+							".",
+						).options,
+					},
+					...sbConfig.markdown?.expressiveCode?.twoSlash,
+				}),
+			)
+		}
+
+		rehypePlugins.push(
 			[
 				rehypeExpressiveCode,
 				{
 					themes: ["github-dark", "github-light"],
 					themeCssSelector: (theme: ExpressiveCodeTheme) =>
 						`[data-theme="${theme.type}"]`,
-					plugins: [
-						pluginLineNumbers(),
-						pluginCollapsibleSections(),
-						ecTwoSlash({
-							twoslashOptions: {
-								compilerOptions: convertCompilerOptionsFromJson(
-									{
-										allowSyntheticDefaultImports: true,
-										esModuleInterop: true,
-										target: "ESNext",
-										module: "ESNext",
-										lib: ["dom", "esnext"],
-										jsxImportSource: "solid-js",
-										jsx: "preserve",
-									},
-									".",
-								).options,
-							},
-						}),
-					],
+					plugins,
 					defaultProps: {
 						showLineNumbers: false,
 						collapseStyle: "collapsible-auto",
@@ -69,31 +87,49 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 				} satisfies RehypeExpressiveCodeOptions,
 			],
 			rehypeFixExpressiveCodeJsx,
-			[rehypeRaw, { passThrough: nodeTypes }],
-			rehypeSlug,
-			[
-				rehypeAutoLinkHeadings,
-				{
-					behavior: "wrap",
-					properties: {
-						"data-auto-heading": "",
-					},
+		)
+	}
+
+	rehypePlugins.push(
+		[rehypeRaw, { passThrough: nodeTypes }],
+		rehypeSlug,
+		[
+			rehypeAutoLinkHeadings,
+			{
+				behavior: "wrap",
+				properties: {
+					"data-auto-heading": "",
 				},
-			],
-			...(sbConfig.markdown?.rehypePlugins ?? []),
+			},
 		],
-		remarkPlugins: [
-			remarkFrontmatter,
-			remarkMdxFrontmatter,
-			remarkGfm,
-			remarkGithubAlertsToDirectives,
-			remarkDirective,
-			remarkRelativeImports,
-			[remarkTOC, sbConfig.markdown?.toc],
-			remarkDirectiveContainers,
-			remarkAddClass,
-			[remarkIssueAutolink, sbConfig.issueAutolink],
-			...(sbConfig.markdown?.remarkPlugins ?? []),
-		],
-	});
+		...(sbConfig.markdown?.rehypePlugins ?? []),
+	);
+
+	return rehypePlugins;
+}
+
+function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
+	const remarkPlugins: any[] = [
+		remarkFrontmatter,
+		remarkMdxFrontmatter,
+		remarkGfm,
+		remarkGithubAlertsToDirectives,
+		remarkDirective,
+		remarkRelativeImports,
+	];
+
+	if(sbConfig.markdown?.toc !== false)
+		remarkPlugins.push([remarkTOC, sbConfig.markdown?.toc]);
+
+	remarkPlugins.push(
+		remarkDirectiveContainers,
+		remarkAddClass
+	);
+
+	if(sbConfig.issueAutolink !== false)
+		remarkPlugins.push([remarkIssueAutolink, sbConfig.issueAutolink])
+
+	remarkPlugins.push(...(sbConfig.markdown?.remarkPlugins ?? []));
+
+	return remarkPlugins
 }

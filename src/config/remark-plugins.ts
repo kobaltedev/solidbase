@@ -82,10 +82,8 @@ export function remarkTOC(opts?: TOCOptions) {
 	};
 }
 
-export type IssueAutoLinkConfig = false | string | ((issue: string) => string);
+export type IssueAutoLinkConfig = string | ((issue: string) => string);
 export function remarkIssueAutolink(issueAutolink: IssueAutoLinkConfig) {
-	if (issueAutolink === false) return;
-
 	const url = (issue: string) => {
 		const number = issue.slice(1);
 		if (typeof issueAutolink === "function") return issueAutolink(number);
