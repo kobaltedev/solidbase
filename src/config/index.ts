@@ -16,15 +16,17 @@ export interface SolidBaseConfig<ThemeConfig> {
 	titleTemplate?: string;
 	description?: string;
 	logo?: string;
-	issueAutolink?: IssueAutoLinkConfig;
+	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
 	locales?: Record<string, LocaleConfig<ThemeConfig>>;
 	themeConfig?: ThemeConfig;
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
 	markdown?: {
-		expressiveCode?: RehypeExpressiveCodeOptions;
-		toc?: TOCOptions;
+		expressiveCode?: (RehypeExpressiveCodeOptions & {
+			twoSlash?: PluginTwoslashOptions | false
+		}) | false;
+		toc?: TOCOptions | false;
 		remarkPlugins?: PluggableList;
 		rehypePlugins?: PluggableList;
 	};
@@ -145,6 +147,7 @@ import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
 import type { PluggableList } from "unified";
 import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
 import type { IssueAutoLinkConfig, TOCOptions } from "./remark-plugins";
+import { PluginTwoslashOptions } from "expressive-code-twoslash";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
 }
