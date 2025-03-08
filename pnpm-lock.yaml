@@ -94,9 +94,6 @@ importers:
       hastscript:
         specifier: ^9.0.0
         version: 9.0.1
-      lexend:
-        specifier: link:@fontsource/variable/lexend
-        version: link:@fontsource/variable/lexend
       mdast-util-find-and-replace:
         specifier: ^3.0.1
         version: 3.0.2
@@ -216,9 +213,6 @@ importers:
 
   docs:
     dependencies:
-      '@fontsource/lexend':
-        specifier: ^5.1.2
-        version: 5.1.2
       '@kobalte/solidbase':
         specifier: workspace:*
         version: link:..
@@ -1136,9 +1130,6 @@ packages:
 
   '@fontsource-variable/lexend@5.1.2':
     resolution: {integrity: sha512-5gY4aYZXvhCNrpqa7f/JmRnUyRMAPqGdE0IXicbqvusj+jEwuj1JuiLPl61hTbGntQP+sMZsDHECBhlrEY/8iQ==}
-
-  '@fontsource/lexend@5.1.2':
-    resolution: {integrity: sha512-ee4+mnk4Nu2C6QI78dO7zENRcVNE7oiLdaKm36/aI6tx4I/YNm69UJL2EYkwg8Pt0oQe7PPT2qXggvgRX8aruw==}
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
@@ -5063,8 +5054,6 @@ snapshots:
   '@fontsource-variable/jetbrains-mono@5.1.2': {}
 
   '@fontsource-variable/lexend@5.1.2': {}
-
-  '@fontsource/lexend@5.1.2': {}
 
   '@iarna/toml@2.2.5': {}
 

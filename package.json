@@ -102,7 +102,7 @@
     "vinxi": "^0.5.3",
     "vite": "^5.4.8"
   },
-  "packageManager": "pnpm@10.5.1+sha512.c424c076bd25c1a5b188c37bb1ca56cc1e136fbf530d98bcb3289982a08fd25527b8c9c4ec113be5e3393c39af04521dd647bcf1d0801eaf8ac6a7b14da313af",
+  "packageManager": "pnpm@10.6.1+sha512.40ee09af407fa9fbb5fbfb8e1cb40fbb74c0af0c3e10e9224d7b53c7658528615b2c92450e74cfad91e3a2dcafe3ce4050d80bda71d757756d2ce2b66213e9a3",
   "dependencies": {
     "@bprogress/core": "^1.1.18",
     "@docsearch/css": "^3.6.2",
@@ -131,7 +131,6 @@
     "expressive-code-twoslash": "=0.4.0",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",
-    "lexend": "link:@fontsource/variable/lexend",
     "mdast-util-find-and-replace": "^3.0.1",
     "mdast-util-toc": "^7.1.0",
     "rehype-autolink-headings": "^7.1.0",
