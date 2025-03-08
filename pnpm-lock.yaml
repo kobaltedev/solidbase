@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@solid-mediakit/og@0.3.1':
-    hash: 7satoney4oehcfj2r6hpo5kjyq
+    hash: 1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf
     path: patches/@solid-mediakit__og@0.3.1.patch
 
 importers:
@@ -213,15 +213,12 @@ importers:
 
   docs:
     dependencies:
-      '@fontsource/lexend':
-        specifier: ^5.1.2
-        version: 5.1.2
       '@kobalte/solidbase':
         specifier: workspace:*
         version: link:..
       '@solid-mediakit/og':
         specifier: ^0.3.1
-        version: 0.3.1(patch_hash=7satoney4oehcfj2r6hpo5kjyq)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
+        version: 0.3.1(patch_hash=1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
@@ -1133,9 +1130,6 @@ packages:
 
   '@fontsource-variable/lexend@5.1.2':
     resolution: {integrity: sha512-5gY4aYZXvhCNrpqa7f/JmRnUyRMAPqGdE0IXicbqvusj+jEwuj1JuiLPl61hTbGntQP+sMZsDHECBhlrEY/8iQ==}
-
-  '@fontsource/lexend@5.1.2':
-    resolution: {integrity: sha512-ee4+mnk4Nu2C6QI78dO7zENRcVNE7oiLdaKm36/aI6tx4I/YNm69UJL2EYkwg8Pt0oQe7PPT2qXggvgRX8aruw==}
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
@@ -5061,8 +5055,6 @@ snapshots:
 
   '@fontsource-variable/lexend@5.1.2': {}
 
-  '@fontsource/lexend@5.1.2': {}
-
   '@iarna/toml@2.2.5': {}
 
   '@iconify-json/ri@1.2.5':
@@ -5546,7 +5538,7 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/og@0.3.1(patch_hash=7satoney4oehcfj2r6hpo5kjyq)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
+  '@solid-mediakit/og@0.3.1(patch_hash=1dd90c51e34409638dd0bf880a19a308379221e6d3717ff4e251aa213e6e86cf)(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)))(rollup@4.34.8)(solid-js@1.9.5)':
     dependencies:
       '@babel/core': 7.25.2
       '@solid-mediakit/shared': 0.0.6(rollup@4.34.8)
