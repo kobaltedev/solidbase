@@ -23,9 +23,11 @@ export interface SolidBaseConfig<ThemeConfig> {
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
 	markdown?: {
-		expressiveCode?: (RehypeExpressiveCodeOptions & {
-			twoSlash?: PluginTwoslashOptions | false
-		}) | false;
+		expressiveCode?:
+			| (RehypeExpressiveCodeOptions & {
+					twoSlash?: PluginTwoslashOptions | false;
+			  })
+			| false;
 		toc?: TOCOptions | false;
 		remarkPlugins?: PluggableList;
 		rehypePlugins?: PluggableList;
@@ -143,11 +145,11 @@ export function createWithSolidBase<ThemeConfig>(
 }
 
 import { dirname, parse } from "node:path";
+import type { PluginTwoslashOptions } from "expressive-code-twoslash";
 import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
 import type { PluggableList } from "unified";
 import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
 import type { IssueAutoLinkConfig, TOCOptions } from "./remark-plugins";
-import { PluginTwoslashOptions } from "expressive-code-twoslash";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
 }

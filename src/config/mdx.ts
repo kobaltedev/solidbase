@@ -8,7 +8,7 @@ import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode, {
 	type RehypeExpressiveCodeOptions,
 	type ExpressiveCodeTheme,
-	ExpressiveCodePlugin,
+	type ExpressiveCodePlugin,
 } from "rehype-expressive-code";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
@@ -43,13 +43,13 @@ export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	const rehypePlugins: any[] = [];
 
-	if(sbConfig.markdown?.expressiveCode !== false) {
+	if (sbConfig.markdown?.expressiveCode !== false) {
 		const plugins: (ExpressiveCodePlugin | ExpressiveCodePlugin[])[] = [
 			pluginLineNumbers(),
 			pluginCollapsibleSections(),
 		];
 
-		if(sbConfig.markdown?.expressiveCode?.twoSlash !== false) {
+		if (sbConfig.markdown?.expressiveCode?.twoSlash !== false) {
 			plugins.push(
 				ecTwoSlash({
 					twoslashOptions: {
@@ -68,7 +68,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 					},
 					...sbConfig.markdown?.expressiveCode?.twoSlash,
 				}),
-			)
+			);
 		}
 
 		rehypePlugins.push(
@@ -87,7 +87,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 				} satisfies RehypeExpressiveCodeOptions,
 			],
 			rehypeFixExpressiveCodeJsx,
-		)
+		);
 	}
 
 	rehypePlugins.push(
@@ -118,18 +118,15 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		remarkRelativeImports,
 	];
 
-	if(sbConfig.markdown?.toc !== false)
+	if (sbConfig.markdown?.toc !== false)
 		remarkPlugins.push([remarkTOC, sbConfig.markdown?.toc]);
 
-	remarkPlugins.push(
-		remarkDirectiveContainers,
-		remarkAddClass
-	);
+	remarkPlugins.push(remarkDirectiveContainers, remarkAddClass);
 
-	if(sbConfig.issueAutolink !== false)
-		remarkPlugins.push([remarkIssueAutolink, sbConfig.issueAutolink])
+	if (sbConfig.issueAutolink !== false)
+		remarkPlugins.push([remarkIssueAutolink, sbConfig.issueAutolink]);
 
 	remarkPlugins.push(...(sbConfig.markdown?.remarkPlugins ?? []));
 
-	return remarkPlugins
+	return remarkPlugins;
 }
