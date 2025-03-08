@@ -1,7 +1,24 @@
 import { type BaseFrontmatter, useFrontmatter } from "../client";
+import { createMemo } from "solid-js";
 
 export function useDefaultThemeFrontmatter() {
-	return useFrontmatter<DefaultThemeFrontmatter>();
+	const frontmatter = useFrontmatter<DefaultThemeFrontmatter>();
+
+	return createMemo(() => {
+		const data = frontmatter();
+
+		if (data?.layout === "home") {
+			data.sidebar = false;
+			data.footer = false;
+			data.toc = false;
+			data.prev = false;
+			data.next = false;
+			data.editLink = false;
+			data.lastUpdated = false;
+		}
+
+		return data;
+	});
 }
 
 export type RelativePageConfig =

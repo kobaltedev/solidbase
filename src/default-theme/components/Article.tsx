@@ -144,7 +144,7 @@ export default function Article(props: ParentProps) {
 
 					<Show
 						when={
-							(config().themeConfig?.footer ?? true) && frontmatter()?.footer
+							config().themeConfig?.footer !== false && frontmatter()?.footer !== false
 						}
 					>
 						<Footer />
