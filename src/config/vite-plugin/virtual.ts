@@ -9,7 +9,7 @@ import { SolidBaseTOC } from "../remark-plugins.js";
 
 export const configModule = {
 	id: "virtual:solidbase/config",
-	resolvedId: "\0virtual:solidlidbase/config",
+	resolvedId: "\0virtual:solidbase/config",
 	load: (solidBaseConfig: Partial<SolidBaseConfig<any>>) =>
 		`export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`,
 };
