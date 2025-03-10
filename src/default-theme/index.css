@@ -48,8 +48,12 @@ article *[id] {
 	--ec-frm-edTabBarBrdCol: var(--sb-code-background-color);
 	--ec-frm-edTabBarBg: var(--sb-background-color);
 	--ec-frm-edActTabIndTopCol: var(--sb-active-link-color);
-	--ec-frm-edActTabIndBtmCol: var(--sb-background-color);
-	--ec-frm-edTabBarBrdBtmCol: var(--sb-background-color);
+	--ec-frm-edActTabIndBtmCol: color-mix(
+		in hsl,
+		var(--sb-code-background-color) 95%,
+		var(--sb-tint-color-opposite)
+	);
+	--ec-frm-edTabBarBrdBtmCol: var(--ec-frm-edActTabIndBtmCol);
 	--ec-frm-edActTabFg: var(--sb-text-color);
 	--header-border-radius: var(--sb-border-radius);
 	--ec-brdRad: var(--sb-border-radius);
@@ -59,6 +63,11 @@ article *[id] {
 
 	pre {
 		border: none;
+	}
+
+	.header .title {
+		font-family: var(--sb-font-mono);
+		font-size: 0.9rem;
 	}
 
 	.copy {

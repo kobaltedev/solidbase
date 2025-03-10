@@ -9,7 +9,7 @@ export function remarkDirectiveContainers() {
 				node.type === "textDirective"
 			) {
 				const maybeLabel = node.children[0];
-				const hasLabel = maybeLabel.data?.directiveLabel;
+				const hasLabel = maybeLabel?.data?.directiveLabel;
 
 				let labelText = undefined;
 
@@ -29,18 +29,6 @@ export function remarkDirectiveContainers() {
 				const attributes = node.attributes || {};
 				attributes.type = node.name;
 				attributes.title = labelText;
-
-				const isCodeGroup = node.name === "code-group";
-
-				const tabs = [];
-				if (isCodeGroup) {
-					attributes.type = "code-group";
-
-					for (const child of node.children) {
-						if (child.type !== "code") continue;
-						tabs.push(child.meta);
-					}
-				}
 
 				parent.children[index!] = {
 					type: "mdxJsxFlowElement",

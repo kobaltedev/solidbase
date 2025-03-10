@@ -107,6 +107,7 @@
     "@bprogress/core": "^1.1.18",
     "@docsearch/css": "^3.6.2",
     "@docsearch/js": "^3.6.2",
+    "@expressive-code/core": "^0.40.2",
     "@expressive-code/plugin-collapsible-sections": "^0.40.2",
     "@expressive-code/plugin-frames": "^0.40.2",
     "@expressive-code/plugin-line-numbers": "^0.40.2",

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
 import type { SolidBaseConfig } from "../index.js";
-import { SolidBaseTOC } from "../remark-plugins.js";
+import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
 export const configModule = {
 	id: "virtual:solidbase/config",
@@ -16,7 +16,7 @@ export const configModule = {
 
 export const componentsModule = {
 	id: "virtual:solidbase/components",
-	resolvedId: "\0virtual:solidlidbase/components",
+	resolvedId: "\0virtual:solidbase/components",
 	load: async (theme: Theme<any>) => {
 		const themePaths = (() => {
 			let t: Theme<any> | undefined = theme;
