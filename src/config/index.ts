@@ -149,7 +149,8 @@ import type { PluginTwoslashOptions } from "expressive-code-twoslash";
 import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
 import type { PluggableList } from "unified";
 import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
-import type { IssueAutoLinkConfig, TOCOptions } from "./remark-plugins";
+import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
+import type { TOCOptions } from "./remark-plugins/toc.js";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
 }

@@ -51,3 +51,31 @@ export default function App() {
 ```tsx twoslash
 const test: 4 | 44 | 444 = 4;
 ```
+
+<br/>
+
+```tsx {4-6} title="custom.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp />;
+}
+```
+
+<br/>
+
+```tsx {4} tab title="a.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp a />;
+}
+```
+
+```tsx {4} tab title="b.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp b />;
+}
+```

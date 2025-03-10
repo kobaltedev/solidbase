@@ -98,19 +98,26 @@ export function DirectiveContainer(
 			| "danger"
 			| "caution"
 			| "details"
-			| "code-group";
+			| "tab-group"
+			| "tab";
 		title?: string;
+		codeGroup?: string;
 		tabNames?: string;
 	} & ParentProps,
 ) {
 	const _children = children(() => props.children).toArray();
 
-	if (props.type === "code-group" && props.tabNames) {
-		const resolvedNames = props.tabNames.split("$$BASE$$");
+	if (props.type === "tab") {
+		return _children;
+	}
+
+	if (props.type === "tab-group") {
+		const tabNames = props.tabNames?.split("\0");
+
 		return (
 			<Tabs.Root class={styles["tabs-container"]}>
 				<Tabs.List class={styles["tabs-list"]}>
-					{resolvedNames.map((title) => {
+					{tabNames?.map((title) => {
 						return (
 							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
 								{title}
@@ -120,7 +127,7 @@ export function DirectiveContainer(
 					<Tabs.Indicator class={styles["tabs-indicator"]} />
 				</Tabs.List>
 
-				<For each={resolvedNames}>
+				<For each={tabNames}>
 					{(title, i) => (
 						<Tabs.Content
 							value={title}
