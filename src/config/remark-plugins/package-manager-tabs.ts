@@ -18,7 +18,7 @@ export function remarkPackageManagerTabs(
 	return (tree: any) => {
 		if (packageManagers === false) return;
 
-		const resolvedManagers = {
+		const resolvedManagers: PackageManagerConfig = {
 			show: ["npm", "pnpm", "yarn", "bun", "deno"],
 			default: "pnpm",
 			lang: "sh",
@@ -90,8 +90,9 @@ export function remarkPackageManagerTabs(
 									lang: resolvedManagers.lang,
 									meta: 'frame="none"',
 									value: (
-										resolvedManagers.presets[preset]?.[packageManagerCommand] ??
-										":content"
+										resolvedManagers.presets?.[preset]?.[
+											packageManagerCommand
+										] ?? ":content"
 									).replace(":content", content),
 								},
 							],
