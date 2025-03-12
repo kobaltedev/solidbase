@@ -57,6 +57,10 @@ export default defineConfig(
 										title: "Expressive Code",
 										link: "/ec",
 									},
+									{
+										title: "Package Manager",
+										link: "/pm",
+									},
 								],
 							},
 							{

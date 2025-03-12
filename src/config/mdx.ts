@@ -19,15 +19,16 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { convertCompilerOptionsFromJson } from "typescript";
 
 import type { SolidBaseResolvedConfig } from "./index.js";
-import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins.js";
-import {
-	remarkAddClass,
-	remarkDirectiveContainers,
-	remarkGithubAlertsToDirectives,
-	remarkIssueAutolink,
-	remarkRelativeImports,
-	remarkTOC,
-} from "./remark-plugins.js";
+import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
+import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
+import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
+import { remarkGithubAlertsToDirectives } from "./remark-plugins/gh-directives.js";
+import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
+import { remarkAddClass } from "./remark-plugins/kbd.js";
+import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
+import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
+import { remarkTabGroup } from "./remark-plugins/tab-group.js";
+import { remarkTOC } from "./remark-plugins/toc.js";
 
 export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 	return mdx.default.withImports({})({
@@ -114,6 +115,9 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		remarkMdxFrontmatter,
 		remarkGfm,
 		remarkGithubAlertsToDirectives,
+		remarkCodeTabs,
+		[remarkPackageManagerTabs, sbConfig.markdown?.packageManagers ?? {}],
+		remarkTabGroup,
 		remarkDirective,
 		remarkRelativeImports,
 	];

@@ -163,7 +163,6 @@ a[data-footnote-ref] {
 }
 
 .table td > .code {
-	background: none;
 	font-size: 1em;
 }
 
@@ -250,13 +249,16 @@ a[data-footnote-ref] {
 
 .table {
 	overflow-x: auto;
+	border-radius: var(--sb-border-radius);
+	margin-top: 2em;
+	margin-bottom: 2em;
+	border: 1px solid
+		color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
 
 	& > table {
 		width: 100%;
 		table-layout: auto;
 		text-align: left;
-		margin-top: 2em;
-		margin-bottom: 2em;
 		font-size: 0.875em;
 		line-height: 1.7;
 		border-collapse: collapse;
@@ -264,33 +266,53 @@ a[data-footnote-ref] {
 		& > thead {
 			color: var(--sb-heading-color);
 			font-family: var(--sb-font-headings);
-			border-bottom: 1px solid var(--sb-decoration-color);
+			background: color-mix(
+				in hsl,
+				var(--sb-background-color) 70%,
+				var(--sb-tint-color)
+			);
+			border: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
+			border-bottom: none;
+			border-top: none;
+		}
+
+		td:not(:last-child),
+		th:not(:last-child) {
+			border-right: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
 		}
 
 		& tr {
 			color: var(--sb-text-color);
 
 			& > * {
-				padding: 0.5rem;
-
-				&:first-child {
-					padding-left: 0;
-				}
-
-				&:last-child {
-					padding-right: 0;
-				}
+				padding: 0.5rem 0.75rem;
 			}
 		}
 
 		& > tbody tr {
-			border-bottom: 1px solid
-				color-mix(in hsl, var(--sb-decoration-color) 20%, transparent);
+			border: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
+			border-top: none;
+
+			html[data-theme="light"] & {
+				background: color-mix(
+					in hsl,
+					var(--sb-background-color) 97%,
+					var(--sb-tint-color-opposite)
+				);
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
 		}
 	}
 }
 
 .tabs-container {
+	margin: 1.5rem 0;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -299,18 +321,23 @@ a[data-footnote-ref] {
 .tabs-list {
 	position: relative;
 	display: flex;
-	border-bottom: 2px solid
-		color-mix(in hsl, var(--sb-text-color) 15%, transparent);
+
+	border-top-left-radius: var(--sb-border-radius);
+	border-top-right-radius: var(--sb-border-radius);
+	border: 1.5px solid var(--sb-code-background-color);
+	border-bottom: 1.5px solid
+		color-mix(
+			in hsl,
+			var(--sb-code-background-color) 95%,
+			var(--sb-tint-color-opposite)
+		);
 }
 
 .tabs-indicator {
-	position: absolute;
-	height: 100%;
-	border-top-right-radius: var(--sb-border-radius);
-	border-top-left-radius: var(--sb-border-radius);
-	background: var(--sb-info-background-color);
+	background: var(--sb-code-background-color);
 	transition: transform 150ms, width 50ms;
 	z-index: 1;
+	overflow: hidden;
 }
 
 .tabs-trigger {
@@ -318,12 +345,40 @@ a[data-footnote-ref] {
 	outline: none;
 	background: none;
 	border: none;
-	padding: 4px 12px;
+	padding: 5.5px 16px;
 	z-index: 2;
-	color: color-mix(in hsl, var(--sb-text-color) 45%, transparent);
+	position: relative;
+	overflow: hidden;
+	border-top-right-radius: var(--sb-border-radius);
+	border-top-left-radius: var(--sb-border-radius);
+	cursor: var(--sb-button-cursor);
+	font-family: var(--sb-font-mono);
+	font-size: 0.9rem;
+	transition: background-color 150ms, border 150ms;
+	color: color-mix(in hsl, var(--sb-text-color) 75%, transparent);
+
+	&[data-selected],
+	&:hover,
+	&:focus {
+		color: var(--sb-text-color);
+		background: color-mix(
+			in hsl,
+			var(--sb-code-background-color) 75%,
+			transparent
+		);
+	}
 
 	&[data-selected] {
-		color: var(--sb-info-text-color);
+		background: var(--sb-code-background-color);
+
+		&::before {
+			content: "";
+			height: 100%;
+			width: 100%;
+			inset: 0;
+			position: absolute;
+			border-top: 1.5px solid var(--sb-active-link-color);
+		}
 	}
 }
 
@@ -334,8 +389,19 @@ a[data-footnote-ref] {
 
 	display: none;
 
-	figure pre {
-		border-top-right-radius: 0;
-		border-top-left-radius: 0;
+	:global(.expressive-code) {
+		margin: 0;
+
+		figure pre {
+			border-top-right-radius: 0;
+			border-top-left-radius: 0;
+		}
+	}
+
+	&:not(:has(figure)) {
+		border-bottom-left-radius: var(--sb-border-radius);
+		border-bottom-right-radius: var(--sb-border-radius);
+		border: 1.5px solid var(--sb-code-background-color);
+		padding: 0 1.25rem;
 	}
 }

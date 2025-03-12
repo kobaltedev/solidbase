@@ -323,7 +323,6 @@ export default function App() {
 }
 ```
 
-<br/>
 ```json
 {
   "data": {
@@ -441,6 +440,46 @@ const line3 = 'This is line 3'
 ## Collapsible
 
 // TODO
+
+## Code Tabs
+
+**Input**
+
+````md
+```tsx {4} tab title="a.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp a />;
+}
+```
+
+```tsx {4} tab title="b.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp b />;
+}
+```
+````
+
+**Output**
+
+```tsx {4} tab title="a.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp a />;
+}
+```
+
+```tsx {4} tab title="b.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp b />;
+}
+```
 
 ## Twoslash
 
