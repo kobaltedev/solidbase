@@ -14,16 +14,27 @@ export function remarkCodeTabs() {
 				const groupNodes = [];
 				groupNodes.push(node);
 
+				const groupTitles: string[] = [];
+				groupTitles.push(
+					nodeMeta.getString("title") ?? groupTitles.length.toString(),
+				);
+
 				for (let i = index! + 1; i < parent.children.length; i++) {
 					const node = parent.children[i];
 					const nodeMeta = new MetaOptions(node.meta ?? "");
+
+					const nodeTitle =
+						nodeMeta.getString("title") ?? groupTitles.length.toString();
+
 					if (
 						node.type === "code" &&
 						(key
 							? nodeMeta.getString("tab") === key
-							: nodeMeta.getBoolean("tab"))
+							: nodeMeta.getBoolean("tab") && !nodeMeta.getString("tab")) &&
+						!groupTitles.includes(nodeTitle)
 					) {
 						groupNodes.push(node);
+						groupTitles.push(nodeTitle);
 					} else break;
 				}
 
@@ -61,7 +72,7 @@ export function remarkCodeTabs() {
 				};
 
 				parent.children.splice(index! + 1, groupNodes.length - 1);
-				return [SKIP, index! + groupNodes.length];
+				return [SKIP, index! + groupNodes.length - 1];
 			}
 		});
 	};

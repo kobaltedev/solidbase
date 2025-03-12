@@ -163,7 +163,6 @@ a[data-footnote-ref] {
 }
 
 .table td > .code {
-	background: none;
 	font-size: 1em;
 }
 
@@ -250,13 +249,16 @@ a[data-footnote-ref] {
 
 .table {
 	overflow-x: auto;
+	border-radius: var(--sb-border-radius);
+	margin-top: 2em;
+	margin-bottom: 2em;
+	border: 1px solid
+		color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
 
 	& > table {
 		width: 100%;
 		table-layout: auto;
 		text-align: left;
-		margin-top: 2em;
-		margin-bottom: 2em;
 		font-size: 0.875em;
 		line-height: 1.7;
 		border-collapse: collapse;
@@ -264,33 +266,53 @@ a[data-footnote-ref] {
 		& > thead {
 			color: var(--sb-heading-color);
 			font-family: var(--sb-font-headings);
-			border-bottom: 1px solid var(--sb-decoration-color);
+			background: color-mix(
+				in hsl,
+				var(--sb-background-color) 70%,
+				var(--sb-tint-color)
+			);
+			border: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
+			border-bottom: none;
+			border-top: none;
+		}
+
+		td:not(:last-child),
+		th:not(:last-child) {
+			border-right: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
 		}
 
 		& tr {
 			color: var(--sb-text-color);
 
 			& > * {
-				padding: 0.5rem;
-
-				&:first-child {
-					padding-left: 0;
-				}
-
-				&:last-child {
-					padding-right: 0;
-				}
+				padding: 0.5rem 0.75rem;
 			}
 		}
 
 		& > tbody tr {
-			border-bottom: 1px solid
-				color-mix(in hsl, var(--sb-decoration-color) 20%, transparent);
+			border: 1px solid
+				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
+			border-top: none;
+
+			html[data-theme="light"] & {
+				background: color-mix(
+					in hsl,
+					var(--sb-background-color) 97%,
+					var(--sb-tint-color-opposite)
+				);
+			}
+
+			&:last-child {
+				border-bottom: none;
+			}
 		}
 	}
 }
 
 .tabs-container {
+	margin: 1.5rem 0;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -367,9 +389,13 @@ a[data-footnote-ref] {
 
 	display: none;
 
-	figure pre {
-		border-top-right-radius: 0;
-		border-top-left-radius: 0;
+	:global(.expressive-code) {
+		margin: 0;
+
+		figure pre {
+			border-top-right-radius: 0;
+			border-top-left-radius: 0;
+		}
 	}
 
 	&:not(:has(figure)) {

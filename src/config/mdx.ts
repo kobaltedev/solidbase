@@ -25,8 +25,9 @@ import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
 import { remarkGithubAlertsToDirectives } from "./remark-plugins/gh-directives.js";
 import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
-import { remarkRelativeImports } from "./remark-plugins/relative-imports";
-import { remarkTabGroup } from "./remark-plugins/tab-group";
+import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
+import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
+import { remarkTabGroup } from "./remark-plugins/tab-group.js";
 import { remarkTOC } from "./remark-plugins/toc.js";
 
 export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
@@ -115,6 +116,7 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		remarkGfm,
 		remarkGithubAlertsToDirectives,
 		remarkCodeTabs,
+		[remarkPackageManagerTabs, sbConfig.markdown?.packageManagers ?? {}],
 		remarkTabGroup,
 		remarkDirective,
 		remarkRelativeImports,

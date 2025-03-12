@@ -7,6 +7,15 @@ import type { Options as FontsOptions } from "unplugin-fonts/types";
 import type { Options as IconsOptions } from "unplugin-icons/types";
 import type { PluginOption } from "vite";
 
+import { dirname, parse } from "node:path";
+import type { PluginTwoslashOptions } from "expressive-code-twoslash";
+import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
+import type { PluggableList } from "unified";
+import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
+import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
+import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
+import type { TOCOptions } from "./remark-plugins/toc.js";
+
 import defaultTheme from "../default-theme/index.js";
 import { solidBaseMdx } from "./mdx.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
@@ -31,6 +40,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 		toc?: TOCOptions | false;
 		remarkPlugins?: PluggableList;
 		rehypePlugins?: PluggableList;
+		packageManagers?: PackageManagerConfig | false;
 	};
 	// enabled by default
 	fonts?: FontsOptions | false;
@@ -144,13 +154,6 @@ export function createWithSolidBase<ThemeConfig>(
 	};
 }
 
-import { dirname, parse } from "node:path";
-import type { PluginTwoslashOptions } from "expressive-code-twoslash";
-import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
-import type { PluggableList } from "unified";
-import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
-import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
-import type { TOCOptions } from "./remark-plugins/toc.js";
 export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
 }

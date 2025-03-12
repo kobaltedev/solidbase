@@ -20,9 +20,12 @@ export function rehypeFixExpressiveCodeJsx() {
 
 				innerHTML = innerHTML.replace(
 					"initTwoslashPopups(document);",
-					`
-if(typeof window.$$$$SolidBase==="undefined") window.$$$$SolidBase = {};
-window.$$$$SolidBase.initTwoslashPopups = () => initTwoslashPopups(document);`,
+					` 
+					if(typeof window.$$$$SolidBase === "undefined") window.$$$$SolidBase = {};
+
+					window.$$$$SolidBase.initTwoslashPopups = () => {
+						if (!!document.querySelector(".twoslash-popup-container")) initTwoslashPopups(document);
+					} `,
 				);
 
 				parent.children[index] = {
