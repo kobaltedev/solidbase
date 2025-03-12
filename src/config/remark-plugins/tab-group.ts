@@ -28,6 +28,10 @@ export function remarkTabGroup() {
 				tabNames.push(labelText);
 			}
 
+			if (node.children[0]?.data?.directiveLabel) {
+				tabs.unshift(node.children[0]);
+			}
+
 			node.children = tabs;
 			node.attributes = {
 				...node.attributes,

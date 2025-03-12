@@ -28,7 +28,7 @@ export function remarkDirectiveContainers() {
 
 				const attributes = node.attributes || {};
 				attributes.type = node.name;
-				attributes.title = labelText;
+				attributes.title ??= labelText;
 
 				parent.children[index!] = {
 					type: "mdxJsxFlowElement",

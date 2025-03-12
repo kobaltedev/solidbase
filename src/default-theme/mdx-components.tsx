@@ -1,11 +1,14 @@
 import { Tabs } from "@kobalte/core";
+import { makePersisted, messageSync } from "@solid-primitives/storage";
 import { A } from "@solidjs/router";
 import {
+	type Accessor,
 	type ComponentProps,
 	For,
 	type ParentProps,
 	Show,
 	children,
+	createSignal,
 	splitProps,
 } from "solid-js";
 import styles from "./mdx-components.module.css";
@@ -114,8 +117,12 @@ export function DirectiveContainer(
 	if (props.type === "tab-group") {
 		const tabNames = props.tabNames?.split("\0");
 
-		return (
-			<Tabs.Root class={styles["tabs-container"]}>
+		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
+			<Tabs.Root
+				value={value?.()}
+				onChange={onChange}
+				class={styles["tabs-container"]}
+			>
 				<Tabs.List class={styles["tabs-list"]}>
 					{tabNames?.map((title) => {
 						return (
@@ -124,7 +131,6 @@ export function DirectiveContainer(
 							</Tabs.Trigger>
 						);
 					})}
-					<Tabs.Indicator class={styles["tabs-indicator"]} />
 				</Tabs.List>
 
 				<For each={tabNames}>
@@ -140,6 +146,15 @@ export function DirectiveContainer(
 				</For>
 			</Tabs.Root>
 		);
+
+		if (!props.title) return tabs();
+
+		const [openTab, setOpenTab] = makePersisted(createSignal(tabNames![0]!), {
+			name: `tab-group:${props.title}`,
+			sync: messageSync(new BroadcastChannel("tab-group")),
+		});
+
+		return tabs(openTab, setOpenTab);
 	}
 
 	if (props.type === "details") {

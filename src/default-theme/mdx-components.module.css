@@ -312,22 +312,10 @@ a[data-footnote-ref] {
 }
 
 .tabs-indicator {
-	position: absolute;
-	height: 100%;
-	border-top-right-radius: var(--sb-border-radius);
-	border-top-left-radius: var(--sb-border-radius);
 	background: var(--sb-code-background-color);
 	transition: transform 150ms, width 50ms;
 	z-index: 1;
 	overflow: hidden;
-
-	&::before {
-		content: "";
-		height: 100%;
-		width: 100%;
-		position: absolute;
-		border-top: 1.5px solid var(--sb-active-link-color);
-	}
 }
 
 .tabs-trigger {
@@ -337,15 +325,38 @@ a[data-footnote-ref] {
 	border: none;
 	padding: 5.5px 16px;
 	z-index: 2;
+	position: relative;
+	overflow: hidden;
+	border-top-right-radius: var(--sb-border-radius);
+	border-top-left-radius: var(--sb-border-radius);
 	cursor: var(--sb-button-cursor);
 	font-family: var(--sb-font-mono);
 	font-size: 0.9rem;
+	transition: background-color 150ms, border 150ms;
 	color: color-mix(in hsl, var(--sb-text-color) 75%, transparent);
 
 	&[data-selected],
 	&:hover,
 	&:focus {
 		color: var(--sb-text-color);
+		background: color-mix(
+			in hsl,
+			var(--sb-code-background-color) 75%,
+			transparent
+		);
+	}
+
+	&[data-selected] {
+		background: var(--sb-code-background-color);
+
+		&::before {
+			content: "";
+			height: 100%;
+			width: 100%;
+			inset: 0;
+			position: absolute;
+			border-top: 1.5px solid var(--sb-active-link-color);
+		}
 	}
 }
 
@@ -359,5 +370,12 @@ a[data-footnote-ref] {
 	figure pre {
 		border-top-right-radius: 0;
 		border-top-left-radius: 0;
+	}
+
+	&:not(:has(figure)) {
+		border-bottom-left-radius: var(--sb-border-radius);
+		border-bottom-right-radius: var(--sb-border-radius);
+		border: 1.5px solid var(--sb-code-background-color);
+		padding: 0 1.25rem;
 	}
 }
