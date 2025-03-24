@@ -46,6 +46,11 @@
       "solid": "./src/default-theme/*",
       "import": "./src/default-theme/*",
       "types": "./src/default-theme/*"
+    },
+    "./solid-mdx": {
+      "solid": "./src/solid-mdx.ts",
+      "import": "./src/solid-mdx.ts",
+      "types": "./src/solid-mdx.ts"
     }
   },
   "publishConfig": {
@@ -75,6 +80,11 @@
         "solid": "./dist/default-theme/*",
         "import": "./dist/default-theme/*",
         "types": "./dist/default-theme/*"
+      },
+      "./solid-mdx": {
+        "solid": "./dist/solid-mdx/index.js",
+        "import": "./dist/solid-mdx/index.js",
+        "types": "./dist/solid-mdx/index.d.ts"
       }
     }
   },
