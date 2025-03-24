@@ -3,12 +3,13 @@ import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { nodeTypes } from "@mdx-js/mdx";
 // @ts-expect-error
 import mdx from "@vinxi/plugin-mdx";
+import type { PluginTwoslashOptions } from "expressive-code-twoslash";
 import ecTwoSlash from "expressive-code-twoslash";
 import rehypeAutoLinkHeadings from "rehype-autolink-headings";
 import rehypeExpressiveCode, {
-	type RehypeExpressiveCodeOptions,
-	type ExpressiveCodeTheme,
 	type ExpressiveCodePlugin,
+	type ExpressiveCodeTheme,
+	type RehypeExpressiveCodeOptions,
 } from "rehype-expressive-code";
 import rehypeRaw from "rehype-raw";
 import rehypeSlug from "rehype-slug";
@@ -17,6 +18,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { convertCompilerOptionsFromJson } from "typescript";
+import type { PluggableList } from "unified";
 
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
@@ -25,10 +27,24 @@ import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
 import { remarkGithubAlertsToDirectives } from "./remark-plugins/gh-directives.js";
 import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
+import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
 import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
 import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
 import { remarkTabGroup } from "./remark-plugins/tab-group.js";
+import type { TOCOptions } from "./remark-plugins/toc.js";
 import { remarkTOC } from "./remark-plugins/toc.js";
+
+export interface MdxOptions {
+	expressiveCode?:
+		| (RehypeExpressiveCodeOptions & {
+				twoSlash?: (PluginTwoslashOptions & { tsconfig: any }) | false;
+		  })
+		| false;
+	toc?: TOCOptions | false;
+	remarkPlugins?: PluggableList;
+	rehypePlugins?: PluggableList;
+	packageManagers?: PackageManagerConfig | false;
+}
 
 export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
 	return mdx.default.withImports({})({
@@ -54,18 +70,24 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 			plugins.push(
 				ecTwoSlash({
 					twoslashOptions: {
-						compilerOptions: convertCompilerOptionsFromJson(
-							{
-								allowSyntheticDefaultImports: true,
-								esModuleInterop: true,
-								target: "ESNext",
-								module: "ESNext",
-								lib: ["dom", "esnext"],
-								jsxImportSource: "solid-js",
-								jsx: "preserve",
-							},
-							".",
-						).options,
+						compilerOptions: {
+							...convertCompilerOptionsFromJson(
+								{
+									allowSyntheticDefaultImports: true,
+									esModuleInterop: true,
+									target: "ESNext",
+									module: "ESNext",
+									lib: ["dom", "esnext"],
+									jsxImportSource: "solid-js",
+									jsx: "preserve",
+									...sbConfig.markdown?.expressiveCode?.twoSlash?.tsconfig,
+								},
+								".",
+							).options,
+							...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions
+								?.compilerOptions,
+						},
+						...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions,
 					},
 					...sbConfig.markdown?.expressiveCode?.twoSlash,
 				}),
