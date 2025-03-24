@@ -82,9 +82,9 @@
         "types": "./dist/default-theme/*"
       },
       "./solid-mdx": {
-        "solid": "./dist/solid-mdx/index.js",
-        "import": "./dist/solid-mdx/index.js",
-        "types": "./dist/solid-mdx/index.d.ts"
+        "solid": "./dist/solid-mdx.js",
+        "import": "./dist/solid-mdx.js",
+        "types": "./dist/solid-mdx.d.ts"
       }
     }
   },
