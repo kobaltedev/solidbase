@@ -1,23 +1,17 @@
+import { dirname, parse } from "node:path";
 import type {
 	SolidStartInlineConfig,
 	ViteCustomizableConfig,
 } from "@solidjs/start/config";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
 import type { Options as FontsOptions } from "unplugin-fonts/types";
+import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
 import type { Options as IconsOptions } from "unplugin-icons/types";
 import type { PluginOption } from "vite";
 
-import { dirname, parse } from "node:path";
-import type { PluginTwoslashOptions } from "expressive-code-twoslash";
-import type { RehypeExpressiveCodeOptions } from "rehype-expressive-code";
-import type { PluggableList } from "unified";
-import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
-import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
-import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
-import type { TOCOptions } from "./remark-plugins/toc.js";
-
 import defaultTheme from "../default-theme/index.js";
-import { solidBaseMdx } from "./mdx.js";
+import { type MdxOptions, solidBaseMdx } from "./mdx.js";
+import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
 
 export interface SolidBaseConfig<ThemeConfig> {
@@ -31,17 +25,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	themeConfig?: ThemeConfig;
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
-	markdown?: {
-		expressiveCode?:
-			| (RehypeExpressiveCodeOptions & {
-					twoSlash?: PluginTwoslashOptions | false;
-			  })
-			| false;
-		toc?: TOCOptions | false;
-		remarkPlugins?: PluggableList;
-		rehypePlugins?: PluggableList;
-		packageManagers?: PackageManagerConfig | false;
-	};
+	markdown?: MdxOptions;
 	// enabled by default
 	fonts?: FontsOptions | false;
 	icons?: Omit<IconsOptions, "compiler"> | false;
