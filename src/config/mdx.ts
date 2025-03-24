@@ -70,19 +70,24 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 			plugins.push(
 				ecTwoSlash({
 					twoslashOptions: {
-						compilerOptions: convertCompilerOptionsFromJson(
-							{
-								allowSyntheticDefaultImports: true,
-								esModuleInterop: true,
-								target: "ESNext",
-								module: "ESNext",
-								lib: ["dom", "esnext"],
-								jsxImportSource: "solid-js",
-								jsx: "preserve",
-								...sbConfig.markdown?.expressiveCode?.twoSlash?.tsconfig,
-							},
-							".",
-						).options,
+						compilerOptions: {
+							...convertCompilerOptionsFromJson(
+								{
+									allowSyntheticDefaultImports: true,
+									esModuleInterop: true,
+									target: "ESNext",
+									module: "ESNext",
+									lib: ["dom", "esnext"],
+									jsxImportSource: "solid-js",
+									jsx: "preserve",
+									...sbConfig.markdown?.expressiveCode?.twoSlash?.tsconfig,
+								},
+								".",
+							).options,
+							...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions
+								?.compilerOptions,
+						},
+						...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions,
 					},
 					...sbConfig.markdown?.expressiveCode?.twoSlash,
 				}),
