@@ -69,7 +69,9 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		if (sbConfig.markdown?.expressiveCode?.twoSlash !== false) {
 			plugins.push(
 				ecTwoSlash({
+					...sbConfig.markdown?.expressiveCode?.twoSlash,
 					twoslashOptions: {
+						...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions,
 						compilerOptions: {
 							...convertCompilerOptionsFromJson(
 								{
@@ -87,9 +89,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 							...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions
 								?.compilerOptions,
 						},
-						...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions,
 					},
-					...sbConfig.markdown?.expressiveCode?.twoSlash,
 				}),
 			);
 		}
