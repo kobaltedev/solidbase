@@ -26,22 +26,24 @@ export default function Article(props: ParentProps) {
 
 	const pageData = useCurrentPageData();
 
+	function closestEC(node: HTMLElement | undefined) {
+		return node?.closest("div.expressive-code code");
+	}
+
 	createShortcut(
 		[isAppleDevice ? "Meta" : "Control", "A"],
 		(event) => {
 			// Only handle when code last clicked and no focus or copy button focused
 			if (
 				(clickedCodeElement() && document.activeElement === document.body) ||
-				(event?.target as HTMLElement | undefined)?.closest(
-					"div.expressive-code",
-				)
+				closestEC(event?.target)
 			) {
-				const targetNode =
-					(event?.target as HTMLElement | undefined)?.closest(
-						"div.expressive-code",
-					) ?? clickedCodeElement()!;
+				const targetNode = closestEC(event?.target) ?? clickedCodeElement()!;
 
-				if (window.getSelection()?.anchorNode === contentRef()) {
+				if (
+					window.getSelection()?.anchorNode.nodeName === "PRE" &&
+					window.getSelection()?.anchorNode.hasAttribute("data-language")
+				) {
 					return; // Code already selected, select all (default) instead.
 				}
 
@@ -57,9 +59,7 @@ export default function Article(props: ParentProps) {
 
 	const onClick = (event: MouseEvent) => {
 		if (event.target) {
-			const closestCode = (event.target as HTMLElement).closest(
-				"div.expressive-code",
-			);
+			const closestCode = closestEC(event.target);
 			setClickedCodeElement(
 				(closestCode ?? undefined) as HTMLElement | undefined,
 			);

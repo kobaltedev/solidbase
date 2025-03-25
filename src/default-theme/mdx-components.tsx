@@ -1,5 +1,9 @@
 import { Tabs } from "@kobalte/core";
-import { makePersisted, messageSync } from "@solid-primitives/storage";
+import {
+	cookieStorage,
+	makePersisted,
+	messageSync,
+} from "@solid-primitives/storage";
 import { A } from "@solidjs/router";
 import {
 	type Accessor,
@@ -152,6 +156,9 @@ export function DirectiveContainer(
 		const [openTab, setOpenTab] = makePersisted(createSignal(tabNames![0]!), {
 			name: `tab-group:${props.title}`,
 			sync: messageSync(new BroadcastChannel("tab-group")),
+			storage: cookieStorage.withOptions({
+				expires: new Date(+new Date() + 3e10),
+			}),
 		});
 
 		return tabs(openTab, setOpenTab);

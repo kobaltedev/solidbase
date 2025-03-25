@@ -129,7 +129,8 @@
 	&[data-matched] {
 		color: var(--sb-active-link-color);
 
-		&:hover {
+		&:hover,
+		&:focus-visible {
 			color: var(--sb-text-color);
 			background-color: color-mix(
 				in hsl,

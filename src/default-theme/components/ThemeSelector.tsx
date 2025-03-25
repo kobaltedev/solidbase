@@ -43,8 +43,14 @@ const THEME_OPTIONS: ThemeOption[] = [
 		label: "System",
 		icon: () => (
 			<div>
-				<IconSunLine class={styles["system-light"]} aria-hidden />
-				<IconMoonLine class={styles["system-dark"]} aria-hidden />
+				<IconSunLine
+					class={`${styles["system-light"]} ${styles["force-light"]}`}
+					aria-hidden
+				/>
+				<IconMoonLine
+					class={`${styles["system-dark"]} ${styles["force-dark"]}`}
+					aria-hidden
+				/>
 			</div>
 		),
 	},
@@ -77,7 +83,10 @@ export default function ThemeSelector() {
 				<Select.Value<ThemeOption>>
 					{(state) => (
 						<RefreshOnMount aria-label={state.selectedOption().label}>
-							{state.selectedOption().icon()}
+							<IconSunLine class={styles["system-light"]} aria-hidden />
+							<IconMoonLine class={styles["system-dark"]} aria-hidden />
+							<IconSunFill class={styles["force-light"]} aria-hidden />
+							<IconMoonFill class={styles["force-dark"]} aria-hidden />
 						</RefreshOnMount>
 					)}
 				</Select.Value>

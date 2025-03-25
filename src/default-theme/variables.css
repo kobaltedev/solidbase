@@ -53,7 +53,7 @@ html {
 	--bprogress-color: var(--sb-active-link-color);
 }
 
-html[data-theme="dark"] {
+html[data-theme*="dark"] {
 	color-scheme: dark;
 
 	--sb-tint-color: black;

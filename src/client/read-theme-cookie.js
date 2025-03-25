@@ -6,8 +6,8 @@ function getThemeCookie() {
 
 document.documentElement.setAttribute(
 	"data-theme",
-	getThemeCookie()?.replace("s", "") ??
+	getThemeCookie() ??
 		(window.matchMedia("(prefers-color-scheme: dark)").matches
-			? "dark"
-			: "light"),
+			? "sdark"
+			: "slight"),
 );

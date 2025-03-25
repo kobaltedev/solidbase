@@ -20,6 +20,7 @@
 
 	& div {
 		display: inline-block;
+		vertical-align: text-top;
 	}
 }
 
@@ -45,7 +46,6 @@
 	& svg {
 		aspect-ratio: 1;
 		font-size: 1.1rem;
-		display: block;
 	}
 }
 
@@ -66,27 +66,45 @@
 	flex-direction: column;
 }
 
-.icon,
-.system-light,
-.system-dark {
+.icon {
 	display: inline-block;
 	vertical-align: text-bottom;
 }
 
-.system-dark {
-	display: none !important;
+.system-light,
+.system-dark,
+.force-light,
+.force-dark {
+	display: none;
+	vertical-align: text-bottom;
 }
 
-@media (prefers-color-scheme: dark) {
-	.system-light {
-		display: none !important;
-	}
-
-	.system-dark {
-		display: inline-block !important;
-
-		.trigger & {
-			display: block !important;
-		}
-	}
+html[data-theme="slight"] .system-light {
+	display: block;
 }
+
+html[data-theme="sdark"] .system-dark {
+	display: block;
+}
+
+html[data-theme="light"] .force-light {
+	display: block;
+}
+
+html[data-theme="dark"] .force-dark {
+	display: block;
+}
+
+/*@media (prefers-color-scheme: dark) {*/
+/*	.system-light {*/
+/*		display: none !important;*/
+/*	}*/
+
+/*	.system-dark {*/
+/*		display: inline-block !important;*/
+
+/*		.trigger & {*/
+/*			display: block !important;*/
+/*		}*/
+/*	}*/
+/*}*/

@@ -29,7 +29,7 @@
 		)
 		color-mix(in hsl, var(--sb-background-color) 95%, var(--mix-color));
 
-	html[data-theme="dark"] & {
+	html[data-theme*="dark"] & {
 		--mix-color: white;
 	}
 }
