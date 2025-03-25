@@ -296,7 +296,7 @@ a[data-footnote-ref] {
 				color-mix(in hsl, var(--sb-decoration-color) 10%, transparent);
 			border-top: none;
 
-			html[data-theme="light"] & {
+			html[data-theme*="light"] & {
 				background: color-mix(
 					in hsl,
 					var(--sb-background-color) 97%,

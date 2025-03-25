@@ -6,6 +6,10 @@ export function useDefaultThemeFrontmatter() {
 
 	return createMemo(() => {
 		const data = frontmatter();
+		if (!data) return data;
+
+		data.editLink ??= true;
+		data.lastUpdated ??= true;
 
 		if (data?.layout === "home") {
 			data.sidebar = false;

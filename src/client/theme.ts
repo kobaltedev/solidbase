@@ -59,7 +59,7 @@ import readThemeCookieScript from "./read-theme-cookie.js?raw";
 
 export function useThemeListener() {
 	createEffect(() => {
-		document.documentElement.setAttribute("data-theme", getTheme());
+		document.documentElement.setAttribute("data-theme", getRawTheme());
 		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
 	});
 
