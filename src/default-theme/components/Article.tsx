@@ -26,8 +26,13 @@ export default function Article(props: ParentProps) {
 
 	const pageData = useCurrentPageData();
 
-	function closestEC(node: HTMLElement | undefined) {
-		return node?.closest("div.expressive-code code");
+	function closestEC(
+		node: EventTarget | null | undefined,
+	): HTMLElement | undefined {
+		return (
+			(node as HTMLElement | undefined)?.closest("div.expressive-code code") ??
+			undefined
+		);
 	}
 
 	createShortcut(
@@ -41,8 +46,10 @@ export default function Article(props: ParentProps) {
 				const targetNode = closestEC(event?.target) ?? clickedCodeElement()!;
 
 				if (
-					window.getSelection()?.anchorNode.nodeName === "PRE" &&
-					window.getSelection()?.anchorNode.hasAttribute("data-language")
+					window.getSelection()?.anchorNode?.nodeName === "PRE" &&
+					(
+						window.getSelection()?.anchorNode as HTMLElement | undefined
+					)?.hasAttribute("data-language")
 				) {
 					return; // Code already selected, select all (default) instead.
 				}
@@ -60,9 +67,7 @@ export default function Article(props: ParentProps) {
 	const onClick = (event: MouseEvent) => {
 		if (event.target) {
 			const closestCode = closestEC(event.target);
-			setClickedCodeElement(
-				(closestCode ?? undefined) as HTMLElement | undefined,
-			);
+			setClickedCodeElement(closestCode);
 		}
 	};
 
