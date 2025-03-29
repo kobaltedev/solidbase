@@ -37,7 +37,7 @@ import { remarkTOC } from "./remark-plugins/toc.js";
 export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: (PluginTwoslashOptions & { tsconfig: any }) | false;
+				twoSlash?: PluginTwoslashOptions & { tsconfig: any };
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -66,12 +66,13 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 			pluginCollapsibleSections(),
 		];
 
-		if (sbConfig.markdown?.expressiveCode?.twoSlash !== false) {
+		if (sbConfig.markdown?.expressiveCode?.twoSlash) {
+			const twoSlash = sbConfig.markdown.expressiveCode.twoSlash;
 			plugins.push(
 				ecTwoSlash({
-					...sbConfig.markdown?.expressiveCode?.twoSlash,
+					...twoSlash,
 					twoslashOptions: {
-						...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions,
+						...twoSlash.twoslashOptions,
 						compilerOptions: {
 							...convertCompilerOptionsFromJson(
 								{
@@ -82,12 +83,11 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 									lib: ["dom", "esnext"],
 									jsxImportSource: "solid-js",
 									jsx: "preserve",
-									...sbConfig.markdown?.expressiveCode?.twoSlash?.tsconfig,
+									...twoSlash.tsconfig,
 								},
 								".",
 							).options,
-							...sbConfig.markdown?.expressiveCode?.twoSlash?.twoslashOptions
-								?.compilerOptions,
+							...twoSlash.twoslashOptions?.compilerOptions,
 						},
 					},
 				}),

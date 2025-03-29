@@ -36,13 +36,13 @@ importers:
         version: 0.40.2
       '@fontsource-variable/inter':
         specifier: ^5.1.1
-        version: 5.1.1
+        version: 5.2.5
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.1.2
-        version: 5.1.2
+        version: 5.2.5
       '@fontsource-variable/lexend':
         specifier: ^5.1.2
-        version: 5.1.2
+        version: 5.2.6
       '@kobalte/core':
         specifier: ^0.13.7
         version: 0.13.9(solid-js@1.9.5)
@@ -148,9 +148,6 @@ importers:
       unplugin-auto-import:
         specifier: ^19.1.0
         version: 19.1.0
-      unplugin-fonts:
-        specifier: ^1.3.1
-        version: 1.3.1(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))
       unplugin-icons:
         specifier: ^22.1.0
         version: 22.1.0
@@ -191,31 +188,6 @@ importers:
       vite:
         specifier: ^6.1.1
         version: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
-
-  dev:
-    dependencies:
-      '@kobalte/solidbase':
-        specifier: workspace:*
-        version: link:..
-      '@solidjs/router':
-        specifier: ^0.15.3
-        version: 0.15.3(solid-js@1.9.5)
-      '@solidjs/start':
-        specifier: ^1.1.1
-        version: 1.1.1(solid-js@1.9.5)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))
-      '@vinxi/plugin-mdx':
-        specifier: ^3.7.2
-        version: 3.7.2(@mdx-js/mdx@3.1.0(acorn@8.14.0))
-      solid-js:
-        specifier: ^1.9.5
-        version: 1.9.5
-      vinxi:
-        specifier: ^0.5.3
-        version: 0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0)
-    devDependencies:
-      '@iconify-json/ri':
-        specifier: ^1.2.5
-        version: 1.2.5
 
   docs:
     dependencies:
@@ -1125,14 +1097,14 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@fontsource-variable/inter@5.1.1':
-    resolution: {integrity: sha512-OpXFTmiH6tHkYijMvQTycFKBLK4X+SRV6tet1m4YOUH7SzIIlMqDja+ocDtiCA72UthBH/vF+3ZtlMr2rN/wIw==}
+  '@fontsource-variable/inter@5.2.5':
+    resolution: {integrity: sha512-TrWffUAFOnT8zroE9YmGybagoOgM/HjRqMQ8k9R0vVgXlnUh/vnpbGPAS/Caz1KIlOPnPGh6fvJbb7DHbFCncA==}
 
-  '@fontsource-variable/jetbrains-mono@5.1.2':
-    resolution: {integrity: sha512-syGEJ/N4FFisAXegxtbe1etYpo2T630dqCbYufPf7Dli/hMKSoSUIm3wK4q5RsGFRxWno1WecfnsgZA1jRK0EQ==}
+  '@fontsource-variable/jetbrains-mono@5.2.5':
+    resolution: {integrity: sha512-G3sN1xq1moZd0JL+hFaA4MEdsiQS+JXC/z7m+EqA5/Fzn5CQlXGUaaNKFGQdDsFuLTnCfW0KOOSWHjygNfjEPw==}
 
-  '@fontsource-variable/lexend@5.1.2':
-    resolution: {integrity: sha512-5gY4aYZXvhCNrpqa7f/JmRnUyRMAPqGdE0IXicbqvusj+jEwuj1JuiLPl61hTbGntQP+sMZsDHECBhlrEY/8iQ==}
+  '@fontsource-variable/lexend@5.2.6':
+    resolution: {integrity: sha512-rDBYVTp0cMaj/UNK2m5EPHMZw3MZcl2CXdZVlv+OQwpg88r5g9prS60mayZ1N+hyH7XRka2YExAFEYBLEv0NRQ==}
 
   '@iarna/toml@2.2.5':
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
@@ -4046,15 +4018,6 @@ packages:
       '@vueuse/core':
         optional: true
 
-  unplugin-fonts@1.3.1:
-    resolution: {integrity: sha512-GmaJWPAWH6lBI4fP8xKdbMZJwTgsnr8PGJOfQE52jlod8QkqSO4M529Nox2L8zYapjB5hox2wCu4N3c/LOal/A==}
-    peerDependencies:
-      '@nuxt/kit': ^3.0.0
-      vite: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
-    peerDependenciesMeta:
-      '@nuxt/kit':
-        optional: true
-
   unplugin-icons@22.1.0:
     resolution: {integrity: sha512-ect2ZNtk1Zgwb0NVHd0C1IDW/MV+Jk/xaq4t8o6rYdVS3+L660ZdD5kTSQZvsgdwCvquRw+/wYn75hsweRjoIA==}
     peerDependencies:
@@ -4085,10 +4048,6 @@ packages:
   unplugin@1.16.1:
     resolution: {integrity: sha512-4/u/j4FrCKdi17jaxuJA0jClGxB1AvU2hw/IuayPc4ay1XGaJs/rbb4v5WKwAjNifjmXK9PIFyuPiaK8azyR9w==}
     engines: {node: '>=14.0.0'}
-
-  unplugin@2.0.0-beta.1:
-    resolution: {integrity: sha512-2qzQo5LN2DmUZXkWDHvGKLF5BP0WN+KthD6aPnPJ8plRBIjv4lh5O07eYcSxgO2znNw9s4MNhEO1sB+JDllDbQ==}
-    engines: {node: '>=18.12.0'}
 
   unplugin@2.2.0:
     resolution: {integrity: sha512-m1ekpSwuOT5hxkJeZGRxO7gXbXT3gF26NjQ7GdVHoLoF8/nopLcd/QfPigpCy7i51oFHiRJg/CyHhj4vs2+KGw==}
@@ -5049,11 +5008,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@fontsource-variable/inter@5.1.1': {}
+  '@fontsource-variable/inter@5.2.5': {}
 
-  '@fontsource-variable/jetbrains-mono@5.1.2': {}
+  '@fontsource-variable/jetbrains-mono@5.2.5': {}
 
-  '@fontsource-variable/lexend@5.1.2': {}
+  '@fontsource-variable/lexend@5.2.6': {}
 
   '@iarna/toml@2.2.5': {}
 
@@ -8833,12 +8792,6 @@ snapshots:
       unplugin: 2.2.0
       unplugin-utils: 0.2.4
 
-  unplugin-fonts@1.3.1(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)):
-    dependencies:
-      fast-glob: 3.3.3
-      unplugin: 2.0.0-beta.1
-      vite: 6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
-
   unplugin-icons@22.1.0:
     dependencies:
       '@antfu/install-pkg': 1.0.0
@@ -8855,11 +8808,6 @@ snapshots:
       picomatch: 4.0.2
 
   unplugin@1.16.1:
-    dependencies:
-      acorn: 8.14.0
-      webpack-virtual-modules: 0.6.2
-
-  unplugin@2.0.0-beta.1:
     dependencies:
       acorn: 8.14.0
       webpack-virtual-modules: 0.6.2
