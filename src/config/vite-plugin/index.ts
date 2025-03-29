@@ -1,5 +1,4 @@
 import AutoImport from "unplugin-auto-import/vite";
-import Unfonts from "unplugin-fonts/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
@@ -49,9 +48,6 @@ export default function solidBaseVitePlugin(
 			},
 		},
 	];
-
-	if (solidBaseConfig.fonts !== false)
-		plugins.push(Unfonts(solidBaseConfig?.fonts));
 
 	if (solidBaseConfig.autoImport) {
 		const {

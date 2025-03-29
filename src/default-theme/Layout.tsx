@@ -16,7 +16,7 @@ import { mobileLayout } from "./globals";
 import { useSidebar } from "./sidebar";
 import { useRouteConfig } from "./utils";
 
-import "unfonts.css";
+import "virtual:solidbase/default-theme/fonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
 import { usePace } from "./pace";

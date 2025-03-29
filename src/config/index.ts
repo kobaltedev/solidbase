@@ -4,7 +4,6 @@ import type {
 	ViteCustomizableConfig,
 } from "@solidjs/start/config";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
-import type { Options as FontsOptions } from "unplugin-fonts/types";
 import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
 import type { Options as IconsOptions } from "unplugin-icons/types";
 import type { PluginOption } from "vite";
@@ -26,8 +25,6 @@ export interface SolidBaseConfig<ThemeConfig> {
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
 	markdown?: MdxOptions;
-	// enabled by default
-	fonts?: FontsOptions | false;
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
