@@ -46,7 +46,8 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 		if (config?.themeConfig?.fonts !== false) {
 			const fonts = config?.themeConfig?.fonts;
 			for (const [font, paths] of Object.entries(allFonts)) {
-				if (fonts?.[font as keyof typeof fonts] !== false) filteredFonts.push(paths);
+				if (fonts?.[font as keyof typeof fonts] !== false)
+					filteredFonts.push(paths);
 			}
 		}
 
@@ -74,13 +75,12 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 							};
 						});
 
-						console.log(preloadFonts)
-
 						return `
 							${preloadFonts.map((f) => f.import).join("\n")}
 							export const preloadFonts = [${preloadFonts
-								.map((f) =>
-									`{
+								.map(
+									(f) =>
+										`{
 										path: ${f.pathIdent},
 										type: "${f.type}",
 									}`,
