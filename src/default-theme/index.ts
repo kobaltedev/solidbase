@@ -77,15 +77,12 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 
 						return `
 							${preloadFonts.map((f) => f.import).join("\n")}
-							export const preloadFonts = [${preloadFonts
-								.map(
-									(f) =>
-										`{
-										path: ${f.pathIdent},
-										type: "${f.type}",
-									}`,
-								)
-								.join(",")}];
+
+							export const preloadFonts = [
+								${preloadFonts
+									.map((f) => `{ path: ${f.pathIdent}, type: "${f.type}" }`)
+									.join(",")}
+							];
 						`;
 					}
 				},

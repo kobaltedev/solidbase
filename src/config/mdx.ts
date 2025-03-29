@@ -34,10 +34,12 @@ import { remarkTabGroup } from "./remark-plugins/tab-group.js";
 import type { TOCOptions } from "./remark-plugins/toc.js";
 import { remarkTOC } from "./remark-plugins/toc.js";
 
+export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
+
 export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: PluginTwoslashOptions & { tsconfig: any };
+				twoSlash?: TwoslashOptions | true;
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -67,7 +69,10 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		];
 
 		if (sbConfig.markdown?.expressiveCode?.twoSlash) {
-			const twoSlash = sbConfig.markdown.expressiveCode.twoSlash;
+			const twoSlash =
+				sbConfig.markdown.expressiveCode.twoSlash === true
+					? ({} as TwoslashOptions)
+					: sbConfig.markdown.expressiveCode.twoSlash;
 			plugins.push(
 				ecTwoSlash({
 					...twoSlash,
