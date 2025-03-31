@@ -18,7 +18,7 @@ const allFonts = {
 	inter: {
 		cssPath: import.meta.resolve("@fontsource-variable/inter"),
 		preloadFontPath: import.meta.resolve(
-			"@fontsource-variable/inter/files/inter-latin-standard-normal.woff2",
+			"@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
 		),
 		fontType: "woff2",
 	},
