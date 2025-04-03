@@ -58,6 +58,10 @@ export default defineConfig(
 										link: "/ec",
 									},
 									{
+										title: "EC File",
+										link: "/ec-file",
+									},
+									{
 										title: "Package Manager",
 										link: "/pm",
 									},

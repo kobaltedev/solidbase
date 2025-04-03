@@ -25,6 +25,7 @@ import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
 import { remarkGithubAlertsToDirectives } from "./remark-plugins/gh-directives.js";
+import { remarkImportFile } from "./remark-plugins/import-file.js";
 import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
 import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
@@ -140,6 +141,7 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	const remarkPlugins: any[] = [
 		remarkFrontmatter,
 		remarkMdxFrontmatter,
+		remarkImportFile,
 		remarkGfm,
 		remarkGithubAlertsToDirectives,
 		remarkCodeTabs,
