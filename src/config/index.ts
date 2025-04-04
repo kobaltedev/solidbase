@@ -28,8 +28,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
-		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
-		| true;
+	| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+	| true;
 }
 
 type ResolvedConfigKeys =
@@ -60,6 +60,7 @@ export type ThemeDefinition<Config> = {
 };
 
 export const withSolidBase = createWithSolidBase(defaultTheme);
+
 
 export function createWithSolidBase<ThemeConfig>(
 	theme: ThemeDefinition<ThemeConfig>,
