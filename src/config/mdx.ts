@@ -19,13 +19,14 @@ import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { convertCompilerOptionsFromJson } from "typescript";
 import type { PluggableList } from "unified";
+import { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
 import { remarkGithubAlertsToDirectives } from "./remark-plugins/gh-directives.js";
-import { remarkImportFile } from "./remark-plugins/import-file.js";
+import { remarkImportFile, viteAliasCodeImports } from "./remark-plugins/import-file.js";
 import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
 import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
@@ -39,25 +40,28 @@ export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
 
 export interface MdxOptions {
 	expressiveCode?:
-		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: TwoslashOptions | true;
-		  })
-		| false;
+	| (RehypeExpressiveCodeOptions & {
+		twoSlash?: TwoslashOptions | true;
+	})
+	| false;
 	toc?: TOCOptions | false;
 	remarkPlugins?: PluggableList;
 	rehypePlugins?: PluggableList;
 	packageManagers?: PackageManagerConfig | false;
 }
 
-export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>) {
-	return mdx.default.withImports({})({
-		jsx: true,
-		jsxImportSource: "solid-js",
-		providerImportSource: "@kobalte/solidbase/solid-mdx",
-		stylePropertyNameCase: "css",
-		rehypePlugins: getRehypePlugins(sbConfig),
-		remarkPlugins: getRemarkPlugins(sbConfig),
-	});
+
+export function solidBaseMdx(sbConfig: SolidBaseResolvedConfig<any>): PluginOption {
+	return [
+		viteAliasCodeImports(),
+		mdx.default.withImports({})({
+			jsx: true,
+			jsxImportSource: "solid-js",
+			providerImportSource: "@kobalte/solidbase/solid-mdx",
+			stylePropertyNameCase: "css",
+			rehypePlugins: getRehypePlugins(sbConfig),
+			remarkPlugins: getRemarkPlugins(sbConfig),
+		})];
 }
 
 function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {

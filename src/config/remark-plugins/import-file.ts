@@ -7,12 +7,12 @@ import { MetaOptions } from "@expressive-code/core";
 import type { Code, Parent, Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
+import { PluginOption } from "vite";
+import { isMarkdown } from "../vite-plugin";
 
 interface CodeImportOptions {
 	preserveTrailingNewline?: boolean;
 	removeRedundantIndentations?: boolean;
-	rootDir?: string;
-	allowImportingFromOutside?: boolean;
 }
 
 function extractLines(
@@ -38,14 +38,8 @@ function extractLines(
 }
 
 export function remarkImportFile(options: CodeImportOptions = {}) {
-	const rootDir = options.rootDir || process.cwd();
-
-	if (!path.isAbsolute(rootDir)) {
-		throw new Error(`"rootDir" has to be an absolute path`);
-	}
-
 	return function transformer(tree: Root, file: VFile) {
-		visit(tree, (node, index, parent) => {
+		visit(tree, (node) => {
 			if (node.type !== "code") return;
 
 			const nodeLangMeta = new MetaOptions(node.lang ?? "");
@@ -67,6 +61,7 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 				/^(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
 					attr,
 				);
+
 			if (!res || !res.groups || !res.groups.path) {
 				throw new Error(`Unable to parse file path ${attr}`);
 			}
@@ -78,29 +73,14 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 			const toLine = res.groups.to
 				? Number.parseInt(res.groups.to, 10)
 				: undefined;
-			const rawPath = filePath.replace(/^\//, rootDir);
-			const fileAbsPath = path.resolve(file.dirname, rawPath);
 
-			if (!options.allowImportingFromOutside) {
-				const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
-				if (
-					!rootDir ||
-					relativePathFromRootDir.startsWith(`..${path.sep}`) ||
-					path.isAbsolute(relativePathFromRootDir)
-				) {
-					throw new Error(
-						`Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`,
-					);
-				}
-			}
-
-			const filename = path.basename(fileAbsPath);
+			const filename = path.basename(filePath);
 			const fileExt = filename.split(".").slice(-1)[0];
 			if (langFile) node.lang = fileExt;
 
 			node.meta = `title="${filename}" ${node.meta ?? ""}`;
 
-			const fileContent = fs.readFileSync(fileAbsPath, "utf8");
+			const fileContent = fs.readFileSync(filePath, "utf8");
 
 			node.value = extractLines(
 				fileContent,
@@ -115,6 +95,38 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 			}
 		});
 	};
+}
+
+const FILE_REGEX = /(\w+)=(?:(["\'])((?:[^"\'\s\\]|\\.)*)(\2)|([^"\'\s]+))/g;
+export function viteAliasCodeImports(): PluginOption {
+	return {
+		name: 'solidbase:vite-alias-code-imports',
+		enforce: "pre",
+		async transform(code, id) {
+			if (isMarkdown(id)) {
+				const lines = code.split("\n");
+				let isDirty = false;
+
+				for (let i = 0; i < lines.length; i++) {
+					const line = lines[i];
+					if (!line.startsWith("```")) continue
+					if (!line.includes("file=")) continue
+
+					const file = line.match(FILE_REGEX)?.[0].slice("file=".length)
+					if (!file) continue;
+
+					const resolved = await this.resolve(file, id);
+					if (!resolved) continue;
+					lines[i] = line.replace(file, resolved.id);
+					isDirty = true;
+				}
+
+				if (isDirty) {
+					return lines.join("\n")
+				}
+			}
+		}
+	}
 }
 
 // Adapted from https://github.com/jamiebuilds/min-indent MIT
