@@ -22,7 +22,6 @@ export default defineConfig(
 			},
 			vite: {
 				plugins: [OGPlugin(), arraybuffer()],
-				server: { allowedHosts: ["5046-159-196-132-71.ngrok-free.app"] },
 			},
 		},
 		{
