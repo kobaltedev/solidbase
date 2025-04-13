@@ -25,6 +25,21 @@ export default defineConfig(
 			titleTemplate: ":title – SolidBase",
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			editPath: "https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
+			markdown: {
+				importCodeFile: {
+					transform: (_code, id) => {
+						let code = _code;
+
+						// tests id
+						if (id.endsWith("to-transform.tsx")) {
+							code += "// appended by transform";
+						}
+
+						// tests code
+						return code.replace("REPLACE ME", "replaced string!");
+					},
+				},
+			},
 			themeConfig: {
 				socialLinks: {
 					github: "https://github.com/kobaltedev/solidbase",
@@ -56,6 +71,10 @@ export default defineConfig(
 									{
 										title: "Expressive Code",
 										link: "/ec",
+									},
+									{
+										title: "EC File",
+										link: "/ec-file",
 									},
 									{
 										title: "Package Manager",
