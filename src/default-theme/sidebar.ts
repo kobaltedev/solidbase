@@ -54,6 +54,9 @@ function flattenSidebarItems(
 					...subItem,
 					link: (() => {
 						if (!sidebar.prefix || sidebar.prefix === "/") return subItem.link;
+
+						if (subItem.link.endsWith("/"))
+							return `${sidebar.prefix}${subItem.link.slice(0, subItem.link.length - 1)}`;
 						return `${sidebar.prefix}${subItem.link}`;
 					})(),
 					depth,
