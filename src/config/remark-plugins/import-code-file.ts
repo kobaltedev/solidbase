@@ -7,12 +7,13 @@ import { MetaOptions } from "@expressive-code/core";
 import type { Code, Parent, Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
-import { PluginOption } from "vite";
+import type { PluginOption } from "vite";
 import { isMarkdown } from "../vite-plugin";
 
-interface CodeImportOptions {
+export interface ImportCodeFileOptions {
 	preserveTrailingNewline?: boolean;
 	removeRedundantIndentations?: boolean;
+	transform?: (code: string, id: string) => string | undefined;
 }
 
 function extractLines(
@@ -37,7 +38,7 @@ function extractLines(
 	return lines.slice(start - 1, end).join("\n");
 }
 
-export function remarkImportFile(options: CodeImportOptions = {}) {
+export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 	return function transformer(tree: Root, file: VFile) {
 		visit(tree, (node) => {
 			if (node.type !== "code") return;
@@ -80,7 +81,10 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 
 			node.meta = `title="${filename}" ${node.meta ?? ""}`;
 
-			const fileContent = fs.readFileSync(filePath, "utf8");
+			let fileContent = fs.readFileSync(filePath, "utf8");
+
+			const transformResult = options.transform?.(fileContent, filePath);
+			if (transformResult !== undefined) fileContent = transformResult;
 
 			node.value = extractLines(
 				fileContent,
@@ -90,9 +94,8 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 				options.preserveTrailingNewline,
 			);
 
-			if (options.removeRedundantIndentations !== false) {
+			if (options.removeRedundantIndentations !== false)
 				node.value = stripIndent(node.value);
-			}
 		});
 	};
 }
@@ -100,7 +103,7 @@ export function remarkImportFile(options: CodeImportOptions = {}) {
 const FILE_REGEX = /(\w+)=(?:(["\'])((?:[^"\'\s\\]|\\.)*)(\2)|([^"\'\s]+))/g;
 export function viteAliasCodeImports(): PluginOption {
 	return {
-		name: 'solidbase:vite-alias-code-imports',
+		name: "solidbase:vite-alias-code-imports",
 		enforce: "pre",
 		async transform(code, id) {
 			if (isMarkdown(id)) {
@@ -109,10 +112,10 @@ export function viteAliasCodeImports(): PluginOption {
 
 				for (let i = 0; i < lines.length; i++) {
 					const line = lines[i];
-					if (!line.startsWith("```")) continue
-					if (!line.includes("file=")) continue
+					if (!line.startsWith("```")) continue;
+					if (!line.includes("file=")) continue;
 
-					const file = line.match(FILE_REGEX)?.[0].slice("file=".length)
+					const file = line.match(FILE_REGEX)?.[0].slice("file=".length);
 					if (!file) continue;
 
 					const resolved = await this.resolve(file, id);
@@ -122,11 +125,11 @@ export function viteAliasCodeImports(): PluginOption {
 				}
 
 				if (isDirty) {
-					return lines.join("\n")
+					return lines.join("\n");
 				}
 			}
-		}
-	}
+		},
+	};
 }
 
 // Adapted from https://github.com/jamiebuilds/min-indent MIT
