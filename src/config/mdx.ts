@@ -1,8 +1,6 @@
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import { nodeTypes } from "@mdx-js/mdx";
-// @ts-expect-error
-import mdx from "@vinxi/plugin-mdx";
 import type { PluginTwoslashOptions } from "expressive-code-twoslash";
 import ecTwoSlash from "expressive-code-twoslash";
 import rehypeAutoLinkHeadings from "rehype-autolink-headings";
@@ -21,6 +19,8 @@ import { convertCompilerOptionsFromJson } from "typescript";
 import type { PluggableList } from "unified";
 import type { PluginOption } from "vite";
 
+// @ts-expect-error
+import mdx from "@vinxi/plugin-mdx";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
