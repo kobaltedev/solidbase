@@ -152,7 +152,7 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	const remarkPlugins: any[] = [
 		remarkFrontmatter,
 		remarkMdxFrontmatter,
-		remarkImportCodeFile,
+		[remarkImportCodeFile, sbConfig.markdown?.importCodeFile],
 		remarkGfm,
 		remarkGithubAlertsToDirectives,
 		remarkCodeTabs,

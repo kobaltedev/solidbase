@@ -13,7 +13,8 @@ import { isMarkdown } from "../vite-plugin";
 export interface ImportCodeFileOptions {
 	preserveTrailingNewline?: boolean;
 	removeRedundantIndentations?: boolean;
-	transform?: (code: string, id: string) => string | undefined;
+	// biome-ignore lint/suspicious/noConfusingVoidType: necessary for no return
+	transform?: (code: string, id: string) => string | void;
 }
 
 function extractLines(
