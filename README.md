@@ -14,4 +14,4 @@ Fully featured, fully customisable static site generation for [SolidStart](https
 
 </div>
 
-Full documentation available at https://solidbase.kobalte.dev.
+Full documentation available at https://solidbase.dev.
