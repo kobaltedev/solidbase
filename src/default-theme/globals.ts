@@ -3,7 +3,6 @@ import { createEffect, createRoot, createSignal, on, onMount } from "solid-js";
 
 const [_mobileLayout, setMobileLayout] = createSignal(false);
 
-
 onMount(() => {
 	const query = createMediaQuery("(max-width: 1100px)");
 
@@ -12,6 +11,6 @@ onMount(() => {
 	});
 
 	setTimeout(() => setMobileLayout(query()));
-})
+});
 
 export const mobileLayout = _mobileLayout;
