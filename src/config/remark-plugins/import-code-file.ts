@@ -14,7 +14,7 @@ export interface ImportCodeFileOptions {
 	preserveTrailingNewline?: boolean;
 	removeRedundantIndentations?: boolean;
 	// biome-ignore lint/suspicious/noConfusingVoidType: necessary for no return
-	transform?: (code: string, id: string) => string | void;
+	transform?: (code: string, id: string, importer: string) => string | void;
 }
 
 function extractLines(
@@ -84,7 +84,11 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 
 			let fileContent = fs.readFileSync(filePath, "utf8");
 
-			const transformResult = options.transform?.(fileContent, filePath);
+			const transformResult = options.transform?.(
+				fileContent,
+				filePath,
+				file.path,
+			);
 			if (transformResult !== undefined) fileContent = transformResult;
 
 			node.value = extractLines(
