@@ -9,7 +9,7 @@
     "check": "biome check",
     "build": "tsc -b --force && node scripts/build.js",
     "format": "biome check --write #&& prettier . --write",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.config.json --noEmit",
+    "typecheck": "tsc -b",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
     "publish:release": "pnpm i && pnpm build && pnpm publish",
     "release": "pnpm tsx scripts/release.ts"
