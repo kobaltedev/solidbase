@@ -4,7 +4,7 @@ import type {
 	ViteCustomizableConfig,
 } from "@solidjs/start/config";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
-import type { ComponentResolverOption } from "unplugin-icons/resolver.js";
+import type { ComponentResolverOption } from "unplugin-icons/resolver";
 import type { Options as IconsOptions } from "unplugin-icons/types";
 import type { PluginOption } from "vite";
 

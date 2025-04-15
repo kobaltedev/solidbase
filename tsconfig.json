@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,8 +19,12 @@
     "sourceMap": true,
     "lib": ["dom", "esnext"],
     "types": ["solid-js", "vite", "vinxi/types/client", "vite/client", "unplugin-icons/types/solid"],
+    "rootDir": "./src",
     "outDir": "./dist"
   },
+  "references": [
+    { "path": "./tsconfig.config.json" }
+  ],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "docs"]
 }
