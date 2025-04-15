@@ -1,8 +1,7 @@
 import { fromJs } from "esast-util-from-js";
 import type { PhrasingContent } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
-import { toc } from "mdast-util-toc";
-import type { SearchOptions } from "mdast-util-toc/lib/search";
+import { type Options, toc } from "mdast-util-toc";
 
 interface ParagraphNode {
 	type: "paragraph";
@@ -41,8 +40,8 @@ function mapNode(node: ListItemNode): TOCTree {
 export const SolidBaseTOC = "$$SolidBase_TOC";
 
 export type TOCOptions = {
-	minDepth?: SearchOptions["minDepth"];
-	maxDepth?: SearchOptions["maxDepth"];
+	minDepth?: Options["minDepth"];
+	maxDepth?: Options["maxDepth"];
 };
 
 export function remarkTOC(opts?: TOCOptions) {

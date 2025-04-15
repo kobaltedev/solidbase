@@ -2,6 +2,7 @@ node_modules
 build
 dist
 gitignore
+*.tsbuildinfo
 
 # debug
 logs

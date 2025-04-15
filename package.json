@@ -7,9 +7,9 @@
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
     "check": "biome check",
-    "build": "tsc && node scripts/build.js",
+    "build": "tsc -b --force && node scripts/build.js",
     "format": "biome check --write #&& prettier . --write",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc -b",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
     "publish:release": "pnpm i && pnpm build && pnpm publish",
     "release": "pnpm tsx scripts/release.ts"

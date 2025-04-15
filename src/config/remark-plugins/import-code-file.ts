@@ -8,7 +8,7 @@ import type { Code, Parent, Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
 import type { PluginOption } from "vite";
-import { isMarkdown } from "../vite-plugin";
+import { isMarkdown } from "../vite-plugin/index.js";
 
 export interface ImportCodeFileOptions {
 	preserveTrailingNewline?: boolean;
