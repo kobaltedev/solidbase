@@ -13,6 +13,9 @@ importers:
 
   .:
     dependencies:
+      '@alloc/quick-lru':
+        specifier: ^5.2.0
+        version: 5.2.0
       '@bprogress/core':
         specifier: ^1.1.18
         version: 1.1.18
@@ -100,6 +103,9 @@ importers:
       mdast-util-find-and-replace:
         specifier: ^3.0.1
         version: 3.0.2
+      mdast-util-mdx-jsx:
+        specifier: ^3.2.0
+        version: 3.2.0
       mdast-util-toc:
         specifier: ^7.1.0
         version: 7.1.0
@@ -152,9 +158,6 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0
     devDependencies:
-      '@alloc/quick-lru':
-        specifier: ^5.2.0
-        version: 5.2.0
       '@biomejs/biome':
         specifier: ^1.9.4
         version: 1.9.4

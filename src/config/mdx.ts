@@ -35,6 +35,7 @@ import { remarkAddClass } from "./remark-plugins/kbd.js";
 import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
 import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
 import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
+import { remarkSteps } from "./remark-plugins/steps.js";
 import { remarkTabGroup } from "./remark-plugins/tab-group.js";
 import type { TOCOptions } from "./remark-plugins/toc.js";
 import { remarkTOC } from "./remark-plugins/toc.js";
@@ -52,6 +53,7 @@ export interface MdxOptions {
 	rehypePlugins?: PluggableList;
 	packageManagers?: PackageManagerConfig | false;
 	importCodeFile?: ImportCodeFileOptions | false;
+	steps?: false;
 }
 
 export function solidBaseMdx(
@@ -148,7 +150,11 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 }
 
 function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
-	const remarkPlugins: any[] = [
+	const remarkPlugins: any[] = [];
+
+	if (sbConfig.markdown?.steps !== false) remarkPlugins.push(remarkSteps);
+
+	remarkPlugins.push(
 		remarkFrontmatter,
 		remarkMdxFrontmatter,
 		[remarkImportCodeFile, sbConfig.markdown?.importCodeFile],
@@ -159,7 +165,7 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		remarkTabGroup,
 		remarkDirective,
 		remarkRelativeImports,
-	];
+	);
 
 	if (sbConfig.markdown?.toc !== false)
 		remarkPlugins.push([remarkTOC, sbConfig.markdown?.toc]);

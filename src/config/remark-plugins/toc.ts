@@ -50,6 +50,7 @@ export function remarkTOC(opts?: TOCOptions) {
 			ordered: true,
 			minDepth: opts?.minDepth ?? 1,
 			maxDepth: opts?.maxDepth ?? 4,
+			parents: (a) => a.type === "root" || a.type === "mdxJsxFlowElement",
 		}).map as PhrasingContent | undefined;
 
 		let value: string;
