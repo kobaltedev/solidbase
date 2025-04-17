@@ -118,22 +118,22 @@ html {
 
 In addition to using a custom `mdx-components` file to override the components available in markdown files,
 the components [listed here](https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/context.tsx)
-can be overriden using `ComponentsProvider`.
+can be overriden using `DefaultThemeComponentsProvider`.
 Most of these components are used as part of the layout, rather than inside your markdown files.
 
 ```tsx
 <!-- Layout.tsx -->
 import Layout from "@kobalte/solidbase/default-theme/Layout";
-import ComponentsProvider from "@kobalte/solidbase/default-theme/context";
+import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.js";
 import Article from "@kobalte/solidbase/default-theme/components/Article";
 
 export default function (props: ComponentProps<typeof Layout>) {
 	return (
-		<ComponentsProvider
+		<DefaultThemeComponentsProvider
 			components={{ Article: CustomArticle }}
 		>
 			<Layout {...props} />
-		</ComponentsProvider>
+		</DefaultThemeComponentsProvider>
 	)
 }
 
