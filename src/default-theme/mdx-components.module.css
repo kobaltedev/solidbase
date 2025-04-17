@@ -349,8 +349,8 @@ a[data-footnote-ref] {
 	z-index: 2;
 	position: relative;
 	overflow: hidden;
-	border-top-right-radius: var(--sb-border-radius);
-	border-top-left-radius: var(--sb-border-radius);
+	border-top-right-radius: calc(var(--sb-border-radius) - 1.5px);
+	border-top-left-radius: calc(var(--sb-border-radius) - 1.5px);
 	cursor: var(--sb-button-cursor);
 	font-family: var(--sb-font-mono);
 	font-size: 0.9rem;
