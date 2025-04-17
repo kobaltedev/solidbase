@@ -3,9 +3,7 @@ declare module "virtual:solidbase/config" {
 }
 
 declare module "virtual:solidbase/components" {
-	export const Layout: import("solid-js").Component<
-		import("@solidjs/router").RouteSectionProps
-	>;
+	export const Layout: import("solid-js").Component;
 	export const mdxComponents: Record<string, import("solid-js").Component<any>>;
 }
 
