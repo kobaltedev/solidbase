@@ -1,12 +1,12 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import { Suspense, createMemo, onMount } from "solid-js";
+import { ParentProps, Suspense, createMemo, onMount } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteSolidBaseConfig } from "./config";
 import { SolidBaseContext } from "./context";
 
-export function SolidBaseRoot(props: {
+export function SolidBaseRoot(props: ParentProps & {
 	currentPageData?: { deferStream?: boolean };
 	meta?: {
 		// allows diabling MetaProvider for cases where you've already got one
@@ -25,7 +25,9 @@ export function SolidBaseRoot(props: {
 			<LocaleContextProvider>
 				<CurrentPageDataProvider {...props.currentPageData}>
 					<MDXProvider components={mdxComponents}>
-						<Inner />
+						<Inner>
+							{props.children}
+						</Inner>
 					</MDXProvider>
 				</CurrentPageDataProvider>
 			</LocaleContextProvider>
@@ -45,7 +47,7 @@ export function SolidBaseRoot(props: {
 import { LocaleContextProvider } from "./locale";
 import { CurrentPageDataProvider, useCurrentPageData } from "./page-data";
 
-export function Inner() {
+export function Inner(props: ParentProps) {
 	const config = useRouteSolidBaseConfig();
 	const pageData = useCurrentPageData();
 
@@ -72,7 +74,9 @@ export function Inner() {
 		<SolidBaseContext.Provider value={{ config, metaTitle }}>
 			<Title>{metaTitle()}</Title>
 			{description() && <Meta name="description" content={description()} />}
-			<Layout />
+			<Layout>
+				{props.children}
+			</Layout>
 		</SolidBaseContext.Provider>
 	);
 }
