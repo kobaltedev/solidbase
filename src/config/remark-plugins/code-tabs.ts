@@ -11,8 +11,7 @@ export function remarkCodeTabs() {
 
 				if (!nodeMeta.getBoolean("tab") && !key) return;
 
-				const groupNodes = [];
-				groupNodes.push(node);
+				const groupNodes = [node];
 
 				const groupTitles: string[] = [];
 				groupTitles.push(
@@ -20,7 +19,7 @@ export function remarkCodeTabs() {
 				);
 
 				for (let i = index! + 1; i < parent.children.length; i++) {
-					const node = parent.children[i];
+					const node = parent.children[i] as any;
 					const nodeMeta = new MetaOptions(node.meta ?? "");
 
 					const nodeTitle =
