@@ -3,7 +3,9 @@ declare module "virtual:solidbase/config" {
 }
 
 declare module "virtual:solidbase/components" {
-	export const Layout: import("solid-js").Component<import("solid-js").ParentProps>;
+	export const Layout: import("solid-js").Component<
+		import("solid-js").ParentProps
+	>;
 	export const mdxComponents: Record<string, import("solid-js").Component<any>>;
 }
 
