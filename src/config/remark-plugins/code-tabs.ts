@@ -61,7 +61,7 @@ export function remarkCodeTabs(): Transformer<Root, Root> {
 									data: {
 										directiveLabel: true,
 									},
-								},
+								} as any,
 								node,
 							],
 						};
