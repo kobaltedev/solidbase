@@ -19,8 +19,7 @@ import { convertCompilerOptionsFromJson } from "typescript";
 import type { PluggableList } from "unified";
 import type { PluginOption } from "vite";
 
-// @ts-expect-error
-import mdx from "@vinxi/plugin-mdx";
+import mdx from "../vite-mdx/index.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
@@ -60,7 +59,7 @@ export function solidBaseMdx(
 ): PluginOption {
 	return [
 		viteAliasCodeImports(),
-		mdx.default.withImports({})({
+		mdx.withImports({})({
 			jsx: true,
 			jsxImportSource: "solid-js",
 			providerImportSource: "@kobalte/solidbase/solid-mdx",
