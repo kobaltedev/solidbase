@@ -68,9 +68,9 @@ SolidBase's default theme uses its own Vite plugin to
 The most basic `Layout` receives the current route as `children` and renders it:
 
 ```tsx
-import { type RouteSectionProps } from "@solidjs/router";
+import { ParentProps } from "solid-js";
 
-export default function Layout(props: RouteSectionProps) {
+export default function Layout(props: ParentProps) {
   return <>{props.children}</>;
 }
 ```

@@ -1,21 +1,18 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import type { RouteSectionProps } from "@solidjs/router";
 import { Suspense, createMemo, onMount } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteSolidBaseConfig } from "./config";
 import { SolidBaseContext } from "./context";
 
-export function SolidBaseRoot(
-	props: RouteSectionProps & {
-		currentPageData?: { deferStream?: boolean };
-		meta?: {
-			// allows diabling MetaProvider for cases where you've already got one
-			provider?: boolean;
-		};
-	},
-) {
+export function SolidBaseRoot(props: {
+	currentPageData?: { deferStream?: boolean };
+	meta?: {
+		// allows diabling MetaProvider for cases where you've already got one
+		provider?: boolean;
+	};
+}) {
 	onMount(() => {
 		const { $$SolidBase } = window as {
 			$$SolidBase?: { initTwoslashPopups?(): void };
@@ -28,7 +25,7 @@ export function SolidBaseRoot(
 			<LocaleContextProvider>
 				<CurrentPageDataProvider {...props.currentPageData}>
 					<MDXProvider components={mdxComponents}>
-						<Inner {...props} />
+						<Inner />
 					</MDXProvider>
 				</CurrentPageDataProvider>
 			</LocaleContextProvider>
@@ -48,7 +45,7 @@ export function SolidBaseRoot(
 import { LocaleContextProvider } from "./locale";
 import { CurrentPageDataProvider, useCurrentPageData } from "./page-data";
 
-export function Inner(props: RouteSectionProps) {
+export function Inner() {
 	const config = useRouteSolidBaseConfig();
 	const pageData = useCurrentPageData();
 
@@ -75,7 +72,7 @@ export function Inner(props: RouteSectionProps) {
 		<SolidBaseContext.Provider value={{ config, metaTitle }}>
 			<Title>{metaTitle()}</Title>
 			{description() && <Meta name="description" content={description()} />}
-			<Layout {...props} />
+			<Layout />
 		</SolidBaseContext.Provider>
 	);
 }

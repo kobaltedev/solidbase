@@ -1,8 +1,8 @@
 // @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
-import { A, type RouteSectionProps } from "@solidjs/router";
-import { For, Show } from "solid-js";
+import { A } from "@solidjs/router";
+import { For, type ParentProps, Show } from "solid-js";
 
 import type { Sidebar, SidebarLink } from ".";
 import { useLocale, useThemeListener } from "../client";
@@ -21,15 +21,15 @@ import styles from "./Layout.module.css";
 import "./index.css";
 import { usePace } from "./pace";
 
-export default (props: RouteSectionProps) => (
+export default (props: ParentProps) => (
 	<DefaultThemeStateProvider>
 		<DefaultThemeComponentsProvider>
-			<Layout {...props} />
+			<Layout>{props.children}</Layout>
 		</DefaultThemeComponentsProvider>
 	</DefaultThemeStateProvider>
 );
 
-function Layout(props: RouteSectionProps) {
+function Layout(props: ParentProps) {
 	const { Header, Article, Link } = useDefaultThemeComponents();
 	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
