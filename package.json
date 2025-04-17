@@ -103,9 +103,9 @@
     "prettier": "4.0.0-alpha.10",
     "solid-js": "^1.9.5",
     "tsx": "^4.19.3",
+    "vfile": "^6.0.3",
     "vinxi": "^0.5.3",
-    "vite": "^6.1.1",
-    "vfile": "^6.0.3"
+    "vite": "^6.1.1"
   },
   "peerDependencies": {
     "@solidjs/start": "^1.0.8",
@@ -145,6 +145,7 @@
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",
     "mdast-util-find-and-replace": "^3.0.1",
+    "mdast-util-mdx-jsx": "^3.2.0",
     "mdast-util-toc": "^7.1.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.40.2",
@@ -168,6 +169,6 @@
     }
   },
   "engines": {
-	  "node": ">=22"
+    "node": ">=22"
   }
 }

@@ -1,18 +1,20 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
 import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import { ParentProps, Suspense, createMemo, onMount } from "solid-js";
+import { type ParentProps, Suspense, createMemo, onMount } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
 import { useRouteSolidBaseConfig } from "./config";
 import { SolidBaseContext } from "./context";
 
-export function SolidBaseRoot(props: ParentProps & {
-	currentPageData?: { deferStream?: boolean };
-	meta?: {
-		// allows diabling MetaProvider for cases where you've already got one
-		provider?: boolean;
-	};
-}) {
+export function SolidBaseRoot(
+	props: ParentProps & {
+		currentPageData?: { deferStream?: boolean };
+		meta?: {
+			// allows diabling MetaProvider for cases where you've already got one
+			provider?: boolean;
+		};
+	},
+) {
 	onMount(() => {
 		const { $$SolidBase } = window as {
 			$$SolidBase?: { initTwoslashPopups?(): void };
@@ -25,9 +27,7 @@ export function SolidBaseRoot(props: ParentProps & {
 			<LocaleContextProvider>
 				<CurrentPageDataProvider {...props.currentPageData}>
 					<MDXProvider components={mdxComponents}>
-						<Inner>
-							{props.children}
-						</Inner>
+						<Inner>{props.children}</Inner>
 					</MDXProvider>
 				</CurrentPageDataProvider>
 			</LocaleContextProvider>
@@ -74,9 +74,7 @@ export function Inner(props: ParentProps) {
 		<SolidBaseContext.Provider value={{ config, metaTitle }}>
 			<Title>{metaTitle()}</Title>
 			{description() && <Meta name="description" content={description()} />}
-			<Layout>
-				{props.children}
-			</Layout>
+			<Layout>{props.children}</Layout>
 		</SolidBaseContext.Provider>
 	);
 }

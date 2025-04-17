@@ -405,3 +405,32 @@ a[data-footnote-ref] {
 		padding: 0 1.25rem;
 	}
 }
+
+.steps {
+	counter-reset: step;
+	border: 0 solid;
+	border-left-width: 1px;
+	border-color: var(--sb-code-background-color);
+	margin-left: 1rem;
+	padding-left: 1.75rem;
+	position: relative;
+}
+
+.step {
+	&:before {
+		background-color: var(--sb-code-background-color);
+		color: var(--sb-text-color);
+		content: counter(step);
+		counter-increment: step;
+		border-radius: 9999px;
+		justify-content: center;
+		align-items: center;
+		width: 2rem;
+		height: 2rem;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		display: flex;
+		position: absolute;
+		left: -1rem;
+	}
+}

@@ -4,7 +4,7 @@ import {
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
-import { A } from "@solidjs/router";
+import { A, useHref } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,
@@ -184,4 +184,12 @@ export function DirectiveContainer(
 			{_children}
 		</div>
 	);
+}
+
+export function Steps(props: ParentProps) {
+	return <div class={styles.steps}>{props.children}</div>;
+}
+
+export function Step(props: ParentProps) {
+	return <div class={styles.step}>{props.children}</div>;
 }
