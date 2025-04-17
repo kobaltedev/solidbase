@@ -6,5 +6,5 @@
 		"module": "Node16",
 		"moduleResolution": "node16"
 	},
-	"include": ["src/config", "src/default-theme/index.ts"]
+	"include": ["src/config", "src/default-theme/index.ts", "src/vite-mdx"]
 }
