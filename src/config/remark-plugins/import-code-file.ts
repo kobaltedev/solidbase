@@ -80,8 +80,7 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 			const fileExt = filename.split(".").slice(-1)[0];
 			if (langFile) node.lang = fileExt;
 
-			if (nodeMeta.getBoolean("title") !== false)
-				node.meta = `title="${filename}" ${node.meta ?? ""}`;
+			node.meta = `title="${filename}" ${node.meta ?? ""}`;
 
 			let fileContent = fs.readFileSync(filePath, "utf8");
 
