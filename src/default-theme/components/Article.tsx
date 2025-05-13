@@ -1,15 +1,15 @@
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
-import { ErrorBoundary, type ParentProps, Show, createSignal } from "solid-js";
+import { type ParentProps, Show, createSignal } from "solid-js";
 
 import { useCurrentPageData } from "../../client";
-import { mobileLayout } from "../globals";
-import { usePrevNext } from "../sidebar";
-import { useSolidBaseContext } from "../utils";
-
+import { usePrevNext } from "../../client/sidebar";
 import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import type { RelativePageConfig } from "../frontmatter";
+import { mobileLayout } from "../globals";
+import { useSolidBaseContext } from "../utils";
+
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {

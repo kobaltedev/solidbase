@@ -7,7 +7,7 @@ import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
 import { ArrowDownIcon, MenuLeftIcon } from "./icons";
 
-import { useSidebar } from "../sidebar";
+import { useSidebar } from "../../client/sidebar";
 import styles from "./Header.module.css";
 
 const DocSearch = lazy(() => import("./DocSearch"));

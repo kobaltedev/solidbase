@@ -4,8 +4,9 @@ import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import { For, type ParentProps, Show } from "solid-js";
 
-import type { Sidebar, SidebarLink } from ".";
 import { useLocale, useThemeListener } from "../client";
+import { SidebarProvider, useSidebar } from "../client/sidebar";
+import type { Sidebar, SidebarLink } from "../config/sidebar";
 import {
 	DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
@@ -13,21 +14,26 @@ import {
 	useDefaultThemeState,
 } from "./context";
 import { mobileLayout } from "./globals";
-import { useSidebar } from "./sidebar";
+import { usePace } from "./pace";
 import { useRouteConfig } from "./utils";
 
 import "virtual:solidbase/default-theme/fonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
-import { usePace } from "./pace";
 
-export default (props: ParentProps) => (
-	<DefaultThemeStateProvider>
-		<DefaultThemeComponentsProvider>
-			<Layout>{props.children}</Layout>
-		</DefaultThemeComponentsProvider>
-	</DefaultThemeStateProvider>
-);
+export default (props: ParentProps) => {
+	const config = useRouteConfig();
+
+	return (
+		<DefaultThemeStateProvider>
+			<DefaultThemeComponentsProvider>
+				<SidebarProvider config={config().themeConfig?.sidebar}>
+					<Layout>{props.children}</Layout>
+				</SidebarProvider>
+			</DefaultThemeComponentsProvider>
+		</DefaultThemeStateProvider>
+	);
+};
 
 function Layout(props: ParentProps) {
 	const { Header, Article, Link } = useDefaultThemeComponents();

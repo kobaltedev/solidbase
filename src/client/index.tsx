@@ -20,4 +20,8 @@ export {
 } from "./page-data";
 export { useSolidBaseContext } from "./context";
 export { useRouteSolidBaseConfig } from "./config";
+
+export { SidebarProvider, useSidebar, usePrevNext } from "./sidebar";
+export type * from "./sidebar";
+
 export { mdxComponents } from "virtual:solidbase/components";
