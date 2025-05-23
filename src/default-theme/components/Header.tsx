@@ -2,13 +2,13 @@ import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
 import { For, Show, createSignal, lazy } from "solid-js";
 
+import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
+import IconCloseFill from "~icons/ri/close-large-fill";
+import IconMenuLeftLine from "~icons/ri/menu-2-line";
+import IconMenuFill from "~icons/ri/menu-fill";
 import { getLocaleLink, useCurrentPageData, useLocale } from "../../client";
 import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
-import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
-import IconMenuLeftLine from "~icons/ri/menu-2-line";
-import IconMenuFill from "~icons/ri/menu-fill";
-import IconCloseFill from "~icons/ri/close-large-fill";
 
 import { useSidebar } from "../sidebar";
 import styles from "./Header.module.css";
@@ -22,8 +22,14 @@ export default function Header() {
 	const { ThemeSelector, LocaleSelector, TableOfContents } =
 		useDefaultThemeComponents();
 
-	const { tocOpen, setTocOpen, setSidebarOpen, frontmatter, navOpen, setNavOpen } =
-		useDefaultThemeState();
+	const {
+		tocOpen,
+		setTocOpen,
+		setSidebarOpen,
+		frontmatter,
+		navOpen,
+		setNavOpen,
+	} = useDefaultThemeState();
 
 	const config = useRouteConfig();
 	const locale = useLocale();
@@ -60,33 +66,33 @@ export default function Header() {
 						</Dialog.Trigger>
 
 						<Dialog.Portal mount={navRef()}>
-							<Dialog.Content
-								class={styles["nav-popup"]}
-							>
-									<Show when={config().themeConfig?.nav}>
-										{(nav) => (
-											<For each={nav()}>
-												{(item) => {
-													const match = useMatch(() =>
-														locale.applyPathPrefix(
-															`${item.activeMatch ?? item.link}/*rest`,
-														),
-													);
+							<Dialog.Content class={styles["nav-popup"]}>
+								<Show when={config().themeConfig?.nav}>
+									{(nav) => (
+										<For each={nav()}>
+											{(item) => {
+												const match = useMatch(() =>
+													locale.applyPathPrefix(
+														`${item.activeMatch ?? item.link}/*rest`,
+													),
+												);
 
-													return (
-														<a
-															class={styles.navLink}
-															href={locale.applyPathPrefix(item.link)}
-															data-matched={match() !== undefined ? true : undefined}
-															onClick={() => setNavOpen(false)}
-														>
-															{item.text}
-														</a>
-													);
-												}}
-											</For>
-										)}
-									</Show>
+												return (
+													<a
+														class={styles.navLink}
+														href={locale.applyPathPrefix(item.link)}
+														data-matched={
+															match() !== undefined ? true : undefined
+														}
+														onClick={() => setNavOpen(false)}
+													>
+														{item.text}
+													</a>
+												);
+											}}
+										</For>
+									)}
+								</Show>
 								<div class={styles["nav-popup-selectors"]}>
 									<LocaleSelector />
 									<ThemeSelector />
@@ -124,9 +130,9 @@ export default function Header() {
 					<ThemeSelector />
 				</div>
 			</div>
-			
+
 			<div ref={setNavRef} class={styles["nav-container"]} />
-			
+
 			<Show when={hasSidebar() || hasToc()}>
 				<div class={styles["mobile-bar"]}>
 					<Show when={hasSidebar()} fallback={<div />}>
