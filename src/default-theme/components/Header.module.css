@@ -40,12 +40,6 @@
 	}
 }
 
-@media screen and (max-width: 500px) {
-	.selectors {
-		display: none !important;
-	}
-}
-
 .logo-link {
 	text-decoration: none;
 	color: var(--sb-heading-color);
@@ -53,7 +47,8 @@
 	font-size: 1.25em;
 }
 
-.mobile-menu {
+.mobile-menu,
+.mobile-nav-menu {
 	appearance: none;
 	outline: none;
 	border: none;
@@ -90,7 +85,9 @@
 		width: 1rem;
 		height: 1rem;
 	}
+}
 
+.mobile-menu {
 	& > svg {
 		transition-property: transform;
 		transition-timing-function: var(--sb-transition-timing);
@@ -102,11 +99,58 @@
 	}
 }
 
-.selectors {
+.top-nav {
 	position: relative;
 	display: flex;
 	flex-direction: row;
 	gap: 1rem;
+}
+
+@media screen and (max-width: 500px) {
+	.top-nav {
+		> *:not(.mobile-nav-menu) {
+			display: none !important;
+		}
+
+		.mobile-nav-menu {
+			display: block;
+		}
+	}
+}
+
+.mobile-nav-menu {
+	position: relative;
+	display: none;
+
+	> .menu-icon,
+	> .close-icon {
+		transition-property: opacity;
+		transition-timing-function: var(--sb-transition-timing);
+		transition-duration: 0.25s;
+	}
+
+	> .menu-icon {
+		position: absolute;
+		left: .5rem;
+		top: .5rem;
+	}
+
+	> .close-icon {
+		pointer-events: none;
+		opacity: 0;
+	}
+
+	&[data-expanded] {
+		> .menu-icon {
+			pointer-events: none;
+			opacity: 0;
+		}
+
+		> .close-icon {
+			pointer-events: all;
+			opacity: 1;
+		}
+	}
 }
 
 .navLink {
@@ -149,7 +193,8 @@
 	padding: 0.25rem 4rem;
 }
 
-.toc-container {
+.toc-container,
+.nav-container {
 	height: 0;
 	width: 100dvw;
 	left: -1rem;
@@ -159,10 +204,8 @@
 	flex: 0 !important;
 }
 
-.toc-popup {
-	position: sticky;
-	top: calc(var(--sb-header-height) + var(--sb-header-offset));
-	left: 0;
+.toc-popup,
+.nav-popup {
 	z-index: 51;
 	width: 100dvw;
 	max-height: 100dvh;
@@ -185,19 +228,43 @@
 	}
 }
 
+.nav-popup {
+	height: calc(100dvh - var(--sb-header-height) * 0.55);
+	display: flex;
+	flex-direction: column;
+	gap: .5rem;
+	align-items: center;
+
+	> *:not(:last-child) {
+		border-bottom: 1px solid
+			color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
+		width: 80dvw;
+	}
+}
+
+.nav-popup-selectors {
+	display: flex;
+	gap: .5rem;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
 @keyframes contentShow {
 	from {
 		opacity: 0;
 		transform: translateY(-1rem);
 	}
+
 	to {
 		opacity: 1;
 	}
 }
+
 @keyframes contentHide {
 	from {
 		opacity: 1;
 	}
+
 	to {
 		opacity: 0;
 		transform: translateY(-1rem);
