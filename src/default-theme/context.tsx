@@ -54,9 +54,18 @@ const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
 	createContextProvider(() => {
 		const [sidebarOpen, setSidebarOpen] = createSignal(false);
 		const [tocOpen, setTocOpen] = createSignal(false);
+		const [navOpen, setNavOpen] = createSignal(false);
 		const frontmatter = useDefaultThemeFrontmatter();
 
-		return { sidebarOpen, setSidebarOpen, tocOpen, setTocOpen, frontmatter };
+		return {
+			sidebarOpen,
+			setSidebarOpen,
+			tocOpen,
+			setTocOpen,
+			navOpen,
+			setNavOpen,
+			frontmatter,
+		};
 	});
 
 export function useDefaultThemeState() {
