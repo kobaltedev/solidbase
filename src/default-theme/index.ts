@@ -1,5 +1,7 @@
 import { fileURLToPath } from "node:url";
+
 import { type ThemeDefinition, defineTheme } from "../config/index.js";
+import type { SidebarConfig } from "../config/sidebar.js";
 
 export type DefaultThemeConfig = {
 	footer?: boolean;
@@ -7,7 +9,7 @@ export type DefaultThemeConfig = {
 		| Record<Exclude<SocialLink["type"], "custom">, string>
 		| Record<string, Omit<SocialLink, "type">>;
 	nav?: Array<NavItem>;
-	sidebar?: Sidebar | Record<`/${string}`, Sidebar>;
+	sidebar?: SidebarConfig;
 	search?: SearchConfig;
 	fonts?: { [K in keyof typeof allFonts]?: false } | false;
 };
@@ -108,25 +110,9 @@ export type NavItem = {
 	activeMatch?: string;
 };
 
-export interface SidebarLink {
-	title: string;
-	link: string;
-}
-
-export interface SidebarItem {
-	title: string;
-	collapsed: boolean;
-	items: (SidebarItem | SidebarLink)[];
-}
-
 export interface SocialLink {
 	type: "discord" | "github" | "opencollective" | "custom";
 	link: string;
 	logo?: string;
 	label?: string;
 }
-
-export type Sidebar = {
-	headerTitle?: string;
-	items: SidebarItem[];
-};

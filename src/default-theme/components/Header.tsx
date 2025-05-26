@@ -10,7 +10,7 @@ import { getLocaleLink, useCurrentPageData, useLocale } from "../../client";
 import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
 
-import { useSidebar } from "../sidebar";
+import { useSidebar } from "../../client/sidebar";
 import styles from "./Header.module.css";
 
 const DocSearch = lazy(() => import("./DocSearch"));

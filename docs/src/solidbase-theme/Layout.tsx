@@ -10,6 +10,7 @@ import {
 } from "@kobalte/solidbase/client";
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
+
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.jsx";
 import { useDefaultThemeFrontmatter } from "@kobalte/solidbase/default-theme/frontmatter.js";
 
