@@ -10,7 +10,7 @@ import type {
 } from "../config/sidebar";
 import { useLocale } from "./locale";
 
-export type * from "../config/sidebar"
+export type * from "../config/sidebar";
 
 const [SidebarProvider, useSidebarRaw] = createContextProvider(
 	(props: { config?: SidebarConfig }) => {
