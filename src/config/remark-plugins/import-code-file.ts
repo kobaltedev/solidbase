@@ -105,7 +105,6 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 	};
 }
 
-const FILE_REGEX = /(\w+)=(?:(["\'])((?:[^"\'\s\\]|\\.)*)(\2)|([^"\'\s]+))/g;
 export function viteAliasCodeImports(): PluginOption {
 	return {
 		name: "solidbase:vite-alias-code-imports",
@@ -118,9 +117,10 @@ export function viteAliasCodeImports(): PluginOption {
 				for (let i = 0; i < lines.length; i++) {
 					const line = lines[i];
 					if (!line.startsWith("```")) continue;
-					if (!line.includes("file=")) continue;
 
-					const file = line.match(FILE_REGEX)?.[0].slice("file=".length);
+					const meta = new MetaOptions(line.slice(3));
+
+					const file = meta.getString("file")
 					if (!file) continue;
 
 					const resolved = await this.resolve(file, id);
@@ -129,9 +129,7 @@ export function viteAliasCodeImports(): PluginOption {
 					isDirty = true;
 				}
 
-				if (isDirty) {
-					return lines.join("\n");
-				}
+				if (isDirty) return lines.join("\n");
 			}
 		},
 	};
