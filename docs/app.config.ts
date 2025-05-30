@@ -154,6 +154,10 @@ export default defineConfig(
 										title: "Extending Themes",
 										link: "/extending-themes",
 									},
+									{
+										title: "Adding to existing project",
+										link: "/add-to-existing"
+									}
 								],
 							},
 						],

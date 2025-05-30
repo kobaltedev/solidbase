@@ -1,0 +1,100 @@
+---
+title: Adding to Existing Project
+---
+
+# Adding to Existing Project
+
+SolidBase wraps your SolidStart config rather than wrapping Start itself,
+so you can add SolidBase to most existing Start projects or create a new one.
+
+
+## 1. Create a New Project
+
+Follow Start's [getting started guide](https://docs.solidjs.com/solid-start/getting-started)
+to create a new project.
+We'd recommend using the `basic` preset as it includes `@solidjs/router`,
+and recommend against the `with-mdx` preset as SolidBase will provide MDX spport for you.
+
+## 2. Add SolidBase to Your Project
+
+Install `@kobalte/solidbase`:
+
+```package-install
+@kobalte/solidbase
+```
+
+In your project's `app.config`, wrap the config being passed to `defineConfig` with `withSolidBase`.
+This will configure SolidBase with the default theme.
+
+```ts
+<!-- app.config.ts -->
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
+
+export default defineConfig(withSolidBase(/* your SolidStart config */));
+```
+
+## 3. Wrap Your App in `SolidBaseRoot`
+
+Add the `SolidBaseRoot` component to the `root` of your project's `Router`.
+
+```tsx
+<!-- app.tsx -->
+import { SolidBaseRoot } from "@kobalte/solidbase/client";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
+
+export default function App() {
+	return (
+		<Router root={SolidBaseRoot}>
+			<FileRoutes />
+		</Router>
+	);
+}
+```
+
+If your router already has a `root` component, you can wrap it with `SolidBaseRoot`.
+
+```tsx
+<Router
+  root={(props) => {
+    return <SolidBaseRoot>{props.children}</SolidBaseRoot>;
+  }}
+>
+  <FileRoutes />
+</Router>
+```
+
+## 4. Add HTML Attributes for SSR
+
+To provide the `lang` and `data-theme` attributes to the `html` element during SSR,
+spread `getHtmlProps()` onto it in `entry-server`:
+
+```tsx title=entry-server.tsx
+// @refresh reload
+import { StartServer, createHandler } from "@solidjs/start/server";
+import { getHtmlProps } from "@kobalte/solidbase/server";
+
+export default createHandler(() => (
+	<StartServer
+		document={({ assets, children, scripts }) => (
+			<html {...getHtmlProps()}>
+				...
+			</html>
+		)}
+	/>
+));
+```
+
+:::note
+SolidBase prerenders your pages by default,
+so `data-theme` will probably be incorrect in the initial HTML.
+To account for this,
+a small script will automatically be injected to correct the theme before the page is rendered.
+:::
+
+## Done
+
+Your project is now setup with the default SolidBase theme!
+You can now create Markdown routes in your project that take advantage of SolidBase's [Markdown Extensions](../markdown),
+and customise your project's appearance by [customising the default theme](../extending-themes#extending-the-default-theme) or [creating a new theme](../custom-themes).
