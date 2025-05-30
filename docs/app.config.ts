@@ -107,8 +107,12 @@ export default defineConfig(
 										link: "/",
 									},
 									{
-										title: "Getting Started",
-										link: "/getting-started",
+										title: "Quick Start",
+										link: "/quick-start",
+									},
+									{
+										title: "Add to an Existing Project",
+										link: "/add-to-existing",
 									},
 									{
 										title: "Deploy",
@@ -153,10 +157,6 @@ export default defineConfig(
 									{
 										title: "Extending Themes",
 										link: "/extending-themes",
-									},
-									{
-										title: "Adding to existing project",
-										link: "/add-to-existing",
 									},
 								],
 							},
