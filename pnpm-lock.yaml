@@ -233,8 +233,8 @@ importers:
         specifier: workspace:*
         version: link:..
       '@solid-mediakit/og':
-        specifier: 0.4.0
-        version: 0.4.0(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)
+        specifier: 0.4.1
+        version: 0.4.1(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
@@ -1639,8 +1639,8 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  '@solid-mediakit/og@0.4.0':
-    resolution: {integrity: sha512-nlXLNwq0dzQpt6MuRV8K1DBqIjAinQMQ8Tou+gL0WCx8FwL8fLCE277qz1ibCmYBMC8Fde/rv+9yrFfvosFxNA==}
+  '@solid-mediakit/og@0.4.1':
+    resolution: {integrity: sha512-DHYJVDX/rk2LHZIv28+VjcSvJD2u7hfceHl+/q0ufpsW0KRZYRVBsFmT/F3LUDkHYM1ckx1Ec8Wh/NvDtkrkng==}
     peerDependencies:
       '@solidjs/meta': ^0.29.4
       '@solidjs/start': ^1.1.3
@@ -5824,9 +5824,9 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/og@0.4.0(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)':
+  '@solid-mediakit/og@0.4.1(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)':
     dependencies:
-      '@babel/core': 7.27.3
+      '@babel/core': 7.25.2
       '@solid-mediakit/shared': 0.0.6(rollup@4.38.0)
       '@solidjs/meta': 0.29.4(solid-js@1.9.5)
       '@solidjs/start': 1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0)
