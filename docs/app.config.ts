@@ -15,10 +15,8 @@ export default defineConfig(
 		{
 			ssr: true,
 			server: {
-				prerender: {
-					crawlLinks: true,
-				},
 				esbuild: { options: { target: "es2022" } },
+				preset: "static"
 			},
 			vite: {
 				plugins: [OGPlugin(), arraybuffer()],
