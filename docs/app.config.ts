@@ -108,7 +108,7 @@ export default defineConfig(
 									},
 									{
 										title: "Quick Start",
-										link: "/quick-start",
+										link: "/quickstart",
 									},
 									{
 										title: "Add to an Existing Project",
