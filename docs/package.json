@@ -3,8 +3,8 @@
   "type": "module",
   "private": "true",
   "scripts": {
-    "dev": "NODE_OPTIONS=\"--max-old-space-size=8192\" VITE_SOLIDBASE_DEV=true vinxi dev",
-    "build": "NODE_OPTIONS=\"--max-old-space-size=8192\" vinxi build",
+    "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" VITE_SOLIDBASE_DEV=true vinxi dev",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" vinxi build",
     "start": "vinxi start"
   },
   "dependencies": {

@@ -6,8 +6,8 @@ import type { SidebarConfig } from "../config/sidebar.js";
 export type DefaultThemeConfig = {
 	footer?: boolean;
 	socialLinks?:
-		| Record<Exclude<SocialLink["type"], "custom">, string>
-		| Record<string, Omit<SocialLink, "type">>;
+	| Record<Exclude<SocialLink["type"], "custom">, string>
+	| Record<string, Omit<SocialLink, "type">>;
 	nav?: Array<NavItem>;
 	sidebar?: SidebarConfig;
 	search?: SearchConfig;
@@ -65,14 +65,14 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 				load(id) {
 					if (id.startsWith("virtual:solidbase/default-theme/fonts.css"))
 						return filteredFonts
-							.map((font) => `@import url(${fileURLToPath(font.cssPath)});`)
+							.map((font) => `@import url(${fileURLToPath(font.cssPath, { windows: false })});`)
 							.join("\n");
 					if (id.startsWith("\0virtual:solidbase/default-theme/fonts")) {
 						const preloadFonts = filteredFonts.map((font, i) => {
 							const pathIdent = `font_${i}`;
 							return {
 								pathIdent,
-								import: `import ${pathIdent} from "${fileURLToPath(font.preloadFontPath)}?url";`,
+								import: `import ${pathIdent} from "${fileURLToPath(font.preloadFontPath, { windows: false })}?url";`,
 								type: font.fontType,
 							};
 						});
@@ -82,8 +82,8 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 
 							export const preloadFonts = [
 								${preloadFonts
-									.map((f) => `{ path: ${f.pathIdent}, type: "${f.type}" }`)
-									.join(",")}
+								.map((f) => `{ path: ${f.pathIdent}, type: "${f.type}" }`)
+								.join(",")}
 							];
 						`;
 					}
