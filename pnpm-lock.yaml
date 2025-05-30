@@ -233,17 +233,14 @@ importers:
         specifier: workspace:*
         version: link:..
       '@solid-mediakit/og':
-        specifier: 0.3.2
-        version: 0.3.2(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)
+        specifier: 0.4.0
+        version: 0.4.0(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)
       '@solidjs/router':
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.5)
       '@solidjs/start':
         specifier: ^1.1.3
         version: 1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0)
-      '@vercel/og':
-        specifier: 0.6.2
-        version: 0.6.2
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
@@ -1642,8 +1639,8 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
-  '@solid-mediakit/og@0.3.2':
-    resolution: {integrity: sha512-l294TfgQv9Zosuz4vHalusZBoGKYcVlYJ6zEu2PA6r3pwBIzEr1EcNG+tQHXNb/VF95xtpCcj6wPEo2CnL92rQ==}
+  '@solid-mediakit/og@0.4.0':
+    resolution: {integrity: sha512-nlXLNwq0dzQpt6MuRV8K1DBqIjAinQMQ8Tou+gL0WCx8FwL8fLCE277qz1ibCmYBMC8Fde/rv+9yrFfvosFxNA==}
     peerDependencies:
       '@solidjs/meta': ^0.29.4
       '@solidjs/start': ^1.1.3
@@ -1856,8 +1853,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  '@vercel/og@0.6.2':
-    resolution: {integrity: sha512-OTe0KE37F5Y2eTys6eMnfopC+P4qr2ooXUTFyFPTplYSPwowmFk/HLD1FXtbKLjqsIH0SgekcJWad+C5uX4nkg==}
+  '@vercel/og@0.6.8':
+    resolution: {integrity: sha512-e4kQK9mP8ntpo3dACWirGod/hHv4qO5JMj9a/0a2AZto7b4persj5YP7t1Er372gTtYFTYxNhMx34jRvHooglw==}
     engines: {node: '>=16'}
 
   '@vinxi/listhen@1.5.6':
@@ -2224,6 +2221,10 @@ packages:
   css-color-keywords@1.0.0:
     resolution: {integrity: sha512-FyyrDHZKEjXDpNJYvVsV960FiqQyXc/LlYmsxl2BcdMb2WPx0OGRVgTg55rPSyLSNMqP52R9r8geSp7apN3Ofg==}
     engines: {node: '>=4'}
+
+  css-gradient-parser@0.0.16:
+    resolution: {integrity: sha512-3O5QdqgFRUbXvK1x5INf1YkBz1UKSWqrd63vWsum8MNHDBYD5urm3QtxZbKU259OrEXNM26lP/MPY3d1IGkBgA==}
+    engines: {node: '>=16'}
 
   css-selector-parser@3.0.5:
     resolution: {integrity: sha512-3itoDFbKUNx1eKmVpYMFyqKX04Ww9osZ+dLgrk6GEv6KMVeXUhUnp4I5X+evw+u3ZxVU6RFXSSRxlTeMh8bA+g==}
@@ -3696,8 +3697,8 @@ packages:
   satori-html@0.3.2:
     resolution: {integrity: sha512-wjTh14iqADFKDK80e51/98MplTGfxz2RmIzh0GqShlf4a67+BooLywF17TvJPD6phO0Hxm7Mf1N5LtRYvdkYRA==}
 
-  satori@0.10.9:
-    resolution: {integrity: sha512-XU9EELUEZuioT4acLIpCXxHcFzrsC8muvg0MY28d+TlqwxbkTzBmWbw+3+hnCzXT7YZ0Qm8k3eXktDaEu+qmEw==}
+  satori@0.12.2:
+    resolution: {integrity: sha512-3C/laIeE6UUe9A+iQ0A48ywPVCCMKCNSTU5Os101Vhgsjd3AAxGNjyq0uAA8kulMPK5n0csn8JlxPN9riXEjLA==}
     engines: {node: '>=16'}
 
   scule@1.3.0:
@@ -4675,7 +4676,7 @@ snapshots:
       '@babel/traverse': 7.27.3
       '@babel/types': 7.27.3
       convert-source-map: 2.0.0
-      debug: 4.4.0
+      debug: 4.4.1(supports-color@9.4.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -5823,16 +5824,16 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
-  '@solid-mediakit/og@0.3.2(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)':
+  '@solid-mediakit/og@0.4.0(@solidjs/meta@0.29.4(solid-js@1.9.5))(@solidjs/start@1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0))(rollup@4.38.0)(solid-js@1.9.5)':
     dependencies:
-      '@babel/core': 7.25.2
+      '@babel/core': 7.27.3
       '@solid-mediakit/shared': 0.0.6(rollup@4.38.0)
       '@solidjs/meta': 0.29.4(solid-js@1.9.5)
       '@solidjs/start': 1.1.3(@types/node@22.13.5)(jiti@2.4.2)(solid-js@1.9.5)(terser@5.39.0)(tsx@4.19.3)(vinxi@0.5.3(@types/node@22.13.5)(db0@0.2.4)(ioredis@5.5.0)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.7.3)(yaml@2.7.0))(vite@6.1.2(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0))(yaml@2.7.0)
-      '@vercel/og': 0.6.2
+      '@vercel/og': 0.6.8
       satori-html: 0.3.2
       solid-js: 1.9.5
-      unplugin: 1.16.1
+      unplugin: 2.3.5
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -6187,10 +6188,10 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/og@0.6.2':
+  '@vercel/og@0.6.8':
     dependencies:
       '@resvg/resvg-wasm': 2.4.0
-      satori: 0.10.9
+      satori: 0.12.2
       yoga-wasm-web: 0.3.3
 
   '@vinxi/listhen@1.5.6':
@@ -6592,6 +6593,8 @@ snapshots:
   css-box-shadow@1.0.0-3: {}
 
   css-color-keywords@1.0.0: {}
+
+  css-gradient-parser@0.0.16: {}
 
   css-selector-parser@3.0.5: {}
 
@@ -8658,11 +8661,12 @@ snapshots:
     dependencies:
       ultrahtml: 1.6.0
 
-  satori@0.10.9:
+  satori@0.12.2:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
       css-background-parser: 0.1.0
       css-box-shadow: 1.0.0-3
+      css-gradient-parser: 0.0.16
       css-to-react-native: 3.2.0
       emoji-regex: 10.4.0
       escape-html: 1.0.3
