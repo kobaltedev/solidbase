@@ -156,7 +156,7 @@ export default defineConfig(
 									},
 									{
 										title: "Adding to existing project",
-										link: "/add-to-existing"
+										link: "/add-to-existing",
 									}
 								],
 							},
