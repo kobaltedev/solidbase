@@ -65,14 +65,17 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 				load(id) {
 					if (id.startsWith("virtual:solidbase/default-theme/fonts.css"))
 						return filteredFonts
-							.map((font) => `@import url(${fileURLToPath(font.cssPath)});`)
+							.map(
+								(font) =>
+									`@import url(${fileURLToPath(font.cssPath, { windows: false })});`,
+							)
 							.join("\n");
 					if (id.startsWith("\0virtual:solidbase/default-theme/fonts")) {
 						const preloadFonts = filteredFonts.map((font, i) => {
 							const pathIdent = `font_${i}`;
 							return {
 								pathIdent,
-								import: `import ${pathIdent} from "${fileURLToPath(font.preloadFontPath)}?url";`,
+								import: `import ${pathIdent} from "${fileURLToPath(font.preloadFontPath, { windows: false })}?url";`,
 								type: font.fontType,
 							};
 						});
