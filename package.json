@@ -119,7 +119,7 @@
   },
   "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
   "dependencies": {
- 		"@alloc/quick-lru": "^5.2.0",
+    "@alloc/quick-lru": "^5.2.0",
     "@bprogress/core": "^1.1.18",
     "@docsearch/css": "^3.6.2",
     "@docsearch/js": "^3.6.2",
@@ -167,11 +167,6 @@
     "unist-util-visit": "^5.0.0",
     "unplugin-auto-import": "^19.1.0",
     "unplugin-icons": "^22.1.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@solid-mediakit/og@0.3.1": "patches/@solid-mediakit__og@0.3.1.patch"
-    }
   },
   "engines": {
     "node": ">=22"

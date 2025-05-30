@@ -120,7 +120,7 @@ export function viteAliasCodeImports(): PluginOption {
 
 					const meta = new MetaOptions(line.slice(3));
 
-					const file = meta.getString("file")
+					const file = meta.getString("file");
 					if (!file) continue;
 
 					const resolved = await this.resolve(file, id);

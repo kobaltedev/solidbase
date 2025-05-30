@@ -15,9 +15,6 @@ export default defineConfig(
 		{
 			ssr: true,
 			server: {
-				prerender: {
-					crawlLinks: true,
-				},
 				esbuild: { options: { target: "es2022" } },
 			},
 			vite: {
