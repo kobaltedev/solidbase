@@ -107,8 +107,12 @@ export default defineConfig(
 										link: "/",
 									},
 									{
-										title: "Getting Started",
-										link: "/getting-started",
+										title: "Quick Start",
+										link: "/quickstart",
+									},
+									{
+										title: "Add to an Existing Project",
+										link: "/add-to-existing",
 									},
 									{
 										title: "Deploy",
