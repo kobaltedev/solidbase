@@ -125,9 +125,6 @@ importers:
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.1
-      remark-mdx-frontmatter:
-        specifier: ^5.0.0
-        version: 5.0.0
       solid-mdx:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.9.5)(vite@6.1.1(@types/node@22.13.5)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.8.0))
@@ -3632,9 +3629,6 @@ packages:
 
   remark-gfm@4.0.1:
     resolution: {integrity: sha512-1quofZ2RQ9EWdeN34S79+KExV1764+wCUGop5CPL1WGdD0ocPpu91lzPGbwWMECpEpd42kJGQwzRfyov9j4yNg==}
-
-  remark-mdx-frontmatter@5.0.0:
-    resolution: {integrity: sha512-kI75pshe27TM71R+0iX7C3p4MbGMdygkvSbrk1WYSar88WAwR2JfQilofcDGgDNFAWUo5IwTPyq9XvGpifTwqQ==}
 
   remark-mdx@3.1.0:
     resolution: {integrity: sha512-Ngl/H3YXyBV9RcRNdlYsZujAmhsxwzxpDzpDEhFBVAGthS4GDgnctpDjgFl/ULx5UEDzqtW1cyBSNKqYYrqLBA==}
@@ -8551,15 +8545,6 @@ snapshots:
       unified: 11.0.5
     transitivePeerDependencies:
       - supports-color
-
-  remark-mdx-frontmatter@5.0.0:
-    dependencies:
-      '@types/mdast': 4.0.4
-      estree-util-is-identifier-name: 3.0.0
-      estree-util-value-to-estree: 3.3.2
-      toml: 3.0.0
-      unified: 11.0.5
-      yaml: 2.8.0
 
   remark-mdx@3.1.0:
     dependencies:
