@@ -22,8 +22,8 @@
   ],
   "author": "jer3m01 <jer3m01@jer3m01.com>",
   "contributors": [
-    "dev-rb <43100342+dev-rb@users.noreply.github.com>",
-    "Brendan Allan <brendonovich@outlook.com>"
+    "Brendan Allan <brendonovich@outlook.com>",
+    "dev-rb <43100342+dev-rb@users.noreply.github.com>"
   ],
   "license": "MIT",
   "exports": {
@@ -159,15 +159,17 @@
     "remark-directive": "^3.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
-    "remark-mdx-frontmatter": "^5.0.0",
     "solid-mdx": "^0.0.7",
+    "toml": "^3.0.0",
     "typescript": "^5.6.3",
     "unified": "^11.0.5",
     "unist": "^0.0.1",
     "unist-builder": "^4.0.0",
+    "unist-util-mdx-define": "^1.1.2",
     "unist-util-visit": "^5.0.0",
     "unplugin-auto-import": "^19.1.0",
-    "unplugin-icons": "^22.1.0"
+    "unplugin-icons": "^22.1.0",
+    "yaml": "^2.8.0"
   },
   "engines": {
     "node": ">=22"

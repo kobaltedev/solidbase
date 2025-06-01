@@ -80,6 +80,10 @@ export default defineConfig(
 										title: "Package Manager",
 										link: "/pm",
 									},
+									{
+										title: "Frontmatter",
+										link: "/frontmatter",
+									},
 								],
 							},
 							{

@@ -14,7 +14,6 @@ import rehypeSlug from "rehype-slug";
 import remarkDirective from "remark-directive";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import { convertCompilerOptionsFromJson } from "typescript";
 import type { PluggableList } from "unified";
 import type { PluginOption } from "vite";
@@ -30,8 +29,10 @@ import {
 	remarkImportCodeFile,
 	viteAliasCodeImports,
 } from "./remark-plugins/import-code-file.js";
+import { remarkInlineFrontmatter } from "./remark-plugins/inline-frontmatter.js";
 import { remarkIssueAutolink } from "./remark-plugins/issue-autolink.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
+import { remarkMdxFrontmatter } from "./remark-plugins/mdx-frontmatter.js";
 import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
 import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
 import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
@@ -157,6 +158,7 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	remarkPlugins.push(
 		remarkFrontmatter,
 		remarkMdxFrontmatter,
+		remarkInlineFrontmatter,
 		[remarkImportCodeFile, sbConfig.markdown?.importCodeFile],
 		remarkGfm,
 		remarkGithubAlertsToDirectives,

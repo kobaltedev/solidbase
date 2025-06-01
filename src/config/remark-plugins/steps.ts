@@ -28,7 +28,7 @@ export function remarkSteps(): Transformer<Root, Root> {
 			name: "Steps",
 			attributes: [],
 			data: {
-				_fd_step: true,
+				_sb_step: true,
 			} as object,
 			children,
 		};
@@ -37,7 +37,7 @@ export function remarkSteps(): Transformer<Root, Root> {
 	return (tree) => {
 		visit(tree, (parent) => {
 			if (!("children" in parent) || parent.type === "heading") return;
-			if (parent.data && "_fd_step" in parent.data) return "skip";
+			if (parent.data && "_sb_step" in parent.data) return "skip";
 
 			let startIdx = -1;
 			let lastNumber = 0;
