@@ -2,28 +2,25 @@
 title: Quick Start
 ---
 
-# Quick Start
+# {frontmatter.title}
 
 SolidBase wraps your SolidStart config rather than wrapping Start itself,
 so you can add SolidBase to most [existing Start projects](../add-to-existing) or create a new one.
 
 
-## Create a New Project
+## 1. Create a New Project
 
-```package-run
-create solid -t with-solidbase -s
+```package-create
+solid@latest -s -t with-solidbase
 ```
 
 This automatically creates a project using the [with-solidbase](https://github.com/solidjs/solid-start/tree/main/examples/with-solidbase) template.
 
-:::note
-SolidBase prerenders your pages by default,
-so `data-theme` will probably be incorrect in the initial HTML.
-To account for this,
-a small script will automatically be injected to correct the theme before the page is rendered.
+:::tip[Existing Project?]
+[Add SolidBase to an existing project](../add-to-existing).
 :::
 
-## Done
+## Done!
 
 Your project is now setup with the default SolidBase theme!
 You can now create Markdown routes in your project that take advantage of SolidBase's [Markdown Extensions](../markdown),

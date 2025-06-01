@@ -30,6 +30,7 @@ export function remarkPackageManagerTabs(
 					run: "npm run :content",
 					"run-full": "npm run :content",
 					dlx: "npx :content",
+					create: "npm create :content",
 				},
 				pnpm: {
 					install: "pnpm add :content",
@@ -37,6 +38,7 @@ export function remarkPackageManagerTabs(
 					run: "pnpm :content",
 					"run-full": "pnpm run :content",
 					dlx: "pnpx :content",
+					create: "pnpm create :content-latest",
 				},
 				yarn: {
 					install: "yarn add :content",
@@ -44,6 +46,7 @@ export function remarkPackageManagerTabs(
 					run: "yarn :content",
 					"run-full": "yarn run :content",
 					dlx: "yarn dlx :content",
+					create: "yarn create :content",
 				},
 				bun: {
 					install: "bun add :content",
@@ -51,6 +54,7 @@ export function remarkPackageManagerTabs(
 					run: "bun :content",
 					"run-full": "bun run :content",
 					dlx: "bunx :content",
+					create: "bun create :content",
 				},
 				deno: {
 					install: "deno add npm::content",
@@ -58,6 +62,7 @@ export function remarkPackageManagerTabs(
 					run: "deno run :content",
 					"run-full": "deno run :content",
 					dlx: "deno run -A npm::content",
+					create: "deno init --npm :content",
 				},
 				...packageManagers.presets,
 			},
@@ -98,7 +103,9 @@ export function remarkPackageManagerTabs(
 										resolvedManagers.presets?.[preset]?.[
 											packageManagerCommand
 										] ?? ":content"
-									).replace(":content", content),
+									)
+										.replace(":content-latest", content.replace("@latest", ""))
+										.replace(":content", content),
 								},
 							],
 						};

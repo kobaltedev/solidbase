@@ -1,10 +1,14 @@
 import { mdxComponents } from "@kobalte/solidbase/client";
+import { HttpStatusCode } from "@solidjs/start";
 import { Dynamic } from "solid-js/web";
 
 # 404
+
+<HttpStatusCode code={404} />
 
 :::danger[]
 No page here
 :::
 
 Go <Dynamic component={mdxComponents.a} onClick={() => history.back()} href="#">back</Dynamic> or return [Home](/).
+
