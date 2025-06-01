@@ -100,15 +100,12 @@ export default function Article(props: ParentProps) {
 					{props.children}
 
 					<div class={styles.info}>
-						<Show
-							when={pageData()?.editLink && frontmatter()?.editLink}
-							fallback={<div />}
-						>
-							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
+						<Show when={frontmatter()?.lastUpdated} fallback={<div />}>
+							<LastUpdated />
 						</Show>
 
-						<Show when={frontmatter()?.lastUpdated}>
-							<LastUpdated />
+						<Show when={pageData()?.editLink && frontmatter()?.editLink}>
+							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
 						</Show>
 					</div>
 
