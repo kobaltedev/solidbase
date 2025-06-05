@@ -1,17 +1,19 @@
-export type SidebarConfig = Sidebar | Record<`/${string}`, Sidebar>;
+export type SidebarConfig<Item = SidebarItem> =
+	| Item[]
+	| Record<`/${string}`, Item[]>;
 
-export interface SidebarLink {
+export type SidebarItem<T = {}> = T & (SidebarItemLink | SidebarItemSection<T>);
+
+export interface SidebarItemLink {
 	title: string;
 	link: string;
+	target?: string;
+	rel?: string;
 }
 
-export interface SidebarItem {
+export interface SidebarItemSection<T = {}> {
 	title: string;
-	collapsed: boolean;
-	items: (SidebarItem | SidebarLink)[];
+	items: SidebarItem<T>[];
+	collapsed?: boolean;
+	base?: string;
 }
-
-export type Sidebar = {
-	headerTitle?: string;
-	items: SidebarItem[];
-};
