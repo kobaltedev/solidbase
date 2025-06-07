@@ -24,7 +24,7 @@
 }
 
 .sidenav {
-	min-width: 14rem;
+	min-width: 14.5rem;
 	height: calc(100dvh - var(--sb-header-height));
 	position: sticky;
 	top: var(--sb-header-height);
@@ -33,6 +33,7 @@
 	flex-direction: row;
 	padding: 1rem;
 	transition: transform 0.3s ease-in-out;
+	overflow-y:auto
 }
 
 :global(div._e + main) {
