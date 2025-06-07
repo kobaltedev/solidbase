@@ -84,6 +84,14 @@ export default function Article(props: ParentProps) {
 	const customLink = (r?: RelativePageConfig) =>
 		typeof r === "object" ? r.link : undefined;
 
+	const info = () => {
+		const editLink = pageData()?.editLink;
+		const lastUpdated = frontmatter()?.lastUpdated;
+
+		if (editLink === undefined && lastUpdated === undefined) return;
+		return { editLink, lastUpdated };
+	};
+
 	return (
 		<>
 			<WindowEventListener onClick={onClick} />
@@ -99,7 +107,7 @@ export default function Article(props: ParentProps) {
 
 					{props.children}
 
-					<div class={styles.info}>
+					{/* <div class={styles.info}>
 						<Show when={frontmatter()?.lastUpdated} fallback={<div />}>
 							<LastUpdated />
 						</Show>
@@ -107,7 +115,24 @@ export default function Article(props: ParentProps) {
 						<Show when={pageData()?.editLink && frontmatter()?.editLink}>
 							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
 						</Show>
-					</div>
+					</div> */}
+					<div style={{ flex: 1 }} />
+
+					<Show when={info()}>
+						{(info) => (
+							<div class={styles.info}>
+								<Show when={info().editLink} fallback={<div />}>
+									{(link) => (
+										<Link href={link()}>Edit this page on GitHub</Link>
+									)}
+								</Show>
+
+								<Show when={info()?.lastUpdated}>
+									<LastUpdated />
+								</Show>
+							</div>
+						)}
+					</Show>
 
 					<Show when={hasPrev() || hasNext()}>
 						<nav class={styles.related}>
