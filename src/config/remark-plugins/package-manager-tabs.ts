@@ -37,7 +37,7 @@ export function remarkPackageManagerTabs(
 					"install-dev": "pnpm add :content -D",
 					run: "pnpm :content",
 					"run-full": "pnpm run :content",
-					dlx: "pnpx :content",
+					dlx: "pnpx :content-latest",
 					create: "pnpm create :content-latest",
 				},
 				yarn: {

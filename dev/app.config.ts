@@ -54,50 +54,58 @@ export default defineConfig(
 					},
 				},
 				sidebar: {
-					"/": {
-						items: [
-							{
-								title: "Dev",
-								collapsed: false,
-								items: [
-									{
-										title: "Index",
-										link: "/",
+					"/": [
+						{
+							title: "Dev",
+							items: [
+								{
+									title: "Index",
+									link: "/",
+									status: "new",
+								},
+								{
+									title: "About",
+									link: "/about",
+									status: "updated",
+								},
+								{
+									title: "Expressive Code",
+									link: "/ec",
+									status: "next",
+								},
+								{
+									title: "EC File",
+									link: "/ec-file",
+									status: {
+										text: "Custom",
+										color: "purple",
 									},
-									{
-										title: "About",
-										link: "/about",
-									},
-									{
-										title: "Expressive Code",
-										link: "/ec",
-									},
-									{
-										title: "EC File",
-										link: "/ec-file",
-									},
-									{
-										title: "Package Manager",
-										link: "/pm",
-									},
-									{
-										title: "Frontmatter",
-										link: "/frontmatter",
-									},
-								],
-							},
-							{
-								title: "Other",
-								collapsed: false,
-								items: [
-									{
-										title: "What are we missing?",
-										link: "/dave",
-									},
-								],
-							},
-						],
-					},
+								},
+								{
+									title: "Package Manager",
+									link: "/pm",
+								},
+								{
+									title: "Frontmatter",
+									link: "/frontmatter",
+								},
+							],
+						},
+						{
+							title: "Other",
+							items: [
+								{
+									title: "Nested",
+									items: [
+										{
+											title: "What are we missing?",
+											link: "/dave",
+										},
+									],
+								},
+							],
+						},
+					],
 				},
 			},
 		},
