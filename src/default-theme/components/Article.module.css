@@ -47,7 +47,7 @@
 	font-size: 0.9em;
 	margin: 4rem 0 1rem;
 	display: flex;
-	justify-content: space-between;
+	flex-direction: row;
 	white-space: nowrap;
 	flex-wrap: wrap;
 	gap: 0.5rem;
