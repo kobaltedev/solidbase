@@ -61,18 +61,25 @@ export default defineConfig(
 								{
 									title: "Index",
 									link: "/",
+									status: "new",
 								},
 								{
 									title: "About",
 									link: "/about",
+									status: "updated",
 								},
 								{
 									title: "Expressive Code",
 									link: "/ec",
+									status: "next",
 								},
 								{
 									title: "EC File",
 									link: "/ec-file",
+									status: {
+										text: "Custom",
+										color: "purple",
+									},
 								},
 								{
 									title: "Package Manager",

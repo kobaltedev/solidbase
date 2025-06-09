@@ -7,22 +7,26 @@ export type DefaultThemeSidebarItemOptions = {
 	status?:
 		| "new"
 		| "updated"
-		| "unreleased"
-		| {
-				text: string;
-				color: string;
-				textColor?: string;
-		  };
+		| "next"
+		| DefaultThemeSidebarItemOptionCustomStatus;
 };
+
+export interface DefaultThemeSidebarItemOptionCustomStatus {
+	text: string;
+	color: string;
+	textColor?: string;
+}
 
 export type DefaultThemeSidebarItem =
 	SidebarItem<DefaultThemeSidebarItemOptions>;
 
 export type DefaultThemeConfig = {
 	footer?: boolean;
-	socialLinks?:
-		| Record<Exclude<SocialLink["type"], "custom">, string>
-		| Record<string, Omit<SocialLink, "type">>;
+	socialLinks?: {
+		[K in Exclude<SocialLink["type"], "custom"> | (string & {})]?:
+			| string
+			| Omit<SocialLink, "type">;
+	};
 	nav?: Array<NavItem>;
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
 	search?: SearchConfig;

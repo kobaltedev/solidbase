@@ -42,39 +42,35 @@ export default defineConfig(
 							},
 						],
 						sidebar: {
-							"/guide": {
-								items: [
-									{
-										title: "Aperçu",
-										collapsed: false,
-										items: [
-											{
-												title: "Qu'est-ce que SolidBase ?",
-												link: "/",
-											},
-										],
-									},
-									{
-										title: "Fonctionnalités",
-										collapsed: false,
-										items: [
-											{
-												title: "Extensions Markdown",
-												link: "/markdown",
-											},
-										],
-									},
-								],
-							},
-							"/reference": {
-								items: [
-									{
-										title: "Référence",
-										collapsed: false,
-										items: [],
-									},
-								],
-							},
+							"/guide": [
+								{
+									title: "Aperçu",
+									collapsed: false,
+									items: [
+										{
+											title: "Qu'est-ce que SolidBase ?",
+											link: "/",
+										},
+									],
+								},
+								{
+									title: "Fonctionnalités",
+									collapsed: false,
+									items: [
+										{
+											title: "Extensions Markdown",
+											link: "/markdown",
+										},
+									],
+								},
+							],
+							"/reference": [
+								{
+									title: "Référence",
+									collapsed: false,
+									items: [],
+								},
+							],
 						},
 					},
 				},
@@ -96,116 +92,113 @@ export default defineConfig(
 					},
 				],
 				sidebar: {
-					"/guide": {
-						items: [
-							{
-								title: "Overview",
-								collapsed: false,
-								items: [
-									{
-										title: "What is SolidBase?",
-										link: "/",
-									},
-									{
-										title: "Quick Start",
-										link: "/quickstart",
-									},
-									{
-										title: "Add to an Existing Project",
-										link: "/add-to-existing",
-									},
-									{
-										title: "Deploy",
-										link: "/deploy",
-									},
-									{
-										title: "Project Structure",
-										link: "/structure",
-									},
-								],
-							},
-							{
-								title: "Features",
-								collapsed: false,
-								items: [
-									{
-										title: "Markdown Extensions",
-										link: "/markdown",
-									},
-									{
-										title: "Internationalisation",
-										link: "/i18n",
-									},
-									{
-										title: "Sitemap Generation",
-										link: "/sitemap",
-									},
-									{
-										title: "Dev",
-										link: "/dev",
-									},
-								],
-							},
-							{
-								title: "Customisation",
-								collapsed: false,
-								items: [
-									{
-										title: "Custom Themes",
-										link: "/custom-themes",
-									},
-									{
-										title: "Extending Themes",
-										link: "/extending-themes",
-									},
-								],
-							},
-						],
-					},
-					"/reference": {
-						items: [
-							{
-								title: "Reference",
-								collapsed: false,
-								items: [
-									{
-										title: "Frontmatter Config",
-										link: "/frontmatter",
-									},
-									{
-										title: "Runtime API",
-										link: "/runtime-api",
-									},
-								],
-							},
-							{
-								title: "Default Theme",
-								collapsed: false,
-								items: [
-									{
-										title: "Overview",
-										link: "/default-theme",
-									},
-									{
-										title: "Sidebar",
-										link: "/default-theme/sidebar",
-									},
-									{
-										title: "Article",
-										link: "/default-theme/article",
-									},
-									{
-										title: "Footer",
-										link: "/default-theme/footer",
-									},
-									{
-										title: "Landing",
-										link: "/default-theme/landing",
-									},
-								],
-							},
-						],
-					},
+					"/guide": [
+						{
+							title: "Overview",
+							collapsed: false,
+							items: [
+								{
+									title: "What is SolidBase?",
+									link: "/",
+								},
+								{
+									title: "Quick Start",
+									link: "/quickstart",
+									status: "new",
+								},
+								{
+									title: "Add to an Existing Project",
+									link: "/add-to-existing",
+								},
+								{
+									title: "Deploy",
+									link: "/deploy",
+								},
+								{
+									title: "Project Structure",
+									link: "/structure",
+								},
+							],
+						},
+						{
+							title: "Features",
+							collapsed: false,
+							items: [
+								{
+									title: "Markdown Extensions",
+									link: "/markdown",
+								},
+								{
+									title: "Internationalisation",
+									link: "/i18n",
+								},
+								{
+									title: "Sitemap Generation",
+									link: "/sitemap",
+								},
+								{
+									title: "Dev",
+									link: "/dev",
+								},
+							],
+						},
+						{
+							title: "Customisation",
+							collapsed: false,
+							items: [
+								{
+									title: "Custom Themes",
+									link: "/custom-themes",
+								},
+								{
+									title: "Extending Themes",
+									link: "/extending-themes",
+								},
+							],
+						},
+					],
+					"/reference": [
+						{
+							title: "Reference",
+							collapsed: false,
+							items: [
+								{
+									title: "Frontmatter Config",
+									link: "/frontmatter",
+								},
+								{
+									title: "Runtime API",
+									link: "/runtime-api",
+								},
+							],
+						},
+						{
+							title: "Default Theme",
+							collapsed: false,
+							items: [
+								{
+									title: "Overview",
+									link: "/default-theme",
+								},
+								{
+									title: "Sidebar",
+									link: "/default-theme/sidebar",
+								},
+								{
+									title: "Article",
+									link: "/default-theme/article",
+								},
+								{
+									title: "Footer",
+									link: "/default-theme/footer",
+								},
+								{
+									title: "Landing",
+									link: "/default-theme/landing",
+								},
+							],
+						},
+					],
 				},
 			},
 		},

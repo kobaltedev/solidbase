@@ -1,4 +1,5 @@
-html {
+html,
+[data-theme*="light"] {
 	--sb-font-headings: "Lexend Variable", Segoe UI, Roboto, sans-serif;
 	--sb-font-text: "Inter Variable", Segoe UI, Roboto, sans-serif;
 	--sb-font-mono: "JetBrains Mono Variable", Menlo, Consolas, monospace;
@@ -53,7 +54,7 @@ html {
 	--bprogress-color: var(--sb-active-link-color);
 }
 
-html[data-theme*="dark"] {
+[data-theme*="dark"] {
 	color-scheme: dark;
 
 	--sb-tint-color: black;

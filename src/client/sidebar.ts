@@ -2,7 +2,11 @@ import { createContextProvider } from "@solid-primitives/context";
 import { useLocation } from "@solidjs/router";
 import { type Accessor, createMemo } from "solid-js";
 
-import type { SidebarConfig, SidebarItem } from "../config/sidebar";
+import type {
+	SidebarConfig,
+	SidebarItem,
+	SidebarItemLink,
+} from "../config/sidebar";
 import { useLocale } from "./locale";
 
 export type * from "../config/sidebar";
@@ -17,6 +21,18 @@ const [SidebarProvider, useSidebarRaw] = createContextProvider(
 
 			if (Array.isArray(sidebarConfig)) {
 				return { "/": sidebarConfig };
+			}
+
+			if ("items" in sidebarConfig) {
+				return { "/": sidebarConfig.items as SidebarItem[] };
+			}
+
+			for (const key in sidebarConfig) {
+				if ("items" in sidebarConfig[key as keyof SidebarConfig]) {
+					sidebarConfig[key as keyof SidebarConfig] =
+						// @ts-expect-error backwards compat
+						sidebarConfig[key as keyof SidebarConfig].items as SidebarItem[];
+				}
 			}
 
 			return sidebarConfig;
@@ -56,7 +72,7 @@ export function useSidebar<T = {}>() {
 function flattenSidebarItems<T = {}>(
 	sidebar: { prefix: string; items: SidebarItem<T>[] },
 	depth = 0,
-): Array<SidebarItem<T> & { depth: number }> {
+): Array<SidebarItemLink & T & { depth: number }> {
 	return sidebar.items.flatMap((item) => {
 		if ("link" in item)
 			return {
