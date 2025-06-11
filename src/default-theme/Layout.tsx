@@ -2,11 +2,15 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
-import { For, type ParentProps, Show } from "solid-js";
+import { For, Match, type ParentProps, Show, Switch } from "solid-js";
 
 import { useLocale, useThemeListener } from "../client";
-import { SidebarProvider, useSidebar } from "../client/sidebar";
-import type { Sidebar, SidebarLink } from "../config/sidebar";
+import {
+	type SidebarItemLink,
+	type SidebarItemSection,
+	SidebarProvider,
+	useSidebar,
+} from "../client/sidebar";
 import {
 	DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
@@ -20,6 +24,14 @@ import { useRouteConfig } from "./utils";
 import "virtual:solidbase/default-theme/fonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
+import { Collapsible } from "@kobalte/core/collapsible";
+import { Dynamic } from "solid-js/web";
+import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
+import type {
+	DefaultThemeSidebarItem,
+	DefaultThemeSidebarItemOptionCustomStatus,
+	DefaultThemeSidebarItemOptions,
+} from ".";
 
 export default (props: ParentProps) => {
 	const config = useRouteConfig();
@@ -40,7 +52,7 @@ function Layout(props: ParentProps) {
 	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
 
-	const sidebar = useSidebar();
+	const sidebar = useSidebar<DefaultThemeSidebarItemOptions>();
 
 	useThemeListener();
 	usePace();
@@ -122,49 +134,125 @@ function Layout(props: ParentProps) {
 }
 
 interface NavigationProps {
-	sidebar: Sidebar & { prefix: string };
+	sidebar: { prefix: string; items: DefaultThemeSidebarItem[] };
 }
 
 function Navigation(props: NavigationProps) {
+	return (
+		<nav class={styles["sidenav-links"]}>
+			<ul>
+				<For each={props.sidebar.items}>
+					{(item) => (
+						<NavigationItem prefix={props.sidebar.prefix} item={item} />
+					)}
+				</For>
+			</ul>
+		</nav>
+	);
+}
+
+interface NavigationItemProps {
+	prefix: string;
+	item: DefaultThemeSidebarItem;
+	depth?: number;
+}
+
+function NavigationItem(props: NavigationItemProps) {
 	const locale = useLocale();
 
 	const { setSidebarOpen } = useDefaultThemeState();
 
 	return (
-		<nav class={styles["sidenav-links"]}>
-			<ul>
-				<For each={props.sidebar.items}>
-					{(section) => (
-						<li>
-							<h2>{section.title}</h2>
-							<ul>
-								<For each={section.items}>
-									{(item) => {
-										const link = () => (item as SidebarLink).link;
-										const prefix = () => props.sidebar.prefix;
+		<Switch>
+			<Match
+				when={
+					"link" in props.item &&
+					(props.item as SidebarItemLink & DefaultThemeSidebarItemOptions)
+				}
+			>
+				{(item) => {
+					const link = () => item().link;
+					const prefix = () => props.prefix;
 
-										return (
-											<li>
-												<A
-													class={`${styles["sidenav-link"]}`}
-													activeClass={styles.active}
-													href={locale.applyPathPrefix(
-														`${prefix() === "/" ? "" : prefix()}${link() === "/" ? "" : link()}`,
-													)}
-													end
-													onClick={() => setSidebarOpen(false)}
-												>
-													{item.title}
-												</A>
-											</li>
-										);
-									}}
-								</For>
-							</ul>
+					return (
+						<li>
+							<A
+								class={`${styles["sidenav-link"]}`}
+								activeClass={styles.active}
+								href={locale.applyPathPrefix(
+									`${prefix() === "/" ? "" : prefix()}${link() === "/" ? "" : link()}`,
+								)}
+								end
+								onClick={() => setSidebarOpen(false)}
+							>
+								<span>{item().title}</span>
+								<Switch>
+									<Match when={item().status === "new"}>
+										<span class={styles["status-new"]}>New</span>
+									</Match>
+									<Match when={item().status === "updated"}>
+										<span class={styles["status-updated"]}>Updated</span>
+									</Match>
+									<Match when={item().status === "next"}>
+										<span class={styles["status-next"]}>Next</span>
+									</Match>
+									<Match
+										when={
+											typeof item().status === "object" &&
+											(item()
+												.status as DefaultThemeSidebarItemOptionCustomStatus)
+										}
+									>
+										{(status) => (
+											<span
+												class={styles["status-custom"]}
+												style={`---fg: ${status().textColor ?? "white"}; ---bg: ${status().color}`}
+											>
+												{status().text}
+											</span>
+										)}
+									</Match>
+								</Switch>
+							</A>
 						</li>
-					)}
-				</For>
-			</ul>
-		</nav>
+					);
+				}}
+			</Match>
+
+			<Match
+				when={
+					"items" in props.item &&
+					(props.item as SidebarItemSection<DefaultThemeSidebarItemOptions>)
+				}
+			>
+				{(section) => {
+					return (
+						<Collapsible as="li" defaultOpen={!section().collapsed}>
+							<Collapsible.Trigger
+								class={styles["section-trigger"]}
+								aria-label="Toggle list view"
+							>
+								<Dynamic component={`h${(props.depth ?? 0) + 2}`}>
+									{section().title}
+								</Dynamic>
+								<IconArrowDownLine />
+							</Collapsible.Trigger>
+
+							<Collapsible.Content as="ul" class={styles["section-content"]}>
+								<For each={section().items}>
+									{(item) => (
+										<NavigationItem
+											prefix={props.prefix + (section().base ?? "")}
+											item={item}
+											depth={(props.depth ?? 0) + 1}
+										/>
+									)}
+								</For>
+							</Collapsible.Content>
+						</Collapsible>
+					);
+				}}
+			</Match>
+		</Switch>
 	);
 }

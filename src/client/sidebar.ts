@@ -1,12 +1,11 @@
 import { createContextProvider } from "@solid-primitives/context";
 import { useLocation } from "@solidjs/router";
-import { createMemo } from "solid-js";
+import { type Accessor, createMemo } from "solid-js";
 
 import type {
-	Sidebar,
 	SidebarConfig,
 	SidebarItem,
-	SidebarLink,
+	SidebarItemLink,
 } from "../config/sidebar";
 import { useLocale } from "./locale";
 
@@ -20,9 +19,22 @@ const [SidebarProvider, useSidebarRaw] = createContextProvider(
 			const sidebarConfig = props.config;
 			if (!sidebarConfig) return;
 
-			if (Object.keys(sidebarConfig).length === 0) return;
+			if (Array.isArray(sidebarConfig)) {
+				return { "/": sidebarConfig };
+			}
 
-			if ("items" in sidebarConfig) return { "/": sidebarConfig };
+			if ("items" in sidebarConfig) {
+				return { "/": sidebarConfig.items as SidebarItem[] };
+			}
+
+			for (const key in sidebarConfig) {
+				if ("items" in sidebarConfig[key as keyof SidebarConfig]) {
+					sidebarConfig[key as keyof SidebarConfig] =
+						// @ts-expect-error backwards compat
+						sidebarConfig[key as keyof SidebarConfig].items as SidebarItem[];
+				}
+			}
+
 			return sidebarConfig;
 		});
 
@@ -33,14 +45,14 @@ const [SidebarProvider, useSidebarRaw] = createContextProvider(
 			const sidebarsEntries = Object.entries(s);
 			if (sidebarsEntries.length === 1) {
 				const [prefix, sidebar] = sidebarsEntries[0];
-				return { prefix, ...sidebar };
+				return { prefix, items: sidebar };
 			}
 
-			sidebarsEntries.sort((a, b) => b[0].length - a[0].length);
+			sidebarsEntries.sort(([a], [b]) => b.length - a.length);
 
 			for (const [prefix, sidebar] of sidebarsEntries) {
 				if (locale.routePath().startsWith(prefix))
-					return { prefix, ...sidebar };
+					return { prefix, items: sidebar };
 			}
 		});
 
@@ -50,58 +62,52 @@ const [SidebarProvider, useSidebarRaw] = createContextProvider(
 
 export { SidebarProvider };
 
-export function useSidebar() {
+export function useSidebar<T = {}>() {
 	const s = useSidebarRaw();
 	if (!s)
 		throw new Error("useSidebar must be called underneath a SidebarProvider");
-	return s;
+	return s as Accessor<{ prefix: string; items: SidebarItem<T>[] }>;
 }
 
-type FlattenedSidebarLink = SidebarLink & { depth: number };
+function flattenSidebarItems<T = {}>(
+	sidebar: { prefix: string; items: SidebarItem<T>[] },
+	depth = 0,
+): Array<SidebarItemLink & T & { depth: number }> {
+	return sidebar.items.flatMap((item) => {
+		if ("link" in item)
+			return {
+				target: (() => {
+					if (item.link.includes("//")) return "_blank";
+				})(),
+				rel: (() => {
+					if (item.link.includes("//") || item.target === "_blank")
+						return "noopener noreferrer";
+				})(),
+				...item,
+				link: (() => {
+					if (sidebar.prefix === "/") return item.link;
 
-function flattenSidebarItems(
-	sidebar: Sidebar & { prefix?: string },
-): Array<SidebarLink & { depth: number }> {
-	function recursivelyFlattenItemLinks(
-		item: SidebarItem,
-		acc: Array<FlattenedSidebarLink> = [],
-		depth = 0,
-	) {
-		for (const subItem of item.items) {
-			if ("link" in subItem)
-				acc.push({
-					...subItem,
-					link: (() => {
-						if (!sidebar.prefix || sidebar.prefix === "/") return subItem.link;
+					if (item.link.endsWith("/"))
+						return `${sidebar.prefix}${item.link.slice(0, -1)}`;
+					return `${sidebar.prefix}${item.link}`;
+				})(),
+				depth,
+			};
 
-						if (subItem.link.endsWith("/"))
-							return `${sidebar.prefix}${subItem.link.slice(0, -1)}`;
-						return `${sidebar.prefix}${subItem.link}`;
-					})(),
-					depth,
-				});
-			else recursivelyFlattenItemLinks(subItem, acc, depth + 1);
-		}
-	}
-
-	const ret: Array<FlattenedSidebarLink> = [];
-
-	for (const item of sidebar.items) {
-		recursivelyFlattenItemLinks(item, ret);
-	}
-
-	return ret;
+		return flattenSidebarItems<T>(
+			{ prefix: sidebar.prefix + (item.base ?? ""), items: item.items },
+			depth + 1,
+		);
+	});
 }
 
-export function usePrevNext() {
-	const sidebar = useSidebarRaw();
-	if (!sidebar)
-		throw new Error("usePrevNext must be called underneath a SidebarProvider");
+export function usePrevNext<T = {}>() {
+	const sidebar = useSidebar<T>();
 
 	const links = createMemo(() => {
 		const s = sidebar();
 		if (!s) return [];
-		return flattenSidebarItems(s);
+		return flattenSidebarItems<T>(s);
 	});
 
 	const location = useLocation();
@@ -110,7 +116,9 @@ export function usePrevNext() {
 		const s = sidebar();
 		if (!s) return -1;
 
-		return links().findIndex(({ link }) => location.pathname === link);
+		return links().findIndex(
+			(item) => "link" in item && location.pathname === item.link,
+		);
 	});
 
 	return {
