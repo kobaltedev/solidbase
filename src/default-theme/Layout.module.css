@@ -24,7 +24,7 @@
 }
 
 .sidenav {
-	min-width: 14rem;
+	min-width: 14.5rem;
 	height: calc(100dvh - var(--sb-header-height));
 	position: sticky;
 	top: var(--sb-header-height);
