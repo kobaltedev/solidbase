@@ -15,6 +15,7 @@ export default defineConfig(
 		{
 			ssr: true,
 			server: {
+				sourceMap: false,
 				esbuild: { options: { target: "es2022" } },
 			},
 			vite: {
