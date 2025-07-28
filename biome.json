@@ -28,16 +28,20 @@
 			"suspicious": {
 				"noEmptyInterface": "off",
 				"noExplicitAny": "off",
-				"noAssignInExpressions": "off"
+				"noAssignInExpressions": "off",
+				"noDocumentCookie": "off"
 			},
 			"style": {
-				"noNonNullAssertion": "off"
+				"noNonNullAssertion": "off",
+				"noDescendingSpecificity": "off"
 			},
 			"complexity": {
-				"noBannedTypes": "off"
+				"noBannedTypes": "off",
+				"noUselessFragments": "off"
 			},
 			"correctness": {
-				"useJsxKeyInIterable": "off"
+				"noUnusedVariables": "off",
+				"noUnusedFunctionParameters": "off"
 			}
 		}
 	},

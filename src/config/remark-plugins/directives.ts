@@ -11,7 +11,7 @@ export function remarkDirectiveContainers() {
 				const maybeLabel = node.children[0];
 				const hasLabel = maybeLabel?.data?.directiveLabel;
 
-				let labelText = undefined;
+				let labelText: any;
 
 				if (hasLabel) {
 					if (maybeLabel.children.length === 0) {

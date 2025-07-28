@@ -1,9 +1,7 @@
 import { For, Show } from "solid-js";
-
-import styles from "./Footer.module.css";
-
 import type { SocialLink } from "..";
 import { useRouteConfig } from "../utils";
+import styles from "./Footer.module.css";
 
 const logos: Partial<Record<SocialLink["type"], string>> = {
 	discord:

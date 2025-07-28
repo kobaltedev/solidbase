@@ -1,25 +1,18 @@
 import { Select } from "@kobalte/core/select";
 import {
 	type ComponentProps,
-	type JSX,
-	Show,
 	children,
-	createEffect,
 	createSignal,
+	type JSX,
 	onMount,
+	Show,
 } from "solid-js";
-import {
-	type ThemeType,
-	getTheme,
-	getThemeVariant,
-	setTheme,
-} from "../../client";
-import styles from "./ThemeSelector.module.css";
-
 import IconMoonFill from "~icons/ri/moon-fill";
 import IconMoonLine from "~icons/ri/moon-line";
 import IconSunFill from "~icons/ri/sun-fill";
 import IconSunLine from "~icons/ri/sun-line";
+import { getThemeVariant, setTheme, type ThemeType } from "../../client";
+import styles from "./ThemeSelector.module.css";
 
 interface ThemeOption {
 	value: ThemeType | "system";

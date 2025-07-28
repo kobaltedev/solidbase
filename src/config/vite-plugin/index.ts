@@ -1,9 +1,8 @@
+import { fileURLToPath } from "node:url";
 import AutoImport from "unplugin-auto-import/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { Plugin, PluginOption } from "vite";
-
-import { fileURLToPath } from "node:url";
 import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
 import {
 	componentsModule,
@@ -99,6 +98,7 @@ export function isMarkdown(path: string) {
 
 // Workaround for https://github.com/solidjs/solid-start/issues/1374
 import type { Options, Resolver } from "unplugin-auto-import/dist/types.js";
+
 function VinxiAutoImport(options: Options): PluginOption {
 	const autoimport = AutoImport(options) as Plugin;
 	const ABSOLUTE_PATH = /^\/|^[a-zA-Z]:\//;

@@ -335,7 +335,9 @@ a[data-footnote-ref] {
 
 .tabs-indicator {
 	background: var(--sb-code-background-color);
-	transition: transform 150ms, width 50ms;
+	transition:
+		transform 150ms,
+		width 50ms;
 	z-index: 1;
 	overflow: hidden;
 }
@@ -354,7 +356,9 @@ a[data-footnote-ref] {
 	cursor: var(--sb-button-cursor);
 	font-family: var(--sb-font-mono);
 	font-size: 0.9rem;
-	transition: background-color 150ms, border 150ms;
+	transition:
+		background-color 150ms,
+		border 150ms;
 	color: color-mix(in hsl, var(--sb-text-color) 75%, transparent);
 
 	&[data-selected],
