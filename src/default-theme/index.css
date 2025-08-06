@@ -83,7 +83,7 @@ article *[id] {
 
 		&:has(.ec-line.highlight) .ec-line:not(.highlight) {
 			opacity: 0.7;
-			transition: opacity .1s var(--sb-transition-timing);
+			transition: opacity 0.1s var(--sb-transition-timing);
 		}
 
 		&:hover .ec-line,

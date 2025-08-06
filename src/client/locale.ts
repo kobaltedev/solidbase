@@ -81,7 +81,7 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			const link = getLocaleLink(currentLocale());
 
 			if (link === "/")
-				return path.startsWith("/") ? path : (`/${path}` as any);
+				return (path.startsWith("/") ? path : `/${path}`) as any;
 
 			if (path.startsWith("/")) path = path.slice(1);
 			return `${link}${path}`;

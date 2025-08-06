@@ -1,12 +1,13 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": [
-			"./tsconfig.json",
-			"*/netlify/*",
-			"**/package.json",
-			"./examples/solid-docs",
-			"**/app.config.*.js"
+		"includes": [
+			"**",
+			"!tsconfig.json",
+			"!**/*/netlify/**/*",
+			"!**/package.json",
+			"!examples/solid-docs",
+			"!**/app.config.*.js"
 		]
 	},
 	"vcs": {
@@ -27,16 +28,20 @@
 			"suspicious": {
 				"noEmptyInterface": "off",
 				"noExplicitAny": "off",
-				"noAssignInExpressions": "off"
+				"noAssignInExpressions": "off",
+				"noDocumentCookie": "off"
 			},
 			"style": {
-				"noNonNullAssertion": "off"
+				"noNonNullAssertion": "off",
+				"noDescendingSpecificity": "off"
 			},
 			"complexity": {
-				"noBannedTypes": "off"
+				"noBannedTypes": "off",
+				"noUselessFragments": "off"
 			},
 			"correctness": {
-				"useJsxKeyInIterable": "off"
+				"noUnusedVariables": "off",
+				"noUnusedFunctionParameters": "off"
 			}
 		}
 	},

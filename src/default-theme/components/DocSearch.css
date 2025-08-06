@@ -67,6 +67,7 @@
 
 .DocSearch-Button:focus {
 	outline: 1px dotted;
+	/* biome-ignore lint/suspicious/noDuplicateProperties: browser compat */
 	outline: 5px auto -webkit-focus-ring-color;
 }
 
@@ -169,7 +170,9 @@
 	line-height: 22px;
 	font-size: 12px;
 	font-weight: 500;
-	transition: color 0.5s, border-color 0.5s;
+	transition:
+		color 0.5s,
+		border-color 0.5s;
 }
 
 .DocSearch-Button .DocSearch-Button-Key + .DocSearch-Button-Key {

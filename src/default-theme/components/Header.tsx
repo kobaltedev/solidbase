@@ -1,16 +1,15 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
-import { For, Show, createSignal, lazy } from "solid-js";
+import { createSignal, For, lazy, Show } from "solid-js";
 
 import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
 import IconCloseFill from "~icons/ri/close-large-fill";
 import IconMenuLeftLine from "~icons/ri/menu-2-line";
 import IconMenuFill from "~icons/ri/menu-fill";
 import { getLocaleLink, useCurrentPageData, useLocale } from "../../client";
+import { useSidebar } from "../../client/sidebar";
 import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
 import { useRouteConfig } from "../utils";
-
-import { useSidebar } from "../../client/sidebar";
 import styles from "./Header.module.css";
 
 const DocSearch = lazy(() => import("./DocSearch"));

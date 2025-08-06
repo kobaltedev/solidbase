@@ -4,15 +4,15 @@ import {
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
-import { A, useHref } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,
+	children,
+	createSignal,
 	For,
 	type ParentProps,
 	Show,
-	children,
-	createSignal,
 	splitProps,
 } from "solid-js";
 import styles from "./mdx-components.module.css";
@@ -157,7 +157,7 @@ export function DirectiveContainer(
 			name: `tab-group:${props.title}`,
 			sync: messageSync(new BroadcastChannel("tab-group")),
 			storage: cookieStorage.withOptions({
-				expires: new Date(+new Date() + 3e10),
+				expires: new Date(Date.now() + 3e10),
 			}),
 		});
 

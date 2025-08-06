@@ -1,6 +1,5 @@
-import { Title } from "@solidjs/meta";
-
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
+import { Title } from "@solidjs/meta";
 import type { ParentProps } from "solid-js";
 
 export default function (props: ParentProps) {

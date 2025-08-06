@@ -1,8 +1,7 @@
 // ty vinxi :)
 
-import type { Plugin } from "vite";
-
 import { VFile, type VFileCompatible } from "vfile";
+import type { Plugin } from "vite";
 import { mergeArrays } from "./common.js";
 import type { NamedImports } from "./imports.js";
 import { createTransformer } from "./transform.js";

@@ -3,8 +3,7 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { getGitTimestamp } from "../git.js";
-import type { Theme } from "../index.js";
-import type { SolidBaseConfig } from "../index.js";
+import type { SolidBaseConfig, Theme } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
 export const configModule = {

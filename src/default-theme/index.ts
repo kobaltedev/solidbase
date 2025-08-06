@@ -1,6 +1,6 @@
 import { fileURLToPath } from "node:url";
 
-import { type ThemeDefinition, defineTheme } from "../config/index.js";
+import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig, SidebarItem } from "../config/sidebar.js";
 
 export type DefaultThemeSidebarItemOptions = {

@@ -1,4 +1,3 @@
-import { MetaOptions } from "@expressive-code/core";
 import { SKIP, visit } from "unist-util-visit";
 
 export interface PackageManagerConfig {

@@ -1,5 +1,5 @@
 .item {
-	padding: .3rem .5rem;
+	padding: 0.3rem 0.5rem;
 	list-style-type: none;
 	border-radius: var(--sb-border-radius);
 	cursor: var(--sb-button-cursor);
@@ -15,7 +15,7 @@
 	}
 
 	& svg {
-		margin-right: .15rem;
+		margin-right: 0.15rem;
 	}
 
 	& div {
@@ -26,7 +26,7 @@
 
 .trigger {
 	appearance: none;
-	padding: .5rem;
+	padding: 0.5rem;
 	background: transparent;
 	border: none;
 	outline: none;
@@ -35,7 +35,7 @@
 	cursor: var(--sb-button-cursor);
 	transition-property: background-color, opacity, color;
 	transition-timing-function: var(--sb-transition-timing);
-	transition-duration: .15s;
+	transition-duration: 0.15s;
 
 	&:hover,
 	&:focus,
