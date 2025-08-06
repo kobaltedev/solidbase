@@ -151,6 +151,7 @@
     "hastscript": "^9.0.0",
     "mdast-util-find-and-replace": "^3.0.1",
     "mdast-util-mdx-jsx": "^3.2.0",
+    "mdast-util-to-string": "^4.0.0",
     "mdast-util-toc": "^7.1.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-expressive-code": "^0.40.2",

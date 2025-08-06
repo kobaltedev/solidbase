@@ -2,6 +2,7 @@ import { fromJs } from "esast-util-from-js";
 import type { PhrasingContent } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
 import { type Options, toc } from "mdast-util-toc";
+import { toString } from "mdast-util-to-string"
 
 interface ParagraphNode {
 	type: "paragraph";
@@ -31,7 +32,7 @@ interface TOCTree {
 
 function mapNode(node: ListItemNode): TOCTree {
 	return {
-		title: node.children[0].children[0].children[0].value,
+		title: toString(node.children[0].children[0].children),
 		href: node.children[0].children[0].url,
 		children: (node.children[1]?.children ?? []).map(mapNode),
 	};
