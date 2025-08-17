@@ -34,33 +34,7 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 
 				const { $component } = lastMatch.route.key as { $component: any };
 
-				let mod: any;
-
-				// modelled after Start's lazyRoute
-				// https://github.com/solidjs/solid-start/blob/main/packages/start/src/router/lazyRoute.ts
-				if (import.meta.env.DEV) {
-					if (
-						typeof window !== "undefined" &&
-						// @ts-ignore
-						typeof window.$$SolidBase_page_data !== "undefined" &&
-						// @ts-ignore
-						typeof window.$$SolidBase_page_data[
-							$component.src.split("?")[0]
-						] !== "undefined"
-					) {
-						const pageData = (window as Record<string, any>)
-							.$$SolidBase_page_data[$component.src.split("?")[0]];
-						if (!pageData)
-							throw new Error("Failed to get page data: no page data");
-						return pageData;
-					}
-
-					const manifest = import.meta.env.SSR
-						? import.meta.env.MANIFEST.ssr
-						: import.meta.env.MANIFEST.client;
-
-					mod = await manifest.inputs[$component.src]?.import();
-				} else mod = await $component.import();
+				const mod = await $component.import();
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;
