@@ -32,6 +32,7 @@ export const componentsModule = {
 			return paths;
 		})();
 
+
 		const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
 
 		for (let i = 0; i < themePaths.length; i++) {
@@ -58,7 +59,9 @@ ${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.p
 
 export const mdxComponents = {
 ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
-};`;
+};
+console.log(mdxComponents);
+`;
 	},
 };
 

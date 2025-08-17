@@ -1,8 +1,3 @@
-import { dirname, parse } from "node:path";
-import type {
-	SolidStartInlineConfig,
-	ViteCustomizableConfig,
-} from "@solidjs/start/config";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
 import type { ComponentResolverOption } from "unplugin-icons/resolver";
 import type { Options as IconsOptions } from "unplugin-icons/types";
@@ -28,8 +23,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
-		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
-		| true;
+	| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+	| true;
 }
 
 type ResolvedConfigKeys =
@@ -53,36 +48,33 @@ export type LocaleConfig<ThemeConfig> = {
 };
 
 export type ThemeDefinition<Config> = {
-	componentsPath: string;
+	componentsPath: URL;
 	extends?: ThemeDefinition<Config>;
 	config?(config: SolidBaseResolvedConfig<Config>): void;
 	vite?(config: SolidBaseResolvedConfig<Config>): PluginOption | undefined;
 };
 
-export const withSolidBase = createWithSolidBase(defaultTheme);
+export const solidbase = createSolidBase(defaultTheme);
 
-export function createWithSolidBase<ThemeConfig>(
+export function createSolidBase<ThemeConfig>(
 	theme: ThemeDefinition<ThemeConfig>,
 ) {
-	if (parse(theme.componentsPath).ext !== "") {
-		theme.componentsPath = dirname(theme.componentsPath);
-	}
+	// if (parse(theme.componentsPath).ext !== "") {
+	// 	theme.componentsPath = dirname(theme.componentsPath);
+	// }
 
 	return (
-		startConfig?: SolidStartInlineConfig,
 		solidBaseConfig?: SolidBaseConfig<ThemeConfig>,
-	) => {
-		const config = startConfig ?? {};
+	): PluginOption => {
+		// const config = startConfig ?? {};
 
-		process.env.PORT ??= "4000";
-
-		config.extensions = [
-			...new Set((config.extensions ?? []).concat(["md", "mdx"])),
-		];
-		config.server ??= {};
-		config.server.prerender ??= {
-			crawlLinks: true,
-		};
+		// config.extensions = [
+		// 	...new Set((config.extensions ?? []).concat(["md", "mdx"])),
+		// ];
+		// config.server ??= {};
+		// config.server.prerender ??= {
+		// 	crawlLinks: true,
+		// };
 
 		const sbConfig: SolidBaseResolvedConfig<ThemeConfig> = {
 			title: "SolidBase",
@@ -94,44 +86,31 @@ export function createWithSolidBase<ThemeConfig>(
 			...solidBaseConfig,
 		};
 
-		let t: ThemeDefinition<any> | undefined = theme;
-		while (t !== undefined) {
-			if (t.config) t.config(sbConfig);
-			t = t.extends;
-		}
-
-		const vite = config.vite;
-
-		config.vite = (options) => {
-			const viteConfig =
-				typeof vite === "function"
-					? vite(options)
-					: { ...(vite ?? ({} as ViteCustomizableConfig)) };
-
-			((viteConfig.optimizeDeps ??= {}).exclude ??= []).push("fsevents");
-
-			viteConfig.plugins = [...(viteConfig.plugins ?? [])];
-			viteConfig.plugins.push(solidBaseMdx(sbConfig));
-			viteConfig.plugins.push(solidBaseVitePlugin(theme, sbConfig));
-
+		{
 			let t: ThemeDefinition<any> | undefined = theme;
-			const plugins: Array<PluginOption> = [];
 			while (t !== undefined) {
-				if (t.vite) {
-					const contents = t.vite(sbConfig);
-					if (contents) plugins.push(contents);
-				}
-
+				if (t.config) t.config(sbConfig);
 				t = t.extends;
 			}
-			plugins.reverse();
+		}
 
-			viteConfig.plugins.push(...plugins);
+		let t: ThemeDefinition<any> | undefined = theme;
+		const plugins: Array<PluginOption> = [];
+		while (t !== undefined) {
+			if (t.vite) {
+				const contents = t.vite(sbConfig);
+				if (contents) plugins.push(contents);
+			}
 
-			return viteConfig;
-		};
+			t = t.extends;
+		}
+		plugins.reverse();
 
-		return config;
+		return [
+			solidBaseMdx(sbConfig),
+			solidBaseVitePlugin(theme, sbConfig),
+			...plugins
+		];
 	};
 }
 
