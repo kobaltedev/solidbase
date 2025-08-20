@@ -1,17 +1,34 @@
 <div align="center">
-  <a href="https://github.com/kobaltedev/solidbase" target="_blank"><img width="400" src="https://raw.githubusercontent.com/kobaltedev/solidbase/refs/heads/main/.github/solidbase.png" alt="SolidBase"></a>
+  <a href="https://solidbase.dev" target="_blank">
+    <img width="350" src=".github/solidbase.png" alt="Logo">
+  </a>
+  
+  # SolidBase
+  [![Version](https://img.shields.io/npm/v/@kobalte/solidbase.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/@kobalte/solidbase)
+  [![Downloads](https://img.shields.io/npm/dm/@kobalte/solidbase.svg?style=for-the-badge&color=green)](https://www.npmjs.com/package/@kobalte/solidbase)
+  [![Stars](https://img.shields.io/github/stars/kobaltedev/solidbase.svg?style=for-the-badge&color=yellow)](https://github.com/kobaltedev/solidbase)
+  [![Checks](https://img.shields.io/github/checks-status/kobaltedev/solidbase/main?style=for-the-badge&color=purple)](https://github.com/kobaltedev/solidbase/actions)
+  
+  Fully featured, fully customisable Static Site Generation for [SolidStart](https://github.com/solidjs/solid-start)
 </div>
 
-<h1 align="center">SolidBase</h1>
+## Quick Start
 
-<div align="center">
+Get started with a SolidBase project using your preferred package manager
 
-Fully featured, fully customisable static site generation for [SolidStart](https://start.solidjs.com)
+```bash
+# using npm
+npm create solid -- --s --t with-solidbase
+```
 
-[![license](https://img.shields.io/badge/license-MIT-1890ff.svg)](https://github.com/kobaltedev/solidbase/blob/main/LICENSE)
-[![checks](https://img.shields.io/github/checks-status/kobaltedev/solidbase/main)](https://github.com/kobaltedev/solidbase/actions)
-[![npm](https://img.shields.io/npm/v/@kobalte/solidbase)](https://www.npmjs.com/package/@kobalte/solidbase)
+```bash
+# using pnpm
+pnpm create solid --s --t with-solidbase
+```
 
-</div>
+```bash
+# using bun
+bun create solid --s --t with-solidbase
+```
 
-Full documentation available at https://solidbase.dev.
+Full documentation available at [solidbase.dev](https://solidbase.dev)
