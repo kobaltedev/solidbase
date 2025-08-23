@@ -45,10 +45,10 @@ export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
 
 export interface MdxOptions {
 	expressiveCode?:
-	| (RehypeExpressiveCodeOptions & {
-		twoSlash?: TwoslashOptions | true;
-	})
-	| false;
+		| (RehypeExpressiveCodeOptions & {
+				twoSlash?: TwoslashOptions | true;
+		  })
+		| false;
 	toc?: TOCOptions | false;
 	remarkPlugins?: PluggableList;
 	rehypePlugins?: PluggableList;

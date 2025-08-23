@@ -1,9 +1,9 @@
+import { Collapsible } from "@kobalte/core/collapsible";
 // @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import { For, Match, type ParentProps, Show, Switch } from "solid-js";
-import { Collapsible } from "@kobalte/core/collapsible";
 import { Dynamic } from "solid-js/web";
 
 import { useLocale, useThemeListener } from "../client/index.jsx";

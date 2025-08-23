@@ -29,9 +29,9 @@ export type RelativePageConfig =
 	| string
 	| false
 	| {
-		text?: string;
-		link?: string;
-	};
+			text?: string;
+			link?: string;
+	  };
 
 interface DefaultThemeBaseFrontmatter {
 	sidebar?: boolean;
