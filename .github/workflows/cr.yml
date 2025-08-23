@@ -31,7 +31,7 @@ jobs:
         run: pnpm run build
 
       - name: Rewrite exports
-        run: jq '.exports = .publishConfig.exports' package.json
+        run: echo $(cat package.json | jq '.exports = .publishConfig.exports') > package.json
 
       - name: Release
         run: pnpm dlx pkg-pr-new@0.0 publish
