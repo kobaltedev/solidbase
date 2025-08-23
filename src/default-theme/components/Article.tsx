@@ -5,7 +5,10 @@ import { type ParentProps, Show, createSignal } from "solid-js";
 
 import { useCurrentPageData } from "../../client/index.jsx";
 import { usePrevNext } from "../../client/sidebar.js";
-import { useDefaultThemeComponents, useDefaultThemeState } from "../context.jsx";
+import {
+	useDefaultThemeComponents,
+	useDefaultThemeState,
+} from "../context.jsx";
 import type { RelativePageConfig } from "../frontmatter.js";
 import { mobileLayout } from "../globals.js";
 import { useSolidBaseContext } from "../utils.js";

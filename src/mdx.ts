@@ -1,9 +1,9 @@
 import {
+	type JSX,
+	type ParentProps,
 	createComponent,
 	createContext,
-	type JSX,
 	mergeProps,
-	type ParentProps,
 	useContext,
 } from "solid-js";
 import { Dynamic } from "solid-js/web";
@@ -383,8 +383,8 @@ export const MDXContext = createContext(
 				});
 				return createComponent(Dynamic, props);
 			},
-		])
-	)
+		]),
+	),
 );
 
 export const MDXProvider = (
@@ -392,7 +392,7 @@ export const MDXProvider = (
 		components: {
 			[k: string]: (props: any) => JSX.Element;
 		};
-	}>
+	}>,
 ) => {
 	const context = useContext(MDXContext);
 	return createComponent(MDXContext.Provider, {

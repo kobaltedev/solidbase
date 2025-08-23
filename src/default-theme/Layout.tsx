@@ -1,3 +1,4 @@
+import { Collapsible } from "@kobalte/core/collapsible";
 // @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
@@ -12,6 +13,7 @@ import {
 	onCleanup,
 	onMount,
 } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
 import { useLocale, useThemeListener } from "../client/index.js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
