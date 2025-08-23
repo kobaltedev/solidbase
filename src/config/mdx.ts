@@ -45,10 +45,10 @@ export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
 
 export interface MdxOptions {
 	expressiveCode?:
-		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: TwoslashOptions | true;
-		  })
-		| false;
+	| (RehypeExpressiveCodeOptions & {
+		twoSlash?: TwoslashOptions | true;
+	})
+	| false;
 	toc?: TOCOptions | false;
 	remarkPlugins?: PluggableList;
 	rehypePlugins?: PluggableList;
@@ -65,7 +65,7 @@ export function solidBaseMdx(
 		mdx.withImports({})({
 			jsx: true,
 			jsxImportSource: "solid-js",
-			providerImportSource: "@kobalte/solidbase/solid-mdx",
+			providerImportSource: "@kobalte/solidbase/mdx",
 			stylePropertyNameCase: "css",
 			rehypePlugins: getRehypePlugins(sbConfig),
 			remarkPlugins: getRemarkPlugins(sbConfig),

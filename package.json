@@ -47,10 +47,10 @@
       "import": "./src/default-theme/*",
       "types": "./src/default-theme/*"
     },
-    "./solid-mdx": {
-      "solid": "./src/solid-mdx.ts",
-      "import": "./src/solid-mdx.ts",
-      "types": "./src/solid-mdx.ts"
+    "./mdx": {
+      "solid": "./src/mdx.ts",
+      "import": "./src/mdx.ts",
+      "types": "./src/mdx.ts"
     }
   },
   "publishConfig": {
@@ -81,10 +81,10 @@
         "import": "./dist/default-theme/*",
         "types": "./dist/default-theme/*"
       },
-      "./solid-mdx": {
-        "solid": "./dist/solid-mdx.js",
-        "import": "./dist/solid-mdx.js",
-        "types": "./dist/solid-mdx.d.ts"
+      "./mdx": {
+        "solid": "./dist/mdx.js",
+        "import": "./dist/mdx.js",
+        "types": "./dist/mdx.d.ts"
       }
     }
   },
@@ -157,7 +157,6 @@
     "remark-directive": "^3.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
-    "solid-mdx": "^0.0.7",
     "toml": "^3.0.0",
     "typescript": "^5.6.3",
     "unified": "^11.0.5",
