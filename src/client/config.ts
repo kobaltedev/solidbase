@@ -1,8 +1,8 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { type Accessor, createMemo } from "solid-js";
 
-import type { SolidBaseResolvedConfig } from "../config";
-import { useLocale } from "./locale";
+import type { SolidBaseResolvedConfig } from "../config/index.js";
+import { useLocale } from "./locale.js";
 
 export function useRouteSolidBaseConfig<ThemeConfig>(): Accessor<
 	SolidBaseResolvedConfig<ThemeConfig>

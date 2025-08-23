@@ -1,5 +1,5 @@
 declare module "virtual:solidbase/config" {
-	export const solidBaseConfig: import("./config").SolidBaseResolvedConfig<any>;
+	export const solidBaseConfig: import("./config/index.js").SolidBaseResolvedConfig<any>;
 }
 
 declare module "virtual:solidbase/components" {

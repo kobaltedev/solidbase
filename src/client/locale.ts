@@ -4,7 +4,7 @@ import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
-import type { LocaleConfig } from "../config";
+import type { LocaleConfig } from "../config/index.js";
 
 export const DEFAULT_LANG_CODE = "en-US";
 export const DEFAULT_LANG_LABEL = "English";

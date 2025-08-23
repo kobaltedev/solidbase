@@ -4,16 +4,14 @@ import {
 	type JSX,
 	Show,
 	children,
-	createEffect,
 	createSignal,
 	onMount,
 } from "solid-js";
 import {
 	type ThemeType,
-	getTheme,
 	getThemeVariant,
 	setTheme,
-} from "../../client";
+} from "../../client/index.jsx";
 import styles from "./ThemeSelector.module.css";
 
 import IconMoonFill from "~icons/ri/moon-fill";

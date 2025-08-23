@@ -1,6 +1,6 @@
 import { useWindowScrollPosition } from "@solid-primitives/scroll";
 import { For, type JSX, Show, createEffect, createSignal } from "solid-js";
-import { type TableOfContentsItemData, useCurrentPageData } from "../../client";
+import { type TableOfContentsItemData, useCurrentPageData } from "../../client/index.jsx";
 import styles from "./TableOfContents.module.css";
 
 export default function TableOfContents(props: {}) {
