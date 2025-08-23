@@ -30,5 +30,11 @@ jobs:
       - name: Build start
         run: pnpm run build
 
+      - name: Extract version from package.json
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: "jq '.exports = .publishConfig.exports' package.json"
+
       - name: Release
         run: pnpm dlx pkg-pr-new@0.0 publish
