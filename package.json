@@ -3,6 +3,7 @@
   "version": "0.0.0-dev",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
+  "sideEffects": true,
   "scripts": {
     "dev": "pnpm -F @kobalte/solidbase-dev dev",
     "dev:docs": "pnpm -F @kobalte/solidbase-docs dev",
