@@ -32,7 +32,6 @@ export const componentsModule = {
 			return paths;
 		})();
 
-
 		const mdxComponentFiles: Array<{ importName: string; path: string }> = [];
 
 		for (let i = 0; i < themePaths.length; i++) {

@@ -1,7 +1,7 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
 import { solidStart } from "@solidjs/start/config";
+import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
-import { defineConfig } from "vite"
 
 import { createSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
@@ -203,8 +203,8 @@ export default defineConfig({
 			ssr: true,
 			server: {
 				esbuild: { options: { target: "es2022" } },
-				preset: "netlify"
+				preset: "netlify",
 			},
 		}),
-	]
+	],
 });

@@ -5,10 +5,10 @@ import type { SidebarConfig, SidebarItem } from "../config/sidebar.js";
 
 export type DefaultThemeSidebarItemOptions = {
 	status?:
-	| "new"
-	| "updated"
-	| "next"
-	| DefaultThemeSidebarItemOptionCustomStatus;
+		| "new"
+		| "updated"
+		| "next"
+		| DefaultThemeSidebarItemOptionCustomStatus;
 };
 
 export interface DefaultThemeSidebarItemOptionCustomStatus {
@@ -24,8 +24,8 @@ export type DefaultThemeConfig = {
 	footer?: boolean;
 	socialLinks?: {
 		[K in Exclude<SocialLink["type"], "custom"> | (string & {})]?:
-		| string
-		| Omit<SocialLink, "type">;
+			| string
+			| Omit<SocialLink, "type">;
 	};
 	nav?: Array<NavItem>;
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
@@ -104,8 +104,8 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 
 							export const preloadFonts = [
 								${preloadFonts
-								.map((f) => `{ path: ${f.pathIdent}, type: "${f.type}" }`)
-								.join(",")}
+									.map((f) => `{ path: ${f.pathIdent}, type: "${f.type}" }`)
+									.join(",")}
 							];
 						`;
 					}

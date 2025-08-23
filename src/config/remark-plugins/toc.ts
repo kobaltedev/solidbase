@@ -1,8 +1,8 @@
 import { fromJs } from "esast-util-from-js";
 import type { PhrasingContent } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
+import { toString } from "mdast-util-to-string";
 import { type Options, toc } from "mdast-util-toc";
-import { toString } from "mdast-util-to-string"
 
 interface ParagraphNode {
 	type: "paragraph";

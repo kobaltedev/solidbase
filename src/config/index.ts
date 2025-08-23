@@ -23,8 +23,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
-	| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
-	| true;
+		| (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+		| true;
 }
 
 type ResolvedConfigKeys =
@@ -59,13 +59,7 @@ export const solidbase = createSolidBase(defaultTheme);
 export function createSolidBase<ThemeConfig>(
 	theme: ThemeDefinition<ThemeConfig>,
 ) {
-	// if (parse(theme.componentsPath).ext !== "") {
-	// 	theme.componentsPath = dirname(theme.componentsPath);
-	// }
-
-	return (
-		solidBaseConfig?: SolidBaseConfig<ThemeConfig>,
-	): PluginOption => {
+	return (solidBaseConfig?: SolidBaseConfig<ThemeConfig>): PluginOption => {
 		// const config = startConfig ?? {};
 
 		// config.extensions = [
@@ -109,7 +103,7 @@ export function createSolidBase<ThemeConfig>(
 		return [
 			solidBaseMdx(sbConfig),
 			solidBaseVitePlugin(theme, sbConfig),
-			...plugins
+			...plugins,
 		];
 	};
 }
