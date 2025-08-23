@@ -22,7 +22,7 @@ export default function solidBaseVitePlugin(
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
 				if (id === componentsModule.id) return componentsModule.resolvedId;
-				if (id === "virtual:solidbase/mdx") return '@kobalte/solidbase/mdx'
+				if (id === "virtual:solidbase/mdx") return "\0virtual:solidbase/mdx";
 				if (id.startsWith("\0unfonts.css")) return id.slice("\0".length);
 			},
 			async load(id) {
@@ -30,6 +30,7 @@ export default function solidBaseVitePlugin(
 					return configModule.load(solidBaseConfig);
 				if (id === componentsModule.resolvedId)
 					return await componentsModule.load(theme);
+				if (id === "\0virtual:solidbase/mdx") return `export * from "@kobalte/solidbase/mdx"`;
 			},
 			transform(code, id) {
 				if (isMarkdown(id)) {
