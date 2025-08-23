@@ -59,7 +59,6 @@ ${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.p
 export const mdxComponents = {
 ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
 };
-console.log(mdxComponents);
 `;
 	},
 };

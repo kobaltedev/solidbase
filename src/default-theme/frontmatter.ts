@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { type BaseFrontmatter, useFrontmatter } from "../client";
+import { type BaseFrontmatter, useFrontmatter } from "../client/index.jsx";
 
 export function useDefaultThemeFrontmatter() {
 	const frontmatter = useFrontmatter<DefaultThemeFrontmatter>();
@@ -29,9 +29,9 @@ export type RelativePageConfig =
 	| string
 	| false
 	| {
-			text?: string;
-			link?: string;
-	  };
+		text?: string;
+		link?: string;
+	};
 
 interface DefaultThemeBaseFrontmatter {
 	sidebar?: boolean;

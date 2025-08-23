@@ -33,9 +33,9 @@
       "types": "./src/client/index.tsx"
     },
     "./server": {
-      "solid": "./src/server.ts",
-      "import": "./src/server.ts",
-      "types": "./src/server.ts"
+      "solid": "./src/server.tsx",
+      "import": "./src/server.tsx",
+      "types": "./src/server.tsx"
     },
     "./default-theme": {
       "solid": "./src/default-theme/index.ts",
@@ -67,8 +67,8 @@
         "types": "./dist/config/index.d.ts"
       },
       "./server": {
-        "solid": "./dist/server.js",
-        "import": "./dist/server.js",
+        "solid": "./dist/server.jsx",
+        "import": "./dist/server.jsx",
         "types": "./dist/server.d.ts"
       },
       "./default-theme": {

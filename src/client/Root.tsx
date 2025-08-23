@@ -3,8 +3,8 @@ import { Meta, MetaProvider, Title } from "@solidjs/meta";
 import { type ParentProps, Suspense, createMemo, onMount } from "solid-js";
 import { MDXProvider } from "solid-mdx";
 
-import { useRouteSolidBaseConfig } from "./config";
-import { SolidBaseContext } from "./context";
+import { useRouteSolidBaseConfig } from "./config.js";
+import { SolidBaseContext } from "./context.jsx";
 
 export function SolidBaseRoot(
 	props: ParentProps & {
@@ -44,8 +44,8 @@ export function SolidBaseRoot(
 	return <>{withMeta()}</>;
 }
 
-import { LocaleContextProvider } from "./locale";
-import { CurrentPageDataProvider, useCurrentPageData } from "./page-data";
+import { LocaleContextProvider } from "./locale.js";
+import { CurrentPageDataProvider, useCurrentPageData } from "./page-data.js";
 
 export function Inner(props: ParentProps) {
 	const config = useRouteSolidBaseConfig();

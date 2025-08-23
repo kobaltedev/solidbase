@@ -1,8 +1,8 @@
-import type { DefaultThemeConfig } from ".";
+import type { DefaultThemeConfig } from "./index.js";
 import {
 	useRouteSolidBaseConfig as _useRouteConfig,
 	useSolidBaseContext as _useSolidBaseContext,
-} from "../client";
+} from "../client/index.jsx";
 
 export function useSolidBaseContext() {
 	return _useSolidBaseContext<DefaultThemeConfig>();

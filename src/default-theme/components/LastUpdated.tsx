@@ -1,7 +1,7 @@
 import { Show, createMemo } from "solid-js";
 
-import { useCurrentPageData } from "../../client";
-import { useRouteConfig } from "../utils";
+import { useCurrentPageData } from "../../client/index.jsx";
+import { useRouteConfig } from "../utils.js";
 import styles from "./LastUpdated.module.css";
 
 export default function LastUpdated() {

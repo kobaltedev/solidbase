@@ -13,35 +13,33 @@ import {
 	onMount,
 } from "solid-js";
 
-import { useLocale, useThemeListener } from "../client";
-import { usePreferredLanguage } from "../client/preferred-language";
+import { useLocale, useThemeListener } from "../client/index.js";
+import { usePreferredLanguage } from "../client/preferred-language.js";
 import {
 	type SidebarItemLink,
 	type SidebarItemSection,
 	SidebarProvider,
 	useSidebar,
-} from "../client/sidebar";
+} from "../client/sidebar.js";
 import {
 	DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
 	useDefaultThemeComponents,
 	useDefaultThemeState,
-} from "./context";
-import { mobileLayout } from "./globals";
-import { usePace } from "./pace";
-import { useRouteConfig } from "./utils";
+} from "./context.jsx";
+import { mobileLayout } from "./globals.js";
+import { usePace } from "./pace.js";
+import { useRouteConfig } from "./utils.js";
 
 import "virtual:solidbase/default-theme/fonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
-import { Collapsible } from "@kobalte/core/collapsible";
-import { Dynamic } from "solid-js/web";
 import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
 import type {
 	DefaultThemeSidebarItem,
 	DefaultThemeSidebarItemOptionCustomStatus,
 	DefaultThemeSidebarItemOptions,
-} from ".";
+} from "./index.js";
 
 export default (props: ParentProps) => {
 	const config = useRouteConfig();

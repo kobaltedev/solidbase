@@ -6,10 +6,10 @@ import type {
 	SidebarConfig,
 	SidebarItem,
 	SidebarItemLink,
-} from "../config/sidebar";
-import { useLocale } from "./locale";
+} from "../config/sidebar.js";
+import { useLocale } from "./locale.js";
 
-export type * from "../config/sidebar";
+export type * from "../config/sidebar.js";
 
 const [SidebarProvider, useSidebarRaw] = createContextProvider(
 	(props: { config?: SidebarConfig }) => {
