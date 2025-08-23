@@ -12,3 +12,7 @@ declare module "virtual:solidbase/components" {
 declare module "virtual:solidbase/default-theme/fonts" {
 	export const preloadFonts: Array<{ path: string; type: string }>;
 }
+
+declare module "virtual:solidbase/mdx" {
+	export const MDXProvider: typeof import("./mdx.ts").MDXProvider;
+}

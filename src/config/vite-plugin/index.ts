@@ -22,6 +22,7 @@ export default function solidBaseVitePlugin(
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
 				if (id === componentsModule.id) return componentsModule.resolvedId;
+				if (id === "virtual:solidbase/mdx") return '@kobalte/solidbase/mdx'
 				if (id.startsWith("\0unfonts.css")) return id.slice("\0".length);
 			},
 			async load(id) {
