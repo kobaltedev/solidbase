@@ -6,7 +6,8 @@
 			"*/netlify/*",
 			"**/package.json",
 			"./examples/solid-docs",
-			"**/app.config.*.js"
+			"**/app.config.*.js",
+			"**/*.d.ts"
 		]
 	},
 	"vcs": {

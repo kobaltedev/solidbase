@@ -19,6 +19,9 @@ export default function solidBaseVitePlugin(
 		{
 			name: "solidbase:pre",
 			enforce: "pre",
+			config() {
+				return { resolve: { noExternal: ["@kobalte/solidbase"] } };
+			},
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
 				if (id === componentsModule.id) return componentsModule.resolvedId;

@@ -74,12 +74,6 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 
 		return [
 			{
-				name: "solidbase-noexternal",
-				config() {
-					return { resolve: { noExternal: ["@kobalte/solidbase"] } };
-				},
-			},
-			{
 				name: "solidbase-default-theme-fonts",
 				resolveId(id) {
 					if (id.startsWith("virtual:solidbase/default-theme/fonts.css"))
