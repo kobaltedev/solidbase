@@ -95,7 +95,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@octokit/core": "^6.1.4",
-    "@solidjs/start": "https://pkg.pr.new/@solidjs/start@b2bea15",
+    "@solidjs/start": "https://pkg.pr.new/@solidjs/start@fb192f6",
     "@types/cross-spawn": "^6.0.6",
     "@types/mdast": "^4.0.4",
     "@types/resolve": "^1.20.6",

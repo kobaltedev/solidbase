@@ -104,7 +104,7 @@ export default defineConfig({
 			ssr: true,
 			server: {
 				esbuild: { options: { target: "es2022" } },
-				preset: "netlify"
+				preset: "netlify",
 			},
 		}),
 	],
