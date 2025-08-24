@@ -3,12 +3,15 @@ import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { type ParentProps, Show, createSignal } from "solid-js";
 
-import { useCurrentPageData } from "../../client";
-import { usePrevNext } from "../../client/sidebar";
-import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
-import type { RelativePageConfig } from "../frontmatter";
-import { mobileLayout } from "../globals";
-import { useSolidBaseContext } from "../utils";
+import { useCurrentPageData } from "../../client/index.jsx";
+import { usePrevNext } from "../../client/sidebar.js";
+import {
+	useDefaultThemeComponents,
+	useDefaultThemeState,
+} from "../context.jsx";
+import type { RelativePageConfig } from "../frontmatter.js";
+import { mobileLayout } from "../globals.js";
+import { useSolidBaseContext } from "../utils.js";
 
 import styles from "./Article.module.css";
 

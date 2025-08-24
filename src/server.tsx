@@ -1,4 +1,4 @@
-import { getLocale, getTheme } from "./client";
+import { getLocale, getTheme } from "./client/index.jsx";
 
 export function getHtmlProps() {
 	return {

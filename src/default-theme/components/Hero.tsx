@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import { type HeroConfig, useDefaultThemeFrontmatter } from "../frontmatter";
+import { type HeroConfig, useDefaultThemeFrontmatter } from "../frontmatter.js";
 
 import styles from "./Hero.module.css";
 

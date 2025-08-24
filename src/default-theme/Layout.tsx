@@ -1,37 +1,37 @@
+import { Collapsible } from "@kobalte/core/collapsible";
 // @refresh reload
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import { For, Match, type ParentProps, Show, Switch } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
-import { useLocale, useThemeListener } from "../client";
+import { useLocale, useThemeListener } from "../client/index.jsx";
 import {
 	type SidebarItemLink,
 	type SidebarItemSection,
 	SidebarProvider,
 	useSidebar,
-} from "../client/sidebar";
+} from "../client/sidebar.js";
 import {
 	DefaultThemeComponentsProvider,
 	DefaultThemeStateProvider,
 	useDefaultThemeComponents,
 	useDefaultThemeState,
-} from "./context";
-import { mobileLayout } from "./globals";
-import { usePace } from "./pace";
-import { useRouteConfig } from "./utils";
+} from "./context.jsx";
+import { mobileLayout } from "./globals.js";
+import { usePace } from "./pace.js";
+import { useRouteConfig } from "./utils.js";
 
 import "virtual:solidbase/default-theme/fonts.css";
 import styles from "./Layout.module.css";
 import "./index.css";
-import { Collapsible } from "@kobalte/core/collapsible";
-import { Dynamic } from "solid-js/web";
 import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
 import type {
 	DefaultThemeSidebarItem,
 	DefaultThemeSidebarItemOptionCustomStatus,
 	DefaultThemeSidebarItemOptions,
-} from ".";
+} from "./index.js";
 
 export default (props: ParentProps) => {
 	const config = useRouteConfig();

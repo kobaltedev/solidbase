@@ -1,27 +1,23 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
-import { defineConfig } from "@solidjs/start/config";
+import { solidStart } from "@solidjs/start/config";
+import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
 
-import { createWithSolidBase, defineTheme } from "../src/config";
+import { createSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
 
 const theme = defineTheme({
-	componentsPath: import.meta.resolve("./src/solidbase-theme"),
+	componentsPath: new URL("./src/solidbase-theme", import.meta.url),
 	extends: defaultTheme,
 });
 
-export default defineConfig(
-	createWithSolidBase(theme)(
-		{
-			ssr: true,
-			server: {
-				esbuild: { options: { target: "es2022" } },
-			},
-			vite: {
-				plugins: [OGPlugin(), arraybuffer()],
-			},
-		},
-		{
+const solidBase = createSolidBase(theme);
+
+export default defineConfig({
+	plugins: [
+		OGPlugin(),
+		arraybuffer(),
+		solidBase({
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
@@ -201,6 +197,14 @@ export default defineConfig(
 					],
 				},
 			},
-		},
-	),
-);
+		}),
+		solidStart({
+			extensions: ["md", "mdx"],
+			ssr: true,
+			server: {
+				esbuild: { options: { target: "es2022" } },
+				preset: "netlify",
+			},
+		}),
+	],
+});

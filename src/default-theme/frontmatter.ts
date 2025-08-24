@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js";
-import { type BaseFrontmatter, useFrontmatter } from "../client";
+import { type BaseFrontmatter, useFrontmatter } from "../client/index.jsx";
 
 export function useDefaultThemeFrontmatter() {
 	const frontmatter = useFrontmatter<DefaultThemeFrontmatter>();

@@ -1,6 +1,6 @@
 import { type Accessor, createContext, useContext } from "solid-js";
 
-import type { SolidBaseResolvedConfig } from "../config";
+import type { SolidBaseResolvedConfig } from "../config/index.js";
 
 export interface SolidBaseContextValue<ThemeConfig> {
 	config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;

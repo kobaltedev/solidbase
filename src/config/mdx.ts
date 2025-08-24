@@ -65,7 +65,7 @@ export function solidBaseMdx(
 		mdx.withImports({})({
 			jsx: true,
 			jsxImportSource: "solid-js",
-			providerImportSource: "@kobalte/solidbase/solid-mdx",
+			providerImportSource: "@kobalte/solidbase/mdx",
 			stylePropertyNameCase: "css",
 			rehypePlugins: getRehypePlugins(sbConfig),
 			remarkPlugins: getRemarkPlugins(sbConfig),

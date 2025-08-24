@@ -2,8 +2,9 @@ import AutoImport from "unplugin-auto-import/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
-
+import MagicString from 'magic-string';
 import { fileURLToPath } from "node:url";
+
 import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
 import {
 	componentsModule,
@@ -19,9 +20,13 @@ export default function solidBaseVitePlugin(
 		{
 			name: "solidbase:pre",
 			enforce: "pre",
+			config() {
+				return { resolve: { noExternal: ["@kobalte/solidbase"] } };
+			},
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
 				if (id === componentsModule.id) return componentsModule.resolvedId;
+				if (id === "virtual:solidbase/mdx") return "\0virtual:solidbase/mdx";
 				if (id.startsWith("\0unfonts.css")) return id.slice("\0".length);
 			},
 			async load(id) {
@@ -29,13 +34,21 @@ export default function solidBaseVitePlugin(
 					return configModule.load(solidBaseConfig);
 				if (id === componentsModule.resolvedId)
 					return await componentsModule.load(theme);
+				if (id === "\0virtual:solidbase/mdx")
+					return `export * from "@kobalte/solidbase/mdx"`;
 			},
 			transform(code, id) {
 				if (isMarkdown(id)) {
-					return code.replaceAll(
+					const s = new MagicString(code);
+					s.replaceAll(
 						/="(\$\$SolidBase_RelativeImport\d+)"/gm,
 						(_, ident) => `={${ident}}`,
 					);
+
+					return {
+						code: s.toString(),
+						map: s.generateMap()
+					}
 				}
 			},
 		},

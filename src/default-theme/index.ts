@@ -60,7 +60,7 @@ const allFonts = {
 } satisfies Record<string, Font>;
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
-	componentsPath: import.meta.resolve("@kobalte/solidbase/default-theme"),
+	componentsPath: new URL(".", import.meta.url),
 	vite(config) {
 		const filteredFonts: Array<Font> = [];
 

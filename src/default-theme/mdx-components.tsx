@@ -4,7 +4,7 @@ import {
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
-import { A, useHref } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,

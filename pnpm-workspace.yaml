@@ -3,3 +3,6 @@ packages:
   - "docs"
   - "dev"
   # - "examples/*"
+
+patchedDependencies:
+  vite-plugin-solid: patches/vite-plugin-solid.patch

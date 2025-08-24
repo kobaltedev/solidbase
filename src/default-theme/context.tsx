@@ -1,18 +1,18 @@
 import { createContextProvider } from "@solid-primitives/context";
 import { createSignal } from "solid-js";
 
-import Article from "./components/Article";
-import Features from "./components/Features";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import LastUpdated from "./components/LastUpdated";
-import Link from "./components/Link";
-import LocaleSelector from "./components/LocaleSelector";
-import TableOfContents from "./components/TableOfContents";
-import ThemeSelector from "./components/ThemeSelector";
+import Article from "./components/Article.jsx";
+import Features from "./components/Features.jsx";
+import Footer from "./components/Footer.jsx";
+import Header from "./components/Header.jsx";
+import Hero from "./components/Hero.jsx";
+import LastUpdated from "./components/LastUpdated.jsx";
+import Link from "./components/Link.jsx";
+import LocaleSelector from "./components/LocaleSelector.jsx";
+import TableOfContents from "./components/TableOfContents.jsx";
+import ThemeSelector from "./components/ThemeSelector.jsx";
 
-import { useDefaultThemeFrontmatter } from "./frontmatter";
+import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 
 const defaultComponents = {
 	Article,
