@@ -6,6 +6,7 @@ import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
 import type { SolidBaseConfig } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
+import MagicString from "magic-string";
 
 export const configModule = {
 	id: "virtual:solidbase/config",
@@ -86,8 +87,9 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
-	return `
-		${code}
+	const s = new MagicString(code);
+
+	s.append(`
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? (frontmatter ?? {}) : {},
 			toc: typeof ${SolidBaseTOC} !== "undefined" ? ${SolidBaseTOC} : undefined,
@@ -101,5 +103,10 @@ export async function transformMdxModule(
 		}
 
 		export const $$SolidBase_page_data = data;
-	`;
+	`)
+
+	return {
+		code: s.toString(),
+		map: s.generateMap()
+	};
 }

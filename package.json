@@ -147,6 +147,7 @@
     "expressive-code-twoslash": "=0.4.0",
     "gray-matter": "^4.0.3",
     "hastscript": "^9.0.0",
+    "magic-string": "^0.30.18",
     "mdast-util-find-and-replace": "^3.0.1",
     "mdast-util-mdx-jsx": "^3.2.0",
     "mdast-util-to-string": "^4.0.0",
