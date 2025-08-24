@@ -2,8 +2,9 @@ import AutoImport from "unplugin-auto-import/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
-
+import MagicString from 'magic-string';
 import { fileURLToPath } from "node:url";
+
 import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
 import {
 	componentsModule,
@@ -38,10 +39,16 @@ export default function solidBaseVitePlugin(
 			},
 			transform(code, id) {
 				if (isMarkdown(id)) {
-					return code.replaceAll(
+					const s = new MagicString(code);
+					s.replaceAll(
 						/="(\$\$SolidBase_RelativeImport\d+)"/gm,
 						(_, ident) => `={${ident}}`,
 					);
+
+					return {
+						code: s.toString(),
+						map: s.generateMap()
+					}
 				}
 			},
 		},
