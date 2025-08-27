@@ -14,21 +14,21 @@
 
 ## Quick Start
 
-Get started with a SolidBase project using your preferred package manager
+Get started with a **SolidBase** project using your preferred package manager
 
 ```bash
 # using npm
-npm create solid -- --s --t with-solidbase
+npm create solid@latest -- -s -t with-solidbase
 ```
 
 ```bash
 # using pnpm
-pnpm create solid --s --t with-solidbase
+pnpm create solid@latest -s -t with-solidbase
 ```
 
 ```bash
 # using bun
-bun create solid --s --t with-solidbase
+bun create solid@latest -s -t with-solidbase
 ```
 
 Full documentation available at [solidbase.dev](https://solidbase.dev)
