@@ -9,7 +9,7 @@
   [![Stars](https://img.shields.io/github/stars/kobaltedev/solidbase.svg?style=for-the-badge&color=yellow&logo=github)](https://github.com/kobaltedev/solidbase)
   [![Checks](https://img.shields.io/github/checks-status/kobaltedev/solidbase/main?style=for-the-badge&logo=github)](https://github.com/kobaltedev/solidbase/actions)
   
-  Fully featured, fully customisable Static Site Generation for [SolidStart](https://github.com/solidjs/solid-start)
+  **Fully featured, fully customisable Static Site Generation for [SolidStart](https://github.com/solidjs/solid-start)**
 </div>
 
 ## Quick Start
@@ -28,7 +28,7 @@ pnpm create solid@latest -s -t with-solidbase
 
 ```bash
 # using bun
-bun create solid@latest -s -t with-solidbase
+bun create solid@latest --s --t with-solidbase
 ```
 
-Full documentation available at [solidbase.dev](https://solidbase.dev)
+Documentation available at [solidbase.dev](https://solidbase.dev)
