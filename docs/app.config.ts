@@ -180,22 +180,69 @@ export default defineConfig(
 									title: "Overview",
 									link: "/default-theme",
 								},
-								{
-									title: "Sidebar",
-									link: "/default-theme/sidebar",
+								{	
+									title: "CSS Variables",
+									link: "/default-theme/css-variables",
 								},
 								{
-									title: "Article",
-									link: "/default-theme/article",
-								},
-								{
-									title: "Footer",
-									link: "/default-theme/footer",
+									title: "Components",
+									collapsed: false,
+									items: [
+										{
+											title: "Article",
+											link: "/default-theme/article",
+										},
+										{
+											title: "Features",
+											link: "/default-theme/features",
+										},
+										{
+											title: "Footer",
+											link: "/default-theme/footer",
+										},
+										{
+											title: "Header",
+											link: "/default-theme/header",
+										},
+										{
+											title: "Hero",
+											link: "/default-theme/hero",
+												},
+										{
+											title: "Last Updated",
+											link: "/default-theme/last-updated",
+										},
+										{
+											title: "Link",
+											link: "/default-theme/link",
+										},
+										{
+											title: "Locale Selector",
+											link: "/default-theme/locale-selector",
+										},
+										{
+											title: "Sidebar",
+											link: "/default-theme/sidebar",
+										},
+										{
+											title: "Table of Contents",
+											link: "/default-theme/toc",
+										},
+										{
+											title: "Theme Selector",
+											link: "/default-theme/theme-selector",
+										},
+									]
 								},
 								{
 									title: "Landing",
 									link: "/default-theme/landing",
 								},
+								{
+									title: "Layout",
+									link: "/default-theme/layout",
+								},
+								
 							],
 						},
 					],
