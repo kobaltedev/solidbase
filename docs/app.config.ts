@@ -111,16 +111,16 @@ export default defineConfig(
 									link: "/add-to-existing",
 								},
 								{
-									title: "Configure Your Project",
+									title: "Configure Your App",
 									link: "/config",
-								},
-								{
-									title: "Deploy",
-									link: "/deploy",
 								},
 								{
 									title: "Project Structure",
 									link: "/structure",
+								},
+								{
+									title: "Deploy Your Site",
+									link: "/deploy",
 								},
 							],
 						},
