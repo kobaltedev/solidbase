@@ -111,6 +111,10 @@ export default defineConfig(
 									link: "/add-to-existing",
 								},
 								{
+									title: "Configure Your Project",
+									link: "/config",
+								},
+								{
 									title: "Deploy",
 									link: "/deploy",
 								},
@@ -162,6 +166,10 @@ export default defineConfig(
 							title: "Reference",
 							collapsed: false,
 							items: [
+								{
+									title: "Configuration Options",
+									link: "/config",
+								},
 								{
 									title: "Frontmatter Config",
 									link: "/frontmatter",

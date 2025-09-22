@@ -6,7 +6,7 @@ title: Project Structure
 
 ## SolidBase Entry
 
-SolidBase is injected from your config file:
+The entry point for a SolidBase project is the `app.config.ts` file located in the root of your project.
 
 ```ts title=app.config.ts
 import { defineConfig } from "@solidjs/start/config";
@@ -39,13 +39,11 @@ export default defineConfig(
 
 ## Routing
 
-SolidBase supports all the same routing features as SolidStart.
-Using file based routing is recommended for management and performance reasons.
+Since SolidBase is built on top of SolidStart, it uses the same file based routing system. Using file-based routing is recommended for both management and performance reasons.
 
-The basic structure looks like:
+The `src/routes` directory is where you define your application's routes. Each file in this directory, corresponds to a route in your application. For example, `src/routes/index.mdx` corresponds to the root route `/`, and `src/routes/about.mdx` corresponds to the `/about` route.
 
 ```
-.
 ├─ src
 │  ├─ routes
 │  │  ├─ index.mdx
@@ -56,4 +54,4 @@ The basic structure looks like:
 └─ app.config.ts
 ```
 
-Full documentation and reference can be found in the [SolidStart docs](https://docs.solidjs.com/solid-start/building-your-application/routing);
+Full documentation and reference can be found in the [SolidStart docs](https://docs.solidjs.com/solid-start/building-your-application/routing).
