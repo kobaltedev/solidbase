@@ -73,6 +73,10 @@ article *[id] {
 			font-size: 0.9rem;
 		}
 
+		.header .sb-ts-toggle {
+			margin-left: auto;
+		}
+
 		.copy {
 			margin-top: 0.2rem;
 		}
@@ -90,5 +94,70 @@ article *[id] {
 		&:focus-within .ec-line {
 			opacity: 1 !important;
 		}
+	}
+}
+
+.expressive-code .sb-ts-toggle,
+.sb-ts-toggle {
+	appearance: none;
+	display: flex;
+	align-items: center;
+	height: 2rem;
+	outline-offset: 0;
+	padding: 0 0.6rem;
+	font-family: var(--sb-font-mono);
+
+	&::before,
+	&::after {
+		width: 2rem;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 0.9rem;
+		color: inherit;
+	}
+
+	&::before {
+		content: "JS";
+	}
+
+	&::after {
+		content: "TS";
+		border-left: none;
+		opacity: 0.3;
+	}
+
+	&:checked {
+		&::before {
+			opacity: 0.3;
+		}
+
+		&::after {
+			opacity: 1;
+		}
+	}
+}
+
+.sb-ts-toggle {
+	margin-left: auto;
+}
+
+html[data-prefers-ts="true"] .sb-ts-group {
+	figure:last-of-type {
+		display: none;
+	}
+
+	pre + pre {
+		display: none;
+	}
+}
+
+html[data-prefers-ts="false"] .sb-ts-group {
+	figure:first-of-type {
+		display: none;
+	}
+
+	pre:has(+ pre) {
+		display: none;
 	}
 }

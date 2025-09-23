@@ -11,6 +11,7 @@ export {
 	getLocaleLink,
 	type ResolvedLocale,
 } from "./locale";
+export { usePrefersTs } from "./prefers-ts";
 export { SolidBaseRoot } from "./Root";
 export {
 	useCurrentPageData,

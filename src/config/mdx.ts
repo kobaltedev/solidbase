@@ -19,6 +19,10 @@ import type { PluggableList } from "unified";
 import type { PluginOption } from "vite";
 
 import mdx from "../vite-mdx/index.js";
+import {
+	type TsToggleOptions,
+	ecPluginTsToggle,
+} from "./ec-plugins/ts-toggle/index.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
@@ -47,6 +51,7 @@ export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
 				twoSlash?: TwoslashOptions | true;
+				tsToggle?: TsToggleOptions | true;
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -111,6 +116,18 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 					},
 				}),
 			);
+		}
+
+		if (sbConfig.markdown?.expressiveCode?.tsToggle) {
+			const config =
+				sbConfig.markdown.expressiveCode.tsToggle === true
+					? ({ showTsToggleButton: true } as TsToggleOptions)
+					: {
+							showTsToggleButton: true,
+							...sbConfig.markdown.expressiveCode?.tsToggle,
+						};
+
+			plugins.push(ecPluginTsToggle(config));
 		}
 
 		rehypePlugins.push(

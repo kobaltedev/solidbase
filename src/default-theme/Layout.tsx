@@ -2,9 +2,19 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
-import { For, Match, type ParentProps, Show, Switch } from "solid-js";
+import {
+	For,
+	Match,
+	type ParentProps,
+	Show,
+	Switch,
+	createEffect,
+	onCleanup,
+	onMount,
+} from "solid-js";
 
 import { useLocale, useThemeListener } from "../client";
+import { usePrefersTs } from "../client/prefers-ts";
 import {
 	type SidebarItemLink,
 	type SidebarItemSection,
@@ -56,6 +66,36 @@ function Layout(props: ParentProps) {
 
 	useThemeListener();
 	usePace();
+
+	const [prefersTs, setPrefersTs] = usePrefersTs();
+
+	onMount(() => {
+		const toggles = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"].sb-ts-toggle',
+		);
+		for (const toggle of toggles) {
+			toggle.checked = prefersTs();
+
+			function handleToggle() {
+				setPrefersTs(toggle.checked);
+			}
+
+			toggle.addEventListener("click", handleToggle);
+
+			onCleanup(() => {
+				toggle.removeEventListener("click", handleToggle);
+			});
+		}
+	});
+
+	createEffect(() => {
+		const toggles = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"].sb-ts-toggle',
+		);
+		for (const toggle of toggles) {
+			toggle.checked = prefersTs();
+		}
+	});
 
 	return (
 		<>

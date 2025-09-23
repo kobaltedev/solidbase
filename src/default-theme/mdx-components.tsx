@@ -4,7 +4,7 @@ import {
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
-import { A, useHref } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,
@@ -15,6 +15,7 @@ import {
 	createSignal,
 	splitProps,
 } from "solid-js";
+import { usePrefersTs } from "../client/prefers-ts";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -120,6 +121,7 @@ export function DirectiveContainer(
 
 	if (props.type === "tab-group") {
 		const tabNames = props.tabNames?.split("\0");
+		const [prefersTs] = usePrefersTs();
 
 		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
 			<Tabs.Root
@@ -129,12 +131,29 @@ export function DirectiveContainer(
 			>
 				<Tabs.List class={styles["tabs-list"]}>
 					{tabNames?.map((title) => {
+						const jsTitle = title.replace(/\.tsx?$/, (ext) => {
+							if (ext === ".tsx") {
+								return ".jsx";
+							}
+							if (ext === ".ts") {
+								return ".js";
+							}
+							return ext;
+						});
+
 						return (
 							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
-								{title}
+								{prefersTs() ? title : jsTitle}
 							</Tabs.Trigger>
 						);
 					})}
+					<input
+						type="checkbox"
+						checked
+						title="Toggle language"
+						aria-label="Toggle JS/TS"
+						class="sb-ts-toggle"
+					/>
 				</Tabs.List>
 
 				<For each={tabNames}>
