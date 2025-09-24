@@ -38,7 +38,7 @@ export default defineConfig({
     expressiveCode: {
       languageSwitcher: {
         showToggleButton: true,
-        postprocessCode: async (code) => {
+        postprocessJsCode: async (code) => {
           // Custom code processing
           return code;
         },
@@ -81,7 +81,7 @@ The plugin automatically preserves line markers.
 - **Default:** `true`
 - **Description:** Whether to show the toggle button in the code block header.
 
-### `postprocessCode`
+### `postprocessJsCode`
 
 - **Type:** `(code: string) => string | Promise<string>`
 - **Default:** Prettier formatting

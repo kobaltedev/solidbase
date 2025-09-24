@@ -88,7 +88,7 @@ export interface LanguageSwitcherOptions {
 	 * A function to process the generated JavaScript code.
 	 * Defaults to formatting with prettier with default options.
 	 */
-	postprocessCode?: (code: string) => string | Promise<string>;
+	postprocessJsCode?: (code: string) => string | Promise<string>;
 }
 
 /**
@@ -163,7 +163,7 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 					codeBlock.code,
 					markers,
 					isJsx,
-					options.postprocessCode,
+					options.postprocessJsCode,
 				);
 
 				for (const { type, lines } of jsMarkers) {
