@@ -129,6 +129,10 @@ export default defineConfig(
 									link: "/markdown",
 								},
 								{
+									title: "Language Switcher",
+									link: "/language-switcher",
+								},
+								{
 									title: "Internationalisation",
 									link: "/i18n",
 								},

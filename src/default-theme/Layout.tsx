@@ -14,7 +14,7 @@ import {
 } from "solid-js";
 
 import { useLocale, useThemeListener } from "../client";
-import { usePrefersTs } from "../client/prefers-ts";
+import { usePreferredLanguage } from "../client/preferred-language";
 import {
 	type SidebarItemLink,
 	type SidebarItemSection,
@@ -67,17 +67,17 @@ function Layout(props: ParentProps) {
 	useThemeListener();
 	usePace();
 
-	const [prefersTs, setPrefersTs] = usePrefersTs();
+	const [preferredLanguage, setPreferredLanguage] = usePreferredLanguage();
 
 	onMount(() => {
 		const toggles = document.querySelectorAll<HTMLInputElement>(
-			'input[type="checkbox"].sb-ts-toggle',
+			'input[type="checkbox"].sb-ts-js-toggle',
 		);
-		for (const toggle of toggles) {
-			toggle.checked = prefersTs();
+		for (const toggle of Array.from(toggles)) {
+			toggle.checked = preferredLanguage() === "ts";
 
 			function handleToggle() {
-				setPrefersTs(toggle.checked);
+				setPreferredLanguage(toggle.checked ? "ts" : "js");
 			}
 
 			toggle.addEventListener("click", handleToggle);
@@ -90,10 +90,10 @@ function Layout(props: ParentProps) {
 
 	createEffect(() => {
 		const toggles = document.querySelectorAll<HTMLInputElement>(
-			'input[type="checkbox"].sb-ts-toggle',
+			'input[type="checkbox"].sb-ts-js-toggle',
 		);
-		for (const toggle of toggles) {
-			toggle.checked = prefersTs();
+		for (const toggle of Array.from(toggles)) {
+			toggle.checked = preferredLanguage() === "ts";
 		}
 	});
 

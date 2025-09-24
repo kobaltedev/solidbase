@@ -73,10 +73,6 @@ article *[id] {
 			font-size: 0.9rem;
 		}
 
-		.header .sb-ts-toggle {
-			margin-left: auto;
-		}
-
 		.copy {
 			margin-top: 0.2rem;
 		}
@@ -97,8 +93,10 @@ article *[id] {
 	}
 }
 
-.expressive-code .sb-ts-toggle,
-.sb-ts-toggle {
+.sb-ts-js-toggle,
+/* Expressive code hides all non-svg elements inside the header, so we need this selector to override it. */
+	.expressive-code
+	.sb-ts-js-toggle {
 	appearance: none;
 	display: flex;
 	align-items: center;
@@ -106,10 +104,16 @@ article *[id] {
 	outline-offset: 0;
 	padding: 0 0.6rem;
 	font-family: var(--sb-font-mono);
+	border-radius: var(--sb-border-radius);
+	margin-left: auto;
+
+	&:hover {
+		background: var(--ts-js-toggle-background-hover);
+	}
 
 	&::before,
 	&::after {
-		width: 2rem;
+		width: 1.5rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -124,12 +128,12 @@ article *[id] {
 	&::after {
 		content: "TS";
 		border-left: none;
-		opacity: 0.3;
+		opacity: 0.4;
 	}
 
 	&:checked {
 		&::before {
-			opacity: 0.3;
+			opacity: 0.4;
 		}
 
 		&::after {
@@ -138,11 +142,7 @@ article *[id] {
 	}
 }
 
-.sb-ts-toggle {
-	margin-left: auto;
-}
-
-html[data-prefers-ts="true"] .sb-ts-group {
+html[data-preferred-language="ts"] .sb-language-group {
 	figure:last-of-type {
 		display: none;
 	}
@@ -152,7 +152,7 @@ html[data-prefers-ts="true"] .sb-ts-group {
 	}
 }
 
-html[data-prefers-ts="false"] .sb-ts-group {
+html[data-preferred-language="js"] .sb-language-group {
 	figure:first-of-type {
 		display: none;
 	}

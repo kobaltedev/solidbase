@@ -104,7 +104,6 @@
     "esbuild": "^0.25.2",
     "glob": "^11.0.1",
     "mdast": "^3.0.0",
-    "prettier": "4.0.0-alpha.10",
     "resolve": "^1.22.10",
     "solid-js": "^1.9.5",
     "tsx": "^4.19.3",
@@ -174,7 +173,8 @@
     "unist-util-visit": "^5.0.0",
     "unplugin-auto-import": "^19.1.0",
     "unplugin-icons": "^22.1.0",
-    "yaml": "^2.8.0"
+    "yaml": "^2.8.0",
+    "prettier": "4.0.0-alpha.10"
   },
   "engines": {
     "node": ">=22"

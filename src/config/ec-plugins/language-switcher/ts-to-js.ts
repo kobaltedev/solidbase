@@ -1,5 +1,6 @@
 import { diffLines } from "diff";
 import MagicString from "magic-string";
+import prettier from "prettier";
 import ts from "typescript";
 
 const tripleSlashDirectiveRegExp =
@@ -430,12 +431,16 @@ export async function tsToJs(
 
 	let jsCode = ms.toString();
 
-	if (postprocessJsCode) {
-		try {
+	try {
+		if (postprocessJsCode) {
 			jsCode = await postprocessJsCode(jsCode);
-		} catch (error) {
-			console.error("Error during post-processing JavaScript code:", error);
+		} else {
+			jsCode = await prettier.format(jsCode, {
+				parser: "babel",
+			});
 		}
+	} catch (error) {
+		console.error("Error during post-processing JavaScript code:", error);
 	}
 
 	return {

@@ -15,7 +15,7 @@ import {
 	createSignal,
 	splitProps,
 } from "solid-js";
-import { usePrefersTs } from "../client/prefers-ts";
+import { usePreferredLanguage } from "../client/preferred-language";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -111,6 +111,7 @@ export function DirectiveContainer(
 		title?: string;
 		codeGroup?: string;
 		tabNames?: string;
+		withTsJsToggle?: string;
 	} & ParentProps,
 ) {
 	const _children = children(() => props.children).toArray();
@@ -121,7 +122,7 @@ export function DirectiveContainer(
 
 	if (props.type === "tab-group") {
 		const tabNames = props.tabNames?.split("\0");
-		const [prefersTs] = usePrefersTs();
+		const [preferredLanguage] = usePreferredLanguage();
 
 		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
 			<Tabs.Root
@@ -143,17 +144,19 @@ export function DirectiveContainer(
 
 						return (
 							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
-								{prefersTs() ? title : jsTitle}
+								{preferredLanguage() === "ts" ? title : jsTitle}
 							</Tabs.Trigger>
 						);
 					})}
-					<input
-						type="checkbox"
-						checked
-						title="Toggle language"
-						aria-label="Toggle JS/TS"
-						class="sb-ts-toggle"
-					/>
+					{props.withTsJsToggle === "true" && (
+						<input
+							type="checkbox"
+							checked
+							title="Toggle language"
+							aria-label="Toggle TS/JS"
+							class="sb-ts-js-toggle"
+						/>
+					)}
 				</Tabs.List>
 
 				<For each={tabNames}>

@@ -19,7 +19,7 @@ import {
 	tsToJs,
 } from "./ts-to-js.js";
 
-const SUPPORTED_LANGS = ["js", "javascript", "jsx", "ts", "typescript", "tsx"];
+const SUPPORTED_LANGS = ["ts", "typescript", "tsx"];
 
 function markerType(input: string) {
 	let normalized = input;
@@ -65,8 +65,8 @@ function addToggleToHeader(header: Element) {
 					type: "checkbox",
 					checked: true,
 					title: "Toggle language",
-					"aria-label": "Toggle JS/TS",
-					className: "sb-ts-toggle",
+					"aria-label": "Toggle TS/JS",
+					className: "sb-ts-js-toggle",
 				}),
 			]);
 
@@ -75,28 +75,51 @@ function addToggleToHeader(header: Element) {
 	});
 }
 
-export interface TsToggleOptions {
-	showTsToggleButton?: boolean | undefined;
-	postprocessJsCode?: (jsCode: string) => string | Promise<string>;
+/**
+ * Options for the Language switcher plugin.
+ */
+export interface LanguageSwitcherOptions {
+	/**
+	 * Whether to show the toggle button in the code block header.
+	 * @default true
+	 */
+	showToggleButton?: boolean;
+	/**
+	 * A function to process the generated JavaScript code.
+	 * Defaults to formatting with prettier with default options.
+	 */
+	postprocessCode?: (code: string) => string | Promise<string>;
 }
 
-export function ecPluginTsToggle(options: TsToggleOptions) {
+/**
+ * Creates an Expressive Code plugin that adds TypeScript/JavaScript toggle functionality.
+ *
+ * This plugin converts TypeScript/TSX code blocks to their JavaScript/JSX equivalents
+ * and renders both versions side-by-side with a toggle button.
+ *
+ * Supported languages: ts, typescript, tsx.
+ * Other languages are not supported and will be ignored by the plugin.
+ *
+ * @param options - Configuration options for the plugin
+ * @returns An Expressive Code plugin
+ */
+export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 	return definePlugin({
-		name: "TS toggle",
+		name: "Language switcher",
 		hooks: {
 			postprocessRenderedBlock: async ({ renderData, codeBlock, config }) => {
-				const metaOptions = new MetaOptions(codeBlock.meta);
-
-				if (metaOptions.getBoolean("disableTsToggle")) {
-					return;
-				}
-
 				if (!SUPPORTED_LANGS.includes(codeBlock.language)) {
 					return;
 				}
 
+				const metaOptions = new MetaOptions(codeBlock.meta);
+
+				if (metaOptions.getBoolean("withoutLanguageSwitcher")) {
+					return;
+				}
+
 				if (
-					options.showTsToggleButton &&
+					options.showToggleButton &&
 					metaOptions.getString("frame") !== "none"
 				) {
 					addToggleToHeader(renderData.blockAst);
@@ -134,13 +157,13 @@ export function ecPluginTsToggle(options: TsToggleOptions) {
 					}
 				}
 
-				const isJsx = ["jsx", "tsx"].includes(codeBlock.language);
+				const isJsx = codeBlock.language === "tsx";
 
 				const { jsCode, markers: jsMarkers } = await tsToJs(
 					codeBlock.code,
 					markers,
 					isJsx,
-					options.postprocessJsCode,
+					options.postprocessCode,
 				);
 
 				for (const { type, lines } of jsMarkers) {
@@ -152,7 +175,7 @@ export function ecPluginTsToggle(options: TsToggleOptions) {
 
 				const engine = new ExpressiveCodeEngine({
 					...config,
-					plugins: config.plugins.filter((v) => v.name !== "TS toggle"),
+					plugins: config.plugins.filter((v) => v.name !== "Language switcher"),
 				});
 
 				const jsBlock = new ExpressiveCodeBlock({
@@ -165,13 +188,13 @@ export function ecPluginTsToggle(options: TsToggleOptions) {
 				const renderedJsBlock = await engine.render(jsBlock);
 
 				if (
-					options.showTsToggleButton &&
+					options.showToggleButton &&
 					metaOptions.getString("frame") !== "none"
 				) {
 					addToggleToHeader(renderedJsBlock.renderedGroupAst);
 				}
 
-				renderData.blockAst = h("div", { className: "sb-ts-group" }, [
+				renderData.blockAst = h("div", { className: "sb-language-group" }, [
 					renderData.blockAst,
 					renderedJsBlock.renderedGroupAst.children[0],
 				]);
