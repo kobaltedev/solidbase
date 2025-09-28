@@ -38,7 +38,7 @@ export default defineConfig({
     expressiveCode: {
       languageSwitcher: {
         showToggleButton: true,
-        formatter: async (code) => {
+        formatter: async (jsCode, isJsx) => {
           // Custom formatting
           return code;
         },
@@ -83,6 +83,6 @@ The plugin automatically preserves line markers.
 
 ### `formatter`
 
-- **Type:** `(code: string) => string | Promise<string>`
+- **Type:** `(jsCode: string, isJsx; boolean) => string | Promise<string>`
 - **Default:** Formatting with Prettier with default options
 - **Description:** A function to format the generated JavaScript code.
