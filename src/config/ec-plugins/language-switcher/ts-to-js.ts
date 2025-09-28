@@ -1,6 +1,7 @@
-import { diffLines } from "diff";
+import { diffChars } from "diff";
 import MagicString from "magic-string";
 import prettier from "prettier";
+import { SourceMapConsumer } from "source-map";
 import ts from "typescript";
 
 const tripleSlashDirectiveRegExp =
@@ -57,20 +58,55 @@ function processImportDeclaration(ms: MagicString, node: ts.ImportDeclaration) {
 	}
 }
 
+function processNamedBindings(
+	ms: MagicString,
+	parentNode: ts.ImportDeclaration | ts.ExportDeclaration,
+	namedBindings: ts.NamedImports | ts.NamedExports,
+) {
+	const valueBindings = namedBindings.elements.filter((el) => !el.isTypeOnly);
+
+	if (valueBindings.length === 0) {
+		ms.remove(parentNode.getFullStart(), parentNode.getEnd());
+		return;
+	}
+
+	if (namedBindings.elements.every((el) => !el.isTypeOnly)) {
+		return;
+	}
+
+	const allElements = namedBindings.elements;
+	for (let i = 0; i < allElements.length; ) {
+		if (allElements[i].isTypeOnly) {
+			let j = i;
+			while (j < allElements.length && allElements[j].isTypeOnly) {
+				j++;
+			}
+			// Contiguous block of type-only bindings from i to j-1.
+			const startNode = allElements[i];
+			const endNode = allElements[j - 1];
+
+			let removalStart = startNode.getFullStart();
+			let removalEnd = endNode.getEnd();
+
+			if (j < allElements.length) {
+				// Block is not at the end, remove up to the start of the next element.
+				removalEnd = allElements[j].getFullStart();
+			} else if (i > 0) {
+				// Block is at the end, remove from the end of the previous element.
+				removalStart = allElements[i - 1].getEnd();
+			}
+
+			ms.remove(removalStart, removalEnd);
+			i = j;
+		} else {
+			i++;
+		}
+	}
+}
+
 function processNamedImports(ms: MagicString, node: ts.ImportDeclaration) {
 	const namedBindings = node.importClause!.namedBindings as ts.NamedImports;
-	const valueImports = namedBindings.elements.filter((el) => !el.isTypeOnly);
-
-	if (valueImports.length === 0) {
-		ms.remove(node.getFullStart(), node.getEnd());
-	} else {
-		const importList = valueImports.map((imp) => imp.getText()).join(", ");
-		ms.overwrite(
-			namedBindings.getStart(),
-			namedBindings.getEnd(),
-			`{ ${importList} }`,
-		);
-	}
+	processNamedBindings(ms, node, namedBindings);
 }
 
 function processExportDeclaration(ms: MagicString, node: ts.ExportDeclaration) {
@@ -86,20 +122,7 @@ function processExportDeclaration(ms: MagicString, node: ts.ExportDeclaration) {
 
 function processNamedExports(ms: MagicString, node: ts.ExportDeclaration) {
 	const namedExports = node.exportClause as ts.NamedExports;
-	const valueExports = namedExports.elements.filter(
-		(element) => !element.isTypeOnly,
-	);
-
-	if (valueExports.length === 0) {
-		ms.remove(node.getFullStart(), node.getEnd());
-	} else {
-		const exportList = valueExports.map((exp) => exp.getText()).join(", ");
-		ms.overwrite(
-			namedExports.getStart(),
-			namedExports.getEnd(),
-			`{ ${exportList} }`,
-		);
-	}
+	processNamedBindings(ms, node, namedExports);
 }
 
 function removeTypeDeclarations(ms: MagicString, node: ts.Node) {
@@ -354,43 +377,6 @@ function transformNode(ms: MagicString, node: ts.Node): boolean {
 	return true;
 }
 
-function mapMarkers(
-	tsCode: string,
-	jsCode: string,
-	markers: Array<Marker>,
-): Array<Marker> {
-	if (!tsCode || !jsCode) {
-		return markers.map((marker) => ({ ...marker, lines: [] }));
-	}
-
-	const changes = diffLines(tsCode, jsCode);
-
-	const mapping = new Map<number, number>();
-	let tsIndex = 0;
-	let jsIndex = 0;
-
-	for (const change of changes) {
-		if (change.added) {
-			jsIndex += change.count;
-		} else if (change.removed) {
-			tsIndex += change.count;
-		} else {
-			for (let i = 0; i < change.count; i++) {
-				mapping.set(tsIndex + i + 1, jsIndex + i + 1);
-			}
-			tsIndex += change.count;
-			jsIndex += change.count;
-		}
-	}
-
-	return markers.map((marker) => ({
-		...marker,
-		lines: marker.lines
-			.filter((line) => mapping.has(line))
-			.map((line) => mapping.get(line)!),
-	}));
-}
-
 export type MarkerType = "mark" | "ins" | "del";
 export type Marker = {
 	type: MarkerType;
@@ -401,15 +387,16 @@ export const MarkerTypeOrder: Array<MarkerType> = ["mark", "del", "ins"];
 
 export async function tsToJs(
 	tsCode: string,
-	markers: Array<Marker>,
+	tsMarkers: Array<Marker>,
 	isJsx?: boolean,
-	postprocessJsCode?: (jsCode: string) => string | Promise<string>,
+	formatter?: (jsCode: string, isJsx?: boolean) => string | Promise<string>,
 ): Promise<{
 	jsCode: string;
 	markers: Array<Marker>;
 }> {
+	const fileName = isJsx ? "temp.tsx" : "temp.ts";
 	const ast = ts.createSourceFile(
-		isJsx ? "temp.tsx" : "temp.ts",
+		fileName,
 		tsCode,
 		ts.ScriptTarget.Latest,
 		true,
@@ -429,13 +416,14 @@ export async function tsToJs(
 
 	walkNode(ast);
 
-	let jsCode = ms.toString();
+	const unformattedCode = ms.toString();
 
+	let formattedCode = unformattedCode;
 	try {
-		if (postprocessJsCode) {
-			jsCode = await postprocessJsCode(jsCode);
+		if (formatter) {
+			formattedCode = await formatter(unformattedCode, isJsx);
 		} else {
-			jsCode = await prettier.format(jsCode, {
+			formattedCode = await prettier.format(unformattedCode, {
 				parser: "babel",
 			});
 		}
@@ -443,8 +431,89 @@ export async function tsToJs(
 		console.error("Error during post-processing JavaScript code:", error);
 	}
 
+	const changes = diffChars(unformattedCode, formattedCode);
+	const formatMs = new MagicString(unformattedCode);
+
+	if (changes && changes.length > 0) {
+		let cursor = 0;
+
+		for (const part of changes) {
+			if (part.added) {
+				formatMs.prependLeft(cursor, part.value);
+				cursor -= part.count;
+			} else if (part.removed) {
+				formatMs.remove(cursor, cursor + part.count);
+			}
+
+			cursor += part.count;
+		}
+	}
+
+	const rawJsMap = await new SourceMapConsumer(
+		ms.generateMap({
+			file: "temp.js",
+			source: fileName,
+		}),
+	);
+	const formattedJsMap = await new SourceMapConsumer(
+		formatMs.generateMap({
+			file: "temp.js",
+			source: "unformatted.js",
+		}),
+	);
+
+	const tsToJsMap = new Map<number, Array<number>>();
+	rawJsMap.eachMapping((m) => {
+		if (m.originalLine === null || m.generatedLine === null) {
+			return;
+		}
+		if (!tsToJsMap.has(m.originalLine)) {
+			tsToJsMap.set(m.originalLine, []);
+		}
+		const lines = tsToJsMap.get(m.originalLine)!;
+		if (!lines.includes(m.generatedLine)) {
+			lines.push(m.generatedLine);
+		}
+	});
+
+	const unformattedToFormattedMap = new Map<number, Array<number>>();
+	formattedJsMap.eachMapping((m) => {
+		if (m.originalLine === null || m.generatedLine === null) {
+			return;
+		}
+		if (!unformattedToFormattedMap.has(m.originalLine)) {
+			unformattedToFormattedMap.set(m.originalLine, []);
+		}
+		const lines = unformattedToFormattedMap.get(m.originalLine)!;
+		if (!lines.includes(m.generatedLine)) {
+			lines.push(m.generatedLine);
+		}
+	});
+
+	const jsMarkers: Array<Marker> = [];
+	for (const tsMarker of tsMarkers) {
+		const jsMarkerLines = new Set<number>();
+		for (const tsLine of tsMarker.lines) {
+			const rawLines = tsToJsMap.get(tsLine);
+			if (rawLines) {
+				for (const rawLine of rawLines) {
+					const formattedLines = unformattedToFormattedMap.get(rawLine);
+					if (formattedLines) {
+						for (const formattedLine of formattedLines) {
+							jsMarkerLines.add(formattedLine);
+						}
+					}
+				}
+			}
+		}
+		jsMarkers.push({
+			...tsMarker,
+			lines: [...jsMarkerLines].sort((a, b) => a - b),
+		});
+	}
+
 	return {
-		jsCode: jsCode,
-		markers: mapMarkers(tsCode, jsCode, markers),
+		jsCode: formattedCode,
+		markers: jsMarkers,
 	};
 }

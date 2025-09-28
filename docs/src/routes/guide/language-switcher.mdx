@@ -38,8 +38,8 @@ export default defineConfig({
     expressiveCode: {
       languageSwitcher: {
         showToggleButton: true,
-        postprocessJsCode: async (code) => {
-          // Custom code processing
+        formatter: async (code) => {
+          // Custom formatting
           return code;
         },
       },
@@ -81,8 +81,8 @@ The plugin automatically preserves line markers.
 - **Default:** `true`
 - **Description:** Whether to show the toggle button in the code block header.
 
-### `postprocessJsCode`
+### `formatter`
 
 - **Type:** `(code: string) => string | Promise<string>`
-- **Default:** Prettier formatting
-- **Description:** A function to process the generated JavaScript code.
+- **Default:** Formatting with Prettier with default options
+- **Description:** A function to format the generated JavaScript code.

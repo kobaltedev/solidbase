@@ -1,109 +1,26 @@
-```tsx
-import { SolidBaseApp } from "@kobalte/solidbase";
+```tsx tab title="index.tsx" del={2,6} {10-12}
+import {
+	type RouteDefinition,
+	createAsync,
+} from "@solidjs/router";
+import {
+	type User,
+	getUserQuery,
+} from "./queries";
 
-export default function App() {
-  return <SolidBaseApp />;
+export const route = {
+  preload: ({ params }) => getUserQuery({ id: params.id }),
+} satisfies RouteDefinition;
+```
+
+```tsx tab title="queries.ts" del={3-5} {7-9}
+import { query } from "@solidjs/router";
+
+export type User = {
+	id: number;
 }
+
+export const getUserQuery = query((id: number) => {
+	return {id} as User
+})
 ```
-
-```tsx {4}
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-```tsx {4-6}
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-```tsx title="custom.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-```tsx showLineNumbers
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-```tsx twoslash
-const test: 4 | 44 | 444 = 4;
-```
-
-```tsx {4-6} title="custom.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp />;
-}
-```
-
-```tsx {4} tab title="a.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp a />;
-}
-```
-
-```tsx {4} tab title="b.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp b />;
-}
-```
-
-```tsx {4} tab="key" title="a.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp a />;
-}
-```
-
-```tsx {4} tab="key" title="b.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp b />;
-}
-```
-
-```tsx {4} tab="key" title="a.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp a />;
-}
-```
-
-```tsx {4} tab="key" title="b.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp b />;
-}
-```
-
-::::tab-group[key]
-:::tab[a.tsx]
-Hey I'm A
-:::
-
-:::tab[b.tsx]
-Hi this is B
-:::
-::::

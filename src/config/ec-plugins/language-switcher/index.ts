@@ -21,7 +21,7 @@ import {
 
 const SUPPORTED_LANGS = ["ts", "typescript", "tsx"];
 
-function markerType(input: string) {
+function getMarkerType(input: string) {
 	let normalized = input;
 	if (input === "add") {
 		normalized = "ins";
@@ -85,10 +85,10 @@ export interface LanguageSwitcherOptions {
 	 */
 	showToggleButton?: boolean;
 	/**
-	 * A function to process the generated JavaScript code.
-	 * Defaults to formatting with prettier with default options.
+	 * A function to format the generated JavaScript code.
+	 * Defaults to formatting with Prettier with default options.
 	 */
-	postprocessJsCode?: (code: string) => string | Promise<string>;
+	formatter?: (code: string) => string | Promise<string>;
 }
 
 /**
@@ -132,15 +132,18 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 					key,
 					value,
 					raw,
+					kind,
 					valueStartDelimiter,
 					valueEndDelimiter,
 				} of metaOptions.list()) {
-					const type = markerType(key ?? "");
-					if (type && typeof value === "string") {
-						markers.push({
-							type,
-							lines: rangeParser(value),
-						});
+					if (kind === "range") {
+						const type = getMarkerType(key ?? "mark");
+						if (type && typeof value === "string") {
+							markers.push({
+								type,
+								lines: rangeParser(value),
+							});
+						}
 					} else if (key === "title" && typeof value === "string") {
 						const newTitle = value.replace(/\.tsx?$/, (ext) => {
 							if (ext === ".tsx") {
@@ -163,14 +166,19 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 					codeBlock.code,
 					markers,
 					isJsx,
-					options.postprocessJsCode,
+					options.formatter,
 				);
 
 				for (const { type, lines } of jsMarkers) {
 					const start = Math.min(...lines);
 					const end = Math.max(...lines);
-					const rangeStr = start === end ? String(start) : `${start}-${end}`;
-					jsMeta += ` ${type}={${rangeStr}}`;
+					if (start === end) {
+						jsMeta += ` ${type}={${start}}`;
+					} else if (end - start + 1 === lines.length) {
+						jsMeta += ` ${type}={${start}-${end}}`;
+					} else {
+						jsMeta += ` ${type}={${lines.join(",")}}`;
+					}
 				}
 
 				const engine = new ExpressiveCodeEngine({
