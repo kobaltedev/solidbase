@@ -39,9 +39,6 @@ export default defineConfig(
 						return code.replace("REPLACE ME", "replaced string!");
 					},
 				},
-				expressiveCode: {
-					languageSwitcher: {},
-				},
 			},
 			themeConfig: {
 				socialLinks: {
