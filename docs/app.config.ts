@@ -27,6 +27,11 @@ export default defineConfig(
 				"Fully featured, fully customisable static site generation for SolidStart",
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
+			markdown: {
+				expressiveCode: {
+					languageSwitcher: true,
+				},
+			},
 			locales: {
 				fr: {
 					label: "Français",

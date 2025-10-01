@@ -15,15 +15,21 @@ To enable it, configure the `languageSwitcher` option in your SolidBase config:
 ### Basic Setup
 
 ```ts title="app.config.ts"
-import { defineConfig } from 'solidbase';
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
 
-export default defineConfig({
-  markdown: {
-    expressiveCode: {
-      languageSwitcher: true,
-    },
-  },
-});
+export default defineConfig(
+	withSolidBase(
+		/* your SolidStart config */,
+		{
+		  markdown: {
+		    expressiveCode: {
+		      languageSwitcher: true,
+		    },
+		  },
+		},
+	),
+);
 ```
 
 ### Advanced Configuration
@@ -31,21 +37,27 @@ export default defineConfig({
 For custom options, pass an object:
 
 ```ts title="app.config.ts"
-import { defineConfig } from 'solidbase';
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
 
-export default defineConfig({
-  markdown: {
-    expressiveCode: {
-      languageSwitcher: {
-        showToggleButton: true,
-        formatter: async (jsCode, isJsx) => {
-          // Custom formatting
-          return code;
-        },
-      },
-    },
-  },
-});
+export default defineConfig(
+	withSolidBase(
+		/* your SolidStart config */,
+		{
+		  markdown: {
+		    expressiveCode: {
+		      languageSwitcher: {
+		        showToggleButton: true,
+		        formatter: async (jsCode, isJsx) => {
+		          // Custom formatting
+		          return code;
+		        },
+		      },
+		    },
+		  },
+		},
+	),
+);
 ```
 
 ### Supported Languages
