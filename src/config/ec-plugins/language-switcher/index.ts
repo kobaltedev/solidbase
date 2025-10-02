@@ -127,15 +127,21 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 
 				let jsMeta = "";
 
+				if (codeBlock.props.title) {
+					const newTitle = codeBlock.props.title.replace(/\.tsx?$/, (ext) => {
+						if (ext === ".tsx") {
+							return ".jsx";
+						}
+						if (ext === ".ts") {
+							return ".js";
+						}
+						return ext;
+					});
+					jsMeta += ` title="${newTitle}"`;
+				}
+
 				const markers: Array<Marker> = [];
-				for (const {
-					key,
-					value,
-					raw,
-					kind,
-					valueStartDelimiter,
-					valueEndDelimiter,
-				} of metaOptions.list()) {
+				for (const { key, value, raw, kind } of metaOptions.list()) {
 					if (kind === "range") {
 						const type = getMarkerType(key ?? "mark");
 						if (type && typeof value === "string") {
@@ -144,18 +150,7 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 								lines: rangeParser(value),
 							});
 						}
-					} else if (key === "title" && typeof value === "string") {
-						const newTitle = value.replace(/\.tsx?$/, (ext) => {
-							if (ext === ".tsx") {
-								return ".jsx";
-							}
-							if (ext === ".ts") {
-								return ".js";
-							}
-							return ext;
-						});
-						jsMeta += ` title=${valueStartDelimiter}${newTitle}${valueEndDelimiter}`;
-					} else {
+					} else if (key !== "title") {
 						jsMeta += ` ${raw}`;
 					}
 				}
