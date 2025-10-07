@@ -1,0 +1,50 @@
+---
+title: Internationalisation
+---
+
+# {frontmatter.title}
+
+SolidBase has built-in i18n support which can be configured in the root config:
+
+```ts
+export default defineConfig(
+	createWithSolidBase(theme)(
+		/* SolidStart options */
+		{
+			...
+		},
+		/* SolidBase options */
+		{
+			...
+			lang: "en", // default lang without route prefix
+			locales: {
+				fr: {
+					label: "Français",
+					themeConfig: {
+						...
+					},
+				},
+			},
+			...
+    }
+  )
+);
+```
+
+## Creating Localized Routes
+
+To create localized routes, simply create a folder with the locale code inside the `src/routes` directory. All files within this folder will be served under the corresponding locale prefix. For example, files in `src/routes/fr` will be accessible under the `/fr` path. The default locale (e.g., `en`) will not have a prefix and will be served from the root path. The folder structure would look like this:
+
+```
+src
+└─ routes
+   ├─ fr
+   │  ├─ index.mdx
+   │  └─ about.mdx
+   ├─ index.mdx
+   └─ about.mdx
+```
+
+## Theme Configuration
+
+Similar to the theme configuration for the default locale, you can provide a `themeConfig` for each locale to customize the theme for that specific language. To learn more about how to adjust the theme configuration, refer to the [Theme Configuration section within the config page](/guide/config#theme-configuration).

@@ -4,22 +4,19 @@ title: Markdown Extensions
 
 # {frontmatter.title}
 
-SolidBase comes with many markdown extensions from [GFM](https://github.github.com/gfm/) to fully custom ones.
-All of their options and usage examples are listed here.
+SolidBase provides multiple ways to extend markdown syntax from [GFM](https://github.github.com/gfm/) to fully customized ones. The following sections list all of their options and usage examples.
 
 ## Autolinked Titles
 
-All titles will have an associated unique slug and self link.
+Each title, heading, and subheading will automatically be given a unique slug and self link.
 
-```md
+```md tab title="Markdown"
 # My Docs
 
 ## Subheading
 ```
 
-will generate:
-
-```html
+```html tab title="HTML Output"
 <h1 id="my-docs"><a href="#my-docs">My Docs</a></h1>
 
 <h2 id="subheading"><a href="#subheading">Subheading</a></h2>
@@ -27,27 +24,38 @@ will generate:
 
 ## External Links
 
-Outbound links automatically get `target="_blank" rel="noreferrer"`:
+Each outbound link will automatically get `target="_blank" rel="noreferrer"` attributes for security and performance reasons.
 
-- [start.solidjs.com](https://start.solidjs.com)
-- [SolidBase on GitHub](https://github.com/kobaltedev/solidbase)
+```md tab title="Markdown"
+[SolidJS](https://www.solidjs.com)
+[SolidBase on GitHub](https://github.com/kobaltedev/solidbase)
+```
+
+```html tab title="HTML Output"
+<a href="https://www.solidjs.com" target="_blank" rel="noopener noreferrer">SolidJS</a>
+<a href="https://github.com/kobaltedev/solidbase" target="_blank" rel="noopener noreferrer">SolidBase on GitHub</a>
+```
 
 ## Frontmatter
 
-[YAML frontmatter](https://mdxjs.com/guides/frontmatter/) is supported out of the box:
+Out of the box, SolidBase supports [YAML frontmatter](https://mdxjs.com/guides/frontmatter/) to define metadata at the top of your markdown files. To add frontmatter to your markdown file, simply add a YAML block at the very top of the file, wrapped in triple dashes `---`.
 
-```yaml
+```mdx title="Markdown"
 ---
 title: SolidBase
 layout: home
 ---
+
+# {frontmatter.title}
 ```
 
-This data will be available to the rest of the page, along with all custom and theming components.
+The data defined in the frontmatter will be parsed and made available to the page as a `frontmatter` object. It is made available through the entire application, including all custom and theming components.
 
-For more details, see [Frontmatter](../reference/frontmatter).
+For more details, see the [Frontmatter reference](../reference/frontmatter).
 
 ## Table of Contents
+
+You can automatically generate a table of contents (ToC) for your markdown files by adding `[[toc]]` anywhere in the document. The ToC will be generated based on all titles, headings, and subheadings in the document.
 
 **Input**
 
@@ -61,9 +69,7 @@ For more details, see [Frontmatter](../reference/frontmatter).
 
 ## Directives
 
-Directives can be defined by their types, titles, and contents.
-
-### Default Title
+Directives are custom blocks that can be used to highlight important information, warnings, tips, and more. They are similar to callouts or alerts in other documentation systems.
 
 **Input**
 
@@ -119,9 +125,9 @@ Negative potential consequences of an action.
 This is a details block.
 :::
 
-### Custom Title
+### Custom Directive Titles
 
-You can set a custom title between square brackets `[]` after the "type" of the directive.
+To set a custom title for a directive, use square brackets `[]` immediately after the directive type.
 
 **Input**
 
@@ -155,9 +161,11 @@ This is a details block.
 
 ## GitHub Flavored Markown
 
+In addition to the standard markdown syntax, SolidBase also supports several GitHub Flavored Markdown (GFM) extensions.
+
 ### Alerts
 
-SolidBase also supports [GitHub-flavored alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts) to render as callouts. They will be rendered the same as the [custom containers](#custom-containers).
+In addition to the directives above, SolidBase also supports [GitHub-flavored alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts). These alerts can render as callouts with similar styles to the [directives above](#directives).
 
 ```md
 > [!NOTE]
@@ -198,7 +206,7 @@ SolidBase also supports [GitHub-flavored alerts](https://docs.github.com/en/get-
 
 ### Autolinks
 
-All text matching link patterns will automatically be converted into a link:
+SolidBase is able to automatically detect and convert URLs into clickable links. This works for URLs containing the protocol (e.g., `https://example.com`) as well as those without (e.g., `www.example.com` or `example.com`).
 
 **Input**
 
@@ -210,21 +218,8 @@ https://github.com/kobaltedev/solidbase
 **Output**
 
 start.solidjs.com
+
 https://github.com/kobaltedev/solidbase
-
-### Strikethrough
-
-Strikethrough text is any text wrapped in a matching pair of one or two tildes (`~`).
-
-**Input**
-
-```md
-~~Hi~~ Hello, ~there~ world!
-```
-
-**Output**
-
-~~Hi~~ Hello, ~there~ world!
 
 ### Tables
 
@@ -244,7 +239,7 @@ Strikethrough text is any text wrapped in a matching pair of one or two tildes (
 | longword | longword | longword | longword |
 | short    | short    |    short | `short`  |
 
-### Task List
+### Task Lists
 
 **Input**
 
@@ -258,24 +253,19 @@ Strikethrough text is any text wrapped in a matching pair of one or two tildes (
 - [ ] to do
 - [x] done
 
-## Kbd
+### Horizontal Rules
 
-While not a markdown syntax, a key input element can be written using html.
+You can create horizontal rules (or horizontal lines) through the following methods:
 
-**Input**
+- Three or more hyphens (`---`)
+- Three or more asterisks (`***`)
+- Three or more underscores (`___`)
+- HTML `<hr />` tag
 
-```md
-<kbd>Ctrl</kbd> + <kbd>C</kbd>
-```
-
-**Output**
-
-<kbd>Ctrl</kbd> + <kbd>C</kbd>
 
 ## Footnotes
 
-Footnotes can be added anywhere in the document and a link will be generated pointing to it.
-All notes are inserted at the end of the document with a corresponding backlink.
+Footnotes are able to be added anywhere in the document using `[^label]` syntax, where `label` is a unique identifier for the footnote. To define the footnote content, the footnote definition should be placed at the end of the document, using the same `[^label]:` syntax followed by the footnote text.
 
 **Input**
 
@@ -291,9 +281,11 @@ A note[^1]
 
 [^1]: Big note.
 
-## Syntax Highlighting in Code Blocks
+## Code Blocks
 
-SolidBase uses [Expressive Code](https://expressive-code.com/) to highlight language syntax in Markdown code blocks, using coloured text. Expressive Code supports a wide variety of programming languages and additional features. All you need to do is append a valid language alias to the beginning backticks for the code block:
+SolidBase uses [Expressive Code](https://expressive-code.com/) to highlight code blocks. Expressive Code is a fast and flexible syntax highlighter that supports a wide range of programming languages as well as additional features like line highlighting, line numbers, collapsible sections, code tabs, and more. The list of supported languages is [available on GitHub]](https://github.com/antfu/textmate-grammars-themes/blob/main/packages/tm-grammars/README.md)
+
+To use Expressive Code, simply wrap your code in triple backticks (```) and specify the language after the opening backticks. This will enable syntax highlighting for that language.
 
 **Input**
 
@@ -331,41 +323,9 @@ export default function App() {
 }
 ```
 
-A [list of valid languages](https://github.com/antfu/textmate-grammars-themes/blob/main/packages/tm-grammars/README.md) is available on GitHub.
+### Line Highlighting
 
-## Line Highlighting in Code Blocks
-
-**Input**
-
-````
-```ts {4}
-export default {
-  data () {
-    return {
-      msg: "Highlighted!"
-    }
-  }
-}
-```
-````
-
-**Output**
-
-```ts {4}
-export default {
-  data () {
-    return {
-      msg: "Highlighted!"
-    }
-  }
-}
-```
-
-In addition to a single line, you can also specify multiple single lines, ranges, or both:
-
-- Line ranges: for example `{1-4}`, `{6-10}`, `{12-20}`
-- Multiple single lines: for example `{4, 6, 10}`
-- Line ranges and single lines: for example `{4, 6-10, 15, 20-24, 40}`
+In addition to syntax highlighting, you can also highlight specific lines in a code block by adding curly braces `{}` after the language and specifying the line numbers or ranges you want to highlight. You can specify single lines (e.g., `{4}`), multiple single lines (e.g., `{4, 6, 10}`), line ranges (e.g., `{1-4}`), or a combination of both (e.g., `{4, 6-10, 15, 20-24, 40}`).
 
 **Input**
 
@@ -401,21 +361,14 @@ export default { // Highlighted
 }
 ```
 
-## Line Numbers
+### Line Numbers
 
-You can enable line numbers for each code block by adding `showLineNumbers` after the language.
+By default, line numbers are disabled. To enable them, add `showLineNumbers` after the language.
 
 **Input**
 
 ````md
-```ts
-// line numbers are disabled by default
-const line2 = "This is line 2";
-const line3 = "This is line 3";
-```
-
 ```ts showLineNumbers
-// line numbers are enabled
 const line2 = "This is line 2";
 const line3 = "This is line 3";
 ```
@@ -423,68 +376,65 @@ const line3 = "This is line 3";
 
 **Output**
 
-```ts
-// line numbers are disabled by default
-const line2 = "This is line 2";
-const line3 = "This is line 3";
-```
-
-<br />
-
 ```ts showLineNumbers
-// line numbers are enabled
 const line2 = 'This is line 2'
 const line3 = 'This is line 3'
 ```
+
+### Code Tabs
+
+When you have multiple related code blocks, you can group them into tabs for better organization and readability. To create code tabs, add `tab` after the language and specify a `title` for each tab.
+
+**Input**
+
+````md
+```tsx {4} tab title="a.tsx"
+
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp a />;
+}
+
+```
+
+```tsx {4} tab title="b.tsx"
+
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp b />;
+}
+
+```
+````
+
+**Output**
+
+```tsx {4} tab title="a.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp a />;
+}
+```
+
+```tsx {4} tab title="b.tsx"
+import { SolidBaseApp } from "@kobalte/solidbase";
+
+export default function App() {
+  return <SolidBaseApp b />;
+}
+```
+
+### Twoslash
+
+// TODO
 
 ## Collapsible
 
 // TODO
 
-## Code Tabs
-
-**Input**
-
-````md
-```tsx {4} tab title="a.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp a />;
-}
-```
-
-```tsx {4} tab title="b.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp b />;
-}
-```
-````
-
-**Output**
-
-```tsx {4} tab title="a.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp a />;
-}
-```
-
-```tsx {4} tab title="b.tsx"
-import { SolidBaseApp } from "@kobalte/solidbase";
-
-export default function App() {
-  return <SolidBaseApp b />;
-}
-```
-
-## Twoslash
-
-// TODO
-
 ## Advanced Configuration
 
-TODO
+// TODO

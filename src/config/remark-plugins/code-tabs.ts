@@ -3,7 +3,13 @@ import type { Root } from "mdast";
 import type { Transformer } from "unified";
 import { SKIP, visit } from "unist-util-visit";
 
-export function remarkCodeTabs(): Transformer<Root, Root> {
+export interface CodeTabsOptions {
+	withTsJsToggle?: boolean;
+}
+
+export function remarkCodeTabs(
+	options: CodeTabsOptions,
+): Transformer<Root, Root> {
 	return (tree) => {
 		visit(tree, (node, index, parent) => {
 			if (node.type === "code" && parent) {
@@ -66,9 +72,11 @@ export function remarkCodeTabs(): Transformer<Root, Root> {
 							],
 						};
 					}),
+
 					attributes: {
 						codeGroup: "true",
 						title: key,
+						withTsJsToggle: String(!!options.withTsJsToggle),
 					},
 				};
 

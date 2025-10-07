@@ -4,70 +4,69 @@ title: Extending Themes
 
 # Extending Themes
 
-If you'd like to customise an existing theme,
-you can define a custom theme that extends it.
-The custom theme's `Layout` should render the original theme's `Layout` component,
-but apart from that you can treat it as a regular theme.
+You can extend the default theme if you'd like to preserve the default theme's functionality while adding your own customisations.
+SolidBase offers the ability to extend this theme, allowing you to build upon its existing features without starting from scratch.
+For example, these docs [extend the default theme](https://github.com/kobaltedev/solidbase/blob/main/docs/app.config.ts#L7) to add [OpenGraph](https://ogp.me) tags
 
-:::info
-The theme used for these docs
-[extends the default theme](https://github.com/kobaltedev/solidbase/blob/main/docs/app.config.ts#L7)
-to add [OpenGraph](https://ogp.me) tags!
-:::
+## Create an Extended Theme
 
-## Creating Extended Themes
-
-These examples will extend the default theme as an example.
-
-Define a custom theme with `defineTheme` and provide the original theme's definition to `extends`:
+To extend the default theme, you must define a custom theme using `defineTheme`, setting its extends property to the `defaultTheme`, imported from `@kobalte/solidbase/default-theme`, and configuring the `componentsPath` property to point to the folder housing your custom theme's components.
 
 ```ts
 <!-- app.config.ts -->
 import { defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
-const customTheme = defineTheme<CustomThemeConfig>({
-  componentsPath: import.meta.resolve("./custom-theme"),
-  extends: defaultTheme
-});
+const customTheme =  defineTheme({
+	componentsPath: import.meta.resolve("./src/custom-theme"),
+	extends: defaultTheme,
+}),
 ```
 
-Add a `Layout` file inside the `componentsPath` folder that renders the original theme's `Layout`:
+Once the theme is defined, you can set it as the active theme in your SolidBase config, using the `createWithSolidBase` helper to wrap your configuration:
+
+```ts
+<!-- app.config.ts -->
+import { defineTheme } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+
+const customTheme =  defineTheme({
+	componentsPath: import.meta.resolve("./src/custom-theme"),
+	extends: defaultTheme,
+}),
+
+export default defineConfig(
+	createWithSolidBase(customTheme)(
+		// your solidbase configuration
+	)
+);
+```
+
+To complete the setup, in the folder specified by `componentsPath`, create a `Layout` file that re-exports the default theme's `Layout` component. In this file, you can add any custom logic or components you'd like to appear on every page, so long as you render the `Layout` component somewhere in the returned JSX.
+
 
 ```tsx
 <!-- Layout.tsx -->
 import { Layout } from "@kobalte/solidbase/default-theme/Layout";
 
 export default function (props: ComponentProps<typeof Layout>) {
-	// do whatever and render whatever you want as long as `Layout` gets rendered
-
 	return <Layout {...props} />
 }
 ```
 
-## Extending the Default Theme
+## Customizing the CSS
 
-The default theme provides multiple methods of customisation,
-which we'd recommend configuring with a custom theme that extends it.
+The default theme uses CSS variables for theming that you can override in your own CSS file. To add your own CSS file, simply import it in your `Layout` file.
 
-### Customising CSS
-
-The default theme's CSS can be customised using CSS variables:
-
-```tsx
-<!-- Layout.tsx -->
+```tsx tab title="Layout.tsx"
 import Layout from "@kobalte/solidbase/default-theme/Layout";
-// this import must be below the Layout import
+
 import "./custom.css";
 
 export default function () { ... };
 ```
 
-<br />
-
-{/* prettier-ignore */}
-```css
-<!-- custom.css -->
+```css tab title="custom.css"
 html {
   --sb-background-color: white;
 }
@@ -77,8 +76,7 @@ html[data-theme*="dark"] {
 }
 ```
 
-The full list of overridable CSS variables is in the
-[default theme's source code](https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/variables.css).
+To see the full list of available CSS variables, refer to the [CSS Variables reference](/reference/default-theme/css-variables).
 
 ### Using Different Fonts
 
@@ -88,7 +86,7 @@ The default theme uses a few fonts:
 - [Inter](https://rsms.me/inter) for text
 - [JetBrains Mono](https://www.jetbrains.com/lp/mono/) for code
 
-To stop these fonts from being loaded, set `themeConfig.fonts` to `false`:
+To disable these fonts, set the `fonts` option to `false` in your SolidBase config:
 
 ```ts
 <!-- app.config.ts -->
@@ -102,7 +100,7 @@ export default defineConfig(withSolidBase(
 ))
 ```
 
-You can then provide your own fonts:
+You can then provide your own fonts by overriding the variables in the CSS file you imported in your `Layout` component.
 
 {/* prettier-ignore */}
 ```css
@@ -116,10 +114,10 @@ html {
 
 ### Overriding Components
 
-In addition to using a custom `mdx-components` file to override the components available in markdown files,
-the components [listed here](https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/context.tsx)
-can be overriden using `DefaultThemeComponentsProvider`.
-Most of these components are used as part of the layout, rather than inside your markdown files.
+Beyond the markdown components, you can also override components used in the layout. These components can be overridden using the `DefaultThemeComponentsProvider` and passing in your custom components.
+
+The full list of components that can be overridden is available in [the reference documentation](/reference/default-theme#components).
+
 
 ```tsx
 <!-- Layout.tsx -->
@@ -130,7 +128,9 @@ import Article from "@kobalte/solidbase/default-theme/components/Article";
 export default function (props: ComponentProps<typeof Layout>) {
 	return (
 		<DefaultThemeComponentsProvider
-			components={{ Article: CustomArticle }}
+			components={{ 
+				Article: CustomArticle,
+			}}
 		>
 			<Layout {...props} />
 		</DefaultThemeComponentsProvider>

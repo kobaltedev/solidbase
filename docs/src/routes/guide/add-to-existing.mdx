@@ -4,20 +4,20 @@ title: Adding to Existing Project
 
 # {frontmatter.title}
 
-SolidBase wraps your SolidStart config rather than wrapping Start itself,
-if your project isn't SolidStart you'll need [create a new one](../quickstart).
+SolidBase can be added to an existing SolidStart project in a few simple steps.
 
 
-## 1. Add SolidBase to Your Project
+## 1. Install `@kobalte/solidbase`
 
-Install `@kobalte/solidbase`:
+To install SolidBase, run the following command in your project's root directory:
 
 ```package-install
 @kobalte/solidbase
 ```
 
-In your project's `app.config`, wrap the config being passed to `defineConfig` with `withSolidBase`.
-This will configure SolidBase with the default theme.
+## 2. Update `app.config`
+
+Since SolidBase is built on top of SolidStart, you'll need to update your `app.config` to include SolidBase's configuration. To do this, wrap the existing configuration with `withSolidBase`:
 
 ```ts title=app.config.ts
 import { defineConfig } from "@solidjs/start/config";
@@ -26,9 +26,11 @@ import { withSolidBase } from "@kobalte/solidbase/config";
 export default defineConfig(withSolidBase(/* your SolidStart config */));
 ```
 
-## 2. Wrap Your App in `SolidBaseRoot`
+## 3. Wrap Your App in `SolidBaseRoot`
 
-Add the `SolidBaseRoot` component to the `root` of your project's `Router`.
+Once SolidBase is installed and configured, you'll need to wrap your application in the `SolidBaseRoot` component to provide the necessary context for SolidBase to function correctly.
+
+In your `app.tsx`, import `SolidBaseRoot` from `@kobalte/solidbase/client` and wrap it around `Router`:
 
 ```tsx {7} title="app.tsx"
 import { SolidBaseRoot } from "@kobalte/solidbase/client";
@@ -44,7 +46,7 @@ export default function App() {
 }
 ```
 
-If your router already has a `root` component, you can wrap it with `SolidBaseRoot`.
+If your router already has a `root` component, you can wrap it with `SolidBaseRoot`:
 
 ```tsx {3}
 <Router
@@ -56,7 +58,7 @@ If your router already has a `root` component, you can wrap it with `SolidBaseRo
 </Router>
 ```
 
-## 3. Add HTML Attributes for SSR
+## 4. Add HTML Attributes for SSR
 
 To provide the `lang` and `data-theme` attributes to the `html` element during SSR,
 spread `getHtmlProps()` onto it in `entry-server`:
