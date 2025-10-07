@@ -188,7 +188,7 @@ export default defineConfig(
 									title: "Overview",
 									link: "/default-theme",
 								},
-								{	
+								{
 									title: "CSS Variables",
 									link: "/default-theme/css-variables",
 								},
@@ -215,7 +215,7 @@ export default defineConfig(
 										{
 											title: "Hero",
 											link: "/default-theme/hero",
-												},
+										},
 										{
 											title: "Last Updated",
 											link: "/default-theme/last-updated",
@@ -240,7 +240,7 @@ export default defineConfig(
 											title: "Theme Selector",
 											link: "/default-theme/theme-selector",
 										},
-									]
+									],
 								},
 								{
 									title: "Landing",
@@ -250,7 +250,6 @@ export default defineConfig(
 									title: "Layout",
 									link: "/default-theme/layout",
 								},
-								
 							],
 						},
 					],
