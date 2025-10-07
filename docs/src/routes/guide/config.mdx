@@ -1,0 +1,312 @@
+---
+title: Configure Your App
+---
+
+# {frontmatter.title}
+
+SolidBase provides a flexible configuration system that allows you to customize various aspects of your project. This guide will walk you through the different configuration options available.
+
+This includes configuration options for both SolidStart and SolidBase.
+
+```ts
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
+
+export default defineConfig(
+    withSolidBase({
+        // SolidStart options here
+    }, {
+        // SolidBase options here
+    })
+);
+```
+
+## SolidStart Config
+
+Since SolidBase is built on top of SolidStart, you can leverage existing SolidStart configuration options. This includes settings for SSR, vite plugins, and more.
+
+```ts title="app.config.ts"
+// ..
+{
+    ssr: false,
+    vite: {
+        // Vite configuration options
+    },
+}
+// ..
+```
+
+You can find more information about these options in the [SolidStart documentation](https://docs.solidjs.com/solid-start/reference/config/define-config).
+
+## SolidBase Config
+
+Within the SolidBase config, there are several options you can customize. To see all available options, refer to the [SolidBase configuration source code](https://github.com/kobaltedev/solidbase/blob/main/src/config/index.ts).
+
+```ts
+interface SolidBaseConfig<ThemeConfig> {
+  title?: string;
+  titleTemplate?: string;
+  description?: string;
+  logo?: string;
+  issueAutolink?: IssueAutoLinkConfig | false;
+  lang?: string;
+  locales?: Record<string, LocaleConfig<ThemeConfig>>;
+  themeConfig?: ThemeConfig;
+  editPath?: string | ((path: string) => string);
+  lastUpdated?: Intl.DateTimeFormatOptions | false;
+  markdown?: MdxOptions;
+  icons?: Omit<IconsOptions, "compiler"> | false;
+  autoImport?:
+    | (AutoImportOptions & { iconResolver?: ComponentResolverOption | false })
+    | true;
+}
+```
+
+### Site Metadata
+
+There are several options for setting site-wide metadata and behavior. These options help define the overall structure and presentation of your documentation site. This includes the site title, description, logo, and language settings.
+
+```ts title="app.config.ts"
+// ..
+{
+    title: "My Documentation Site",
+    titleTemplate: "%s - MySite",
+    description: "A comprehensive guide to MySite.",
+    logo: "/logo.png",
+}
+// ..
+```
+
+:::note
+For multilingual support, you can use the `locales` option to define different configurations for each locale. More details can be found in the [Internationalization guide](/guide/i18n).
+:::
+
+#### Miscellaneous options
+
+In addition to setting the site title and description, you can also configure other options. This includes:
+
+- `editPath`: A string or function to generate the "Edit this page" link for each page.
+- `lastUpdated`: An object to configure the display of the last updated timestamp on each page. Set to `false` to disable this feature.
+- `issueAutolink`: An object to configure automatic linking of issue references in your markdown content. Set to `false` to disable this feature.
+
+```ts title="app.config.ts"
+// ..
+editPath: "https://github.com/[USERNAME]/[REPO]/edit/main/docs/:path"
+lastUpdated: false;
+issueAutolink: "https://github.com/[USERNAME]/[REPO]/issues/:issue"
+// ..
+```
+
+### Markdown Configuration
+
+In addition to the default markdown support provided by SolidBase, you can include additional markdown plugins, configurations, and other options through the `markdown` option.
+
+```ts title="app.config.ts"
+// ..
+markdown: {
+    expressiveCode: {
+        // see Expressive Code below
+    },
+    toc: {
+        minDepth: 2, // Minimum heading depth
+        maxDepth: 4, // Maximum heading depth
+    },
+    remarkPlugins: [
+        // Add your remark plugins here
+    ],
+    rehypePlugins: [
+        // Add your rehype plugins here
+    ],
+    packageManager: {
+        // see Package Manager below
+    }
+},
+// ..
+```
+
+#### Expressive Code
+
+The `expressiveCode` option allows you to configure the [Rehype Expressive Code](https://github.com/rehypejs/rehype-expressive-code) plugin, which adds support for expressive code blocks in your markdown.
+
+```ts title="app.config.ts"
+// ..
+expressiveCode: {
+    // Rehype expressive code options
+    twoSlash: {
+        // TwoSlash options
+    }
+},
+// ..
+```
+
+#### Remark & Rehype Plugins
+
+You can extend the markdown processing capabilities by adding custom Remark and Rehype plugins. These plugins can help you transform and enhance your markdown content in various ways.
+
+To see a list of potential plugins to use, check out [the official remark plugin list](https://github.com/remarkjs/remark/blob/main/doc/plugins.md) and [the official rehype plugin list](https://github.com/rehypejs/rehype/blob/main/doc/plugins.md).
+
+#### Package Manager
+
+The `packageManager` option allows you to specify the package managers you would like to support in code blocks. By default, SolidBase supports npm, pnpm, yarn, bun, and deno. To disable this feature, you can set the `packageManager` option to `false`, or you can customize the supported package managers by providing an object with the desired configurations.
+
+To see the available options, refer to the [Package Manager plugin's source code](https://github.com/kobaltedev/solidbase/blob/main/s
+
+### Theme Configuration
+
+You can also customize theme-specific settings using the `themeConfig` option. The structure of this object will depend on the theme you are using. Refer to the theme's documentation for available options.
+
+```ts title="app.config.ts"
+// ..
+    themeConfig: {
+        footer: // see Footer below;
+        socialLinks:  {
+            // see Social Links below
+        };
+        nav: {
+            // see Navigation below
+        },
+        sidebar: {
+            // see Sidebar below
+        },
+        search: {
+            // see Search below
+        },
+    };
+// ..
+```
+
+#### Footer
+
+By default, SolidBase includes a footer section that can be customized or disabled. You can set the `footer` option to `false` to remove the footer entirely, or provide an object with `message` and `copyright`.
+
+```ts title="app.config.ts"
+// ..
+    footer: false // or true
+// ..
+```
+
+#### Social Links
+
+There are 4 built-in social link types available:
+
+- `github`
+- `discord`
+- `opencollective`
+- `custom` (for custom icons and links)
+
+Each option can be configured with a link, optional logo, and label.
+
+```ts title="app.config.ts"
+//..
+    socialLinks: {
+        github: "https://github.com/your-repo",
+        discord: "https://discord.gg/your-server",
+        opencollective: "https://opencollective.com/your-project",
+        custom: {
+            link: "https://example.com/",
+            logo: "/path/to/logo.svg",
+            label: "Logo label"
+        },
+    }
+//..
+```
+
+#### Navigation
+
+The `nav` option allows you to define the main navigation links for your site. These links will appear in the header and provide easy access to important sections of your documentation.
+
+```ts title="app.config.ts"
+// ..
+nav: [
+    {
+        text: "Guide",
+        link: "/guide",
+    },
+    {
+        text: "Reference",
+        link: "/reference",
+    },
+],
+// ..
+```
+
+#### Sidebar
+
+The sidebar configuration allows you to create a structured sidebar navigation for different sections of your documentation, with support for collapsible groups and nested items. The value is an array, each containing a title, a collapsed state, and an array of items. Each item can have a title, link, and optional status (`"new"`, `"updated"`, `"next"`).
+
+:::note
+While there are preset statuses available, you can create your own custom status styles. 
+
+```ts title="app.config.ts"
+// ..
+status: {
+    text: "custom",
+    color: "#FF0000",
+    textColor: "#FFFFFF"
+}
+// ..
+```
+:::
+
+```ts title="app.config.ts"
+// ..
+sidebar: {
+    "/guide": [
+        {
+            title: "Overview",
+            collapsed: false,
+            items: [
+                {
+                    title: "Introduction",
+                    link: "/",
+                },
+                {
+                    title: "Quick Start",
+                    link: "/quick-start",
+                    status: "new",
+                },
+            ],
+        },
+        {
+            title: "Features",
+            collapsed: false,
+            items: [
+                {
+                    title: "Feature 1",
+                    link: "/feature-1",
+                },
+            ],
+        },
+    ],
+    "/reference": [
+        {
+            title: "Reference",
+            collapsed: false,
+            items: [
+                {
+                    title: "Some API",
+                    link: "/some-api",
+                }
+            ],
+        },
+    ],
+},
+// ..
+```
+
+#### Search
+
+SolidBase includes built-in search functionality. At the moment, it supports [Algolia DocSearch](https://docsearch.algolia.com/). You can configure the search provider and its options using the `search` option within `themeConfig`.
+
+```ts title="app.config.ts"
+// ..
+search: {
+    provider: "algolia",
+    options: {
+        appID: "<YOUR_APP_ID>",
+        apiKey: "<YOUR_API_KEY>"
+        indexName: "<YOUR_INDEX_NAME>"
+    }
+}
+// ..
+```
