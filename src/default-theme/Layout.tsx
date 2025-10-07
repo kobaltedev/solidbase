@@ -2,9 +2,19 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
-import { For, Match, type ParentProps, Show, Switch } from "solid-js";
+import {
+	For,
+	Match,
+	type ParentProps,
+	Show,
+	Switch,
+	createEffect,
+	onCleanup,
+	onMount,
+} from "solid-js";
 
 import { useLocale, useThemeListener } from "../client";
+import { usePreferredLanguage } from "../client/preferred-language";
 import {
 	type SidebarItemLink,
 	type SidebarItemSection,
@@ -56,6 +66,36 @@ function Layout(props: ParentProps) {
 
 	useThemeListener();
 	usePace();
+
+	const [preferredLanguage, setPreferredLanguage] = usePreferredLanguage();
+
+	onMount(() => {
+		const toggles = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"].sb-ts-js-toggle',
+		);
+		for (const toggle of Array.from(toggles)) {
+			toggle.checked = preferredLanguage() === "ts";
+
+			function handleToggle() {
+				setPreferredLanguage(toggle.checked ? "ts" : "js");
+			}
+
+			toggle.addEventListener("click", handleToggle);
+
+			onCleanup(() => {
+				toggle.removeEventListener("click", handleToggle);
+			});
+		}
+	});
+
+	createEffect(() => {
+		const toggles = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"].sb-ts-js-toggle',
+		);
+		for (const toggle of Array.from(toggles)) {
+			toggle.checked = preferredLanguage() === "ts";
+		}
+	});
 
 	return (
 		<>

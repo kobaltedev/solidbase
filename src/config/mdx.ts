@@ -19,6 +19,10 @@ import type { PluggableList } from "unified";
 import type { PluginOption } from "vite";
 
 import mdx from "../vite-mdx/index.js";
+import {
+	type LanguageSwitcherOptions,
+	ecPluginLanguageSwitcher,
+} from "./ec-plugins/language-switcher/index.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
@@ -47,6 +51,7 @@ export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
 				twoSlash?: TwoslashOptions | true;
+				languageSwitcher?: LanguageSwitcherOptions | true;
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -113,6 +118,18 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 			);
 		}
 
+		if (sbConfig.markdown?.expressiveCode?.languageSwitcher) {
+			const config =
+				sbConfig.markdown.expressiveCode.languageSwitcher === true
+					? ({ showToggleButton: true } satisfies LanguageSwitcherOptions)
+					: ({
+							showToggleButton: true,
+							...sbConfig.markdown.expressiveCode?.languageSwitcher,
+						} satisfies LanguageSwitcherOptions);
+
+			plugins.push(ecPluginLanguageSwitcher(config));
+		}
+
 		rehypePlugins.push(
 			[
 				rehypeExpressiveCode,
@@ -155,6 +172,16 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 
 	if (sbConfig.markdown?.steps !== false) remarkPlugins.push(remarkSteps);
 
+	const expressiveCodeConfig = sbConfig.markdown?.expressiveCode;
+	const languageSwitcherConfig = expressiveCodeConfig
+		? expressiveCodeConfig.languageSwitcher
+		: {};
+	const isLanguageSwitcherDisabled =
+		!languageSwitcherConfig ||
+		(languageSwitcherConfig !== true &&
+			!(languageSwitcherConfig.showToggleButton ?? true));
+	const withTsJsToggle = !!expressiveCodeConfig && !isLanguageSwitcherDisabled;
+
 	remarkPlugins.push(
 		remarkFrontmatter,
 		remarkMdxFrontmatter,
@@ -162,7 +189,12 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		[remarkImportCodeFile, sbConfig.markdown?.importCodeFile],
 		remarkGfm,
 		remarkGithubAlertsToDirectives,
-		remarkCodeTabs,
+		[
+			remarkCodeTabs,
+			{
+				withTsJsToggle,
+			},
+		],
 		[remarkPackageManagerTabs, sbConfig.markdown?.packageManagers ?? {}],
 		remarkTabGroup,
 		remarkDirective,

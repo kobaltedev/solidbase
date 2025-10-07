@@ -114,3 +114,13 @@ function getLocaleLink(locale: ResolvedLocale<any>): `/${string}`;
 ```
 
 Returns the root path for the provided locale.
+
+## Preferred Language
+
+### `usePreferredLanguage`
+
+Manages the user's preferred language for TypeScript/JavaScript toggles in code blocks.
+
+```ts
+function usePreferredLanguage(): [Accessor<"ts" | "js">, Setter<"ts" | "js">];
+```

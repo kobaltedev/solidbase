@@ -1,0 +1,100 @@
+---
+title: Language Switcher
+---
+
+# Language Switcher
+
+The Language Switcher plugin allows you to display both TypeScript and JavaScript versions of code blocks with a toggle button.
+It converts TypeScript and TSX code blocks to their JavaScript equivalents, making your documentation accessible to developers who prefer JavaScript.
+
+## Configuration
+
+The plugin is not enabled by default.
+To enable it, configure the `languageSwitcher` option in your SolidBase config:
+
+### Basic Setup
+
+```ts title="app.config.ts"
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
+
+export default defineConfig(
+	withSolidBase(
+		/* your SolidStart config */,
+		{
+		  markdown: {
+		    expressiveCode: {
+		      languageSwitcher: true,
+		    },
+		  },
+		},
+	),
+);
+```
+
+### Advanced Configuration
+
+For custom options, pass an object:
+
+```ts title="app.config.ts"
+import { defineConfig } from "@solidjs/start/config";
+import { withSolidBase } from "@kobalte/solidbase/config";
+
+export default defineConfig(
+	withSolidBase(
+		/* your SolidStart config */,
+		{
+		  markdown: {
+		    expressiveCode: {
+		      languageSwitcher: {
+		        showToggleButton: true,
+		        formatter: async (jsCode, isJsx) => {
+		          // Custom formatting
+		          return code;
+		        },
+		      },
+		    },
+		  },
+		},
+	),
+);
+```
+
+### Supported Languages
+
+The plugin converts these TypeScript variants to JavaScript:
+
+- `typescript` / `ts` → `javascript` / `js`
+- `tsx` → `jsx`
+
+JavaScript code blocks (`js`, `javascript`, `jsx`) are not converted.
+
+### Meta Options
+
+You can control the plugin behavior using code block meta options:
+
+#### Disable for Specific Blocks
+
+````md
+```typescript withoutLanguageSwitcher
+// This block won't have the toggle
+```
+````
+
+#### Line Markers
+
+The plugin automatically preserves line markers.
+
+## Options
+
+### `showToggleButton`
+
+- **Type:** `boolean`
+- **Default:** `true`
+- **Description:** Whether to show the toggle button in the code block header.
+
+### `formatter`
+
+- **Type:** `(jsCode: string, isJsx; boolean) => string | Promise<string>`
+- **Default:** Formatting with Prettier with default options
+- **Description:** A function to format the generated JavaScript code.
