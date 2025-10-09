@@ -246,7 +246,7 @@ function NavigationItem(props: NavigationItemProps) {
 										{(status) => (
 											<span
 												class={styles["status-custom"]}
-												style={`---fg: ${status().textColor ?? "white"}; ---bg: ${status().color}`}
+												style={`--fg: ${status().textColor ?? "white"}; --bg: ${status().color}`}
 											>
 												{status().text}
 											</span>
