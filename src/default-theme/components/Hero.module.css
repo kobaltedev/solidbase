@@ -116,12 +116,12 @@ article:has(.hero) > div {
 }
 
 @media screen and (max-width: 40rem) {
-  .hero.hero > div:first-child {
-    align-items: center;
-    text-align: center;
-  }
+	.hero.hero > div:first-child {
+		align-items: center;
+		text-align: center;
+	}
 
-  .actions {
-  	justify-content: center;
-  }
+	.actions {
+		justify-content: center;
+	}
 }
