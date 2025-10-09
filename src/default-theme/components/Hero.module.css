@@ -42,6 +42,7 @@
 			display: flex;
 			gap: 1.25rem;
 			margin: 1rem 0;
+			flex-wrap: wrap;
 
 			.action {
 				padding: 0.5rem 0.75rem;
@@ -52,6 +53,7 @@
 				transition-property: background-color, opacity, color;
 				transition-timing-function: var(--sb-transition-timing);
 				transition-duration: 0.15s;
+				white-space: nowrap;
 
 				&:hover,
 				&:focus {
@@ -111,4 +113,15 @@ article:has(.hero) > div {
 	.hero {
 		flex-direction: column-reverse;
 	}
+}
+
+@media screen and (max-width: 40rem) {
+  .hero.hero > div:first-child {
+    align-items: center;
+    text-align: center;
+  }
+
+  .actions {
+  	justify-content: center;
+  }
 }

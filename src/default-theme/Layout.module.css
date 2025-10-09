@@ -286,8 +286,8 @@
 		}
 
 		.status-custom {
-			background: var(---bg);
-			color: var(---fg);
+			background: var(--bg);
+			color: var(--fg);
 		}
 	}
 }
