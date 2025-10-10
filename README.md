@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://solidbase.dev" target="_blank">
-    <img width="350" src=".github/solidbase.png" alt="logo">
+    <img width="300" src=".github/solidbase.png" alt="logo">
   </a>
   
   # SolidBase
@@ -9,7 +9,7 @@
   [![Stars](https://img.shields.io/github/stars/kobaltedev/solidbase.svg?style=for-the-badge&color=yellow&logo=github)](https://github.com/kobaltedev/solidbase)
   [![Checks](https://img.shields.io/github/checks-status/kobaltedev/solidbase/main?style=for-the-badge&logo=github)](https://github.com/kobaltedev/solidbase/actions)
   
-  **Fully featured, fully customisable Static Site Generation for [SolidStart](https://github.com/solidjs/solid-start)**
+  **Fully featured, fully customisable Static Site Generation for [SolidStart](https://start.solidjs.com)**
 </div>
 
 ## Quick Start
@@ -18,12 +18,12 @@ Get started with a **SolidBase** project using your preferred package manager
 
 ```bash
 # using npm
-npm create solid@latest -- -s -t with-solidbase
+npm create solid@latest -- -st with-solidbase
 ```
 
 ```bash
 # using pnpm
-pnpm create solid@latest -s -t with-solidbase
+pnpm create solid@latest -st with-solidbase
 ```
 
 ```bash
