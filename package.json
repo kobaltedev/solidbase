@@ -32,6 +32,11 @@
       "import": "./src/client/index.tsx",
       "types": "./src/client/index.tsx"
     },
+    "./client/plugins": {
+      "solid": "./src/client/plugins.ts",
+      "import": "./src/client/plugins.ts",
+      "types": "./src/client/plugins.ts"
+    },
     "./server": {
       "solid": "./src/server.ts",
       "import": "./src/server.ts",

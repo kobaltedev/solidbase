@@ -16,6 +16,10 @@ import {
 	splitProps,
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language";
+import {
+	type ConversionRule,
+	convertFileExtension,
+} from "../config/ec-plugins/language-switcher";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -112,6 +116,7 @@ export function DirectiveContainer(
 		codeGroup?: string;
 		tabNames?: string;
 		withTsJsToggle?: string;
+		languageSwitcherConversions?: string;
 	} & ParentProps,
 ) {
 	const _children = children(() => props.children).toArray();
@@ -132,15 +137,16 @@ export function DirectiveContainer(
 			>
 				<Tabs.List class={styles["tabs-list"]}>
 					{tabNames?.map((title) => {
-						const jsTitle = title.replace(/\.tsx?$/, (ext) => {
-							if (ext === ".tsx") {
-								return ".jsx";
-							}
-							if (ext === ".ts") {
-								return ".js";
-							}
-							return ext;
-						});
+						let conversions: Record<string, ConversionRule> = {};
+						try {
+							conversions = props.languageSwitcherConversions
+								? JSON.parse(props.languageSwitcherConversions)
+								: {};
+						} catch (e) {
+							conversions = {};
+						}
+
+						const jsTitle = convertFileExtension(title, conversions);
 
 						return (
 							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
