@@ -52,8 +52,6 @@ html,
 	);
 
 	--bprogress-color: var(--sb-active-link-color);
-
-	--ts-js-toggle-background-hover: #f6f6f7;
 }
 
 [data-theme*="dark"] {
@@ -84,6 +82,4 @@ html,
 
 	--sb-danger-background-color: hsl(356, 38%, 16%);
 	--sb-danger-text-color: hsl(0, 91%, 71%);
-
-	--ts-js-toggle-background-hover: #27272a;
 }

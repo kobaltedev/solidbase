@@ -385,25 +385,44 @@ export type Marker = {
 };
 export const MarkerTypeOrder: Array<MarkerType> = ["mark", "del", "ins"];
 
-export async function tsToJs(
-	tsCode: string,
-	tsMarkers: Array<Marker>,
-	isJsx?: boolean,
-	formatter?: (jsCode: string, isJsx?: boolean) => string | Promise<string>,
-): Promise<{
-	jsCode: string;
-	markers: Array<Marker>;
-}> {
+export type Formatter = (code: string) => string | Promise<string>;
+
+/**
+ * A function that transforms code and line markers from a source language to a target language.
+ */
+export type Converter = (context: {
+	sourceCode: string;
+	sourceMarkers: Array<Marker>;
+	sourceLanguage: string;
+	formatter?: Formatter;
+}) => Promise<{
+	targetCode: string;
+	targetMarkers: Array<Marker>;
+}>;
+
+export async function defaultFormatter(jsCode: string) {
+	return await prettier.format(jsCode, {
+		parser: "babel",
+	});
+}
+
+export const defaultConverter: Converter = async ({
+	sourceCode,
+	sourceMarkers,
+	sourceLanguage,
+	formatter,
+}) => {
+	const isJsx = ["tsx", "jsx"].includes(sourceLanguage);
 	const fileName = isJsx ? "temp.tsx" : "temp.ts";
 	const ast = ts.createSourceFile(
 		fileName,
-		tsCode,
+		sourceCode,
 		ts.ScriptTarget.Latest,
 		true,
 		isJsx ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
 	);
 
-	const ms = new MagicString(tsCode);
+	const ms = new MagicString(sourceCode);
 
 	removeTripleSlashDirectives(ms, ast);
 
@@ -418,18 +437,9 @@ export async function tsToJs(
 
 	const unformattedCode = ms.toString();
 
-	let formattedCode = unformattedCode;
-	try {
-		if (formatter) {
-			formattedCode = await formatter(unformattedCode, isJsx);
-		} else {
-			formattedCode = await prettier.format(unformattedCode, {
-				parser: "babel",
-			});
-		}
-	} catch (error) {
-		console.error("Error during post-processing JavaScript code:", error);
-	}
+	const formattedCode = formatter
+		? await formatter(unformattedCode)
+		: unformattedCode;
 
 	const changes = diffChars(unformattedCode, formattedCode);
 	const formatMs = new MagicString(unformattedCode);
@@ -490,10 +500,10 @@ export async function tsToJs(
 		}
 	});
 
-	const jsMarkers: Array<Marker> = [];
-	for (const tsMarker of tsMarkers) {
+	const targetMarkers: Array<Marker> = [];
+	for (const sourceMarker of sourceMarkers) {
 		const jsMarkerLines = new Set<number>();
-		for (const tsLine of tsMarker.lines) {
+		for (const tsLine of sourceMarker.lines) {
 			const rawLines = tsToJsMap.get(tsLine);
 			if (rawLines) {
 				for (const rawLine of rawLines) {
@@ -506,14 +516,14 @@ export async function tsToJs(
 				}
 			}
 		}
-		jsMarkers.push({
-			...tsMarker,
+		targetMarkers.push({
+			...sourceMarker,
 			lines: [...jsMarkerLines].sort((a, b) => a - b),
 		});
 	}
 
 	return {
-		jsCode: formattedCode,
-		markers: jsMarkers,
+		targetCode: formattedCode,
+		targetMarkers: targetMarkers,
 	};
-}
+};

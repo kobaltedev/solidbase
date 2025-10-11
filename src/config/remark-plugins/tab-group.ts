@@ -1,7 +1,17 @@
-import { SKIP, visit } from "unist-util-visit";
+import { visit } from "unist-util-visit";
+import {
+	type EcPluginLanguageSwitcherOptions,
+	convertFileExtension,
+	getEffectiveConversions,
+} from "../ec-plugins/language-switcher/index.js";
 
-export function remarkTabGroup() {
+export interface RemarkTabGroupOptions
+	extends EcPluginLanguageSwitcherOptions {}
+
+export function remarkTabGroup(options?: RemarkTabGroupOptions) {
 	return (tree: any) => {
+		const conversions = getEffectiveConversions(options?.conversions);
+
 		visit(tree, (node, index, parent) => {
 			if (node.type !== "containerDirective" || node.name !== "tab-group")
 				return;
@@ -36,6 +46,7 @@ export function remarkTabGroup() {
 			node.attributes = {
 				...node.attributes,
 				tabNames: tabNames.join("\0"),
+				languageSwitcherConversions: JSON.stringify(conversions),
 			};
 		});
 	};

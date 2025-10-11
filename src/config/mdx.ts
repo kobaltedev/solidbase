@@ -20,7 +20,7 @@ import type { PluginOption } from "vite";
 
 import mdx from "../vite-mdx/index.js";
 import {
-	type LanguageSwitcherOptions,
+	type EcPluginLanguageSwitcherOptions,
 	ecPluginLanguageSwitcher,
 } from "./ec-plugins/language-switcher/index.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
@@ -51,7 +51,7 @@ export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
 				twoSlash?: TwoslashOptions | true;
-				languageSwitcher?: LanguageSwitcherOptions | true;
+				languageSwitcher?: EcPluginLanguageSwitcherOptions | true;
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -121,11 +121,8 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 		if (sbConfig.markdown?.expressiveCode?.languageSwitcher) {
 			const config =
 				sbConfig.markdown.expressiveCode.languageSwitcher === true
-					? ({ showToggleButton: true } satisfies LanguageSwitcherOptions)
-					: ({
-							showToggleButton: true,
-							...sbConfig.markdown.expressiveCode?.languageSwitcher,
-						} satisfies LanguageSwitcherOptions);
+					? {}
+					: sbConfig.markdown.expressiveCode?.languageSwitcher;
 
 			plugins.push(ecPluginLanguageSwitcher(config));
 		}
@@ -196,7 +193,10 @@ function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 			},
 		],
 		[remarkPackageManagerTabs, sbConfig.markdown?.packageManagers ?? {}],
-		remarkTabGroup,
+		[
+			remarkTabGroup,
+			languageSwitcherConfig === true ? {} : languageSwitcherConfig,
+		],
 		remarkDirective,
 		remarkRelativeImports,
 	);
