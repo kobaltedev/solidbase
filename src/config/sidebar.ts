@@ -25,22 +25,27 @@ export interface SidebarItemSection<T = {}> {
 export type SidebarItemWithMeta<T = {}> = SidebarItem<T> & {
 	filePath: string;
 	matterData?: any;
-}
+};
 
 export interface FilesystemSidebarOptions {
 	filter?: (item: SidebarItemWithMeta) => boolean;
 	sort?: (a: SidebarItemWithMeta, b: SidebarItemWithMeta) => number;
 }
 
-const ROUTES_FOLDER = import.meta.resolve("./src/routes/").substring("file:".length);
+const ROUTES_FOLDER = import.meta
+	.resolve("./src/routes/")
+	.substring("file:".length);
 
-export function createFilesystemSidebar<Item = SidebarItem>(route: string, options?: FilesystemSidebarOptions): Item[] {
+export function createFilesystemSidebar<Item = SidebarItem>(
+	route: string,
+	options?: FilesystemSidebarOptions,
+): Item[] {
 	const folder = path.join(ROUTES_FOLDER, route);
 
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
 		filter: (item) => {
-			console.log("AAAAAAAAA", item.matterData)
-			return item.matterData?.excludeFromSidebar !== true
+			console.log("AAAAAAAAA", item.matterData);
+			return item.matterData?.excludeFromSidebar !== true;
 		},
 		sort: (a, b) => {
 			if (stripExtension(a.filePath).endsWith("index")) return -1;
@@ -48,25 +53,39 @@ export function createFilesystemSidebar<Item = SidebarItem>(route: string, optio
 			if (b.filePath > a.filePath) return -1;
 			return 0;
 		},
-		...options
-	}
+		...options,
+	};
 
-	const items = readdirSync(folder).flatMap((file) => {
-		return traverse(path.join(folder, file), folder, resolvedOptions);
-	}).filter(Boolean) as SidebarItemWithMeta[];
-
+	const items = readdirSync(folder)
+		.flatMap((file) => {
+			return traverse(path.join(folder, file), folder, resolvedOptions);
+		})
+		.filter(Boolean) as SidebarItemWithMeta[];
 
 	const transform = (items: SidebarItemWithMeta[]): Item[] => {
-		return items.filter(resolvedOptions.filter).sort(resolvedOptions.sort).map((item) => {
-			if ("items" in item) return (stripMeta({ ...item, items: transform(item.items as SidebarItemWithMeta[]) as SidebarItem[]}));
-			return stripMeta(item);
-		}) as Item[];
-	}
+		return items
+			.filter(resolvedOptions.filter)
+			.sort(resolvedOptions.sort)
+			.map((item) => {
+				if ("items" in item)
+					return stripMeta({
+						...item,
+						items: transform(
+							item.items as SidebarItemWithMeta[],
+						) as SidebarItem[],
+					});
+				return stripMeta(item);
+			}) as Item[];
+	};
 
 	return transform(items);
 }
 
-function traverse(filePath: string, baseFolder: string, options: Required<FilesystemSidebarOptions>): SidebarItemWithMeta | SidebarItemWithMeta[] | undefined {
+function traverse(
+	filePath: string,
+	baseFolder: string,
+	options: Required<FilesystemSidebarOptions>,
+): SidebarItemWithMeta | SidebarItemWithMeta[] | undefined {
 	const title = formatTitle(path.basename(filePath));
 
 	if (title.includes("[...")) return;
@@ -76,16 +95,19 @@ function traverse(filePath: string, baseFolder: string, options: Required<Filesy
 
 		return {
 			title: getMatterData(filePath).title ?? title,
-			link: `/${removeParenthesesGroups(stripExtension(path.relative(baseFolder, filePath)))}`.replace(/\/index$/, "").replaceAll("//", "/"),
+			link: `/${removeParenthesesGroups(stripExtension(path.relative(baseFolder, filePath)))}`
+				.replace(/\/index$/, "")
+				.replaceAll("//", "/"),
 			filePath,
 			matterData,
 		};
 	}
 
-	const items =
-		(readdirSync(filePath).flatMap((file) => {
-		return traverse(path.join(filePath, file), baseFolder, options);
-	}).filter(Boolean) as SidebarItemWithMeta[]);
+	const items = readdirSync(filePath)
+		.flatMap((file) => {
+			return traverse(path.join(filePath, file), baseFolder, options);
+		})
+		.filter(Boolean) as SidebarItemWithMeta[];
 
 	if (title === "") {
 		return items;
@@ -117,7 +139,7 @@ function formatTitle(filePath: string): string {
 }
 
 function removeParenthesesGroups(s: string) {
-	return s.replaceAll(/\((\w|-)+\)/g, "").replaceAll("//", "/");
+	return s.replaceAll(/\((\w|-|_)+\)/g, "").replaceAll("//", "/");
 }
 
 function stripMeta(item: SidebarItemWithMeta): SidebarItem {

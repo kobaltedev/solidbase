@@ -3,8 +3,8 @@ import { defineConfig } from "@solidjs/start/config";
 import arraybuffer from "vite-plugin-arraybuffer";
 
 import { createWithSolidBase, defineTheme } from "../src/config";
+import { SidebarConfig, createFilesystemSidebar } from "../src/config/sidebar";
 import defaultTheme, { DefaultThemeSidebarItem } from "../src/default-theme";
-import { createFilesystemSidebar, SidebarConfig } from "../src/config/sidebar";
 
 const theme = defineTheme({
 	componentsPath: import.meta.resolve("./src/solidbase-theme"),
@@ -106,7 +106,6 @@ export default defineConfig(
 	),
 );
 
-
 function customFSSidebar(route: string, title: string) {
 	const sidebar = createFilesystemSidebar(route);
 
@@ -115,6 +114,6 @@ function customFSSidebar(route: string, title: string) {
 			title,
 			items: sidebar.filter((i) => !("items" in i)),
 		},
-		...sidebar.filter((i) => ("items" in i))
+		...sidebar.filter((i) => "items" in i),
 	];
 }
