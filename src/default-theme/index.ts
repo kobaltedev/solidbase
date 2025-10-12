@@ -116,15 +116,7 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 });
 export default defaultTheme;
 
-export type SearchConfig = {
-	provider: "algolia";
-	options: DocSearchOptions;
-};
-export interface DocSearchOptions {
-	appId: string;
-	apiKey: string;
-	indexName: string;
-}
+export type SearchConfig = {};
 
 export type NavItem = {
 	text: string;

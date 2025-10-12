@@ -13,8 +13,6 @@ import { useRouteConfig } from "../utils";
 import { useSidebar } from "../../client/sidebar";
 import styles from "./Header.module.css";
 
-const DocSearch = lazy(() => import("./DocSearch"));
-
 export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 	const [navRef, setNavRef] = createSignal<HTMLElement>();
@@ -100,9 +98,6 @@ export default function Header() {
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog>
-					{config().themeConfig?.search?.provider === "algolia" && (
-						<DocSearch />
-					)}
 					<Show when={config().themeConfig?.nav}>
 						{(nav) => (
 							<For each={nav()}>
