@@ -90,7 +90,7 @@ export interface ConversionRule {
 	converter: Converter;
 	/**
 	 * An optional, custom formatter for this language's output.
-	 * If not provided, a default Prettier-based formatter is used.
+	 * If not provided, the top-level `formatter` will be used.
 	 * This function is passed to the `converter`.
 	 */
 	formatter?: Formatter;
@@ -200,8 +200,7 @@ export interface EcPluginLanguageSwitcherOptions {
 	/**
 	 * A function to format the generated JavaScript code.
 	 * Defaults to formatting with Prettier.
-	 * @deprecated Use the `formatter` property within the `conversions` map instead.
-	 * This option will be removed in a future major version.
+	 * This can be overridden by the `formatter` property in a `ConversionRule`.
 	 */
 	formatter?: Formatter;
 	/**
@@ -238,11 +237,9 @@ export function ecPluginLanguageSwitcher(
 
 	const conversions = getEffectiveConversions(effectiveOptions.conversions);
 
-	// Handle deprecated formatter for backward compatibility
 	if (effectiveOptions.formatter) {
 		for (const lang in conversions) {
 			const rule = conversions[lang] as ConversionRule;
-			// Only apply if a specific formatter isn't already set
 			if (!rule.formatter) {
 				rule.formatter = effectiveOptions.formatter;
 			}

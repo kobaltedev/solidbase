@@ -135,12 +135,13 @@ The plugin automatically preserves line markers.
 	- `fileExtensionMap: Record<string, string>`: A map of source file extensions to their target extensions for this language (e.g., `{ ".ts": ".js" }`).
 		This is used to update the filename in the code block title.
 	- `converter: Converter`: A converter for this language.
-	- `formatter?: Formatter`: An optional formatter for this language's output.
+	- `formatter?: Formatter`: An optional formatter for this language's generated code.
+		This will override the top-level `formatter` option if provided.
 
 ### `formatter`
 
-- **Type:** `(jsCode: string, isJsx; boolean) => string | Promise<string>`
+- **Type:** `(jsCode: string, isJsx: boolean) => string | Promise<string>`
 - **Default:** Formatting with Prettier with default options
-- **Description:** A function to format the generated JavaScript code.
-- **Deprecated:** Use the `formatter` property within the `conversions` map instead.
-This option will be removed in a future major version.
+- **Description:** A function to format the generated code.
+	This acts as the default formatter.
+	It can be overridden by the `formatter` property within the `conversions` map.
