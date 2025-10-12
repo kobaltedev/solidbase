@@ -20,7 +20,7 @@ import { withSolidBase } from "@kobalte/solidbase/config";
 
 export default defineConfig(
 	withSolidBase(
-		/* your SolidStart config */,
+		/* your SolidStart config */
 		{
 		  markdown: {
 		    expressiveCode: {
@@ -42,15 +42,30 @@ import { withSolidBase } from "@kobalte/solidbase/config";
 
 export default defineConfig(
 	withSolidBase(
-		/* your SolidStart config */,
+		/* your SolidStart config */
 		{
 		  markdown: {
 		    expressiveCode: {
 		      languageSwitcher: {
 		        showToggleButton: true,
-		        formatter: async (jsCode, isJsx) => {
-		          // Custom formatting
-		          return code;
+		        toggleButtonTsLabel: "TypeScript",
+		        toggleButtonJsLabel: "JavaScript",
+		        conversions: {
+		          // Override default formatter for typescript
+		          typescript: {
+		            to: "javascript",
+		            fileExtensionMap: { ".ts": ".js" },
+		            formatter: (code) => myFormatter(code),
+		          },
+		          // Add a new conversion for Svelte
+		          svelte: {
+		            to: "svelte",
+		            fileExtensionMap: { ".svelte": ".svelte" },
+		            converter: svelteConverter,
+								formatter: svelteFormatter
+		          },
+		          // Disable the default "tsx" conversion
+		          tsx: false,
 		        },
 		      },
 		    },
@@ -62,12 +77,12 @@ export default defineConfig(
 
 ### Supported Languages
 
-The plugin converts these TypeScript variants to JavaScript:
+By default, the plugin converts these TypeScript variants to JavaScript:
 
 - `typescript` / `ts` → `javascript` / `js`
 - `tsx` → `jsx`
 
-JavaScript code blocks (`js`, `javascript`, `jsx`) are not converted.
+You can extend or override these defaults using the [`conversions`](#conversions) option.
 
 ### Meta Options
 
@@ -93,8 +108,40 @@ The plugin automatically preserves line markers.
 - **Default:** `true`
 - **Description:** Whether to show the toggle button in the code block header.
 
+### `toggleButtonTsLabel`
+
+- **Type:** `string`
+- **Default:** `"TS"`
+- **Description:** The label for the TypeScript toggle button.
+
+### `toggleButtonJsLabel`
+
+- **Type:** `string`
+- **Default:** `"JS"`
+- **Description:** The label for the JavaScript toggle button.
+
+### `conversions`
+
+- **Type:** `Record<string, ConversionRule | false>`
+- **Description:** A map defining language conversion rules.
+	The key is the source language ID.
+	This allows you to extend the default conversions (e.g., add Svelte) or override them (e.g., change the formatter for TypeScript).
+	To disable a default conversion (e.g., for "typescript"), set its value to `false`.
+
+	A `ConversionRule` object has the following properties:
+
+	- `to?: string`: The target language ID to use for syntax highlighting after conversion.
+		If not provided, the source language ID is used.
+	- `fileExtensionMap: Record<string, string>`: A map of source file extensions to their target extensions for this language (e.g., `{ ".ts": ".js" }`).
+		This is used to update the filename in the code block title.
+	- `converter: Converter`: A converter for this language.
+	- `formatter?: Formatter`: An optional formatter for this language's generated code.
+		This will override the top-level `formatter` option if provided.
+
 ### `formatter`
 
-- **Type:** `(jsCode: string, isJsx; boolean) => string | Promise<string>`
+- **Type:** `(jsCode: string, isJsx: boolean) => string | Promise<string>`
 - **Default:** Formatting with Prettier with default options
-- **Description:** A function to format the generated JavaScript code.
+- **Description:** A function to format the generated code.
+	This acts as the default formatter.
+	It can be overridden by the `formatter` property within the `conversions` map.
