@@ -1,12 +1,15 @@
 .article {
-	margin: 2rem;
+	padding: 2rem;
 	display: flex;
+	height: 100%;
 }
 
 .content {
 	max-width: min(calc(100dvw - 2.5rem), 52rem);
 	flex: 1;
 	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
 }
 
 .aside {
@@ -44,7 +47,7 @@
 	font-size: 0.9em;
 	margin: 4rem 0 1rem;
 	display: flex;
-	justify-content: space-between;
+	flex-direction: row;
 	white-space: nowrap;
 	flex-wrap: wrap;
 	gap: 0.5rem;
@@ -54,9 +57,8 @@
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-column-gap: 1rem;
-	margin: 2rem 0;
 	font-size: 0.9em;
-	padding: 2rem 0 0;
+	padding: 1.5rem 0;
 	border-top: 1px solid
 		color-mix(in hsl, var(--sb-decoration-color) 15%, transparent);
 }
