@@ -235,7 +235,7 @@ nav: [
 The sidebar configuration allows you to create a structured sidebar navigation for different sections of your documentation, with support for collapsible groups and nested items. The value is an array, each containing a title, a collapsed state, and an array of items. Each item can have a title, link, and optional status (`"new"`, `"updated"`, `"next"`).
 
 :::note
-While there are preset statuses available, you can create your own custom status styles. 
+While there are preset statuses available, you can create your own custom status styles.
 
 ```ts title="app.config.ts"
 // ..
@@ -291,22 +291,5 @@ sidebar: {
         },
     ],
 },
-// ..
-```
-
-#### Search
-
-SolidBase includes built-in search functionality. At the moment, it supports [Algolia DocSearch](https://docsearch.algolia.com/). You can configure the search provider and its options using the `search` option within `themeConfig`.
-
-```ts title="app.config.ts"
-// ..
-search: {
-    provider: "algolia",
-    options: {
-        appID: "<YOUR_APP_ID>",
-        apiKey: "<YOUR_API_KEY>"
-        indexName: "<YOUR_INDEX_NAME>"
-    }
-}
 // ..
 ```

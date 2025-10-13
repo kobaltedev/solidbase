@@ -71,93 +71,193 @@ You can automatically generate a table of contents (ToC) for your markdown files
 
 Directives are custom blocks that can be used to highlight important information, warnings, tips, and more. They are similar to callouts or alerts in other documentation systems.
 
-**Input**
 
-```md
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::info
 Highlights information that users should take into account, even when skimming.
 :::
+````
+::::
 
-:::tip
-Optional information to help a user be more successful.
-:::
-
-:::important
-Crucial information necessary for users to succeed.
-:::
-
-:::warning
-Critical content demanding immediate user attention due to potential risks.
-:::
-
-:::danger
-Negative potential consequences of an action.
-:::
-
-:::details
-This is a details block.
-:::
-```
-
-**Output**
+::::tab[HTML Output]
 
 :::info
 Highlights information that users should take into account, even when skimming.
 :::
+::::
+:::::
 
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::tip
 Optional information to help a user be more successful.
 :::
+````
+::::
 
+::::tab[HTML Output]
+:::tip
+Optional information to help a user be more successful.
+:::
+::::
+:::::
+
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::important
 Crucial information necessary for users to succeed.
 :::
+````
+::::
 
+::::tab[HTML Output]
+:::important
+Crucial information necessary for users to succeed.
+:::
+::::
+:::::
+
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::warning
 Critical content demanding immediate user attention due to potential risks.
 :::
+````
+::::
 
+::::tab[HTML Output]
+:::warning
+Critical content demanding immediate user attention due to potential risks.
+:::
+::::
+:::::
+
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::danger
 Negative potential consequences of an action.
 :::
+````
+::::
 
+::::tab[HTML Output]
+:::danger
+Negative potential consequences of an action.
+:::
+::::
+:::::
+
+
+:::::tab-group[features-demo-directives]
+::::tab[Markdown]
+````md
 :::details
 This is a details block.
 :::
+````
+::::
+
+::::tab[HTML Output]
+:::details
+This is a details block.
+:::
+::::
+:::::
 
 ### Custom Directive Titles
 
 To set a custom title for a directive, use square brackets `[]` immediately after the directive type.
 
-**Input**
 
-```md
+:::::tab-group[features-demo-directives-titles]
+::::tab[Markdown]
+````md
 :::info[Custom Title]
 Highlights information that users should take into account, even when skimming.
 :::
+````
+::::
 
-:::tip[]
-This is a tip with no title.
-:::
-
-:::details[Click me to view]
-This is a details block.
-:::
-```
-
-**Output**
-
+::::tab[HTML Output]
 :::info[Custom Title]
 Highlights information that users should take into account, even when skimming.
 :::
+::::
+:::::
 
+
+
+:::::tab-group[features-demo-directives-titles]
+::::tab[Markdown]
+````md
 :::tip[]
 This is a tip with no title.
 :::
+````
+::::
 
+::::tab[HTML Output]
+:::tip[]
+This is a tip with no title.
+:::
+::::
+:::::
+
+
+:::::tab-group[features-demo-directives-titles]
+::::tab[Markdown]
+````md
 :::details[Click me to view]
 This is a details block.
 :::
+````
+::::
+
+::::tab[HTML Output]
+:::details[Click me to view]
+This is a details block.
+:::
+::::
+:::::
+
+## Tabs
+
+::::::tab-group
+:::::tab[Markdown]
+
+````mdx
+::::tab-group[key]
+:::tab[Title A]
+Hey I'm A
+:::
+
+:::tab[Title B]
+Hi this is B
+:::
+::::
+````
+:::::
+
+:::::tab[HTML Output]
+::::tab-group
+:::tab[Title A]
+Hey I'm A
+:::
+
+:::tab[Title B]
+Hi this is B
+:::
+::::
+:::::
+::::::
+
+`[key]` is used for syncing and persistance.
 
 ## GitHub Flavored Markown
 
@@ -167,59 +267,98 @@ In addition to the standard markdown syntax, SolidBase also supports several Git
 
 In addition to the directives above, SolidBase also supports [GitHub-flavored alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts). These alerts can render as callouts with similar styles to the [directives above](#directives).
 
-```md
+:::::tab-group[features-demo-directives-gfm]
+::::tab[Markdown]
+````md
 > [!NOTE]
 > Highlights information that users should take into account, even when skimming.
+````
+::::
 
-> [!TIP]
-> Optional information to help a user be more successful.
-
-> [!IMPORTANT]
-> Crucial information necessary for users to succeed.
-
-> [!WARNING]
-> Critical content demanding immediate user attention due to potential risks.
-
-> [!CAUTION]
-> Negative potential consequences of an action.
-```
-
+::::tab[HTML Output]
 {/* prettier-ignore */}
 > [!NOTE]
 > Highlights information that users should take into account, even when skimming.
+::::
+:::::
 
+
+:::::tab-group[features-demo-directives-gfm]
+::::tab[Markdown]
+````md
+> [!TIP]
+> Optional information to help a user be more successful.
+````
+::::
+
+::::tab[HTML Output]
 {/* prettier-ignore */}
 > [!TIP]
 > Optional information to help a user be more successful.
+::::
+:::::
 
+:::::tab-group[features-demo-directives-gfm]
+::::tab[Markdown]
+````md
+> [!IMPORTANT]
+> Crucial information necessary for users to succeed.
+````
+::::
+
+::::tab[HTML Output]
 {/* prettier-ignore */}
 > [!IMPORTANT]
 > Crucial information necessary for users to succeed.
+::::
+:::::
 
-{/* prettier-ignore */}
+:::::tab-group[features-demo-directives-gfm]
+::::tab[Markdown]
+````md
 > [!WARNING]
 > Critical content demanding immediate user attention due to potential risks.
 
+````
+::::
+
+::::tab[HTML Output]
+{/* prettier-ignore */}
+> [!WARNING]
+> Critical content demanding immediate user attention due to potential risks.
+::::
+:::::
+
+:::::tab-group[features-demo-directives-gfm]
+::::tab[Markdown]
+````md
+> [!CAUTION]
+> Negative potential consequences of an action.
+````
+::::
+
+::::tab[HTML Output]
 {/* prettier-ignore */}
 > [!CAUTION]
 > Negative potential consequences of an action.
+::::
+:::::
 
 ### Autolinks
 
-SolidBase is able to automatically detect and convert URLs into clickable links. This works for URLs containing the protocol (e.g., `https://example.com`) as well as those without (e.g., `www.example.com` or `example.com`).
+SolidBase is able to automatically detect and convert URLs into clickable links.
 
-**Input**
-
-```md
-start.solidjs.com
+::::tab-group
+:::tab[Markdown]
+````md
 https://github.com/kobaltedev/solidbase
-```
+````
+:::
 
-**Output**
-
-start.solidjs.com
-
+:::tab[HTML Output]
 https://github.com/kobaltedev/solidbase
+:::
+::::
 
 ### Tables
 
