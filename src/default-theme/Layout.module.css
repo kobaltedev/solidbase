@@ -110,7 +110,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: .5rem;
+	margin: 1rem 0 .5rem;
 	width: 100%;
 
 	&:hover,
@@ -149,10 +149,6 @@
 	h6 {
 		font-size: 0.9rem;
 		font-weight: 500;
-	}
-
-	&:has(h2) {
-		margin-bottom: 1rem;
 	}
 
 	&[data-expanded] {
@@ -208,7 +204,6 @@
 	& > ul {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
 
 		ul {
 			padding-left: .5rem;

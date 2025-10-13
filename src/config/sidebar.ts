@@ -44,7 +44,6 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
 		filter: (item) => {
-			console.log("AAAAAAAAA", item.matterData);
 			return item.matterData?.excludeFromSidebar !== true;
 		},
 		sort: (a, b) => {

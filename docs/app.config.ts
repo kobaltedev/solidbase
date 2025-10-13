@@ -98,22 +98,10 @@ export default defineConfig(
 					},
 				],
 				sidebar: {
-					"/guide": customFSSidebar("/guide", "Overview"),
-					"/reference": customFSSidebar("/reference", "Reference"),
+					"/guide": createFilesystemSidebar("/guide"),
+					"/reference": createFilesystemSidebar("/reference"),
 				},
 			},
 		},
 	),
 );
-
-function customFSSidebar(route: string, title: string) {
-	const sidebar = createFilesystemSidebar(route);
-
-	return [
-		{
-			title,
-			items: sidebar.filter((i) => !("items" in i)),
-		},
-		...sidebar.filter((i) => "items" in i),
-	];
-}
