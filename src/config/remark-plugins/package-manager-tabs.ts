@@ -25,40 +25,40 @@ export function remarkPackageManagerTabs(
 			...packageManagers,
 			presets: {
 				npm: {
-					install: "npm i :content",
-					"install-dev": "npm i :content -D",
+					install: "npm i ::package",
+					"install-dev": "npm i ::package -D",
 					run: "npm run :content",
 					"run-full": "npm run :content",
 					dlx: "npx :content",
 					create: "npm create :content",
 				},
 				pnpm: {
-					install: "pnpm add :content",
-					"install-dev": "pnpm add :content -D",
+					install: "pnpm add ::package",
+					"install-dev": "pnpm add ::package -D",
 					run: "pnpm :content",
 					"run-full": "pnpm run :content",
 					dlx: "pnpx :content-latest",
 					create: "pnpm create :content-latest",
 				},
 				yarn: {
-					install: "yarn add :content",
-					"install-dev": "yarn add :content -D",
+					install: "yarn add ::package",
+					"install-dev": "yarn add ::package -D",
 					run: "yarn :content",
 					"run-full": "yarn run :content",
 					dlx: "yarn dlx :content",
 					create: "yarn create :content",
 				},
 				bun: {
-					install: "bun add :content",
-					"install-dev": "bun add :content -d",
+					install: "bun add ::package",
+					"install-dev": "bun add ::package -d",
 					run: "bun :content",
 					"run-full": "bun run :content",
 					dlx: "bunx :content",
 					create: "bun create :content",
 				},
 				deno: {
-					install: "deno add npm::content",
-					"install-dev": "deno add npm::content -D",
+					install: "deno add npm:::package",
+					"install-dev": "deno add npm:::package -D",
 					run: "deno run :content",
 					"run-full": "deno run :content",
 					dlx: "deno run -A npm::content",
@@ -74,7 +74,8 @@ export function remarkPackageManagerTabs(
 
 				const packageManagerCommand = node.lang.slice("package-".length);
 
-				const content = node.value;
+				const content: string = node.value;
+				const packages = content.split(" ");
 
 				parent.children[index!] = {
 					type: "containerDirective",
@@ -105,7 +106,12 @@ export function remarkPackageManagerTabs(
 										] ?? ":content"
 									)
 										.replace(":content-latest", content.replace("@latest", ""))
-										.replace(":content", content),
+										.replace(":content", content)
+										.replace(/(?<=^|\s)([^\s]*::package)(?=$|\s)/, (pattern) =>
+											packages
+												.map((pkg) => pattern.replace("::package", pkg))
+												.join(" "),
+										),
 								},
 							],
 						};
