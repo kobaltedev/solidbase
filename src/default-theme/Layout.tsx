@@ -147,7 +147,7 @@ function Layout(props: ParentProps) {
 									<Dialog.Content class={styles.sidenav}>
 										<div class={styles["sidenav-content"]}>
 											<div class={styles["sidenav-header"]}>
-												<a href="/" class={styles["logo-link"]}>
+												<a href={config().base || "/"} class={styles["logo-link"]}>
 													<Show
 														when={config().logo}
 														fallback={<span>{config().title}</span>}
