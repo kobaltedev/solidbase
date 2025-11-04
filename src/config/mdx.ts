@@ -136,7 +136,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 				{
 					themes: ["github-dark", "github-light"],
 					themeCssSelector: (theme: ExpressiveCodeTheme) =>
-						`[data-theme="${theme.type}"]`,
+						`[data-theme*="${theme.type}"]`,
 					plugins,
 					defaultProps: {
 						showLineNumbers: false,
