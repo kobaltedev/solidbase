@@ -1,9 +1,9 @@
+import { fileURLToPath } from "node:url";
+import MagicString from "magic-string";
 import AutoImport from "unplugin-auto-import/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
-import MagicString from 'magic-string';
-import { fileURLToPath } from "node:url";
 
 import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
 import {
@@ -47,8 +47,8 @@ export default function solidBaseVitePlugin(
 
 					return {
 						code: s.toString(),
-						map: s.generateMap()
-					}
+						map: s.generateMap(),
+					};
 				}
 			},
 		},
