@@ -377,8 +377,8 @@ export const MDXContext = createContext(
 	Object.fromEntries(
 		[...HTMLElements, ...SVGElements.keys()].map((el) => [
 			el,
-			(props: any) => {
-				props = mergeProps(props, {
+			(_props: any) => {
+				const props = mergeProps(_props, {
 					component: el,
 				});
 				return createComponent(Dynamic, props);
