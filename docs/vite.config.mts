@@ -1,14 +1,18 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
 import { solidStart } from "@solidjs/start/config";
+import { nitroV2Plugin } from "@solidjs/vite-plugin-nitro-2";
 import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
 
-import { createWithSolidBase, defineTheme } from "../src/config";
-import { SidebarConfig, createFilesystemSidebar } from "../src/config/sidebar";
-import defaultTheme, { DefaultThemeSidebarItem } from "../src/default-theme";
+import { createSolidBase, defineTheme } from "../src/config";
+import { createFilesystemSidebar } from "../src/config/sidebar";
+import defaultTheme from "../src/default-theme";
 
 const theme = defineTheme({
-	componentsPath: new URL("./src/solidbase-theme", import.meta.url),
+	componentsPath: new URL(
+		"src/solidbase-theme",
+		`file://${import.meta.dirname}/`,
+	),
 	extends: defaultTheme,
 });
 
@@ -94,18 +98,18 @@ export default defineConfig({
 					},
 				],
 				sidebar: {
-					"/guide": createFilesystemSidebar("/guide"),
-					"/reference": createFilesystemSidebar("/reference"),
+					"/guide": createFilesystemSidebar("./src/routes/guide"),
+					"/reference": createFilesystemSidebar("./src/routes/reference"),
 				},
 			},
 		}),
 		solidStart({
 			extensions: ["md", "mdx"],
 			ssr: true,
-			server: {
-				esbuild: { options: { target: "es2022" } },
-				preset: "netlify",
-			},
+		}),
+		nitroV2Plugin({
+			esbuild: { options: { target: "es2022" } },
+			preset: "node-server",
 		}),
 	],
 });

@@ -13,7 +13,6 @@ import { defineConfig } from "@solidjs/start/config";
 
 import { createWithSolidBase } from "@kobalte/solidbase";
 
-
 export default defineConfig(
 	createWithSolidBase(theme)(
 		/* SolidStart options */
@@ -24,13 +23,11 @@ export default defineConfig(
 					crawlLinks: true,
 				},
 			},
-			...
 		},
 		/* SolidBase options */
 		{
 			title: "SolidBase",
 			description: "Fully featured, fully customisable static site generation for SolidStart",
-			...
     }
   )
 );

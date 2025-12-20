@@ -3,22 +3,30 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
+import type { PluginContext } from "rollup";
+import type { Plugin } from "vite";
 import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
 import type { SolidBaseConfig } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
-export const configModule = {
+type VirtualModule<T = void> = {
+	id: string;
+	resolvedId: string;
+	load(this: PluginContext, arg: T): Promise<string>;
+};
+
+export const configModule: VirtualModule<Partial<SolidBaseConfig<any>>> = {
 	id: "virtual:solidbase/config",
 	resolvedId: "\0virtual:solidbase/config",
-	load: (solidBaseConfig: Partial<SolidBaseConfig<any>>) =>
+	load: async (solidBaseConfig) =>
 		`export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`,
 };
 
-export const componentsModule = {
+export const componentsModule: VirtualModule<Theme<any>> = {
 	id: "virtual:solidbase/components",
 	resolvedId: "\0virtual:solidbase/components",
-	load: async (theme: Theme<any>) => {
+	async load(theme) {
 		const themePaths = (() => {
 			let t: Theme<any> | undefined = theme;
 			const paths: Array<string> = [];

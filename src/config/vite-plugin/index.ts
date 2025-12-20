@@ -31,9 +31,9 @@ export default function solidBaseVitePlugin(
 			},
 			async load(id) {
 				if (id === configModule.resolvedId)
-					return configModule.load(solidBaseConfig);
+					return configModule.load.call(this, solidBaseConfig);
 				if (id === componentsModule.resolvedId)
-					return await componentsModule.load(theme);
+					return await componentsModule.load.call(this, theme);
 				if (id === "\0virtual:solidbase/mdx")
 					return `export * from "@kobalte/solidbase/mdx"`;
 			},
