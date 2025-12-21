@@ -77,12 +77,12 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 				name: "solidbase-default-theme-fonts",
 				resolveId(id) {
 					if (id.startsWith("virtual:solidbase/default-theme/fonts.css"))
-						return "virtual:solidbase/default-theme/fonts.css";
+						return "\0virtual:solidbase/default-theme/fonts.css";
 					if (id.startsWith("virtual:solidbase/default-theme/fonts"))
 						return "\0virtual:solidbase/default-theme/fonts";
 				},
 				load(id) {
-					if (id.startsWith("virtual:solidbase/default-theme/fonts.css"))
+					if (id.startsWith("\0virtual:solidbase/default-theme/fonts.css"))
 						return filteredFonts
 							.map(
 								(font) =>
