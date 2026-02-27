@@ -15,7 +15,7 @@ import {
 	createSignal,
 	splitProps,
 } from "solid-js";
-import { usePreferredLanguage } from "../client/preferred-language";
+import { usePreferredLanguage } from "../client/preferred-language.js";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
