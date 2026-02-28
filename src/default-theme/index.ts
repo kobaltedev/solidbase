@@ -60,7 +60,7 @@ const allFonts = {
 } satisfies Record<string, Font>;
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
-	componentsPath: new URL(".", import.meta.url),
+	componentsPath: import.meta.resolve("./"),
 	vite(config) {
 		const filteredFonts: Array<Font> = [];
 

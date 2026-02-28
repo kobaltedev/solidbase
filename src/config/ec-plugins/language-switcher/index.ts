@@ -178,7 +178,8 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 
 				const engine = new ExpressiveCodeEngine({
 					...config,
-					plugins: config.plugins.filter((v) => v.name !== "Language switcher"),
+					plugins:
+						config.plugins.filter((v) => v.name !== "Language switcher") ?? [],
 				});
 
 				const jsBlock = new ExpressiveCodeBlock({

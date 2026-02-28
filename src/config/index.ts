@@ -1,3 +1,4 @@
+import type { SolidStartOptions } from "@solidjs/start/config";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
 import type { ComponentResolverOption } from "unplugin-icons/resolver";
 import type { Options as IconsOptions } from "unplugin-icons/types";
@@ -48,7 +49,7 @@ export type LocaleConfig<ThemeConfig> = {
 };
 
 export type ThemeDefinition<Config> = {
-	componentsPath: URL;
+	componentsPath: string;
 	extends?: ThemeDefinition<Config>;
 	config?(config: SolidBaseResolvedConfig<Config>): void;
 	vite?(config: SolidBaseResolvedConfig<Config>): PluginOption | undefined;
@@ -59,17 +60,9 @@ export const solidBase = createSolidBase(defaultTheme);
 export function createSolidBase<ThemeConfig>(
 	theme: ThemeDefinition<ThemeConfig>,
 ) {
-	return (solidBaseConfig?: SolidBaseConfig<ThemeConfig>): PluginOption => {
-		// const config = startConfig ?? {};
-
-		// config.extensions = [
-		// 	...new Set((config.extensions ?? []).concat(["md", "mdx"])),
-		// ];
-		// config.server ??= {};
-		// config.server.prerender ??= {
-		// 	crawlLinks: true,
-		// };
-
+	const plugin = (
+		solidBaseConfig?: SolidBaseConfig<ThemeConfig>,
+	): PluginOption => {
 		const sbConfig: SolidBaseResolvedConfig<ThemeConfig> = {
 			title: "SolidBase",
 			description:
@@ -106,6 +99,16 @@ export function createSolidBase<ThemeConfig>(
 			...plugins,
 		];
 	};
+
+	const startConfig = (config: SolidStartOptions = {}) => {
+		config.ssr ??= true;
+		config.extensions = [
+			...new Set((config.extensions ?? []).concat(["md", "mdx"])),
+		];
+		return config;
+	};
+
+	return { plugin, startConfig };
 }
 
 export function defineTheme<C>(def: ThemeDefinition<C>) {

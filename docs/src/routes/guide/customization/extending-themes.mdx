@@ -17,10 +17,10 @@ To extend the default theme, you must define a custom theme using `defineTheme`,
 import { defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
-const customTheme =  defineTheme({
+const customTheme = defineTheme({
 	componentsPath: import.meta.resolve("./src/custom-theme"),
 	extends: defaultTheme,
-}),
+});
 ```
 
 Once the theme is defined, you can set it as the active theme in your SolidBase config, using the `createWithSolidBase` helper to wrap your configuration:
@@ -30,10 +30,10 @@ Once the theme is defined, you can set it as the active theme in your SolidBase 
 import { defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
-const customTheme =  defineTheme({
+const customTheme = defineTheme({
 	componentsPath: import.meta.resolve("./src/custom-theme"),
 	extends: defaultTheme,
-}),
+});
 
 export default defineConfig(
 	createWithSolidBase(customTheme)(

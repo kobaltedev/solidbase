@@ -9,7 +9,7 @@ import { createFilesystemSidebar } from "../src/config/sidebar";
 import defaultTheme from "../src/default-theme";
 
 const theme = defineTheme({
-  componentsPath: new URL("./src/solidbase-theme", import.meta.url),
+  componentsPath: import.meta.resolve("./src/solidbase-theme"),
   extends: defaultTheme,
 });
 
@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     OGPlugin(),
     arraybuffer(),
-    solidBase({
+    solidBase.plugin({
       title: "SolidBase",
       description:
         "Fully featured, fully customisable static site generation for SolidStart",
@@ -100,13 +100,11 @@ export default defineConfig({
         },
       },
     }),
-    solidStart({
-      extensions: ["md", "mdx"],
-      ssr: true,
-    }),
+    solidStart(solidBase.startConfig()),
     nitroV2Plugin({
       esbuild: { options: { target: "es2022" } },
-      preset: "node-server",
+      preset: "netlify",
+      prerender: { crawlLinks: true },
     }),
   ],
 });
