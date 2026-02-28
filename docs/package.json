@@ -11,7 +11,7 @@
     "@kobalte/solidbase": "workspace:*",
     "@solid-mediakit/og": "0.4.1",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "https://pkg.pr.new/solidjs/solid-start/@solidjs/start@2039",
+    "@solidjs/start": "2.0.0-alpha.2",
     "@solidjs/vite-plugin-nitro-2": "https://pkg.pr.new/solidjs/solid-start/@solidjs/vite-plugin-nitro-2@2039",
     "solid-js": "^1.9.9",
     "vite": "^7.2.4"
