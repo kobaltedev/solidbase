@@ -4,8 +4,7 @@
   "private": "true",
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" VITE_SOLIDBASE_DEV=true vite dev",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" vite build",
-    "start": "vinxi start"
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" vite build"
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",

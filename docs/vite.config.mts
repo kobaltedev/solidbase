@@ -27,7 +27,7 @@ export default defineConfig({
       lang: "en",
       markdown: {
         expressiveCode: {
-          languageSwitcher: true,
+          languageSwitcher: false,
         },
       },
       locales: {
