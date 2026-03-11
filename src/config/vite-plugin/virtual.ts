@@ -3,7 +3,8 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
-import type { PluginContext } from "rolldown";
+import type { PluginContext } from "rollup";
+import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { SolidBaseConfig, Theme } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
@@ -11,13 +12,13 @@ import { SolidBaseTOC } from "../remark-plugins/toc.js";
 type VirtualModule<T = void> = {
 	id: string;
 	resolvedId: string;
-	load(this: PluginContext, arg: T): Promise<string>;
+	load(this: PluginContext, arg: T, root?: string): Promise<string>;
 };
 
 export const configModule: VirtualModule<Partial<SolidBaseConfig<any>>> = {
 	id: "virtual:solidbase/config",
 	resolvedId: "\0virtual:solidbase/config",
-	load: async (solidBaseConfig) =>
+	load: async (solidBaseConfig, _root) =>
 		`export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`,
 };
 
@@ -104,6 +105,10 @@ export async function transformMdxModule(
 	}
 
 	const s = new MagicString(code);
+	const llmText = await toDocumentMarkdown(await readFile(modulePath, "utf8"), {
+		config: solidBaseConfig,
+		filePath: modulePath,
+	});
 
 	s.append(`
 		const data = {
