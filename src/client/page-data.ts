@@ -12,6 +12,7 @@ export interface BaseFrontmatter {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
+	llms?: false | { exclude?: boolean };
 }
 
 interface CurrentPageData {
@@ -19,6 +20,7 @@ interface CurrentPageData {
 	toc?: Array<TableOfContentsItemData>;
 	editLink?: string;
 	lastUpdated?: number;
+	llmText?: string;
 }
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] =

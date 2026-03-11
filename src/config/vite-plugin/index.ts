@@ -4,7 +4,8 @@ import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
 
 import { fileURLToPath } from "node:url";
-import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
+import type { SolidBaseResolvedConfig, ThemeDefinition } from "../index.js";
+import solidBaseLlmsPlugin from "./llms.js";
 import {
 	componentsModule,
 	configModule,
@@ -13,12 +14,17 @@ import {
 
 export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
-	solidBaseConfig: Partial<SolidBaseConfig<any>>,
+	solidBaseConfig: SolidBaseResolvedConfig<any>,
 ): PluginOption {
+	let root = process.cwd();
+
 	const plugins: PluginOption[] = [
 		{
 			name: "solidbase:pre",
 			enforce: "pre",
+			configResolved(resolvedConfig) {
+				root = resolvedConfig.root;
+			},
 			resolveId(id) {
 				if (id === configModule.id) return configModule.resolvedId;
 				if (id === componentsModule.id) return componentsModule.resolvedId;
@@ -26,7 +32,7 @@ export default function solidBaseVitePlugin(
 			},
 			async load(id) {
 				if (id === configModule.resolvedId)
-					return configModule.load(solidBaseConfig);
+					return configModule.load(solidBaseConfig, root);
 				if (id === componentsModule.resolvedId)
 					return await componentsModule.load(theme);
 			},
@@ -89,6 +95,8 @@ export default function solidBaseVitePlugin(
 				...solidBaseConfig.icons,
 			}),
 		);
+
+	plugins.push(solidBaseLlmsPlugin(solidBaseConfig));
 
 	return plugins;
 }
