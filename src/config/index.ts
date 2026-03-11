@@ -13,6 +13,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
+	llms?: boolean;
 	logo?: string;
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
@@ -31,6 +32,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 type ResolvedConfigKeys =
 	| "title"
 	| "description"
+	| "llms"
 	| "lang"
 	| "issueAutolink"
 	| "lastUpdated";
@@ -67,6 +69,7 @@ export function createSolidBase<ThemeConfig>(
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
+			llms: false,
 			lang: "en-US",
 			issueAutolink: false,
 			lastUpdated: { dateStyle: "short", timeStyle: "short" },
