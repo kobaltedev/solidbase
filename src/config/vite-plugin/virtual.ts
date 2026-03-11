@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -72,6 +72,16 @@ ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
 	},
 };
 
+function getMarkdownModulePath(id: string) {
+	const [pathname, search = ""] = id.split(/\?(.*)/s);
+	const params = new URLSearchParams(search);
+	const nestedId = params.get("id");
+
+	if (nestedId) return nestedId.split("?")[0]!;
+
+	return pathname!;
+}
+
 export async function transformMdxModule(
 	code: string,
 	id: string,
@@ -79,7 +89,7 @@ export async function transformMdxModule(
 ) {
 	const rootPath = process.env.PWD!;
 
-	const modulePath = id.split("?")[0];
+	const modulePath = getMarkdownModulePath(id);
 
 	let modulePathLink = "";
 	if (solidBaseConfig.editPath && modulePath.startsWith(rootPath)) {
@@ -103,6 +113,7 @@ export async function transformMdxModule(
 			toc: typeof ${SolidBaseTOC} !== "undefined" ? ${SolidBaseTOC} : undefined,
 			editLink: "${modulePathLink}",
 			lastUpdated: ${lastUpdated},
+			llmText: ${JSON.stringify(llmText)},
 		};
 
 		if (typeof window !== "undefined") {
