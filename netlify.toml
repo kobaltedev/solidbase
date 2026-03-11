@@ -1,5 +1,5 @@
 [build]
-command = "VITE_ORIGIN=$DEPLOY_URL pnpm build:docs"
+command = "VITE_ORIGIN=$DEPLOY_URL pnpm build:docs && ps auxw ; false"
 publish = "docs/dist/"
 
 [functions]
