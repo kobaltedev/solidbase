@@ -11,6 +11,8 @@
     "build": "tsc -b --force && node scripts/build.js",
     "build:docs": "pnpm -F @kobalte/solidbase-docs build",
     "format": "biome check --write #&& prettier . --write",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc -b",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
     "publish:release": "pnpm i && pnpm build && pnpm publish",
@@ -110,7 +112,8 @@
     "solid-js": "^1.9.9",
     "tsx": "^4.19.3",
     "vfile": "^6.0.3",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "solid-js": "^1.9.1",
