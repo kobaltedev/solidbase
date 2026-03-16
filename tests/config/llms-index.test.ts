@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
 	buildLlmsIndex,
 	getDocumentByPath,
@@ -64,5 +67,50 @@ describe("getLlmDocuments", () => {
 			routePath: "/guide/getting-started",
 			title: "Getting Started",
 		});
+	});
+
+	it("falls back to a flat index when no sidebar is configured", async () => {
+		const documents = await getLlmDocuments(fixtureSiteRoot, config);
+		const index = buildLlmsIndex(
+			undefined,
+			{ ...config, themeConfig: {} },
+			documents,
+		);
+
+		expect(index).toContain(
+			"- [Getting Started](/guide/getting-started.md): Learn the basics",
+		);
+		expect(index).toContain("- [Home](/index.md): Welcome home");
+	});
+
+	it("uses route path as a title fallback and respects nested llms exclusion", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-"));
+		const routesDir = join(root, "src", "routes", "guide");
+		await mkdir(routesDir, { recursive: true });
+
+		await writeFile(
+			join(root, "src", "routes", "guide", "no-title.mdx"),
+			"Paragraph only.",
+		);
+		await writeFile(
+			join(root, "src", "routes", "guide", "excluded.mdx"),
+			["---", "llms:", "  exclude: true", "---", "", "Should not appear."].join(
+				"\n",
+			),
+		);
+
+		const documents = await getLlmDocuments(root, {
+			...config,
+			themeConfig: {},
+		});
+
+		expect(documents).toEqual([
+			expect.objectContaining({
+				title: "/guide/no-title",
+				routePath: "/guide/no-title",
+				markdownPath: "/guide/no-title.md",
+				content: "Paragraph only.",
+			}),
+		]);
 	});
 });
