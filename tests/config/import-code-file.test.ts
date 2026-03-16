@@ -52,4 +52,21 @@ describe("remarkImportCodeFile", () => {
 
 		expect(tree.children[0].value).toContain('console.log("see ya");');
 	});
+
+	it("throws for missing files so broken imports are visible", async () => {
+		const missingPath = routeFixturePath("..", "..", "code", "missing.ts");
+
+		await expect(
+			transform(`\`\`\`ts file=\"${missingPath}\"\n\`\`\``),
+		).rejects.toThrow(/missing\.ts|ENOENT/);
+	});
+
+	it("returns an empty snippet for out-of-range line selections", async () => {
+		const codePath = routeFixturePath("..", "..", "code", "example.ts");
+		const tree: any = await transform(
+			`\`\`\`ts file=\"${codePath}#L99-L100\"\n\`\`\``,
+		);
+
+		expect(tree.children[0].value).toBe("");
+	});
 });
