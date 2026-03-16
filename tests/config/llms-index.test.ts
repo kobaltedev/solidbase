@@ -34,6 +34,7 @@ describe("getLlmDocuments", () => {
 		expect(documents.map((document) => document.routePath)).toEqual([
 			"/guide/getting-started",
 			"/",
+			"/plain",
 		]);
 
 		expect(documents[1]).toMatchObject({
