@@ -74,17 +74,20 @@ function flattenSidebarItems<T = {}>(
 	depth = 0,
 ): Array<SidebarItemLink & T & { depth: number }> {
 	return sidebar.items.flatMap((item) => {
-		if ("link" in item)
+		if ("link" in item) {
+			const isExternal = item.link.includes("//");
+
 			return {
 				target: (() => {
-					if (item.link.includes("//")) return "_blank";
+					if (isExternal) return "_blank";
 				})(),
 				rel: (() => {
-					if (item.link.includes("//") || item.target === "_blank")
+					if (isExternal || item.target === "_blank")
 						return "noopener noreferrer";
 				})(),
 				...item,
 				link: (() => {
+					if (isExternal) return item.link;
 					if (sidebar.prefix === "/") return item.link;
 
 					if (item.link.endsWith("/"))
@@ -93,6 +96,7 @@ function flattenSidebarItems<T = {}>(
 				})(),
 				depth,
 			};
+		}
 
 		return flattenSidebarItems<T>(
 			{ prefix: sidebar.prefix + (item.base ?? ""), items: item.items },
