@@ -9,6 +9,8 @@
     "check": "biome check",
     "build": "tsc -b --force && node scripts/build.js",
     "format": "biome check --write #&& prettier . --write",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc -b",
     "publish:next": "pnpm i && pnpm build && pnpm publish --tag next",
     "publish:release": "pnpm i && pnpm build && pnpm publish",
@@ -109,7 +111,8 @@
     "tsx": "^4.19.3",
     "vfile": "^6.0.3",
     "vinxi": "^0.5.3",
-    "vite": "^6.1.1"
+    "vite": "^6.1.1",
+    "vitest": "^4.1.0"
   },
   "peerDependencies": {
     "@solidjs/start": "^1.0.8",
