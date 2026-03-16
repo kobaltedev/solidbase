@@ -24,4 +24,35 @@ describe("transformMdxModule", () => {
 		expect(code).toContain("Welcome to SolidBase.");
 		expect(code).toContain("```md\\n{frontmatter.product}\\n```");
 	});
+
+	it("supports nested vite ids and function edit links", async () => {
+		const modulePath = routeFixturePath("guide", "getting-started.mdx");
+		process.env.PWD = "/home/sarah/GitHub/solidbase";
+
+		const code = await transformMdxModule(
+			"export default function Page() {}",
+			`${modulePath}?id=${encodeURIComponent(`${modulePath}?import`)}`,
+			{
+				markdown: {},
+				editPath: (file: string) => `https://example.com/edit/${file}`,
+			},
+		);
+
+		expect(code).toContain("Getting Started");
+		expect(code).toContain("https://example.com/edit/");
+		expect(code).toContain(
+			"/tests/fixtures/src/routes/guide/getting-started.mdx",
+		);
+	});
+
+	it("works for markdown files without frontmatter", async () => {
+		const markdownPath = routeFixturePath("plain.md");
+		const code = await transformMdxModule(
+			"export default function Page() {}",
+			markdownPath,
+			{ markdown: {} },
+		);
+
+		expect(code).toContain('llmText: "Just plain markdown."');
+	});
 });

@@ -161,4 +161,38 @@ describe("toDocumentMarkdown", () => {
 			].join("\n"),
 		);
 	});
+
+	it("applies TOC, imported code, and github alert transforms together", async () => {
+		const codePath = routeFixturePath("..", "..", "code", "example.ts");
+		const source = [
+			"---",
+			"title: Home",
+			"product: SolidBase",
+			"---",
+			"",
+			"# {frontmatter.title}",
+			"",
+			"[[toc]]",
+			"",
+			"## Install",
+			"",
+			"> [!NOTE]",
+			"> Welcome to {frontmatter.product}.",
+			"",
+			`\`\`\`ts file="${codePath}#L2-L3"`,
+			"```",
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: { markdown: { toc: {} } },
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain("# Home");
+		expect(markdown).toContain("1. [Install](#install)");
+		expect(markdown).toContain('<DirectiveContainer type="note"');
+		expect(markdown).toContain("Welcome to SolidBase.");
+		expect(markdown).toContain('title="example.ts"');
+		expect(markdown).toContain('console.log("hi");');
+	});
 });
