@@ -96,7 +96,10 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
-	const llmText = toDocumentMarkdown(await readFile(modulePath, "utf8"));
+	const llmText = await toDocumentMarkdown(await readFile(modulePath, "utf8"), {
+		config: solidBaseConfig,
+		filePath: modulePath,
+	});
 
 	return `
 		${code}

@@ -23,7 +23,12 @@ import {
 	type LanguageSwitcherOptions,
 	ecPluginLanguageSwitcher,
 } from "./ec-plugins/language-switcher/index.js";
-import type { SolidBaseResolvedConfig } from "./index.js";
+import type { SolidBaseConfig, SolidBaseResolvedConfig } from "./index.js";
+
+export type RemarkPipelineConfig = Pick<
+	SolidBaseConfig<any>,
+	"markdown" | "issueAutolink"
+>;
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
@@ -167,7 +172,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	return rehypePlugins;
 }
 
-function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
+export function getRemarkPlugins(sbConfig: RemarkPipelineConfig) {
 	const remarkPlugins: any[] = [];
 
 	if (sbConfig.markdown?.steps !== false) remarkPlugins.push(remarkSteps);

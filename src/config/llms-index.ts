@@ -119,7 +119,10 @@ export async function getLlmDocuments(
 						: undefined,
 				routePath,
 				markdownPath: toMarkdownPath(routePath),
-				content: toDocumentMarkdown(source),
+				content: await toDocumentMarkdown(source, {
+					config,
+					filePath,
+				}),
 			} satisfies LlmDocument;
 		}),
 	).then((documents) => documents.filter((document) => document !== null));
