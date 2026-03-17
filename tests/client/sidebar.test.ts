@@ -128,5 +128,4 @@ describe("client sidebar helpers", () => {
 			dispose();
 		});
 	});
-
 });

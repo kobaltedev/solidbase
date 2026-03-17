@@ -107,5 +107,4 @@ describe("locale client helpers", () => {
 		expect(getLocale("/docs/setup").code).toBe("en-US");
 		expect(getLocaleLink(getLocale("/de/docs/setup"))).toBe("/de/docs/");
 	});
-
 });

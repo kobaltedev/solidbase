@@ -5,7 +5,7 @@ import IconsResolver from "unplugin-icons/resolver";
 import Icons from "unplugin-icons/vite";
 import type { PluginOption } from "vite";
 
-import type { SolidBaseConfig, ThemeDefinition } from "../index.js";
+import type {SolidBaseConfig, ThemeDefinition} from "../index.js";
 import solidBaseLlmsPlugin from "./llms.js";
 import {
 	componentsModule,
@@ -15,9 +15,9 @@ import {
 
 export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
-	solidBaseConfig: SolidBaseResolvedConfig<any>,
+	solidBaseConfig: SolidBaseConfig<any>,
 ): PluginOption {
-	let root = process.cwd();
+	const root = process.cwd();
 
 	const plugins: PluginOption[] = [
 		{
