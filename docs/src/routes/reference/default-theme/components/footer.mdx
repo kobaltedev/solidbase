@@ -12,17 +12,17 @@ The footer has multiple options available.
 <!-- app.config.ts -->
 import { defineConfig } from "@solidjs/start/config";
 
-import { createWithSolidBase } from "@kobalte/solidbase";
+import { createSolidBase } from "@kobalte/solidbase";
 
 
-export default defineConfig(
-	createWithSolidBase(theme)(
-		/* SolidStart options */
-		{
-			...
-		},
-		/* SolidBase options */
-		{
+const solidBase = createSolidBase(theme);
+
+export default defineConfig({
+	...solidBase.startConfig({
+		...
+	}),
+	plugins: [
+		solidBase.plugin({
 			...
 			themeConfig: {
 				socialLinks: {
@@ -32,9 +32,9 @@ export default defineConfig(
 				...
 			},
 			...
-    }
-  )
-);
+		}),
+	],
+});
 
 ```
 
