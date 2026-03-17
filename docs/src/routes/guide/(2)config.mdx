@@ -49,6 +49,7 @@ interface SolidBaseConfig<ThemeConfig> {
   description?: string;
   logo?: string;
   issueAutolink?: IssueAutoLinkConfig | false;
+  llms?: boolean;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
   themeConfig?: ThemeConfig;
@@ -78,7 +79,7 @@ There are several options for setting site-wide metadata and behavior. These opt
 ```
 
 :::note
-For multilingual support, you can use the `locales` option to define different configurations for each locale. More details can be found in the [Internationalization guide](/guide/i18n).
+For multilingual support, you can use the `locales` option to define different configurations for each locale. More details can be found in the [Internationalization guide](/guide/features/i18n).
 :::
 
 #### Miscellaneous options
@@ -88,14 +89,18 @@ In addition to setting the site title and description, you can also configure ot
 - `editPath`: A string or function to generate the "Edit this page" link for each page.
 - `lastUpdated`: An object to configure the display of the last updated timestamp on each page. Set to `false` to disable this feature.
 - `issueAutolink`: An object to configure automatic linking of issue references in your markdown content. Set to `false` to disable this feature.
+- `llms`: Set to `true` to emit an `llms.txt` index and markdown copies of your routes for LLM-friendly documentation output.
 
 ```ts title="app.config.ts"
 // ..
 editPath: "https://github.com/[USERNAME]/[REPO]/edit/main/docs/:path"
 lastUpdated: false;
 issueAutolink: "https://github.com/[USERNAME]/[REPO]/issues/:issue"
+llms: true;
 // ..
 ```
+
+See the [LLMs.txt guide](/guide/features/llms) for page-level exclusion and output details.
 
 ### Markdown Configuration
 
