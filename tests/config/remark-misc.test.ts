@@ -1,8 +1,7 @@
-import { describe, expect, it } from "vitest";
-
 import remarkDirective from "remark-directive";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
+import { describe, expect, it } from "vitest";
 
 import { remarkDirectiveContainers } from "../../src/config/remark-plugins/directives.ts";
 import { remarkGithubAlertsToDirectives } from "../../src/config/remark-plugins/gh-directives.ts";

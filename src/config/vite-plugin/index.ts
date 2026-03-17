@@ -118,9 +118,9 @@ export function isMarkdown(path: string) {
 	return !!path.match(/\.(mdx|md)/gm);
 }
 
+import type { Options, Resolver } from "unplugin-auto-import/dist/types.js";
 // Workaround for https://github.com/solidjs/solid-start/issues/1374
 import type { Plugin } from "vite";
-import type { Options, Resolver } from "unplugin-auto-import/dist/types.js";
 
 function VinxiAutoImport(options: Options): PluginOption {
 	const autoimport = AutoImport(options) as Plugin;

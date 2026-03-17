@@ -1,9 +1,8 @@
-import { describe, expect, it } from "vitest";
-
 import remarkMdx from "remark-mdx";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { VFile } from "vfile";
+import { describe, expect, it } from "vitest";
 
 import viteMdx from "../../src/vite-mdx/index.ts";
 import { createTransformer } from "../../src/vite-mdx/transform.ts";

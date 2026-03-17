@@ -1,7 +1,6 @@
-import { describe, expect, it } from "vitest";
-
 import remarkParse from "remark-parse";
 import { unified } from "unified";
+import { describe, expect, it } from "vitest";
 
 import { remarkImportCodeFile } from "../../src/config/remark-plugins/import-code-file.ts";
 import { routeFixturePath } from "../helpers/fixtures.ts";
@@ -18,7 +17,7 @@ async function transform(
 describe("remarkImportCodeFile", () => {
 	it("inlines imported code and annotates title metadata", async () => {
 		const codePath = routeFixturePath("..", "..", "code", "example.ts");
-		const tree: any = await transform(`\`\`\`ts file=\"${codePath}\"\n\`\`\``);
+		const tree: any = await transform(`\`\`\`ts file="${codePath}"\n\`\`\``);
 		const code = tree.children[0];
 
 		expect(code.lang).toBe("ts");
@@ -30,7 +29,7 @@ describe("remarkImportCodeFile", () => {
 	it("supports line ranges and strips redundant indentation", async () => {
 		const codePath = routeFixturePath("..", "..", "code", "example.ts");
 		const tree: any = await transform(
-			`\`\`\`ts file=\"${codePath}#L2-L3\"\n\`\`\``,
+			`\`\`\`ts file="${codePath}#L2-L3"\n\`\`\``,
 		);
 		const code = tree.children[0];
 
@@ -44,7 +43,7 @@ describe("remarkImportCodeFile", () => {
 			.use(remarkImportCodeFile, {
 				transform: (code) => code.replace("bye", "see ya"),
 			});
-		const markdown = `\`\`\`ts file=\"${codePath}#L2-L3\"\n\`\`\``;
+		const markdown = `\`\`\`ts file="${codePath}#L2-L3"\n\`\`\``;
 		const tree: any = await processor.run(processor.parse(markdown), {
 			path: routeFixturePath("index.mdx"),
 			value: markdown,
@@ -57,14 +56,14 @@ describe("remarkImportCodeFile", () => {
 		const missingPath = routeFixturePath("..", "..", "code", "missing.ts");
 
 		await expect(
-			transform(`\`\`\`ts file=\"${missingPath}\"\n\`\`\``),
+			transform(`\`\`\`ts file="${missingPath}"\n\`\`\``),
 		).rejects.toThrow(/missing\.ts|ENOENT/);
 	});
 
 	it("returns an empty snippet for out-of-range line selections", async () => {
 		const codePath = routeFixturePath("..", "..", "code", "example.ts");
 		const tree: any = await transform(
-			`\`\`\`ts file=\"${codePath}#L99-L100\"\n\`\`\``,
+			`\`\`\`ts file="${codePath}#L99-L100"\n\`\`\``,
 		);
 
 		expect(tree.children[0].value).toBe("");

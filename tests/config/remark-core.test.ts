@@ -1,10 +1,9 @@
-import { describe, expect, it } from "vitest";
-
 import remarkFrontmatter from "remark-frontmatter";
 import remarkMdx from "remark-mdx";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { VFile } from "vfile";
+import { describe, expect, it } from "vitest";
 
 import { remarkAddClass } from "../../src/config/remark-plugins/kbd.ts";
 import {

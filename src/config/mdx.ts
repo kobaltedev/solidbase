@@ -29,6 +29,7 @@ export type RemarkPipelineConfig = Pick<
 	SolidBaseConfig<any>,
 	"markdown" | "issueAutolink"
 >;
+
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import { remarkDirectiveContainers } from "./remark-plugins/directives.js";

@@ -1,7 +1,6 @@
-import { describe, expect, it } from "vitest";
-
 import remarkParse from "remark-parse";
 import { unified } from "unified";
+import { describe, expect, it } from "vitest";
 
 import { remarkCodeTabs } from "../../src/config/remark-plugins/code-tabs.ts";
 import { remarkPackageManagerTabs } from "../../src/config/remark-plugins/package-manager-tabs.ts";

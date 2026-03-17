@@ -1,13 +1,12 @@
-import { describe, expect, it } from "vitest";
-
 import remarkMdx from "remark-mdx";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
+import { describe, expect, it } from "vitest";
 
 import {
+	remarkTOC,
 	SolidBaseTOC,
 	type TOCOptions,
-	remarkTOC,
 } from "../../src/config/remark-plugins/toc.ts";
 
 async function transform(markdown: string, opts?: TOCOptions) {
