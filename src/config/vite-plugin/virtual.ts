@@ -3,7 +3,6 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
-import type { PluginContext } from "rollup";
 import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { SolidBaseConfig, Theme } from "../index.js";
@@ -12,7 +11,7 @@ import { SolidBaseTOC } from "../remark-plugins/toc.js";
 type VirtualModule<T = void> = {
 	id: string;
 	resolvedId: string;
-	load(this: PluginContext, arg: T, root?: string): Promise<string>;
+	load(arg: T, root?: string): Promise<string>;
 };
 
 export const configModule: VirtualModule<Partial<SolidBaseConfig<any>>> = {
@@ -114,10 +113,6 @@ export async function transformMdxModule(
 	});
 
 	const s = new MagicString(code);
-	const llmText = await toDocumentMarkdown(await readFile(modulePath, "utf8"), {
-		config: solidBaseConfig,
-		filePath: modulePath,
-	});
 
 	s.append(`
 		const data = {

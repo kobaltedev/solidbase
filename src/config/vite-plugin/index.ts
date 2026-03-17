@@ -17,6 +17,8 @@ export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
 	solidBaseConfig: SolidBaseResolvedConfig<any>,
 ): PluginOption {
+	let root = process.cwd();
+
 	const plugins: PluginOption[] = [
 		{
 			name: "solidbase:pre",
@@ -35,9 +37,9 @@ export default function solidBaseVitePlugin(
 			},
 			async load(id) {
 				if (id === configModule.resolvedId)
-					return configModule.load.call(this, solidBaseConfig, root);
+					return configModule.load(solidBaseConfig, root);
 				if (id === componentsModule.resolvedId)
-					return await componentsModule.load.call(this, theme);
+					return await componentsModule.load(theme);
 				if (id === "\0virtual:solidbase/mdx")
 					return `export * from "@kobalte/solidbase/mdx"`;
 			},
@@ -117,10 +119,15 @@ export function isMarkdown(path: string) {
 }
 
 // Workaround for https://github.com/solidjs/solid-start/issues/1374
+import type { Plugin } from "vite";
 import type { Options, Resolver } from "unplugin-auto-import/dist/types.js";
 
 function VinxiAutoImport(options: Options): PluginOption {
-	const autoimport = AutoImport(options);
+	const autoimport = AutoImport(options) as Plugin;
+	const transform =
+		typeof autoimport.transform === "function"
+			? autoimport.transform
+			: autoimport.transform?.handler;
 
 	const ABSOLUTE_PATH = /^\/|^[a-zA-Z]:\//;
 
@@ -133,7 +140,7 @@ function VinxiAutoImport(options: Options): PluginOption {
 				pathname = new URL(`file://${id}`).pathname;
 			}
 
-			return autoimport.transform(src, pathname);
+			return transform?.call(this, src, pathname);
 		},
 	};
 }
