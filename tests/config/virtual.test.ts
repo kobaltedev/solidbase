@@ -12,7 +12,6 @@ describe("transformMdxModule", () => {
 
 	it("embeds llmText using the same transformed markdown output", async () => {
 		const modulePath = routeFixturePath("index.mdx");
-		process.env.PWD = "/home/sarah/GitHub/solidbase";
 
 		const code = await transformMdxModule(
 			"export default function Page() {}",
@@ -27,7 +26,6 @@ describe("transformMdxModule", () => {
 
 	it("supports nested vite ids and function edit links", async () => {
 		const modulePath = routeFixturePath("guide", "getting-started.mdx");
-		process.env.PWD = "/home/sarah/GitHub/solidbase";
 
 		const code = await transformMdxModule(
 			"export default function Page() {}",

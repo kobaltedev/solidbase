@@ -35,8 +35,11 @@ function createStubCompiler() {
 }
 
 describe("vite-mdx integration", () => {
+	const pagePath = "tests/fixtures/page.mdx";
+	const sharedPath = "tests/fixtures/shared.mdx";
+
 	it("createTransformer prepends imports and transpiles JSX output", async () => {
-		const transform = createTransformer("/home/sarah/GitHub/solidbase", {});
+		const transform = createTransformer(process.cwd(), {});
 
 		const code = await transform("# Hello");
 
@@ -52,18 +55,13 @@ describe("vite-mdx integration", () => {
 		})) as any[];
 
 		plugin.configResolved({
-			root: "/home/sarah/GitHub/solidbase",
+			root: process.cwd(),
 			plugins: [],
 		} as any);
 
 		plugin.mdxOptions.remarkPlugins.push(appendParagraph("global"));
 
-		const result = await plugin.transform.call(
-			{},
-			"# Hello",
-			"/tmp/page.mdx",
-			false,
-		);
+		const result = await plugin.transform.call({}, "# Hello", pagePath, false);
 
 		expect(result.code).toContain('"global"');
 		expect(result.code).toContain('"local"');
@@ -80,7 +78,7 @@ describe("vite-mdx integration", () => {
 			astCache: astCache as any,
 			importMap,
 			resolve: async (id: string) =>
-				id === "./shared.mdx" ? "/tmp/shared.mdx" : undefined,
+				id === "./shared.mdx" ? sharedPath : undefined,
 			readFile: async () => {
 				readCount += 1;
 				return "## Shared\n\nFrom import.";
@@ -89,7 +87,7 @@ describe("vite-mdx integration", () => {
 		})();
 
 		const firstFile = new VFile({
-			path: "/tmp/page.mdx",
+			path: pagePath,
 			value: 'import "./shared.mdx"\n\n# Page',
 		});
 		const firstTree: any = processor.parse(firstFile);
@@ -101,13 +99,11 @@ describe("vite-mdx integration", () => {
 			"heading",
 		]);
 		expect(firstTree.children[0].children[0].value).toBe("Shared");
-		expect(importMap.importers.get("/tmp/shared.mdx")).toEqual(
-			new Set(["/tmp/page.mdx"]),
-		);
+		expect(importMap.importers.get(sharedPath)).toEqual(new Set([pagePath]));
 		expect(readCount).toBe(1);
 
 		const secondFile = new VFile({
-			path: "/tmp/page.mdx",
+			path: pagePath,
 			value: 'import "./shared.mdx"\n\n# Page',
 		});
 		const secondTree: any = processor.parse(secondFile);
@@ -127,7 +123,7 @@ describe("vite-mdx integration", () => {
 		})();
 
 		const file = new VFile({
-			path: "/tmp/page.mdx",
+			path: pagePath,
 			value: 'import "./missing.mdx"\n\n# Page',
 		});
 		const tree: any = processor.parse(file);

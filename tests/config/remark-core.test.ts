@@ -19,7 +19,7 @@ async function runMarkdown(markdown: string, ...plugins: Array<any>) {
 		if (Array.isArray(plugin)) processor.use(plugin[0], plugin[1]);
 		else processor.use(plugin);
 	}
-	const file = new VFile({ value: markdown, path: "/tmp/test.mdx" });
+	const file = new VFile({ value: markdown, path: "tests/fixtures/test.mdx" });
 	const tree = processor.parse(file);
 	return processor.run(tree, file);
 }
@@ -72,7 +72,7 @@ describe("remarkSteps", () => {
 });
 
 describe("remarkAddClass", () => {
-	it("adds sb-kbd class when missing", async () => {
+	it("adds sb-kbd class to <kbd>", async () => {
 		const tree: any = await runMarkdown(
 			"Press <kbd>Enter</kbd>",
 			remarkAddClass,
@@ -86,7 +86,7 @@ describe("remarkAddClass", () => {
 		);
 	});
 
-	it("appends sb-kbd to an existing class", async () => {
+	it("appends sb-kbd to an existing class on <kbd>", async () => {
 		const tree: any = await runMarkdown(
 			'Press <kbd class="hotkey">Enter</kbd>',
 			remarkAddClass,

@@ -1,4 +1,5 @@
 import { EventEmitter } from "node:events";
+import { dirname } from "node:path";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -30,6 +31,10 @@ function createChild(output: string) {
 }
 
 describe("getGitTimestamp", () => {
+	const missingPath = "tests/fixtures/missing.mdx";
+	const docPath = "tests/fixtures/doc.mdx";
+	const errorPath = "tests/fixtures/error.mdx";
+
 	beforeEach(() => {
 		vi.resetModules();
 		existsSync.mockReset();
@@ -40,7 +45,7 @@ describe("getGitTimestamp", () => {
 		existsSync.mockReturnValue(false);
 		const { getGitTimestamp } = await import("../../src/config/git.ts");
 
-		expect(getGitTimestamp("/tmp/missing.mdx")).toBe(0);
+		expect(getGitTimestamp(missingPath)).toBe(0);
 		expect(spawn).not.toHaveBeenCalled();
 	});
 
@@ -49,17 +54,17 @@ describe("getGitTimestamp", () => {
 		spawn.mockImplementation(() => createChild("2024-01-02 03:04:05 +0000"));
 		const { getGitTimestamp } = await import("../../src/config/git.ts");
 
-		await expect(getGitTimestamp("/tmp/doc.mdx")).resolves.toBe(
+		await expect(getGitTimestamp(docPath)).resolves.toBe(
 			+new Date("2024-01-02 03:04:05 +0000"),
 		);
-		expect(getGitTimestamp("/tmp/doc.mdx")).toBe(
+		expect(getGitTimestamp(docPath)).toBe(
 			+new Date("2024-01-02 03:04:05 +0000"),
 		);
 		expect(spawn).toHaveBeenCalledTimes(1);
 		expect(spawn).toHaveBeenCalledWith(
 			"git",
 			["log", "-1", '--pretty="%ai"', "doc.mdx"],
-			{ cwd: "/tmp" },
+			{ cwd: dirname(docPath) },
 		);
 	});
 
@@ -75,8 +80,6 @@ describe("getGitTimestamp", () => {
 		});
 		const { getGitTimestamp } = await import("../../src/config/git.ts");
 
-		await expect(getGitTimestamp("/tmp/error.mdx")).rejects.toThrow(
-			"git failed",
-		);
+		await expect(getGitTimestamp(errorPath)).rejects.toThrow("git failed");
 	});
 });
