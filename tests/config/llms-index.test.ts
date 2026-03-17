@@ -134,6 +134,84 @@ describe("getLlmDocuments", () => {
 		expect(index).not.toContain("/fr/guide/getting-started.md");
 	});
 
+	it("renders nav sections and indented sidebar groups", () => {
+		const index = buildLlmsIndex(
+			undefined,
+			{
+				...config,
+				themeConfig: {
+					nav: [
+						{ text: "Guide", link: "/guide" },
+						{ text: "Reference", link: "/reference" },
+					],
+					sidebar: {
+						"/guide": [
+							{ title: "About", link: "/guide" },
+							{
+								title: "Customization",
+								items: [
+									{
+										title: "Custom Themes",
+										link: "/guide/customization/custom-themes",
+									},
+								],
+							},
+							{
+								title: "Features",
+								items: [
+									{
+										title: "LLMs.txt",
+										link: "/guide/features/llms",
+									},
+								],
+							},
+						],
+						"/reference": [
+							{ title: "Runtime API", link: "/reference/runtime-api" },
+						],
+					},
+				},
+			},
+			[
+				{
+					title: "About",
+					routePath: "/guide",
+					markdownPath: "/guide.md",
+					content: "About",
+				},
+				{
+					title: "Custom Themes",
+					routePath: "/guide/customization/custom-themes",
+					markdownPath: "/guide/customization/custom-themes.md",
+					content: "Custom Themes",
+				},
+				{
+					title: "LLMs.txt",
+					routePath: "/guide/features/llms",
+					markdownPath: "/guide/features/llms.md",
+					content: "LLMs",
+				},
+				{
+					title: "Runtime API",
+					routePath: "/reference/runtime-api",
+					markdownPath: "/reference/runtime-api.md",
+					content: "Runtime API",
+				},
+			],
+		);
+
+		expect(index).toContain("## Guide");
+		expect(index).toContain("## Reference");
+		expect(index).toContain("- [About](/guide.md)");
+		expect(index).toContain(
+			"- Customization\n  - [Custom Themes](/guide/customization/custom-themes.md)",
+		);
+		expect(index).toContain(
+			"- Features\n  - [LLMs.txt](/guide/features/llms.md)",
+		);
+		expect(index).toContain("- [Runtime API](/reference/runtime-api.md)");
+	});
+
 	it("uses route path as a title fallback and respects nested llms exclusion", async () => {
 		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-"));
 		const routesDir = join(root, "src", "routes", "guide");
@@ -188,5 +266,35 @@ describe("getLlmDocuments", () => {
 		});
 
 		expect(documents.map((document) => document.routePath)).toEqual(["/"]);
+	});
+
+	it("strips numeric ordering prefixes from llms route paths", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-ordering-"));
+		await mkdir(join(root, "src", "routes", "guide", "features"), {
+			recursive: true,
+		});
+
+		await writeFile(
+			join(root, "src", "routes", "guide", "(0)quickstart.mdx"),
+			["---", "title: Quick Start", "---", "", "Start here."].join("\n"),
+		);
+		await writeFile(
+			join(root, "src", "routes", "guide", "features", "(3)llms.mdx"),
+			["---", "title: LLMs.txt", "---", "", "AI docs."].join("\n"),
+		);
+
+		const documents = await getLlmDocuments(root, {
+			...config,
+			themeConfig: {},
+		});
+
+		expect(documents.map((document) => document.routePath)).toEqual([
+			"/guide/quickstart",
+			"/guide/features/llms",
+		]);
+		expect(documents.map((document) => document.markdownPath)).toEqual([
+			"/guide/quickstart.md",
+			"/guide/features/llms.md",
+		]);
 	});
 });

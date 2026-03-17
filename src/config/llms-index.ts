@@ -21,6 +21,11 @@ type SidebarItem = {
 	items?: SidebarItem[];
 };
 
+type NavItem = {
+	text: string;
+	link?: string;
+};
+
 export type LlmDocument = {
 	title: string;
 	description?: string;
@@ -44,6 +49,10 @@ function isNotFoundRoute(routesDir: string, filePath: string) {
 		.some((segment) => segment.startsWith("[...404]."));
 }
 
+function stripOrderingSegment(segment: string) {
+	return segment.replace(/^\(\d+\)/, "");
+}
+
 async function collectMarkdownFiles(dir: string): Promise<string[]> {
 	const entries = await readdir(dir, { withFileTypes: true });
 	const files = await Promise.all(
@@ -62,7 +71,11 @@ async function collectMarkdownFiles(dir: string): Promise<string[]> {
 
 function toRoutePath(routesDir: string, filePath: string) {
 	const relativePath = relative(routesDir, filePath).replace(/\\/g, "/");
-	const routePath = relativePath.replace(/\.(md|mdx)$/, "");
+	const routePath = relativePath
+		.replace(/\.(md|mdx)$/, "")
+		.split("/")
+		.map(stripOrderingSegment)
+		.join("/");
 
 	if (routePath === "index") return "/";
 	if (routePath.endsWith("/index")) {
@@ -92,6 +105,16 @@ function getSidebar(config: SolidBaseResolvedConfig<any>) {
 		"sidebar" in themeConfig
 	) {
 		return themeConfig.sidebar as SidebarConfig<SidebarItem> | undefined;
+	}
+
+	return undefined;
+}
+
+function getNav(config: SolidBaseResolvedConfig<any>) {
+	const themeConfig = config.themeConfig;
+
+	if (themeConfig && typeof themeConfig === "object" && "nav" in themeConfig) {
+		return themeConfig.nav as NavItem[] | undefined;
 	}
 
 	return undefined;
@@ -180,27 +203,58 @@ export function buildLlmsIndex(
 		indexDocuments.map((document) => [document.routePath, document] as const),
 	);
 
-	const renderItem = (item: SidebarItem): string[] => {
+	const renderItem = (item: SidebarItem, depth = 0): string[] => {
+		const indent = "  ".repeat(depth);
+		const children = (item.items ?? []).flatMap((child) =>
+			renderItem(child, depth + 1),
+		);
+
 		if (item.link) {
 			const document = byRoutePath.get(item.link);
-			if (!document) return [];
+			if (!document) return children;
 
 			const description = document.description
 				? `: ${document.description}`
 				: "";
 
 			return [
-				`- [${item.title}](${toDocumentHref(document.markdownPath, origin)})${description}`,
+				`${indent}- [${item.title}](${toDocumentHref(document.markdownPath, origin)})${description}`,
+				...children,
 			];
 		}
 
-		return (item.items ?? []).flatMap(renderItem);
+		if (children.length === 0) return [];
+
+		return [`${indent}- ${item.title}`, ...children];
 	};
 
 	const sidebar = getSidebar(config);
-	const sections = getRootSidebarItems(sidebar)
+	const nav = getNav(config);
+	const keyedSidebar =
+		sidebar && !Array.isArray(sidebar)
+			? (sidebar as Record<`/${string}`, SidebarItem[]>)
+			: undefined;
+	const rootSectionEntries = getRootSidebarItems(sidebar).map((item) => ({
+		title: item.title,
+		items:
+			item.items ?? (item.link ? [{ title: item.title, link: item.link }] : []),
+	}));
+	const sectionEntries = Array.isArray(sidebar)
+		? rootSectionEntries
+		: (nav
+				?.filter((item): item is NavItem & { link: `/${string}` } =>
+					Boolean(item.link && keyedSidebar?.[item.link as `/${string}`]),
+				)
+				.map((item) => ({
+					title: item.text,
+					items: keyedSidebar?.[item.link] ?? [],
+				})) ?? rootSectionEntries);
+
+	const sections = sectionEntries
 		.map((section) => {
-			const lines = renderItem(section);
+			const lines = section.items.flatMap((item: SidebarItem) =>
+				renderItem(item),
+			);
 			if (lines.length === 0) return null;
 
 			return [`## ${section.title}`, "", ...lines].join("\n");
