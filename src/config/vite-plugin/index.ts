@@ -37,7 +37,7 @@ export default function solidBaseVitePlugin(
 			},
 			async load(id) {
 				if (id === configModule.resolvedId)
-					return configModule.load(solidBaseConfig, root);
+					return configModule.load.call(this, solidBaseConfig, root);
 				if (id === componentsModule.resolvedId)
 					return await componentsModule.load.call(this, theme);
 				if (id === "\0virtual:solidbase/mdx")
