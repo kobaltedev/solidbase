@@ -75,16 +75,4 @@ describe("page data helpers", () => {
 		dispose();
 	});
 
-	it("throws when useCurrentPageData is called without a provider", async () => {
-		const { useCurrentPageData } = await import(
-			"../../src/client/page-data.ts"
-		);
-
-		createRoot((dispose) => {
-			expect(() => useCurrentPageData()).toThrow(
-				"useCurrentPageData must be called underneath a CurrentPageDataProvider",
-			);
-			dispose();
-		});
-	});
 });

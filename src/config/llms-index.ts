@@ -34,8 +34,7 @@ function getRoutesDir(root: string) {
 }
 
 function isExcluded(frontmatter: LlmFrontmatter) {
-	if (frontmatter.llms === false) return true;
-	return frontmatter.llms?.exclude === true;
+	return frontmatter.llms === false || frontmatter.llms?.exclude === true;
 }
 
 async function collectMarkdownFiles(dir: string): Promise<string[]> {

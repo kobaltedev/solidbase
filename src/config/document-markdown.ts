@@ -125,8 +125,7 @@ export async function toDocumentMarkdown(
 		.use(remarkMdx)
 		.use(getDocumentRemarkPlugins(options.config))
 		.use(remarkStripDocumentMetadata)
-		.use(remarkStringify)
-		.use(remarkMdx);
+		.use(remarkStringify);
 
 	const file = await processor.process(
 		new VFile({ path: options.filePath, value: source }),

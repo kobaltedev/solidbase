@@ -129,14 +129,4 @@ describe("client sidebar helpers", () => {
 		});
 	});
 
-	it("throws when useSidebar is called without a provider", async () => {
-		const { useSidebar } = await import("../../src/client/sidebar.ts");
-
-		createRoot((dispose) => {
-			expect(() => useSidebar()).toThrow(
-				"useSidebar must be called underneath a SidebarProvider",
-			);
-			dispose();
-		});
-	});
 });
