@@ -3,8 +3,7 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
-import type { PluginContext } from "rollup";
-import type { Plugin } from "vite";
+import type { PluginContext } from "rolldown";
 import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
 import type { SolidBaseConfig } from "../index.js";

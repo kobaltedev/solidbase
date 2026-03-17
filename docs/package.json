@@ -13,10 +13,10 @@
     "@solidjs/start": "2.0.0-alpha.2",
     "@solidjs/vite-plugin-nitro-2": "https://pkg.pr.new/solidjs/solid-start/@solidjs/vite-plugin-nitro-2@2039",
     "solid-js": "^1.9.9",
-    "vite": "^7.2.4"
+    "vite": "^8.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12"
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.2.5",

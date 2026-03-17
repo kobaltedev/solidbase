@@ -107,14 +107,15 @@
     "glob": "^11.0.1",
     "mdast": "^3.0.0",
     "resolve": "^1.22.10",
+    "rolldown": "1.0.0-rc.9",
     "solid-js": "^1.9.9",
     "tsx": "^4.19.3",
     "vfile": "^6.0.3",
-    "vite": "^7.2.4"
+    "vite": "^8.0.0"
   },
   "peerDependencies": {
     "solid-js": "^1.9.1",
-    "vite": "^7.1.1"
+    "vite": "^8.0.0"
   },
   "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
   "dependencies": {
@@ -162,7 +163,6 @@
     "remark-directive": "^3.0.0",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
-    "rollup": "^4.53.3",
     "source-map": "^0.7.6",
     "toml": "^3.0.0",
     "typescript": "^5.6.3",
@@ -176,6 +176,6 @@
     "yaml": "^2.8.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.12"
   }
 }

@@ -50,8 +50,8 @@ export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
 export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: TwoslashOptions | true;
-				languageSwitcher?: LanguageSwitcherOptions | true;
+				twoSlash?: TwoslashOptions | boolean;
+				languageSwitcher?: LanguageSwitcherOptions | boolean;
 		  })
 		| false;
 	toc?: TOCOptions | false;
