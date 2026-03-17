@@ -34,4 +34,18 @@ The title is formatted from the config:
 
 ## Layout
 
-More options such as `layout` are available in the [Default Theme](./default-theme) reference.
+More options such as `layout` are available in the [Default Theme](/reference/default-theme) reference.
+
+## LLMs
+
+The `llms` frontmatter key controls whether a page is included in generated LLMS documents.
+
+```md
+---
+title: About
+llms:
+  exclude: true
+---
+```
+
+You can also write `llms: false` to exclude the page entirely.
