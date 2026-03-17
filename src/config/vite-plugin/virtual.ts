@@ -2,6 +2,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { toDocumentMarkdown } from "../document-markdown.js";
 import MagicString from "magic-string";
 import type { PluginContext } from "rollup";
 import type { Plugin } from "vite";
