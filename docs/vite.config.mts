@@ -1,7 +1,7 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
 import { solidStart } from "@solidjs/start/config";
-import { nitroV2Plugin } from "@solidjs/vite-plugin-nitro-2";
 import { defineConfig } from "vite";
+import { nitro } from "nitro/vite";
 import arraybuffer from "vite-plugin-arraybuffer";
 
 import { createSolidBase, defineTheme } from "../src/config";
@@ -101,8 +101,7 @@ export default defineConfig({
       },
     }),
     solidStart(solidBase.startConfig()),
-    nitroV2Plugin({
-      esbuild: { options: { target: "es2022" } },
+    nitro({
       preset: "netlify",
       prerender: { crawlLinks: true },
     }),
