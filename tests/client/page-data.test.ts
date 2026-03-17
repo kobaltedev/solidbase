@@ -26,6 +26,8 @@ vi.mock("solid-js", async () => {
 });
 
 describe("page data helpers", () => {
+	const pagePath = "tests/fixtures/page.mdx";
+
 	afterEach(() => {
 		useCurrentMatches.mockReset();
 		vi.resetModules();
@@ -35,11 +37,11 @@ describe("page data helpers", () => {
 	it("reads current page data from the window cache in dev", async () => {
 		useCurrentMatches.mockReturnValue([
 			{
-				route: { key: { $component: { src: "/tmp/page.mdx?import" } } },
+				route: { key: { $component: { src: `${pagePath}?import` } } },
 			},
 		]);
 		(window as any).$$SolidBase_page_data = {
-			"/tmp/page.mdx": {
+			[pagePath]: {
 				frontmatter: { title: "Hello", description: "World" },
 				llmText: "Hello world",
 			},
@@ -67,12 +69,11 @@ describe("page data helpers", () => {
 		await Promise.resolve();
 		await Promise.resolve();
 
-		expect(pageData?.()?.llmText).toBe("Hello world");
+		expect((pageData?.() as any)?.llmText).toBe("Hello world");
 		expect(frontmatter?.()).toEqual({
 			title: "Hello",
 			description: "World",
 		});
 		dispose();
 	});
-
 });
