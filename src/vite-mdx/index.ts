@@ -1,8 +1,7 @@
 // ty vinxi :)
 
-import type { Plugin } from "vite";
-
 import { VFile, type VFileCompatible } from "vfile";
+import type { Plugin } from "vite";
 import { mergeArrays } from "./common.js";
 import type { NamedImports } from "./imports.js";
 import { createTransformer } from "./transform.js";
@@ -67,7 +66,7 @@ function createPlugin(
 		},
 		async transform(_code, id, ssr) {
 			let code = _code;
-			const [path, query] = id.split("?");
+			const [path, _query] = id.split("?");
 			if (/\.mdx?$/.test(path)) {
 				if (!transformMdx)
 					throw new Error(
@@ -82,8 +81,8 @@ function createPlugin(
 				const input = new VFile({ value: code, path });
 
 				code = await transformMdx(input, { ...mdxOptions });
-				// @ts-ignore
-				const refreshResult = await reactRefresh?.transform!.call(
+				// @ts-expect-error
+				const refreshResult = await reactRefresh?.transform?.call(
 					this,
 					code,
 					`${path}.js`,

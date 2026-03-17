@@ -112,6 +112,7 @@ export function isMarkdown(path: string) {
 
 // Workaround for https://github.com/solidjs/solid-start/issues/1374
 import type { Options, Resolver } from "unplugin-auto-import/dist/types.js";
+
 function VinxiAutoImport(options: Options): PluginOption {
 	const autoimport = AutoImport(options);
 

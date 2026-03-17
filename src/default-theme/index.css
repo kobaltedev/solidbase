@@ -20,6 +20,7 @@ html {
 }
 
 code {
+	/* biome-ignore lint/complexity/noImportantStyles: important */
 	font-family: var(--sb-font-mono) !important;
 }
 
@@ -83,11 +84,12 @@ article *[id] {
 
 		&:has(.ec-line.highlight) .ec-line:not(.highlight) {
 			opacity: 0.7;
-			transition: opacity .1s var(--sb-transition-timing);
+			transition: opacity 0.1s var(--sb-transition-timing);
 		}
 
 		&:hover .ec-line,
 		&:focus-within .ec-line {
+			/* biome-ignore lint/complexity/noImportantStyles: important */
 			opacity: 1 !important;
 		}
 	}
@@ -95,8 +97,7 @@ article *[id] {
 
 .sb-ts-js-toggle,
 /* Expressive code hides all non-svg elements inside the header, so we need this selector to override it. */
-	.expressive-code
-	.sb-ts-js-toggle {
+.expressive-code .sb-ts-js-toggle {
 	appearance: none;
 	display: flex;
 	align-items: center;

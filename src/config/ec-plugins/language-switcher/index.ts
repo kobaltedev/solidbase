@@ -1,14 +1,14 @@
 import {
+	definePlugin,
 	ExpressiveCodeBlock,
 	ExpressiveCodeEngine,
 	MetaOptions,
-	definePlugin,
 } from "@expressive-code/core";
 import {
-	type Element,
-	SKIP,
 	addClassName,
+	type Element,
 	h,
+	SKIP,
 	visit,
 } from "expressive-code/hast";
 import rangeParser from "parse-numeric-range";

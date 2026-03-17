@@ -48,6 +48,7 @@ export function usePreferredLanguage() {
 			"data-preferred-language",
 			preferredLanguageStr,
 		);
+		// biome-ignore lint/suspicious/noDocumentCookie: remove next major
 		document.cookie = `${COOKIE_NAME}=${preferredLanguageStr}; max-age=31536000; path=/`;
 
 		const toggles = document.querySelectorAll<HTMLInputElement>(

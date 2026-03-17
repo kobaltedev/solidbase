@@ -1,16 +1,14 @@
 import { Layout, mdxComponents } from "virtual:solidbase/components";
-import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import { type ParentProps, Suspense, createMemo, onMount } from "solid-js";
-
-import { useRouteSolidBaseConfig } from "./config.js";
-import { SolidBaseContext } from "./context.jsx";
-
 // Doing this instead of importing '../mdx.js' is annoying but necessary:
 // MDX files import from `@kobalte/solidbase/mdx`, and this file would otherwise import
 // from `../mdx.js`. Even though these both point to the same file, Vite treats them
 // as different modules, resulting in this file getting its own MDXContext (id `file://.../mdx.js),
 // and the MDX files sharing another (id `@kobalte/solidbase/mdx`).
 import { MDXProvider } from "virtual:solidbase/mdx";
+import { Meta, MetaProvider, Title } from "@solidjs/meta";
+import { createMemo, onMount, type ParentProps, Suspense } from "solid-js";
+import { useRouteSolidBaseConfig } from "./config.js";
+import { SolidBaseContext } from "./context.jsx";
 
 export function SolidBaseRoot(
 	props: ParentProps & {
@@ -44,7 +42,7 @@ export function SolidBaseRoot(
 		(props.meta?.provider ?? true) ? (
 			<MetaProvider>{base()}</MetaProvider>
 		) : (
-			<>{base()}</>
+			base()
 		);
 
 	return <>{withMeta()}</>;

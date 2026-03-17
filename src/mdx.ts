@@ -1,9 +1,9 @@
 import {
-	type JSX,
-	type ParentProps,
 	createComponent,
 	createContext,
+	type JSX,
 	mergeProps,
+	type ParentProps,
 	useContext,
 } from "solid-js";
 import { Dynamic } from "solid-js/web";

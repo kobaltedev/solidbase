@@ -1,7 +1,7 @@
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
-import { type ParentProps, Show, createSignal } from "solid-js";
+import { createSignal, type ParentProps, Show } from "solid-js";
 
 import { useCurrentPageData } from "../../client/index.jsx";
 import { usePrevNext } from "../../client/sidebar.js";
@@ -22,7 +22,7 @@ export default function Article(props: ParentProps) {
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
 		useDefaultThemeComponents();
 
-	const [contentRef, setContentRef] = createSignal<HTMLElement>();
+	const [_contentRef, setContentRef] = createSignal<HTMLElement>();
 
 	const [clickedCodeElement, setClickedCodeElement] =
 		createSignal<HTMLElement>();

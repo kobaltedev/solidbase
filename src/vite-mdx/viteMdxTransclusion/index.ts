@@ -3,15 +3,15 @@ import { isAbsolute } from "node:path";
 import LRUCache from "@alloc/quick-lru";
 import {
 	type FSWatcher,
+	normalizePath,
 	type Plugin,
 	type ResolvedConfig,
-	normalizePath,
 } from "vite";
 
 import { mergeArrays } from "../common.js";
 import type { MdxOptions, MdxPlugin } from "../types.js";
-import { ImportMap } from "./ImportMap.js";
 import { createMdxAstCompiler } from "./createMdxAstCompiler.js";
+import { ImportMap } from "./ImportMap.js";
 import { type MdxAstCache, remarkTransclusion } from "./remarkTransclusion.js";
 
 /**
@@ -68,7 +68,6 @@ export function viteMdxTransclusion(
 					if (importers) {
 						astCache.delete(filePath);
 						for (const importer of importers) {
-							// @ts-ignore
 							watcher!.emit("change", importer);
 						}
 					}

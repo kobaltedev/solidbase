@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { EOL } from "node:os";
 import path from "node:path";
 import { MetaOptions } from "@expressive-code/core";
-import type { Code, Parent, Root } from "mdast";
+import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
 import type { PluginOption } from "vite";

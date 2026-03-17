@@ -65,7 +65,7 @@ export function remarkTOC(opts?: TOCOptions) {
 
 			findAndReplace(tree, [["[[toc]]", () => map]]);
 
-			// @ts-ignore: not sure what the correct type is
+			// @ts-expect-error: not sure what the correct type is
 			value = JSON.stringify(map.children.map(mapNode));
 		}
 

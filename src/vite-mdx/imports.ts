@@ -38,7 +38,7 @@ export function resolveImport(
 	if (!importCache[cacheKey]) {
 		try {
 			importCache[cacheKey] = resolve.sync(name, { basedir: cwd });
-		} catch (e) {
+		} catch (_e) {
 			if (throwOnMissing) {
 				throw new Error(`[vite-plugin-mdx] "${name}" must be installed`);
 			}

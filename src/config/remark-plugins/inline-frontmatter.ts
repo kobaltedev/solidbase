@@ -2,7 +2,7 @@ import { SKIP, visit } from "unist-util-visit";
 
 export function remarkInlineFrontmatter() {
 	return (tree: any) => {
-		visit(tree, (node, index, parent) => {
+		visit(tree, (node, _index, parent) => {
 			if (node.type !== "mdxTextExpression" || parent.type !== "heading")
 				return;
 

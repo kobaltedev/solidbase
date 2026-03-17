@@ -20,8 +20,8 @@ import type { PluginOption } from "vite";
 
 import mdx from "../vite-mdx/index.js";
 import {
-	type LanguageSwitcherOptions,
 	ecPluginLanguageSwitcher,
+	type LanguageSwitcherOptions,
 } from "./ec-plugins/language-switcher/index.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
