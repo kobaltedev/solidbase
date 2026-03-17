@@ -23,6 +23,7 @@ export default defineConfig({
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
+			llms: true,
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			markdown: {
