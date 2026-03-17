@@ -1,25 +1,24 @@
 import { createSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
 
-const customTheme = defineTheme({
+const theme = defineTheme({
 	componentsPath: import.meta.resolve("./src/solidbase-theme"),
 	extends: defaultTheme,
 });
 
-const solidBase = createSolidBase(customTheme);
-const startConfig = solidBase.startConfig({
-	ssr: true,
-});
+const solidBase = createSolidBase(theme);
 
 export default {
-	...startConfig,
+	...solidBase.startConfig({
+		ssr: true,
+	}),
 	server: {
 		prerender: {
 			crawlLinks: true,
 		},
 	},
-	vite: {
-		plugins: solidBase.plugin({
+	plugins: [
+		solidBase.plugin({
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
@@ -108,5 +107,5 @@ export default {
 				},
 			},
 		}),
-	},
+	],
 };

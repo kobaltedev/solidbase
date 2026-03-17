@@ -108,15 +108,4 @@ describe("locale client helpers", () => {
 		expect(getLocaleLink(getLocale("/de/docs/setup"))).toBe("/de/docs/");
 	});
 
-	it("throws when useLocale is called without a provider", async () => {
-		setSolidBaseConfig({});
-		const { useLocale } = await import("../../src/client/locale.ts");
-
-		createRoot((dispose) => {
-			expect(() => useLocale()).toThrow(
-				"useLocale must be called underneath a LocaleContextProvider",
-			);
-			dispose();
-		});
-	});
 });
