@@ -134,7 +134,7 @@ describe("getLlmDocuments", () => {
 		expect(index).not.toContain("/fr/guide/getting-started.md");
 	});
 
-	it("renders nav sections and indented sidebar groups", () => {
+	it("renders nav sections and nested sidebar groups as headings", () => {
 		const index = buildLlmsIndex(
 			undefined,
 			{
@@ -146,13 +146,13 @@ describe("getLlmDocuments", () => {
 					],
 					sidebar: {
 						"/guide": [
-							{ title: "About", link: "/guide" },
+							{ title: "About", link: "/" },
 							{
 								title: "Customization",
 								items: [
 									{
 										title: "Custom Themes",
-										link: "/guide/customization/custom-themes",
+										link: "/customization/custom-themes",
 									},
 								],
 							},
@@ -161,13 +161,24 @@ describe("getLlmDocuments", () => {
 								items: [
 									{
 										title: "LLMs.txt",
-										link: "/guide/features/llms",
+										link: "/features/llms",
 									},
 								],
 							},
 						],
 						"/reference": [
-							{ title: "Runtime API", link: "/reference/runtime-api" },
+							{ title: "Index", link: "/" },
+							{ title: "Frontmatter", link: "/frontmatter" },
+							{ title: "Runtime API", link: "/runtime-api" },
+							{
+								title: "Default Theme",
+								items: [
+									{
+										title: "Landing",
+										link: "/default-theme/landing",
+									},
+								],
+							},
 						],
 					},
 				},
@@ -192,24 +203,48 @@ describe("getLlmDocuments", () => {
 					content: "LLMs",
 				},
 				{
+					title: "Index",
+					routePath: "/reference",
+					markdownPath: "/reference.md",
+					content: "Reference",
+				},
+				{
+					title: "Frontmatter",
+					routePath: "/reference/frontmatter",
+					markdownPath: "/reference/frontmatter.md",
+					content: "Frontmatter",
+				},
+				{
 					title: "Runtime API",
 					routePath: "/reference/runtime-api",
 					markdownPath: "/reference/runtime-api.md",
 					content: "Runtime API",
 				},
+				{
+					title: "Landing",
+					routePath: "/reference/default-theme/landing",
+					markdownPath: "/reference/default-theme/landing.md",
+					content: "Landing",
+				},
 			],
 		);
 
+		expect(index).toContain("- [About](/guide.md)");
 		expect(index).toContain("## Guide");
 		expect(index).toContain("## Reference");
 		expect(index).toContain("- [About](/guide.md)");
 		expect(index).toContain(
-			"- Customization\n  - [Custom Themes](/guide/customization/custom-themes.md)",
+			"### Customization\n\n- [Custom Themes](/guide/customization/custom-themes.md)",
 		);
 		expect(index).toContain(
-			"- Features\n  - [LLMs.txt](/guide/features/llms.md)",
+			"### Features\n\n- [LLMs.txt](/guide/features/llms.md)",
 		);
+		expect(index).toContain("- [Index](/reference.md)");
+		expect(index).toContain("- [Frontmatter](/reference/frontmatter.md)");
 		expect(index).toContain("- [Runtime API](/reference/runtime-api.md)");
+		expect(index).toContain(
+			"### Default Theme\n\n- [Landing](/reference/default-theme/landing.md)",
+		);
 	});
 
 	it("uses route path as a title fallback and respects nested llms exclusion", async () => {

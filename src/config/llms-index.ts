@@ -120,6 +120,28 @@ function getNav(config: SolidBaseResolvedConfig<any>) {
 	return undefined;
 }
 
+function joinRoutePath(basePath: `/${string}`, link: string) {
+	if (link === "/") return basePath;
+	if (link.startsWith(`${basePath}/`) || link === basePath) return link;
+	if (!link.startsWith("/")) return `${basePath}/${link}`.replaceAll("//", "/");
+	return `${basePath}${link}`.replaceAll("//", "/");
+}
+
+function resolveSidebarItems(
+	items: SidebarItem[],
+	basePath?: `/${string}`,
+): SidebarItem[] {
+	return items.map((item) => ({
+		...item,
+		link: item.link
+			? basePath
+				? joinRoutePath(basePath, item.link)
+				: item.link
+			: undefined,
+		items: item.items ? resolveSidebarItems(item.items, basePath) : undefined,
+	}));
+}
+
 function normalizeLocalePrefix(prefix: string) {
 	if (prefix === "/") return "/";
 	return prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
@@ -202,30 +224,31 @@ export function buildLlmsIndex(
 	const byRoutePath = new Map(
 		indexDocuments.map((document) => [document.routePath, document] as const),
 	);
+	const renderedRoutePaths = new Set<string>();
 
-	const renderItem = (item: SidebarItem, depth = 0): string[] => {
-		const indent = "  ".repeat(depth);
+	const renderItem = (item: SidebarItem, headingLevel: number): string[] => {
 		const children = (item.items ?? []).flatMap((child) =>
-			renderItem(child, depth + 1),
+			renderItem(child, Math.min(headingLevel + 1, 6)),
 		);
 
 		if (item.link) {
 			const document = byRoutePath.get(item.link);
 			if (!document) return children;
+			renderedRoutePaths.add(document.routePath);
 
 			const description = document.description
 				? `: ${document.description}`
 				: "";
 
 			return [
-				`${indent}- [${item.title}](${toDocumentHref(document.markdownPath, origin)})${description}`,
+				`- [${item.title}](${toDocumentHref(document.markdownPath, origin)})${description}`,
 				...children,
 			];
 		}
 
 		if (children.length === 0) return [];
 
-		return [`${indent}- ${item.title}`, ...children];
+		return [`${"#".repeat(headingLevel)} ${item.title}`, "", ...children];
 	};
 
 	const sidebar = getSidebar(config);
@@ -234,7 +257,9 @@ export function buildLlmsIndex(
 		sidebar && !Array.isArray(sidebar)
 			? (sidebar as Record<`/${string}`, SidebarItem[]>)
 			: undefined;
-	const rootSectionEntries = getRootSidebarItems(sidebar).map((item) => ({
+	const rootSectionEntries = resolveSidebarItems(
+		getRootSidebarItems(sidebar),
+	).map((item) => ({
 		title: item.title,
 		items:
 			item.items ?? (item.link ? [{ title: item.title, link: item.link }] : []),
@@ -247,13 +272,16 @@ export function buildLlmsIndex(
 				)
 				.map((item) => ({
 					title: item.text,
-					items: keyedSidebar?.[item.link] ?? [],
+					items: resolveSidebarItems(
+						keyedSidebar?.[item.link] ?? [],
+						item.link,
+					),
 				})) ?? rootSectionEntries);
 
 	const sections = sectionEntries
 		.map((section) => {
 			const lines = section.items.flatMap((item: SidebarItem) =>
-				renderItem(item),
+				renderItem(item, 3),
 			);
 			if (lines.length === 0) return null;
 
@@ -261,6 +289,16 @@ export function buildLlmsIndex(
 		})
 		.filter((section): section is string => section !== null)
 		.join("\n\n");
+
+	const topLevelDocuments = indexDocuments
+		.filter((document) => !renderedRoutePaths.has(document.routePath))
+		.map((document) => {
+			const description = document.description
+				? `: ${document.description}`
+				: "";
+			return `- [${document.title}](${toDocumentHref(document.markdownPath, origin)})${description}`;
+		})
+		.join("\n");
 
 	const fallbackSections = indexDocuments
 		.map((document) => {
@@ -276,7 +314,9 @@ export function buildLlmsIndex(
 		"",
 		config.description,
 		"",
-		sections || fallbackSections,
+		topLevelDocuments && sections
+			? `${topLevelDocuments}\n\n${sections}`
+			: topLevelDocuments || sections || fallbackSections,
 	].join("\n");
 }
 
