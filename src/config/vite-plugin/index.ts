@@ -17,8 +17,6 @@ export default function solidBaseVitePlugin(
 	theme: ThemeDefinition<any>,
 	solidBaseConfig: SolidBaseResolvedConfig<any>,
 ): PluginOption {
-	let root = process.cwd();
-
 	const plugins: PluginOption[] = [
 		{
 			name: "solidbase:pre",
