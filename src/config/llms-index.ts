@@ -93,14 +93,14 @@ function getSidebar(config: SolidBaseResolvedConfig<any>) {
 export async function getLlmDocuments(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
-) {
+): Promise<LlmDocument[]> {
 	if (!config.llms) return [];
 
 	const routesDir = getRoutesDir(root);
 	const markdownFiles = await collectMarkdownFiles(routesDir);
 
 	return Promise.all(
-		markdownFiles.map(async (filePath) => {
+		markdownFiles.map(async (filePath): Promise<LlmDocument | null> => {
 			const source = await readFile(filePath, "utf8");
 			const { data } = matter(source);
 			const frontmatter = data as LlmFrontmatter;
