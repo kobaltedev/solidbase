@@ -10,29 +10,29 @@ The sidebar for the default theme is configured in the app config:
 <!-- app.config.ts -->
 import { defineConfig } from "@solidjs/start/config";
 
-import { createWithSolidBase } from "@kobalte/solidbase";
+import { createSolidBase } from "@kobalte/solidbase";
 
 
-export default defineConfig(
-	createWithSolidBase(theme)(
-		/* SolidStart options */
-		{
-			...
-		},
-		/* SolidBase options */
-		{
+const solidBase = createSolidBase(theme);
+
+export default defineConfig({
+	...solidBase.startConfig({
+		...
+	}),
+	plugins: [
+		solidBase.plugin({
 			...
 			themeConfig: {
 				...
 				sidebar: {
-					"/guide": { // Route matching prefix
+					"/guide": {
 						items: [
 							{
-								title: "Overview", // Group
+								title: "Overview",
 								collapsed: false,
 								items: [
 									{
-										title: "What is SolidBase?", // Item
+										title: "What is SolidBase?",
 										link: "/",
 									},
 									{
@@ -43,7 +43,7 @@ export default defineConfig(
 								],
 							},
 							{
-								title: "Features", // Second Group
+								title: "Features",
 								collapsed: false,
 								items: [
 									{
@@ -84,8 +84,8 @@ export default defineConfig(
 				},
 			},
 			...
-    }
-  )
-);
+		}),
+	],
+});
 
 ```

@@ -86,14 +86,19 @@ It's up to you whether you distribute your theme's components as TS or JS.
 
 ## Consuming a Theme
 
-To consume a theme, import its definition in your `app.config` and use it to create a custom `withSolidBase` function:
+To consume a theme, import its definition in your `app.config` and create a SolidBase instance from it:
 
 ```ts
 import { someTheme } from "awesome-solidbase-theme";
 
-const withSolidBase = createWithSolidBase(someTheme);
+const solidBase = createSolidBase(someTheme);
 
-export default defineConfig(withSolidBase(...))
+export default defineConfig({
+	...solidBase.startConfig({
+		...
+	}),
+	plugins: [solidBase.plugin({ ... })],
+})
 ```
 
 You can add to the theme by [extending](./extending-themes) it with your own theme.
