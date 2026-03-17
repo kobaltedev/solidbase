@@ -83,6 +83,57 @@ describe("getLlmDocuments", () => {
 		expect(index).toContain("- [Home](/index.md): Welcome home");
 	});
 
+	it("defaults llms.txt to root locale documents when localized routes exist", () => {
+		const index = buildLlmsIndex(
+			undefined,
+			{
+				...config,
+				themeConfig: {},
+				locales: {
+					root: { label: "English" },
+					fr: { label: "Francais" },
+				},
+			},
+			[
+				{
+					title: "Home",
+					description: "Welcome home",
+					routePath: "/",
+					markdownPath: "/index.md",
+					content: "Home",
+				},
+				{
+					title: "Guide",
+					description: "English docs",
+					routePath: "/guide/getting-started",
+					markdownPath: "/guide/getting-started.md",
+					content: "Guide",
+				},
+				{
+					title: "Accueil",
+					description: "French docs",
+					routePath: "/fr",
+					markdownPath: "/fr.md",
+					content: "Accueil",
+				},
+				{
+					title: "Demarrage",
+					description: "French getting started",
+					routePath: "/fr/guide/getting-started",
+					markdownPath: "/fr/guide/getting-started.md",
+					content: "Demarrage",
+				},
+			],
+		);
+
+		expect(index).toContain("- [Home](/index.md): Welcome home");
+		expect(index).toContain(
+			"- [Guide](/guide/getting-started.md): English docs",
+		);
+		expect(index).not.toContain("/fr.md");
+		expect(index).not.toContain("/fr/guide/getting-started.md");
+	});
+
 	it("uses route path as a title fallback and respects nested llms exclusion", async () => {
 		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-"));
 		const routesDir = join(root, "src", "routes", "guide");
@@ -112,5 +163,30 @@ describe("getLlmDocuments", () => {
 				content: "Paragraph only.",
 			}),
 		]);
+	});
+
+	it("skips not-found route files from llms output", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-404-"));
+		await mkdir(join(root, "src", "routes", "fr"), { recursive: true });
+
+		await writeFile(
+			join(root, "src", "routes", "index.mdx"),
+			["---", "title: Home", "---", "", "Welcome home."].join("\n"),
+		);
+		await writeFile(
+			join(root, "src", "routes", "[...404].mdx"),
+			["---", "title: Not Found", "---", "", "Missing page."].join("\n"),
+		);
+		await writeFile(
+			join(root, "src", "routes", "fr", "[...404].mdx"),
+			["---", "title: Introuvable", "---", "", "Page manquante."].join("\n"),
+		);
+
+		const documents = await getLlmDocuments(root, {
+			...config,
+			themeConfig: {},
+		});
+
+		expect(documents.map((document) => document.routePath)).toEqual(["/"]);
 	});
 });

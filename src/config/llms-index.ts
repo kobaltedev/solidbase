@@ -37,6 +37,13 @@ function isExcluded(frontmatter: LlmFrontmatter) {
 	return frontmatter.llms === false || frontmatter.llms?.exclude === true;
 }
 
+function isNotFoundRoute(routesDir: string, filePath: string) {
+	const relativePath = relative(routesDir, filePath).replace(/\\/g, "/");
+	return relativePath
+		.split("/")
+		.some((segment) => segment.startsWith("[...404]."));
+}
+
 async function collectMarkdownFiles(dir: string): Promise<string[]> {
 	const entries = await readdir(dir, { withFileTypes: true });
 	const files = await Promise.all(
@@ -90,6 +97,30 @@ function getSidebar(config: SolidBaseResolvedConfig<any>) {
 	return undefined;
 }
 
+function normalizeLocalePrefix(prefix: string) {
+	if (prefix === "/") return "/";
+	return prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
+}
+
+function getNonRootLocalePrefixes(config: SolidBaseResolvedConfig<any>) {
+	return Object.entries(config.locales ?? {})
+		.filter(([locale]) => locale !== "root")
+		.map(([locale, localeConfig]) =>
+			normalizeLocalePrefix(localeConfig.link ?? `/${locale}/`),
+		);
+}
+
+function isDefaultLocaleRoute(
+	routePath: string,
+	config: SolidBaseResolvedConfig<any>,
+) {
+	const localePrefixes = getNonRootLocalePrefixes(config);
+
+	return !localePrefixes.some(
+		(prefix) => routePath === prefix || routePath.startsWith(`${prefix}/`),
+	);
+}
+
 export async function getLlmDocuments(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
@@ -101,6 +132,8 @@ export async function getLlmDocuments(
 
 	return Promise.all(
 		markdownFiles.map(async (filePath): Promise<LlmDocument | null> => {
+			if (isNotFoundRoute(routesDir, filePath)) return null;
+
 			const source = await readFile(filePath, "utf8");
 			const { data } = matter(source);
 			const frontmatter = data as LlmFrontmatter;
@@ -137,8 +170,14 @@ export function buildLlmsIndex(
 	config: SolidBaseResolvedConfig<any>,
 	documents: LlmDocument[],
 ) {
+	const defaultLocaleDocuments = documents.filter((document) =>
+		isDefaultLocaleRoute(document.routePath, config),
+	);
+	const indexDocuments =
+		defaultLocaleDocuments.length > 0 ? defaultLocaleDocuments : documents;
+
 	const byRoutePath = new Map(
-		documents.map((document) => [document.routePath, document] as const),
+		indexDocuments.map((document) => [document.routePath, document] as const),
 	);
 
 	const renderItem = (item: SidebarItem): string[] => {
@@ -169,7 +208,7 @@ export function buildLlmsIndex(
 		.filter((section): section is string => section !== null)
 		.join("\n\n");
 
-	const fallbackSections = documents
+	const fallbackSections = indexDocuments
 		.map((document) => {
 			const description = document.description
 				? `: ${document.description}`
