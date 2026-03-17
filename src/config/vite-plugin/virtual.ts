@@ -2,10 +2,9 @@ import { readFile, readdir } from "node:fs/promises";
 import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { toDocumentMarkdown } from "../document-markdown.js";
 import MagicString from "magic-string";
 import type { PluginContext } from "rollup";
-import type { Plugin } from "vite";
+import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { Theme } from "../index.js";
 import type { SolidBaseConfig } from "../index.js";
@@ -106,6 +105,15 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
+	const source = await readFile(modulePath, "utf8");
+	const llmText = await toDocumentMarkdown(source, {
+		config: {
+			markdown: solidBaseConfig.markdown,
+			issueAutolink: solidBaseConfig.issueAutolink ?? false,
+		},
+		filePath: modulePath,
+	});
+
 	const s = new MagicString(code);
 
 	s.append(`
@@ -128,5 +136,5 @@ export async function transformMdxModule(
 	return {
 		code: s.toString(),
 		map: s.generateMap(),
-	};
+	}.code;
 }
