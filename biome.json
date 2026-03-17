@@ -1,13 +1,14 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": [
-			"./tsconfig.json",
-			"*/netlify/*",
-			"**/package.json",
-			"./examples/solid-docs",
-			"**/app.config.*.js",
-			"**/*.d.ts"
+		"includes": [
+			"**",
+			"!./tsconfig.json",
+			"!*/netlify/*",
+			"!**/package.json",
+			"!./examples/solid-docs",
+			"!**/app.config.*.js",
+			"!**/*.d.ts"
 		]
 	},
 	"vcs": {
