@@ -113,7 +113,7 @@
     "solid-js": "^1.9.9",
     "tsx": "^4.19.3",
     "vfile": "^6.0.3",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
     "vitest": "^4.1.0"
   },
   "peerDependencies": {
