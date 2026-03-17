@@ -210,6 +210,20 @@ function toDocumentHref(markdownPath: string, origin?: string) {
 	return new URL(markdownPath, origin).toString();
 }
 
+function addHeadingSpacing(lines: string[]) {
+	const spaced: string[] = [];
+
+	for (const line of lines) {
+		if (line.startsWith("#") && spaced.at(-1) && spaced.at(-1) !== "") {
+			spaced.push("");
+		}
+
+		spaced.push(line);
+	}
+
+	return spaced;
+}
+
 export function buildLlmsIndex(
 	origin: string | undefined,
 	config: SolidBaseResolvedConfig<any>,
@@ -280,8 +294,8 @@ export function buildLlmsIndex(
 
 	const sections = sectionEntries
 		.map((section) => {
-			const lines = section.items.flatMap((item: SidebarItem) =>
-				renderItem(item, 3),
+			const lines = addHeadingSpacing(
+				section.items.flatMap((item: SidebarItem) => renderItem(item, 3)),
 			);
 			if (lines.length === 0) return null;
 
