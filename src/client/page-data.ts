@@ -2,6 +2,12 @@ import { createContextProvider } from "@solid-primitives/context";
 import { useCurrentMatches } from "@solidjs/router";
 import { createResource } from "solid-js";
 
+function getWindowPageData(path?: string) {
+	if (typeof window === "undefined" || !path) return;
+
+	return (window as any).$$SolidBase_page_data?.[path.split("?")[0]!];
+}
+
 export interface TableOfContentsItemData {
 	title: string;
 	href: string;
@@ -34,9 +40,17 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				// if there's no matches that's not an us problem
 				if (!lastMatch) return;
 
-				const { $component } = lastMatch.route.key as { $component: any };
+				const { $component } = lastMatch.route.key as {
+					$component: { import?: () => Promise<any>; src?: string };
+				};
+				const windowPageData = getWindowPageData($component?.src);
 
-				const mod = await $component.import();
+				if (windowPageData) return windowPageData;
+
+				const mod =
+					typeof $component?.import === "function"
+						? await $component.import()
+						: undefined;
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;

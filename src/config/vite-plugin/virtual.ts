@@ -104,6 +104,15 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
+	const source = await readFile(modulePath, "utf8");
+	const llmText = await toDocumentMarkdown(source, {
+		config: {
+			markdown: solidBaseConfig.markdown,
+			issueAutolink: solidBaseConfig.issueAutolink ?? false,
+		},
+		filePath: modulePath,
+	});
+
 	const s = new MagicString(code);
 	const llmText = await toDocumentMarkdown(await readFile(modulePath, "utf8"), {
 		config: solidBaseConfig,
@@ -130,5 +139,5 @@ export async function transformMdxModule(
 	return {
 		code: s.toString(),
 		map: s.generateMap(),
-	};
+	}.code;
 }
