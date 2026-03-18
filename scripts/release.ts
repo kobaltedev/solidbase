@@ -3,11 +3,11 @@ import { Octokit } from "@octokit/core";
 
 if (!execSync("git --version").includes("git version")) {
 	console.error("Git not installed");
-	// @ts-ignore
+	// @ts-expect-error
 	process.exit(1);
 }
 
-// @ts-ignore
+// @ts-expect-error
 const DRY_RUN = !process.env.GITHUB_ACTIONS;
 
 if (DRY_RUN) console.log("DRY RUN\n");
@@ -105,7 +105,7 @@ console.log(`Creating tag v${nextVersion} for hash ${currentHash}`);
 
 if (!DRY_RUN) {
 	const octokit = new Octokit({
-		// @ts-ignore
+		// @ts-expect-error
 		auth: process.env.GITHUB_TOKEN,
 	});
 

@@ -1,18 +1,16 @@
-import { Meta } from "@solidjs/meta";
-import { useLocation } from "@solidjs/router";
-import { type ComponentProps, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
-
 import {
 	mdxComponents,
 	useLocale,
 	useSolidBaseContext,
 } from "@kobalte/solidbase/client";
-import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
-
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.jsx";
 import { useDefaultThemeFrontmatter } from "@kobalte/solidbase/default-theme/frontmatter.js";
+import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
+import { Meta } from "@solidjs/meta";
+import { useLocation } from "@solidjs/router";
+import { type ComponentProps, Show } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
 import { OGImage } from "./og-image";
 

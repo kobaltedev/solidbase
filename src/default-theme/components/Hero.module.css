@@ -69,7 +69,11 @@
 
 					&:hover,
 					&:focus {
-						background: color-mix(in hsl, var(--sb-text-color) 20%, transparent);
+						background: color-mix(
+							in hsl,
+							var(--sb-text-color) 20%,
+							transparent
+						);
 					}
 				}
 
@@ -106,6 +110,7 @@
 }
 
 article:has(.hero) > div {
+	/* biome-ignore lint/complexity/noImportantStyles: important */
 	max-width: min(calc(100dvw - 2.5rem), 72rem) !important;
 }
 

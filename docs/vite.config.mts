@@ -1,36 +1,34 @@
 import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
-import { defineConfig } from "@solidjs/start/config";
+import { solidStart } from "@solidjs/start/config";
+import { nitro } from "nitro/vite";
+import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
 
-import { createWithSolidBase, defineTheme } from "../src/config";
-import { SidebarConfig, createFilesystemSidebar } from "../src/config/sidebar";
-import defaultTheme, { DefaultThemeSidebarItem } from "../src/default-theme";
+import { createSolidBase, defineTheme } from "../src/config";
+import { createFilesystemSidebar } from "../src/config/sidebar";
+import defaultTheme from "../src/default-theme";
 
 const theme = defineTheme({
 	componentsPath: import.meta.resolve("./src/solidbase-theme"),
 	extends: defaultTheme,
 });
 
-export default defineConfig(
-	createWithSolidBase(theme)(
-		{
-			ssr: true,
-			server: {
-				esbuild: { options: { target: "es2022" } },
-			},
-			vite: {
-				plugins: [OGPlugin(), arraybuffer()],
-			},
-		},
-		{
+const solidBase = createSolidBase(theme);
+
+export default defineConfig({
+	plugins: [
+		OGPlugin(),
+		arraybuffer(),
+		solidBase.plugin({
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
+			llms: true,
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			markdown: {
 				expressiveCode: {
-					languageSwitcher: true,
+					languageSwitcher: false,
 				},
 			},
 			locales: {
@@ -98,10 +96,15 @@ export default defineConfig(
 					},
 				],
 				sidebar: {
-					"/guide": createFilesystemSidebar("/guide"),
-					"/reference": createFilesystemSidebar("/reference"),
+					"/guide": createFilesystemSidebar("./src/routes/guide"),
+					"/reference": createFilesystemSidebar("./src/routes/reference"),
 				},
 			},
-		},
-	),
-);
+		}),
+		solidStart(solidBase.startConfig()),
+		nitro({
+			preset: "netlify",
+			prerender: { crawlLinks: true },
+		}),
+	],
+});

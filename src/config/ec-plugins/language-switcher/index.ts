@@ -1,14 +1,14 @@
 import {
+	definePlugin,
 	ExpressiveCodeBlock,
 	ExpressiveCodeEngine,
 	MetaOptions,
-	definePlugin,
 } from "@expressive-code/core";
 import {
-	type Element,
-	SKIP,
 	addClassName,
+	type Element,
 	h,
+	SKIP,
 	visit,
 } from "expressive-code/hast";
 import rangeParser from "parse-numeric-range";
@@ -178,7 +178,8 @@ export function ecPluginLanguageSwitcher(options: LanguageSwitcherOptions) {
 
 				const engine = new ExpressiveCodeEngine({
 					...config,
-					plugins: config.plugins.filter((v) => v.name !== "Language switcher"),
+					plugins:
+						config.plugins.filter((v) => v.name !== "Language switcher") ?? [],
 				});
 
 				const jsBlock = new ExpressiveCodeBlock({

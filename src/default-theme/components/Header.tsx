@@ -1,16 +1,22 @@
 import { Dialog } from "@kobalte/core/dialog";
 import { useMatch } from "@solidjs/router";
-import { For, Show, createSignal, lazy } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 
 import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
 import IconCloseFill from "~icons/ri/close-large-fill";
 import IconMenuLeftLine from "~icons/ri/menu-2-line";
 import IconMenuFill from "~icons/ri/menu-fill";
-import { getLocaleLink, useCurrentPageData, useLocale } from "../../client";
-import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
-import { useRouteConfig } from "../utils";
-
-import { useSidebar } from "../../client/sidebar";
+import {
+	getLocaleLink,
+	useCurrentPageData,
+	useLocale,
+} from "../../client/index.jsx";
+import { useSidebar } from "../../client/sidebar.js";
+import {
+	useDefaultThemeComponents,
+	useDefaultThemeState,
+} from "../context.jsx";
+import { useRouteConfig } from "../utils.js";
 import styles from "./Header.module.css";
 
 export default function Header() {

@@ -8,14 +8,14 @@ import { A } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,
+	children,
+	createSignal,
 	For,
 	type ParentProps,
 	Show,
-	children,
-	createSignal,
 	splitProps,
 } from "solid-js";
-import { usePreferredLanguage } from "../client/preferred-language";
+import { usePreferredLanguage } from "../client/preferred-language.js";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
@@ -66,7 +66,7 @@ export function hr(props: ComponentProps<"hr">) {
 }
 
 export function table(props: ComponentProps<"table">) {
-	const [local, others] = splitProps(props, ["class"]);
+	const [_local, others] = splitProps(props, ["class"]);
 
 	return (
 		<div class={styles.table}>
@@ -179,7 +179,7 @@ export function DirectiveContainer(
 			name: `tab-group:${props.title}`,
 			sync: messageSync(new BroadcastChannel("tab-group")),
 			storage: cookieStorage.withOptions({
-				expires: new Date(+new Date() + 3e10),
+				expires: new Date(Date.now() + 3e10),
 			}),
 		});
 

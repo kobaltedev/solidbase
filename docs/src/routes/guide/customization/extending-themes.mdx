@@ -6,7 +6,7 @@ title: Extending Themes
 
 You can extend the default theme if you'd like to preserve the default theme's functionality while adding your own customisations.
 SolidBase offers the ability to extend this theme, allowing you to build upon its existing features without starting from scratch.
-For example, these docs [extend the default theme](https://github.com/kobaltedev/solidbase/blob/main/docs/app.config.ts#L7) to add [OpenGraph](https://ogp.me) tags
+For example, the dev app [extends the default theme](https://github.com/kobaltedev/solidbase/blob/main/dev/app.config.ts#L4) to add [OpenGraph](https://ogp.me) tags
 
 ## Create an Extended Theme
 
@@ -17,29 +17,37 @@ To extend the default theme, you must define a custom theme using `defineTheme`,
 import { defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
-const customTheme =  defineTheme({
+const customTheme = defineTheme({
 	componentsPath: import.meta.resolve("./src/custom-theme"),
 	extends: defaultTheme,
-}),
+});
 ```
 
-Once the theme is defined, you can set it as the active theme in your SolidBase config, using the `createWithSolidBase` helper to wrap your configuration:
+Once the theme is defined, you can set it as the active theme in your SolidBase config with `createSolidBase`:
 
 ```ts
 <!-- app.config.ts -->
-import { defineTheme } from "@kobalte/solidbase/config";
+import { defineConfig } from "@solidjs/start/config";
+import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
-const customTheme =  defineTheme({
+const customTheme = defineTheme({
 	componentsPath: import.meta.resolve("./src/custom-theme"),
 	extends: defaultTheme,
-}),
+});
 
-export default defineConfig(
-	createWithSolidBase(customTheme)(
-		// your solidbase configuration
-	)
-);
+const solidBase = createSolidBase(customTheme);
+
+export default defineConfig({
+	...solidBase.startConfig({
+		ssr: true,
+	}),
+	plugins: [
+		solidBase.plugin({
+			// your solidbase configuration
+		}),
+	],
+});
 ```
 
 To complete the setup, in the folder specified by `componentsPath`, create a `Layout` file that re-exports the default theme's `Layout` component. In this file, you can add any custom logic or components you'd like to appear on every page, so long as you render the `Layout` component somewhere in the returned JSX.
@@ -90,14 +98,18 @@ To disable these fonts, set the `fonts` option to `false` in your SolidBase conf
 
 ```ts
 <!-- app.config.ts -->
-export default defineConfig(withSolidBase(
-	...,
-	{
-		themeConfig: {
-			fonts: false
-		}
-	}
-))
+export default defineConfig({
+	...solidBase.startConfig({
+		...
+	}),
+	plugins: [
+		solidBase.plugin({
+			themeConfig: {
+				fonts: false,
+			},
+		}),
+	],
+})
 ```
 
 You can then provide your own fonts by overriding the variables in the CSS file you imported in your `Layout` component.

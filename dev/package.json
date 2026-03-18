@@ -3,21 +3,23 @@
   "type": "module",
   "private": "true",
   "scripts": {
-    "dev": "VITE_SOLIDBASE_DEV=1 vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "cross-env VITE_SOLIDBASE_DEV=true vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.1.1",
-    "solid-js": "^1.9.5",
-    "vinxi": "^0.5.3"
+    "@solidjs/start": "https://pkg.pr.new/solidjs/solid-start/@solidjs/start@2080",
+    "nitro": "3.0.260311-beta",
+    "solid-js": "^1.9.9"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.12"
   },
   "devDependencies": {
-    "@iconify-json/ri": "^1.2.5"
+    "@iconify-json/ri": "^1.2.5",
+    "cross-env": "^7.0.3",
+    "vite": "^8.0.0"
   }
 }

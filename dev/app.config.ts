@@ -1,24 +1,24 @@
-import { defineConfig } from "@solidjs/start/config";
-
-import { createWithSolidBase, defineTheme } from "../src/config";
+import { createSolidBase, defineTheme } from "../src/config";
 import defaultTheme from "../src/default-theme";
 
-const customTheme = defineTheme({
+const theme = defineTheme({
 	componentsPath: import.meta.resolve("./src/solidbase-theme"),
 	extends: defaultTheme,
 });
 
-export default defineConfig(
-	createWithSolidBase(customTheme)(
-		{
-			ssr: true,
-			server: {
-				prerender: {
-					crawlLinks: true,
-				},
-			},
+const solidBase = createSolidBase(theme);
+
+export default {
+	...solidBase.startConfig({
+		ssr: true,
+	}),
+	server: {
+		prerender: {
+			crawlLinks: true,
 		},
-		{
+	},
+	plugins: [
+		solidBase.plugin({
 			title: "SolidBase",
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
@@ -30,12 +30,10 @@ export default defineConfig(
 					transform: (_code, id) => {
 						let code = _code;
 
-						// tests id
 						if (id.endsWith("to-transform.tsx")) {
 							code += "// appended by transform";
 						}
 
-						// tests code
 						return code.replace("REPLACE ME", "replaced string!");
 					},
 				},
@@ -108,6 +106,6 @@ export default defineConfig(
 					],
 				},
 			},
-		},
-	),
-);
+		}),
+	],
+};

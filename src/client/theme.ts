@@ -60,6 +60,7 @@ import readThemeCookieScript from "./read-theme-cookie.js?raw";
 export function useThemeListener() {
 	createEffect(() => {
 		document.documentElement.setAttribute("data-theme", getRawTheme());
+		// biome-ignore lint/suspicious/noDocumentCookie: remove next major
 		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
 	});
 

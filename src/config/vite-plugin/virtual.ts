@@ -1,23 +1,30 @@
-import { readdir } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import MagicString from "magic-string";
+import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
-import type { Theme } from "../index.js";
-import type { SolidBaseConfig } from "../index.js";
+import type { SolidBaseConfig, Theme } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
-export const configModule = {
+type VirtualModule<T = void> = {
+	id: string;
+	resolvedId: string;
+	load(arg: T, root?: string): Promise<string>;
+};
+
+export const configModule: VirtualModule<Partial<SolidBaseConfig<any>>> = {
 	id: "virtual:solidbase/config",
 	resolvedId: "\0virtual:solidbase/config",
-	load: (solidBaseConfig: Partial<SolidBaseConfig<any>>) =>
+	load: async (solidBaseConfig, _root) =>
 		`export const solidBaseConfig = ${JSON.stringify(solidBaseConfig)};`,
 };
 
-export const componentsModule = {
+export const componentsModule: VirtualModule<Theme<any>> = {
 	id: "virtual:solidbase/components",
 	resolvedId: "\0virtual:solidbase/components",
-	load: async (theme: Theme<any>) => {
+	async load(theme) {
 		const themePaths = (() => {
 			let t: Theme<any> | undefined = theme;
 			const paths: Array<string> = [];
@@ -58,9 +65,20 @@ ${mdxComponentFiles.map((file) => `import * as ${file.importName} from "${file.p
 
 export const mdxComponents = {
 ${mdxComponentFiles.map((file) => `...${file.importName}`).join(",\n")}
-};`;
+};
+`;
 	},
 };
+
+function getMarkdownModulePath(id: string) {
+	const [pathname, search = ""] = id.split(/\?(.*)/s);
+	const params = new URLSearchParams(search);
+	const nestedId = params.get("id");
+
+	if (nestedId) return nestedId.split("?")[0]!;
+
+	return pathname!;
+}
 
 export async function transformMdxModule(
 	code: string,
@@ -69,7 +87,7 @@ export async function transformMdxModule(
 ) {
 	const rootPath = process.env.PWD!;
 
-	const modulePath = id.split("?")[0];
+	const modulePath = getMarkdownModulePath(id);
 
 	let modulePathLink = "";
 	if (solidBaseConfig.editPath && modulePath.startsWith(rootPath)) {
@@ -85,13 +103,24 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
-	return `
-		${code}
+	const source = await readFile(modulePath, "utf8");
+	const llmText = await toDocumentMarkdown(source, {
+		config: {
+			markdown: solidBaseConfig.markdown,
+			issueAutolink: solidBaseConfig.issueAutolink ?? false,
+		},
+		filePath: modulePath,
+	});
+
+	const s = new MagicString(code);
+
+	s.append(`
 		const data = {
 			frontmatter: typeof frontmatter !== "undefined" ? (frontmatter ?? {}) : {},
 			toc: typeof ${SolidBaseTOC} !== "undefined" ? ${SolidBaseTOC} : undefined,
 			editLink: "${modulePathLink}",
 			lastUpdated: ${lastUpdated},
+			llmText: ${JSON.stringify(llmText)},
 		};
 
 		if (typeof window !== "undefined") {
@@ -100,5 +129,10 @@ export async function transformMdxModule(
 		}
 
 		export const $$SolidBase_page_data = data;
-	`;
+	`);
+
+	return {
+		code: s.toString(),
+		map: s.generateMap(),
+	}.code;
 }

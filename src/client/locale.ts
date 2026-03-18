@@ -4,7 +4,7 @@ import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
-import type { LocaleConfig } from "../config";
+import type { LocaleConfig } from "../config/index.js";
 
 export const DEFAULT_LANG_CODE = "en-US";
 export const DEFAULT_LANG_LABEL = "English";
@@ -80,11 +80,13 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			let path = _path;
 			const link = getLocaleLink(currentLocale());
 
-			if (link === "/")
-				return path.startsWith("/") ? path : (`/${path}` as any);
+			if (link === "/") {
+				const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+				return normalizedPath as `/${string}`;
+			}
 
 			if (path.startsWith("/")) path = path.slice(1);
-			return `${link}${path}`;
+			return `${link}${path}` as `/${string}`;
 		},
 		routePath: () => {
 			const rest = match()?.params.rest;

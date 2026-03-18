@@ -20,10 +20,16 @@ import type { PluginOption } from "vite";
 
 import mdx from "../vite-mdx/index.js";
 import {
-	type LanguageSwitcherOptions,
 	ecPluginLanguageSwitcher,
+	type LanguageSwitcherOptions,
 } from "./ec-plugins/language-switcher/index.js";
-import type { SolidBaseResolvedConfig } from "./index.js";
+import type { SolidBaseConfig, SolidBaseResolvedConfig } from "./index.js";
+
+export type RemarkPipelineConfig = Pick<
+	SolidBaseConfig<any>,
+	"markdown" | "issueAutolink"
+>;
+
 import { rehypeFixExpressiveCodeJsx } from "./rehype-plugins/fix-expressive-code.js";
 import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import { remarkDirectiveContainers } from "./remark-plugins/directives.js";
@@ -50,8 +56,8 @@ export type TwoslashOptions = PluginTwoslashOptions & { tsconfig: any };
 export interface MdxOptions {
 	expressiveCode?:
 		| (RehypeExpressiveCodeOptions & {
-				twoSlash?: TwoslashOptions | true;
-				languageSwitcher?: LanguageSwitcherOptions | true;
+				twoSlash?: TwoslashOptions | boolean;
+				languageSwitcher?: LanguageSwitcherOptions | boolean;
 		  })
 		| false;
 	toc?: TOCOptions | false;
@@ -70,7 +76,7 @@ export function solidBaseMdx(
 		mdx.withImports({})({
 			jsx: true,
 			jsxImportSource: "solid-js",
-			providerImportSource: "@kobalte/solidbase/solid-mdx",
+			providerImportSource: "@kobalte/solidbase/mdx",
 			stylePropertyNameCase: "css",
 			rehypePlugins: getRehypePlugins(sbConfig),
 			remarkPlugins: getRemarkPlugins(sbConfig),
@@ -167,7 +173,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 	return rehypePlugins;
 }
 
-function getRemarkPlugins(sbConfig: SolidBaseResolvedConfig<any>) {
+export function getRemarkPlugins(sbConfig: RemarkPipelineConfig) {
 	const remarkPlugins: any[] = [];
 
 	if (sbConfig.markdown?.steps !== false) remarkPlugins.push(remarkSteps);

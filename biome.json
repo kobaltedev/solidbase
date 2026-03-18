@@ -1,12 +1,15 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"ignore": [
-			"./tsconfig.json",
-			"*/netlify/*",
-			"**/package.json",
-			"./examples/solid-docs",
-			"**/app.config.*.js"
+		"includes": [
+			"**",
+			"!./tsconfig.json",
+			"!*/netlify/*",
+			"!**/package.json",
+			"!./examples/solid-docs",
+			"!**/app.config.*.js",
+			"!**/*.d.ts",
+			"!node_modules"
 		]
 	},
 	"vcs": {
@@ -30,7 +33,8 @@
 				"noAssignInExpressions": "off"
 			},
 			"style": {
-				"noNonNullAssertion": "off"
+				"noNonNullAssertion": "off",
+				"noDescendingSpecificity": "off"
 			},
 			"complexity": {
 				"noBannedTypes": "off"

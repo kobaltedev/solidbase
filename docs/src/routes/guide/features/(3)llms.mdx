@@ -1,0 +1,88 @@
+---
+title: LLMS.txt
+---
+
+# {frontmatter.title}
+
+SolidBase can generate an `llms.txt` index plus markdown versions of your routes for LLM tooling, AI assistants, and other machine-readable documentation consumers.
+
+## Enable the feature
+
+Turn it on with the `llms` option in your SolidBase config:
+
+```ts title="app.config.ts"
+import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+
+const theme = defineTheme({
+	componentsPath: import.meta.resolve("./src/solidbase-theme"),
+	extends: defaultTheme,
+});
+
+const solidBase = createSolidBase(theme);
+
+export default {
+	...solidBase.startConfig({
+		ssr: true,
+	}),
+	plugins: [
+		solidBase.plugin({
+			title: "My Docs",
+			description: "Documentation for my project",
+			llms: true,
+			themeConfig: {
+				sidebar: {
+					"/": [
+						{
+							title: "Guide",
+							items: [{ title: "Getting Started", link: "/guide/getting-started" }],
+						},
+					],
+				},
+			},
+		}),
+	],
+};
+```
+
+Once enabled, the build emits:
+
+- `llms.txt` at the site root
+- one `.md` file per markdown route, such as `index.md` and `guide/getting-started.md`
+
+## What goes into `llms.txt`
+
+SolidBase builds the index from your docs metadata:
+
+- the document title comes from frontmatter `title`
+- the description comes from frontmatter `description`
+- the list order follows `themeConfig.sidebar` when a sidebar is configured
+- if no sidebar is available, SolidBase falls back to a flat list of discovered documents
+
+The generated links point to the emitted markdown files, for example `/guide/getting-started.md`.
+
+## Generated markdown output
+
+Each emitted markdown file is derived from the source route and passed through the document markdown pipeline. That means:
+
+- frontmatter metadata is removed from the final file
+- inline frontmatter expressions like `{frontmatter.title}` are rendered to plain text when possible
+- markdown transforms such as `[[toc]]`, imported code snippets, and GitHub-style alerts are preserved in the generated document output
+
+## Excluding pages
+
+You can keep individual pages out of the LLMS output with page frontmatter:
+
+```md title="src/routes/about.mdx"
+---
+title: About
+llms:
+  exclude: true
+---
+```
+
+You can also disable it entirely for a page with `llms: false`.
+
+:::note
+Pages are only included when they live under `src/routes` and are written as `.md` or `.mdx` files.
+:::

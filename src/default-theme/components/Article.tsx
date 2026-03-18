@@ -1,14 +1,17 @@
 import { WindowEventListener } from "@solid-primitives/event-listener";
 import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
-import { type ParentProps, Show, createSignal } from "solid-js";
+import { createSignal, type ParentProps, Show } from "solid-js";
 
-import { useCurrentPageData } from "../../client";
-import { usePrevNext } from "../../client/sidebar";
-import { useDefaultThemeComponents, useDefaultThemeState } from "../context";
-import type { RelativePageConfig } from "../frontmatter";
-import { mobileLayout } from "../globals";
-import { useSolidBaseContext } from "../utils";
+import { useCurrentPageData } from "../../client/index.jsx";
+import { usePrevNext } from "../../client/sidebar.js";
+import {
+	useDefaultThemeComponents,
+	useDefaultThemeState,
+} from "../context.jsx";
+import type { RelativePageConfig } from "../frontmatter.js";
+import { mobileLayout } from "../globals.js";
+import { useSolidBaseContext } from "../utils.js";
 
 import styles from "./Article.module.css";
 
@@ -19,7 +22,7 @@ export default function Article(props: ParentProps) {
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
 		useDefaultThemeComponents();
 
-	const [contentRef, setContentRef] = createSignal<HTMLElement>();
+	const [_contentRef, setContentRef] = createSignal<HTMLElement>();
 
 	const [clickedCodeElement, setClickedCodeElement] =
 		createSignal<HTMLElement>();

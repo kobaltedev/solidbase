@@ -1,30 +1,27 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "newLine": "LF",
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": false,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "jsxImportSource": "solid-js",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "declaration": true,
-    "sourceMap": true,
-    "lib": ["dom", "esnext"],
-    "types": ["solid-js", "vite", "vinxi/types/client", "vite/client", "unplugin-icons/types/solid"],
-    "rootDir": "./src",
-    "outDir": "./dist"
-  },
-  "references": [
-    { "path": "./tsconfig.config.json" }
-  ],
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "docs"]
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "Node16",
+		"moduleResolution": "node16",
+		"newLine": "LF",
+		"allowJs": false,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": false,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"declaration": true,
+		"sourceMap": true,
+		"lib": ["dom", "esnext"],
+		"types": ["solid-js", "vite/client", "unplugin-icons/types/solid"],
+		"rootDir": "./src",
+		"outDir": "./dist"
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "docs"]
 }

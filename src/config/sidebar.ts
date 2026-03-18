@@ -32,15 +32,11 @@ export interface FilesystemSidebarOptions {
 	sort?: (a: SidebarItemWithMeta, b: SidebarItemWithMeta) => number;
 }
 
-const ROUTES_FOLDER = import.meta
-	.resolve("./src/routes/")
-	.substring("file:".length);
-
 export function createFilesystemSidebar<Item = SidebarItem>(
 	route: string,
 	options?: FilesystemSidebarOptions,
 ): Item[] {
-	const folder = path.join(ROUTES_FOLDER, route);
+	const folder = path.join(process.cwd(), route);
 
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
 		filter: (item) => {

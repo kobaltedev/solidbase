@@ -1,8 +1,10 @@
 import * as fs from "node:fs/promises";
+import { glob } from "node:fs/promises";
 import * as path from "node:path";
-import { glob } from "glob";
 
-const files = await glob("**/*.{js,css}", { cwd: `${process.cwd()}/src` });
+const files = await Array.fromAsync(
+	glob("**/*.{js,css}", { cwd: `${process.cwd()}/src` }),
+);
 
 await Promise.all(
 	files.map((file) =>

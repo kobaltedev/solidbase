@@ -1,7 +1,7 @@
 import { fromJs } from "esast-util-from-js";
 import type { PhrasingContent } from "mdast";
 import { findAndReplace } from "mdast-util-find-and-replace";
-import { toString as mdastToString } from "mdast-util-to-string";
+import { toString as nodeToString } from "mdast-util-to-string";
 import { type Options, toc } from "mdast-util-toc";
 
 interface ParagraphNode {
@@ -32,7 +32,7 @@ interface TOCTree {
 
 function mapNode(node: ListItemNode): TOCTree {
 	return {
-		title: mdastToString(node.children[0].children[0].children),
+		title: nodeToString(node.children[0].children[0].children),
 		href: node.children[0].children[0].url,
 		children: (node.children[1]?.children ?? []).map(mapNode),
 	};
@@ -65,7 +65,7 @@ export function remarkTOC(opts?: TOCOptions) {
 
 			findAndReplace(tree, [["[[toc]]", () => map]]);
 
-			// @ts-ignore: not sure what the correct type is
+			// @ts-expect-error: not sure what the correct type is
 			value = JSON.stringify(map.children.map(mapNode));
 		}
 

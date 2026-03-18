@@ -11,29 +11,26 @@ The entry point for a SolidBase project is the `app.config.ts` file located in t
 ```ts title=app.config.ts
 import { defineConfig } from "@solidjs/start/config";
 
-import { createWithSolidBase } from "@kobalte/solidbase";
+import { createSolidBase } from "@kobalte/solidbase";
 
+const solidBase = createSolidBase(theme);
 
-export default defineConfig(
-	createWithSolidBase(theme)(
-		/* SolidStart options */
-		{
-			ssr: true,
-			server: {
-				prerender: {
-					crawlLinks: true,
-				},
-			},
-			...
+export default defineConfig({
+	...solidBase.startConfig({
+		ssr: true,
+	}),
+	server: {
+		prerender: {
+			crawlLinks: true,
 		},
-		/* SolidBase options */
-		{
+	},
+	plugins: [
+		solidBase.plugin({
 			title: "SolidBase",
 			description: "Fully featured, fully customisable static site generation for SolidStart",
-			...
-    }
-  )
-);
+		}),
+	],
+});
 
 ```
 

@@ -1,8 +1,8 @@
-import { SKIP, visit } from "unist-util-visit";
+import { visit } from "unist-util-visit";
 
 export function remarkTabGroup() {
 	return (tree: any) => {
-		visit(tree, (node, index, parent) => {
+		visit(tree, (node, _index, _parent) => {
 			if (node.type !== "containerDirective" || node.name !== "tab-group")
 				return;
 

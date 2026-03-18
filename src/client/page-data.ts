@@ -2,6 +2,12 @@ import { createContextProvider } from "@solid-primitives/context";
 import { useCurrentMatches } from "@solidjs/router";
 import { createResource } from "solid-js";
 
+function getWindowPageData(path?: string) {
+	if (typeof window === "undefined" || !path) return;
+
+	return (window as any).$$SolidBase_page_data?.[path.split("?")[0]!];
+}
+
 export interface TableOfContentsItemData {
 	title: string;
 	href: string;
@@ -12,6 +18,7 @@ export interface BaseFrontmatter {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
+	llms?: { exclude?: boolean };
 }
 
 interface CurrentPageData {
@@ -32,35 +39,17 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				// if there's no matches that's not an us problem
 				if (!lastMatch) return;
 
-				const { $component } = lastMatch.route.key as { $component: any };
+				const { $component } = lastMatch.route.key as {
+					$component: { import?: () => Promise<any>; src?: string };
+				};
+				const windowPageData = getWindowPageData($component?.src);
 
-				let mod: any;
+				if (windowPageData) return windowPageData;
 
-				// modelled after Start's lazyRoute
-				// https://github.com/solidjs/solid-start/blob/main/packages/start/src/router/lazyRoute.ts
-				if (import.meta.env.DEV) {
-					if (
-						typeof window !== "undefined" &&
-						// @ts-ignore
-						typeof window.$$SolidBase_page_data !== "undefined" &&
-						// @ts-ignore
-						typeof window.$$SolidBase_page_data[
-							$component.src.split("?")[0]
-						] !== "undefined"
-					) {
-						const pageData = (window as Record<string, any>)
-							.$$SolidBase_page_data[$component.src.split("?")[0]];
-						if (!pageData)
-							throw new Error("Failed to get page data: no page data");
-						return pageData;
-					}
-
-					const manifest = import.meta.env.SSR
-						? import.meta.env.MANIFEST.ssr
-						: import.meta.env.MANIFEST.client;
-
-					mod = await manifest.inputs[$component.src]?.import();
-				} else mod = await $component.import();
+				const mod =
+					typeof $component?.import === "function"
+						? await $component.import()
+						: undefined;
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;

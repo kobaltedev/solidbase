@@ -7,14 +7,14 @@ title: Internationalisation
 SolidBase has built-in i18n support which can be configured in the root config:
 
 ```ts
-export default defineConfig(
-	createWithSolidBase(theme)(
-		/* SolidStart options */
-		{
-			...
-		},
-		/* SolidBase options */
-		{
+const solidBase = createSolidBase(theme);
+
+export default defineConfig({
+	...solidBase.startConfig({
+		...
+	}),
+	plugins: [
+		solidBase.plugin({
 			...
 			lang: "en", // default lang without route prefix
 			locales: {
@@ -26,9 +26,9 @@ export default defineConfig(
 				},
 			},
 			...
-    }
-  )
-);
+		}),
+	],
+});
 ```
 
 ## Creating Localized Routes
