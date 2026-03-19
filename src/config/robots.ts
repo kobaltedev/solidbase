@@ -5,6 +5,10 @@ import type {
 } from "./index.js";
 import { getSitemapHostname } from "./index.js";
 
+const DEFAULT_ROBOTS_RULES = [
+	{ userAgent: "*", allow: ["/"] },
+] satisfies RobotsRule[];
+
 function toArray(value: string | string[]) {
 	return Array.isArray(value) ? value : [value];
 }
@@ -21,12 +25,12 @@ function getDefaultSitemapUrl(config: SolidBaseResolvedConfig<any>) {
 
 function getRobotsRules(config: SolidBaseResolvedConfig<any>) {
 	if (!config.robots || typeof config.robots !== "object") {
-		return [{ userAgent: "*", allow: ["/"] }] satisfies RobotsRule[];
+		return DEFAULT_ROBOTS_RULES;
 	}
 
 	return config.robots.rules?.length
 		? config.robots.rules
-		: ([{ userAgent: "*", allow: ["/"] }] satisfies RobotsRule[]);
+		: DEFAULT_ROBOTS_RULES;
 }
 
 function getRobotsSitemapUrl(config: SolidBaseResolvedConfig<any>) {
@@ -63,10 +67,4 @@ export function buildRobotsTxt(config: SolidBaseResolvedConfig<any>) {
 		: ruleBlocks;
 
 	return `${lines.join("\n\n")}\n`;
-}
-
-export function getRobotsConfig(
-	config: SolidBaseResolvedConfig<any>,
-): RobotsConfig | true | false {
-	return config.robots;
 }
