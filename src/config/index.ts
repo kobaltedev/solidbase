@@ -14,6 +14,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	titleTemplate?: string;
 	description?: string;
 	llms?: boolean;
+	sitemap?: boolean | SitemapConfig;
 	logo?: string;
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
@@ -33,6 +34,7 @@ type ResolvedConfigKeys =
 	| "title"
 	| "description"
 	| "llms"
+	| "sitemap"
 	| "lang"
 	| "issueAutolink"
 	| "lastUpdated";
@@ -48,6 +50,11 @@ export type LocaleConfig<ThemeConfig> = {
 	lang?: string;
 	link?: string;
 	themeConfig?: ThemeConfig;
+};
+
+export type SitemapConfig = {
+	hostname: string;
+	maxUrlsPerSitemap?: number;
 };
 
 export type ThemeDefinition<Config> = {
@@ -70,6 +77,7 @@ export function createSolidBase<ThemeConfig>(
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
 			llms: false,
+			sitemap: false,
 			lang: "en-US",
 			issueAutolink: false,
 			lastUpdated: { dateStyle: "short", timeStyle: "short" },

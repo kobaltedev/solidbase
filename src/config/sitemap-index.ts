@@ -1,5 +1,5 @@
 import type { SolidBaseResolvedConfig } from "./index.js";
-import type { RouteIndexEntry } from "./routes-index.js";
+import { getRoutesIndex, type RouteIndexEntry } from "./routes-index.js";
 
 type SitemapFrontmatter = {
 	sitemap?: boolean | { exclude?: boolean };
@@ -152,4 +152,14 @@ export function buildSitemapEntries(
 			} satisfies SitemapEntry;
 		})
 		.sort((a, b) => a.routePath.localeCompare(b.routePath));
+}
+
+export async function getSitemapEntries(
+	root: string,
+	config: SolidBaseResolvedConfig<any>,
+) {
+	if (!config.sitemap || typeof config.sitemap !== "object") return [];
+
+	const routes = await getRoutesIndex(root);
+	return buildSitemapEntries(config.sitemap.hostname, config, routes);
 }
