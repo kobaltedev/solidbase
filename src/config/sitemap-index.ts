@@ -1,4 +1,8 @@
-import { getSitemapHostname, type SolidBaseResolvedConfig } from "./index.js";
+import {
+	getSitemapHostname,
+	normalizeSiteUrl,
+	type SolidBaseResolvedConfig,
+} from "./index.js";
 import { getRoutesIndex, type RouteIndexEntry } from "./routes-index.js";
 
 type SitemapFrontmatter = {
@@ -28,10 +32,6 @@ type LocaleDefinition = {
 	prefix: string;
 	hreflang: string;
 };
-
-function normalizeHostname(hostname: string) {
-	return hostname.endsWith("/") ? hostname : `${hostname}/`;
-}
 
 function normalizeLocalePrefix(prefix: string) {
 	if (prefix === "/") return "/";
@@ -104,7 +104,7 @@ function isSitemapExcluded(frontmatter: SitemapFrontmatter) {
 }
 
 function toAbsoluteUrl(hostname: string, routePath: string) {
-	return new URL(routePath, normalizeHostname(hostname)).toString();
+	return new URL(routePath, normalizeSiteUrl(hostname)).toString();
 }
 
 export function buildSitemapEntries(
