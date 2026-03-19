@@ -50,6 +50,7 @@ describe("buildSitemapEntries", () => {
 				alternates: [
 					{ hreflang: "en-US", href: "https://example.com/" },
 					{ hreflang: "fr-FR", href: "https://example.com/fr" },
+					{ hreflang: "x-default", href: "https://example.com/" },
 				],
 			},
 			{
@@ -58,6 +59,7 @@ describe("buildSitemapEntries", () => {
 				alternates: [
 					{ hreflang: "en-US", href: "https://example.com/" },
 					{ hreflang: "fr-FR", href: "https://example.com/fr" },
+					{ hreflang: "x-default", href: "https://example.com/" },
 				],
 			},
 			{
@@ -72,6 +74,10 @@ describe("buildSitemapEntries", () => {
 						hreflang: "fr-FR",
 						href: "https://example.com/fr/guide/getting-started",
 					},
+					{
+						hreflang: "x-default",
+						href: "https://example.com/guide/getting-started",
+					},
 				],
 			},
 			{
@@ -85,6 +91,10 @@ describe("buildSitemapEntries", () => {
 					{
 						hreflang: "fr-FR",
 						href: "https://example.com/fr/guide/getting-started",
+					},
+					{
+						hreflang: "x-default",
+						href: "https://example.com/guide/getting-started",
 					},
 				],
 			},
@@ -110,6 +120,48 @@ describe("buildSitemapEntries", () => {
 					{
 						hreflang: "en-US",
 						href: "https://example.com/guide/deploy",
+					},
+				],
+			},
+		]);
+	});
+
+	it("does not emit x-default when a localized group has no default-locale route", () => {
+		const entries = buildSitemapEntries("https://example.com", config, [
+			{
+				routePath: "/fr/reference/api",
+				markdownPath: "/fr/reference/api.md",
+				filePath: "/tmp/src/routes/fr/reference/api.mdx",
+				source: "",
+				frontmatter: { title: "API" },
+			},
+			{
+				routePath: "/fr/reference/config",
+				markdownPath: "/fr/reference/config.md",
+				filePath: "/tmp/src/routes/fr/reference/config.mdx",
+				source: "",
+				frontmatter: { title: "Config" },
+			},
+		]);
+
+		expect(entries).toEqual([
+			{
+				routePath: "/fr/reference/api",
+				url: "https://example.com/fr/reference/api",
+				alternates: [
+					{
+						hreflang: "fr-FR",
+						href: "https://example.com/fr/reference/api",
+					},
+				],
+			},
+			{
+				routePath: "/fr/reference/config",
+				url: "https://example.com/fr/reference/config",
+				alternates: [
+					{
+						hreflang: "fr-FR",
+						href: "https://example.com/fr/reference/config",
 					},
 				],
 			},

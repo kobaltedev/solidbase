@@ -20,6 +20,7 @@ type LocaleRouteInfo = {
 	locale: string;
 	hreflang: string;
 	groupPath: string;
+	isDefaultLocale: boolean;
 };
 
 type LocaleDefinition = {
@@ -71,6 +72,7 @@ function getLocaleRouteInfo(
 				locale: definition.locale,
 				hreflang: definition.hreflang,
 				groupPath: "/",
+				isDefaultLocale: false,
 			};
 		}
 
@@ -79,6 +81,7 @@ function getLocaleRouteInfo(
 				locale: definition.locale,
 				hreflang: definition.hreflang,
 				groupPath: routePath.slice(definition.prefix.length),
+				isDefaultLocale: false,
 			};
 		}
 	}
@@ -87,6 +90,7 @@ function getLocaleRouteInfo(
 		locale: "root",
 		hreflang: config.lang,
 		groupPath: routePath,
+		isDefaultLocale: true,
 	};
 }
 
@@ -114,7 +118,13 @@ export function buildSitemapEntries(
 
 	const groups = new Map<
 		string,
-		Array<{ routePath: string; url: string; hreflang: string; locale: string }>
+		Array<{
+			routePath: string;
+			url: string;
+			hreflang: string;
+			locale: string;
+			isDefaultLocale: boolean;
+		}>
 	>();
 
 	for (const route of includedRoutes) {
@@ -124,6 +134,7 @@ export function buildSitemapEntries(
 			url: toAbsoluteUrl(hostname, route.routePath),
 			hreflang: localeInfo.hreflang,
 			locale: localeInfo.locale,
+			isDefaultLocale: localeInfo.isDefaultLocale,
 		};
 
 		const group = groups.get(localeInfo.groupPath);
@@ -142,13 +153,23 @@ export function buildSitemapEntries(
 			return {
 				routePath: route.routePath,
 				url: toAbsoluteUrl(hostname, route.routePath),
-				alternates: variants
-					.map(({ hreflang, url }) => ({ hreflang, href: url }))
-					.sort(
-						(a, b) =>
-							a.hreflang.localeCompare(b.hreflang) ||
-							a.href.localeCompare(b.href),
-					),
+				alternates: [
+					...variants.map(({ hreflang, url }) => ({ hreflang, href: url })),
+					...(variants.length > 1
+						? (() => {
+								const defaultVariant = variants.find(
+									(variant) => variant.isDefaultLocale,
+								);
+								return defaultVariant
+									? [{ hreflang: "x-default", href: defaultVariant.url }]
+									: [];
+							})()
+						: []),
+				].sort(
+					(a, b) =>
+						a.hreflang.localeCompare(b.hreflang) ||
+						a.href.localeCompare(b.href),
+				),
 			} satisfies SitemapEntry;
 		})
 		.sort((a, b) => a.routePath.localeCompare(b.routePath));

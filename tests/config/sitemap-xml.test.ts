@@ -21,6 +21,10 @@ describe("serializeSitemap", () => {
 						hreflang: "fr-FR",
 						href: "https://example.com/fr/guide/getting-started",
 					},
+					{
+						hreflang: "x-default",
+						href: "https://example.com/guide/getting-started",
+					},
 				],
 			},
 		]);
@@ -34,6 +38,9 @@ describe("serializeSitemap", () => {
 		);
 		expect(xml).toContain(
 			'<xhtml:link rel="alternate" hreflang="fr-FR" href="https://example.com/fr/guide/getting-started" />',
+		);
+		expect(xml).toContain(
+			'<xhtml:link rel="alternate" hreflang="x-default" href="https://example.com/guide/getting-started" />',
 		);
 	});
 
