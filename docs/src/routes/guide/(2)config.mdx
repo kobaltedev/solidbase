@@ -47,9 +47,12 @@ interface SolidBaseConfig<ThemeConfig> {
   title?: string;
   titleTemplate?: string;
   description?: string;
+  siteUrl?: string;
   logo?: string;
   issueAutolink?: IssueAutoLinkConfig | false;
   llms?: boolean;
+  sitemap?: boolean | SitemapConfig;
+  robots?: boolean | RobotsConfig;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
   themeConfig?: ThemeConfig;
@@ -73,10 +76,13 @@ There are several options for setting site-wide metadata and behavior. These opt
     title: "My Documentation Site",
     titleTemplate: "%s - MySite",
     description: "A comprehensive guide to MySite.",
+    siteUrl: "https://docs.example.com",
     logo: "/logo.png",
 }
 // ..
 ```
+
+Set `siteUrl` to the canonical public URL for your site. SolidBase uses it as the shared base for generated sitemap URLs, `robots.txt`, and default Open Graph URL metadata.
 
 :::note
 For multilingual support, you can use the `locales` option to define different configurations for each locale. More details can be found in the [Internationalization guide](/guide/features/i18n).
@@ -90,17 +96,64 @@ In addition to setting the site title and description, you can also configure ot
 - `lastUpdated`: An object to configure the display of the last updated timestamp on each page. Set to `false` to disable this feature.
 - `issueAutolink`: An object to configure automatic linking of issue references in your markdown content. Set to `false` to disable this feature.
 - `llms`: Set to `true` to emit an `llms.txt` index and markdown copies of your routes for LLM-friendly documentation output.
+- `sitemap`: Set to `true` to emit `/sitemap.xml`. You can also pass an object to override the hostname or control sitemap chunking for very large sites.
+- `robots`: Set to `true` to emit a simple Google-friendly `/robots.txt` file that allows crawling and points to your sitemap.
 
 ```ts title="app.config.ts"
 // ..
+siteUrl: "https://docs.example.com"
 editPath: "https://github.com/[USERNAME]/[REPO]/edit/main/docs/:path"
 lastUpdated: false;
 issueAutolink: "https://github.com/[USERNAME]/[REPO]/issues/:issue"
 llms: true;
+sitemap: true;
+robots: true;
 // ..
 ```
 
 See the [LLMs.txt guide](/guide/features/llms) for page-level exclusion and output details.
+
+## Sitemap and robots
+
+SolidBase can generate both `/sitemap.xml` and `/robots.txt` during the build.
+
+```ts title="app.config.ts"
+// ..
+siteUrl: "https://docs.example.com",
+sitemap: true,
+robots: true,
+// ..
+```
+
+This emits:
+
+- `/sitemap.xml` with fully-qualified canonical URLs for your markdown routes
+- `hreflang` alternates for localized routes, plus `x-default` when a default-locale route exists
+- `/robots.txt` with an allow-all policy and a `Sitemap:` reference
+
+If you need more control, `sitemap` also accepts an object:
+
+```ts title="app.config.ts"
+// ..
+siteUrl: "https://docs.example.com",
+sitemap: {
+    maxUrlsPerSitemap: 10000,
+},
+robots: {
+    rules: [
+        {
+            userAgent: "*",
+            allow: ["/"],
+            disallow: ["/admin/"],
+        },
+    ],
+},
+// ..
+```
+
+Use `siteUrl` for the normal case. Override `sitemap.hostname` only when your sitemap should use a different canonical host than the rest of the site.
+
+See the [Sitemap and robots guide](/guide/features/sitemap-and-robots) for a full walkthrough of localized alternates, page exclusion, and custom crawler rules.
 
 ### Markdown Configuration
 
