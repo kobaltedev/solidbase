@@ -24,6 +24,9 @@ export default defineConfig({
 			description:
 				"Fully featured, fully customisable static site generation for SolidStart",
 			llms: true,
+			sitemap: {
+				hostname: "https://solidbase.dev",
+			},
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			markdown: {
