@@ -1,13 +1,7 @@
-import { readdir, readFile } from "node:fs/promises";
-import { extname, join, relative } from "node:path";
-
-import matter from "gray-matter";
-
 import { toDocumentMarkdown } from "./document-markdown.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
+import { getRoutesIndex, isDefaultLocaleRoute } from "./routes-index.js";
 import type { SidebarConfig } from "./sidebar.js";
-
-const MARKDOWN_EXTENSIONS = new Set([".md", ".mdx"]);
 
 type LlmFrontmatter = {
 	title?: string;
@@ -34,60 +28,8 @@ export type LlmDocument = {
 	content: string;
 };
 
-function getRoutesDir(root: string) {
-	return join(root, "src/routes");
-}
-
 function isExcluded(frontmatter: LlmFrontmatter) {
 	return frontmatter.llms === false || frontmatter.llms?.exclude === true;
-}
-
-function isNotFoundRoute(routesDir: string, filePath: string) {
-	const relativePath = relative(routesDir, filePath).replace(/\\/g, "/");
-	return relativePath
-		.split("/")
-		.some((segment) => segment.startsWith("[...404]."));
-}
-
-function stripOrderingSegment(segment: string) {
-	return segment.replace(/^\(\d+\)/, "");
-}
-
-async function collectMarkdownFiles(dir: string): Promise<string[]> {
-	const entries = await readdir(dir, { withFileTypes: true });
-	const files = await Promise.all(
-		entries.map(async (entry) => {
-			const fullPath = join(dir, entry.name);
-
-			if (entry.isDirectory()) return collectMarkdownFiles(fullPath);
-			if (!MARKDOWN_EXTENSIONS.has(extname(entry.name))) return [];
-
-			return [fullPath];
-		}),
-	);
-
-	return files.flat().sort((a, b) => a.localeCompare(b));
-}
-
-function toRoutePath(routesDir: string, filePath: string) {
-	const relativePath = relative(routesDir, filePath).replace(/\\/g, "/");
-	const routePath = relativePath
-		.replace(/\.(md|mdx)$/, "")
-		.split("/")
-		.map(stripOrderingSegment)
-		.join("/");
-
-	if (routePath === "index") return "/";
-	if (routePath.endsWith("/index")) {
-		return `/${routePath.slice(0, -"/index".length)}`;
-	}
-
-	return `/${routePath}`;
-}
-
-export function toMarkdownPath(routePath: string) {
-	if (routePath === "/") return "/index.md";
-	return `${routePath}.md`;
 }
 
 function getRootSidebarItems(sidebar: SidebarConfig<SidebarItem> | undefined) {
@@ -142,63 +84,34 @@ function resolveSidebarItems(
 	}));
 }
 
-function normalizeLocalePrefix(prefix: string) {
-	if (prefix === "/") return "/";
-	return prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
-}
-
-function getNonRootLocalePrefixes(config: SolidBaseResolvedConfig<any>) {
-	return Object.entries(config.locales ?? {})
-		.filter(([locale]) => locale !== "root")
-		.map(([locale, localeConfig]) =>
-			normalizeLocalePrefix(localeConfig.link ?? `/${locale}/`),
-		);
-}
-
-function isDefaultLocaleRoute(
-	routePath: string,
-	config: SolidBaseResolvedConfig<any>,
-) {
-	const localePrefixes = getNonRootLocalePrefixes(config);
-
-	return !localePrefixes.some(
-		(prefix) => routePath === prefix || routePath.startsWith(`${prefix}/`),
-	);
-}
-
 export async function getLlmDocuments(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
 ): Promise<LlmDocument[]> {
 	if (!config.llms) return [];
 
-	const routesDir = getRoutesDir(root);
-	const markdownFiles = await collectMarkdownFiles(routesDir);
+	const routes = await getRoutesIndex(root);
 
 	return Promise.all(
-		markdownFiles.map(async (filePath): Promise<LlmDocument | null> => {
-			if (isNotFoundRoute(routesDir, filePath)) return null;
-
-			const source = await readFile(filePath, "utf8");
-			const { data } = matter(source);
-			const frontmatter = data as LlmFrontmatter;
+		routes.map(async (route): Promise<LlmDocument | null> => {
+			const frontmatter = route.frontmatter as LlmFrontmatter;
 
 			if (isExcluded(frontmatter)) return null;
 
-			const routePath = toRoutePath(routesDir, filePath);
-
 			return {
 				title:
-					typeof frontmatter.title === "string" ? frontmatter.title : routePath,
+					typeof frontmatter.title === "string"
+						? frontmatter.title
+						: route.routePath,
 				description:
 					typeof frontmatter.description === "string"
 						? frontmatter.description
 						: undefined,
-				routePath,
-				markdownPath: toMarkdownPath(routePath),
-				content: await toDocumentMarkdown(source, {
+				routePath: route.routePath,
+				markdownPath: route.markdownPath,
+				content: await toDocumentMarkdown(route.source, {
 					config,
-					filePath,
+					filePath: route.filePath,
 				}),
 			} satisfies LlmDocument;
 		}),

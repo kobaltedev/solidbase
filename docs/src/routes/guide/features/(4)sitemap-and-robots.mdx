@@ -1,0 +1,123 @@
+---
+title: Sitemap and Robots
+---
+
+# {frontmatter.title}
+
+SolidBase can generate both `/sitemap.xml` and `/robots.txt` during the build so search engines can discover and crawl your docs more reliably.
+
+## Enable the feature
+
+Set a canonical `siteUrl`, then turn both features on in your SolidBase config:
+
+```ts title="app.config.ts"
+import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+
+const theme = defineTheme({
+	componentsPath: import.meta.resolve("./src/solidbase-theme"),
+	extends: defaultTheme,
+});
+
+const solidBase = createSolidBase(theme);
+
+export default {
+	...solidBase.startConfig({
+		ssr: true,
+	}),
+	plugins: [
+		solidBase.plugin({
+			title: "My Docs",
+			description: "Documentation for my project",
+			siteUrl: "https://docs.example.com",
+			sitemap: true,
+			robots: true,
+		}),
+	],
+};
+```
+
+With that config, SolidBase emits:
+
+- `/sitemap.xml` with fully-qualified canonical URLs
+- `/robots.txt` with an allow-all policy and a `Sitemap:` reference
+
+## What goes into the sitemap
+
+SolidBase builds the sitemap from markdown routes under `src/routes`.
+
+- `.md` and `.mdx` routes are included automatically
+- `[...404]` routes are excluded
+- localized routes include `hreflang` alternates
+- multilingual route groups include `x-default` when a default-locale page exists
+
+If your site grows large enough, SolidBase automatically switches from a single `sitemap.xml` file to a sitemap index plus chunked sitemap files.
+
+## Localized URLs
+
+When you use `lang` and `locales`, SolidBase groups equivalent localized pages together in the sitemap.
+
+```ts title="app.config.ts"
+// ..
+siteUrl: "https://docs.example.com",
+lang: "en-US",
+locales: {
+	fr: {
+		label: "Français",
+		lang: "fr-FR",
+	},
+},
+sitemap: true,
+// ..
+```
+
+That means a page like `/guide/getting-started` can emit alternates for both `en-US` and `fr-FR`, plus `x-default` pointing at the default-locale URL.
+
+## Excluding pages from the sitemap
+
+You can exclude individual pages with frontmatter:
+
+```md title="src/routes/internal.mdx"
+---
+title: Internal
+sitemap:
+  exclude: true
+---
+```
+
+You can also disable sitemap inclusion entirely for a page with `sitemap: false`.
+
+## Custom sitemap and robots config
+
+The default setup is enough for most sites. If you need more control, you can pass config objects instead of booleans.
+
+```ts title="app.config.ts"
+// ..
+siteUrl: "https://docs.example.com",
+sitemap: {
+	maxUrlsPerSitemap: 10000,
+},
+robots: {
+	rules: [
+		{
+			userAgent: "*",
+			allow: ["/"],
+			disallow: ["/admin/"],
+		},
+	],
+},
+// ..
+```
+
+Use `siteUrl` for the normal case. Only override `sitemap.hostname` when your sitemap should use a different canonical host than the rest of the site.
+
+## Google-friendly defaults
+
+SolidBase keeps the generated files intentionally conservative:
+
+- sitemap URLs are absolute and canonical
+- `priority` and `changefreq` are omitted
+- `lastmod` is omitted unless SolidBase can source it accurately in the future
+- `robots.txt` allows crawling by default instead of blocking resources automatically
+
+If you need page-level metadata details, see the [Frontmatter reference](/reference/frontmatter). For the full config surface, see [Configure Your App](/guide/config).

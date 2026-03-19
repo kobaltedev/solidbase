@@ -43,17 +43,29 @@ describe("createSolidBase", () => {
 			expect.objectContaining({
 				title: "Docs",
 				llms: true,
+				sitemap: false,
+				robots: false,
 				lang: "en-US",
 				issueAutolink: false,
 			}),
 		);
 		expect(plugins).toEqual(["mdx-plugin", "solidbase-plugin", "theme-plugin"]);
 		expect(solidBaseMdx).toHaveBeenCalledWith(
-			expect.objectContaining({ title: "Docs", llms: true }),
+			expect.objectContaining({
+				title: "Docs",
+				llms: true,
+				sitemap: false,
+				robots: false,
+			}),
 		);
 		expect(solidBaseVitePlugin).toHaveBeenCalledWith(
 			theme,
-			expect.objectContaining({ title: "Docs", llms: true }),
+			expect.objectContaining({
+				title: "Docs",
+				llms: true,
+				sitemap: false,
+				robots: false,
+			}),
 		);
 	});
 

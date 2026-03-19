@@ -70,7 +70,9 @@ function OpenGraph() {
 				name="og:url"
 				content={new URL(
 					location.pathname,
-					import.meta.env.VITE_ORIGIN ?? "https://solidbase.netlify.app",
+					solidBaseCtx.config().siteUrl ??
+						import.meta.env.VITE_ORIGIN ??
+						"https://solidbase.netlify.app",
 				).toString()}
 			/>
 			<Meta name="twitter:card" content="summary_large_image" />

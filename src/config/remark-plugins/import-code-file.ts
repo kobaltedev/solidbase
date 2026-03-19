@@ -1,7 +1,6 @@
 // Adapted from https://github.com/kevin940726/remark-code-import MIT
 
 import fs from "node:fs";
-import { EOL } from "node:os";
 import path from "node:path";
 import { MetaOptions } from "@expressive-code/core";
 import type { Root } from "mdast";
@@ -24,7 +23,7 @@ function extractLines(
 	toLine: number | undefined,
 	preserveTrailingNewline = false,
 ) {
-	const lines = content.split(EOL);
+	const lines = content.split(/\r\n|\n|\r/);
 	const start = fromLine || 1;
 	let end: number;
 	if (!hasDash) {
