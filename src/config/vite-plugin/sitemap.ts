@@ -1,18 +1,14 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
-import { join, sep } from "node:path";
+import { writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 import type { PluginOption } from "vite";
 
 import { getSitemapHostname, type SolidBaseResolvedConfig } from "../index.js";
 import { getSitemapEntries } from "../sitemap-index.js";
 import { buildSitemapXmlFiles } from "../sitemap-xml.js";
+import { createGeneratedAssetPlugin, emptyDir } from "./generated-asset.js";
 
 const SITEMAP_PUBLIC_ASSETS_DIR = join("node_modules", ".solidbase", "sitemap");
-
-async function emptyDir(dir: string) {
-	await rm(dir, { recursive: true, force: true });
-	await mkdir(dir, { recursive: true });
-}
 
 async function writeSitemapAssets(
 	root: string,
@@ -43,40 +39,12 @@ export default function solidBaseSitemapPlugin(
 ): PluginOption {
 	if (!config.sitemap) return [];
 
-	let root = process.cwd();
-
-	return {
+	return createGeneratedAssetPlugin({
 		name: "solidbase:sitemap",
-		config(viteConfig) {
-			const nitroConfig = (viteConfig as any).nitro ?? {};
-
-			return {
-				nitro: {
-					...nitroConfig,
-					publicAssets: [
-						...(nitroConfig.publicAssets ?? []),
-						{
-							dir: SITEMAP_PUBLIC_ASSETS_DIR,
-							baseURL: "/",
-							fallthrough: true,
-							ignore: false,
-						},
-					],
-				},
-			} as any;
+		assetDir: SITEMAP_PUBLIC_ASSETS_DIR,
+		watchRoutes: true,
+		write(root) {
+			return writeSitemapAssets(root, config);
 		},
-		configResolved(resolvedConfig) {
-			root = resolvedConfig.root;
-		},
-		async buildStart() {
-			await writeSitemapAssets(root, config);
-		},
-		async handleHotUpdate(ctx) {
-			if (!ctx.file.includes(`${sep}src${sep}routes${sep}`)) {
-				return;
-			}
-
-			await writeSitemapAssets(root, config);
-		},
-	};
+	});
 }

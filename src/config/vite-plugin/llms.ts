@@ -1,17 +1,13 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
-import { dirname, join, sep } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 
 import type { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig } from "../index.js";
 import { buildLlmsIndex, getLlmDocuments } from "../llms-index.js";
+import { createGeneratedAssetPlugin, emptyDir } from "./generated-asset.js";
 
 const LLMS_PUBLIC_ASSETS_DIR = join("node_modules", ".solidbase", "llms");
-
-async function emptyDir(dir: string) {
-	await rm(dir, { recursive: true, force: true });
-	await mkdir(dir, { recursive: true });
-}
 
 async function writeLlmsAssets(
 	root: string,
@@ -42,40 +38,12 @@ export default function solidBaseLlmsPlugin(
 ): PluginOption {
 	if (!config.llms) return [];
 
-	let root = process.cwd();
-
-	return {
+	return createGeneratedAssetPlugin({
 		name: "solidbase:llms",
-		config(viteConfig) {
-			const nitroConfig = (viteConfig as any).nitro ?? {};
-
-			return {
-				nitro: {
-					...nitroConfig,
-					publicAssets: [
-						...(nitroConfig.publicAssets ?? []),
-						{
-							dir: LLMS_PUBLIC_ASSETS_DIR,
-							baseURL: "/",
-							fallthrough: true,
-							ignore: false,
-						},
-					],
-				},
-			} as any;
+		assetDir: LLMS_PUBLIC_ASSETS_DIR,
+		watchRoutes: true,
+		write(root) {
+			return writeLlmsAssets(root, config);
 		},
-		configResolved(resolvedConfig) {
-			root = resolvedConfig.root;
-		},
-		async buildStart() {
-			await writeLlmsAssets(root, config);
-		},
-		async handleHotUpdate(ctx) {
-			if (!ctx.file.includes(`${sep}src${sep}routes${sep}`)) {
-				return;
-			}
-
-			await writeLlmsAssets(root, config);
-		},
-	};
+	});
 }

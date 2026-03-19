@@ -1,17 +1,13 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import type { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig } from "../index.js";
 import { buildRobotsTxt } from "../robots.js";
+import { createGeneratedAssetPlugin, emptyDir } from "./generated-asset.js";
 
 const ROBOTS_PUBLIC_ASSETS_DIR = join("node_modules", ".solidbase", "robots");
-
-async function emptyDir(dir: string) {
-	await rm(dir, { recursive: true, force: true });
-	await mkdir(dir, { recursive: true });
-}
 
 async function writeRobotsAsset(
 	root: string,
@@ -31,33 +27,11 @@ export default function solidBaseRobotsPlugin(
 ): PluginOption {
 	if (!config.robots) return [];
 
-	let root = process.cwd();
-
-	return {
+	return createGeneratedAssetPlugin({
 		name: "solidbase:robots",
-		config(viteConfig) {
-			const nitroConfig = (viteConfig as any).nitro ?? {};
-
-			return {
-				nitro: {
-					...nitroConfig,
-					publicAssets: [
-						...(nitroConfig.publicAssets ?? []),
-						{
-							dir: ROBOTS_PUBLIC_ASSETS_DIR,
-							baseURL: "/",
-							fallthrough: true,
-							ignore: false,
-						},
-					],
-				},
-			} as any;
+		assetDir: ROBOTS_PUBLIC_ASSETS_DIR,
+		write(root) {
+			return writeRobotsAsset(root, config);
 		},
-		configResolved(resolvedConfig) {
-			root = resolvedConfig.root;
-		},
-		async buildStart() {
-			await writeRobotsAsset(root, config);
-		},
-	};
+	});
 }
