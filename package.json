@@ -29,6 +29,9 @@
     "dev-rb <43100342+dev-rb@users.noreply.github.com>"
   ],
   "license": "MIT",
+  "repository": {
+  	"url": "https://github.com/kobaltedev/solidbase"
+  },
   "exports": {
     "./client": {
       "solid": "./src/client/index.tsx",
