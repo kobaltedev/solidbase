@@ -1,4 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
+import { describe, expect, it } from "vitest";
 
 import solidBaseLlmsPlugin from "../../src/config/vite-plugin/llms.ts";
 import { fixtureSiteRoot } from "../helpers/fixtures.ts";
@@ -34,21 +37,23 @@ describe("solidBaseLlmsPlugin", () => {
 		if (!plugin) throw new Error("Expected LLMS plugin to be defined");
 
 		plugin.configResolved?.({ root: fixtureSiteRoot } as any);
-		const emitFile = vi.fn();
+		await plugin.buildStart?.call({} as any);
 
-		await plugin.generateBundle?.call({ emitFile } as any);
+		const llmsRoot = join(
+			fixtureSiteRoot,
+			"node_modules",
+			".solidbase",
+			"llms",
+		);
+		const [llmsIndex, homeDoc, guideDoc] = await Promise.all([
+			readFile(join(llmsRoot, "llms.txt"), "utf8"),
+			readFile(join(llmsRoot, "index.md"), "utf8"),
+			readFile(join(llmsRoot, "guide", "getting-started.md"), "utf8"),
+		]);
 
-		expect(emitFile).toHaveBeenCalledWith(
-			expect.objectContaining({ fileName: "llms.txt", type: "asset" }),
-		);
-		expect(emitFile).toHaveBeenCalledWith(
-			expect.objectContaining({ fileName: "index.md", type: "asset" }),
-		);
-		expect(emitFile).toHaveBeenCalledWith(
-			expect.objectContaining({
-				fileName: "guide/getting-started.md",
-				type: "asset",
-			}),
-		);
+		expect(llmsIndex).toContain("/index.md");
+		expect(llmsIndex).toContain("/guide/getting-started.md");
+		expect(homeDoc).toContain("# Home");
+		expect(guideDoc).toContain("# Getting Started");
 	});
 });
