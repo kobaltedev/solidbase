@@ -63,9 +63,10 @@ function getLocaleDefinitions(config: SolidBaseResolvedConfig<any>) {
 
 function getLocaleRouteInfo(
 	routePath: string,
-	config: SolidBaseResolvedConfig<any>,
+	localeDefinitions: LocaleDefinition[],
+	defaultHreflang: string,
 ): LocaleRouteInfo {
-	for (const definition of getLocaleDefinitions(config)) {
+	for (const definition of localeDefinitions) {
 		if (definition.locale === "root") continue;
 		if (routePath === definition.prefix) {
 			return {
@@ -88,7 +89,7 @@ function getLocaleRouteInfo(
 
 	return {
 		locale: "root",
-		hreflang: config.lang,
+		hreflang: defaultHreflang,
 		groupPath: routePath,
 		isDefaultLocale: true,
 	};
@@ -112,6 +113,7 @@ export function buildSitemapEntries(
 	config: SolidBaseResolvedConfig<any>,
 	routes: RouteIndexEntry[],
 ): SitemapEntry[] {
+	const localeDefinitions = getLocaleDefinitions(config);
 	const includedRoutes = routes.filter(
 		(route) => !isSitemapExcluded(route.frontmatter as SitemapFrontmatter),
 	);
@@ -128,7 +130,11 @@ export function buildSitemapEntries(
 	>();
 
 	for (const route of includedRoutes) {
-		const localeInfo = getLocaleRouteInfo(route.routePath, config);
+		const localeInfo = getLocaleRouteInfo(
+			route.routePath,
+			localeDefinitions,
+			config.lang,
+		);
 		const entry = {
 			routePath: route.routePath,
 			url: toAbsoluteUrl(hostname, route.routePath),
@@ -147,7 +153,11 @@ export function buildSitemapEntries(
 
 	return includedRoutes
 		.map((route) => {
-			const localeInfo = getLocaleRouteInfo(route.routePath, config);
+			const localeInfo = getLocaleRouteInfo(
+				route.routePath,
+				localeDefinitions,
+				config.lang,
+			);
 			const variants = groups.get(localeInfo.groupPath) ?? [];
 
 			return {
