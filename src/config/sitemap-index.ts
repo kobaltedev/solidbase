@@ -1,4 +1,4 @@
-import type { SolidBaseResolvedConfig } from "./index.js";
+import { getSitemapHostname, type SolidBaseResolvedConfig } from "./index.js";
 import { getRoutesIndex, type RouteIndexEntry } from "./routes-index.js";
 
 type SitemapFrontmatter = {
@@ -158,8 +158,9 @@ export async function getSitemapEntries(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
 ) {
-	if (!config.sitemap || typeof config.sitemap !== "object") return [];
+	const hostname = getSitemapHostname(config);
+	if (!hostname) return [];
 
 	const routes = await getRoutesIndex(root);
-	return buildSitemapEntries(config.sitemap.hostname, config, routes);
+	return buildSitemapEntries(hostname, config, routes);
 }

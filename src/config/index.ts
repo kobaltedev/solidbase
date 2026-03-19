@@ -13,6 +13,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
+	siteUrl?: string;
 	llms?: boolean;
 	sitemap?: boolean | SitemapConfig;
 	robots?: boolean | RobotsConfig;
@@ -55,7 +56,7 @@ export type LocaleConfig<ThemeConfig> = {
 };
 
 export type SitemapConfig = {
-	hostname: string;
+	hostname?: string;
 	maxUrlsPerSitemap?: number;
 };
 
@@ -140,3 +141,23 @@ export function defineTheme<C>(def: ThemeDefinition<C>) {
 	return def;
 }
 export type Theme<C> = ReturnType<typeof defineTheme<C>>;
+
+export function normalizeSiteUrl(siteUrl: string) {
+	return siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;
+}
+
+export function getSiteUrl(config: Pick<SolidBaseConfig<any>, "siteUrl">) {
+	if (!config.siteUrl) return undefined;
+	return normalizeSiteUrl(config.siteUrl);
+}
+
+export function getSitemapHostname(
+	config: Pick<SolidBaseConfig<any>, "siteUrl" | "sitemap">,
+) {
+	if (!config.sitemap) return undefined;
+	if (config.sitemap !== true && config.sitemap.hostname) {
+		return normalizeSiteUrl(config.sitemap.hostname);
+	}
+
+	return getSiteUrl(config);
+}

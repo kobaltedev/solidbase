@@ -14,7 +14,8 @@ describe("solidBaseRobotsPlugin", () => {
 	it("writes robots.txt with the canonical sitemap URL", async () => {
 		const pluginOption = solidBaseRobotsPlugin({
 			lang: "en-US",
-			sitemap: { hostname: "https://solidbase.dev" },
+			siteUrl: "https://solidbase.dev",
+			sitemap: true,
 			robots: true,
 		} as any);
 		const plugin = (

@@ -6,7 +6,8 @@ describe("buildRobotsTxt", () => {
 	it("emits a Google-aligned allow-all robots file with sitemap by default", () => {
 		const robots = buildRobotsTxt({
 			lang: "en-US",
-			sitemap: { hostname: "https://solidbase.dev" },
+			siteUrl: "https://solidbase.dev",
+			sitemap: true,
 			robots: true,
 		} as any);
 
@@ -24,7 +25,8 @@ describe("buildRobotsTxt", () => {
 	it("omits the sitemap line when robots disables it", () => {
 		const robots = buildRobotsTxt({
 			lang: "en-US",
-			sitemap: { hostname: "https://solidbase.dev" },
+			siteUrl: "https://solidbase.dev",
+			sitemap: true,
 			robots: { sitemap: false },
 		} as any);
 

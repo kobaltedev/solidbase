@@ -3,6 +3,7 @@ import type {
 	RobotsRule,
 	SolidBaseResolvedConfig,
 } from "./index.js";
+import { getSitemapHostname } from "./index.js";
 
 function toArray(value: string | string[]) {
 	return Array.isArray(value) ? value : [value];
@@ -13,8 +14,9 @@ function normalizeRulePaths(paths: string[] | undefined) {
 }
 
 function getDefaultSitemapUrl(config: SolidBaseResolvedConfig<any>) {
-	if (!config.sitemap || typeof config.sitemap !== "object") return undefined;
-	return new URL("sitemap.xml", config.sitemap.hostname).toString();
+	const hostname = getSitemapHostname(config);
+	if (!hostname) return undefined;
+	return new URL("sitemap.xml", hostname).toString();
 }
 
 function getRobotsRules(config: SolidBaseResolvedConfig<any>) {

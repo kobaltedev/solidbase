@@ -3,7 +3,7 @@ import { join, sep } from "node:path";
 
 import type { PluginOption } from "vite";
 
-import type { SolidBaseResolvedConfig } from "../index.js";
+import { getSitemapHostname, type SolidBaseResolvedConfig } from "../index.js";
 import { getSitemapEntries } from "../sitemap-index.js";
 import { buildSitemapXmlFiles } from "../sitemap-xml.js";
 
@@ -18,11 +18,15 @@ async function writeSitemapAssets(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
 ) {
-	if (!config.sitemap || typeof config.sitemap !== "object") return;
+	const hostname = getSitemapHostname(config);
+	if (!hostname) return;
 
 	const entries = await getSitemapEntries(root, config);
-	const files = buildSitemapXmlFiles(config.sitemap.hostname, entries, {
-		maxUrlsPerSitemap: config.sitemap.maxUrlsPerSitemap,
+	const files = buildSitemapXmlFiles(hostname, entries, {
+		maxUrlsPerSitemap:
+			typeof config.sitemap === "object"
+				? config.sitemap.maxUrlsPerSitemap
+				: undefined,
 	});
 	const outputDir = join(root, SITEMAP_PUBLIC_ASSETS_DIR);
 
@@ -37,7 +41,7 @@ async function writeSitemapAssets(
 export default function solidBaseSitemapPlugin(
 	config: SolidBaseResolvedConfig<any>,
 ): PluginOption {
-	if (!config.sitemap || typeof config.sitemap !== "object") return [];
+	if (!config.sitemap) return [];
 
 	let root = process.cwd();
 

@@ -14,10 +14,11 @@ describe("solidBaseSitemapPlugin", () => {
 	it("writes sitemap.xml for the configured root", async () => {
 		const pluginOption = solidBaseSitemapPlugin({
 			lang: "en-US",
+			siteUrl: "https://example.com",
 			locales: {
 				root: { label: "English", lang: "en-US" },
 			},
-			sitemap: { hostname: "https://example.com" },
+			sitemap: true,
 		} as any);
 		const plugin = (
 			Array.isArray(pluginOption) ? pluginOption[0] : pluginOption
@@ -50,11 +51,11 @@ describe("solidBaseSitemapPlugin", () => {
 	it("writes a sitemap index when the URL limit is exceeded", async () => {
 		const pluginOption = solidBaseSitemapPlugin({
 			lang: "en-US",
+			siteUrl: "https://example.com",
 			locales: {
 				root: { label: "English", lang: "en-US" },
 			},
 			sitemap: {
-				hostname: "https://example.com",
 				maxUrlsPerSitemap: 1,
 			},
 		} as any);
