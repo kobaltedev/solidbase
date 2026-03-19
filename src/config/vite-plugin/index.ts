@@ -7,6 +7,7 @@ import type { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig, ThemeDefinition } from "../index.js";
 import solidBaseLlmsPlugin from "./llms.js";
+import solidBaseRobotsPlugin from "./robots.js";
 import solidBaseSitemapPlugin from "./sitemap.js";
 import {
 	componentsModule,
@@ -112,6 +113,7 @@ export default function solidBaseVitePlugin(
 
 	plugins.push(solidBaseLlmsPlugin(solidBaseConfig));
 	plugins.push(solidBaseSitemapPlugin(solidBaseConfig));
+	plugins.push(solidBaseRobotsPlugin(solidBaseConfig));
 
 	return plugins;
 }

@@ -15,6 +15,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	description?: string;
 	llms?: boolean;
 	sitemap?: boolean | SitemapConfig;
+	robots?: boolean | RobotsConfig;
 	logo?: string;
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
@@ -35,6 +36,7 @@ type ResolvedConfigKeys =
 	| "description"
 	| "llms"
 	| "sitemap"
+	| "robots"
 	| "lang"
 	| "issueAutolink"
 	| "lastUpdated";
@@ -55,6 +57,17 @@ export type LocaleConfig<ThemeConfig> = {
 export type SitemapConfig = {
 	hostname: string;
 	maxUrlsPerSitemap?: number;
+};
+
+export type RobotsRule = {
+	userAgent: string | string[];
+	allow?: string[];
+	disallow?: string[];
+};
+
+export type RobotsConfig = {
+	rules?: RobotsRule[];
+	sitemap?: string | false;
 };
 
 export type ThemeDefinition<Config> = {
@@ -78,6 +91,7 @@ export function createSolidBase<ThemeConfig>(
 				"Fully featured, fully customisable static site generation for SolidStart",
 			llms: false,
 			sitemap: false,
+			robots: false,
 			lang: "en-US",
 			issueAutolink: false,
 			lastUpdated: { dateStyle: "short", timeStyle: "short" },

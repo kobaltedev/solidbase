@@ -27,6 +27,7 @@ export default defineConfig({
 			sitemap: {
 				hostname: "https://solidbase.dev",
 			},
+			robots: true,
 			issueAutolink: "https://github.com/kobaltedev/solidbase/issues/:issue",
 			lang: "en",
 			markdown: {
