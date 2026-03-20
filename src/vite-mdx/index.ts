@@ -1,7 +1,6 @@
 // ty vinxi :)
 
 import { VFile, type VFileCompatible } from "vfile";
-import type { Plugin } from "vite";
 import { mergeArrays } from "./common.js";
 import type { NamedImports } from "./imports.js";
 import { createTransformer } from "./transform.js";
@@ -36,7 +35,7 @@ function createPlugin(
 	globalMdxOptions.remarkPlugins ??= [];
 	globalMdxOptions.rehypePlugins ??= [];
 
-	let reactRefresh: Plugin | undefined;
+	// let reactRefresh: Plugin | undefined;
 	let transformMdx:
 		| ((
 				code_mdx: VFileCompatible,
@@ -49,22 +48,18 @@ function createPlugin(
 		// I can't think of any reason why a plugin would need to run before mdx; let's make sure `vite-plugin-mdx` runs first.
 		enforce: "pre",
 		mdxOptions: globalMdxOptions,
-		configResolved({ root, plugins }) {
-			// @vitejs/plugin-react-refresh has been upgraded to @vitejs/plugin-react,
-			// and the name of the plugin performing `transform` has been changed from 'react-refresh' to 'vite:react-babel',
-			// to be compatible, we need to look for both plugin name.
-			// We should also look for the other plugins names exported from @vitejs/plugin-react in case there are some internal refactors.
-			const reactRefreshPlugins = plugins.filter(
-				(p) =>
-					p.name === "react-refresh" ||
-					p.name === "vite:react-babel" ||
-					p.name === "vite:react-refresh" ||
-					p.name === "vite:react-jsx",
-			);
-			reactRefresh = reactRefreshPlugins.find((p) => p.transform);
+		configResolved({ root }) {
+			// const reactRefreshPlugins = plugins.filter(
+			// 	(p) =>
+			// 		p.name === "react-refresh" ||
+			// 		p.name === "vite:react-babel" ||
+			// 		p.name === "vite:react-refresh" ||
+			// 		p.name === "vite:react-jsx",
+			// );
+			// reactRefresh = reactRefreshPlugins.find((p) => p.transform);
 			transformMdx = createTransformer(root, namedImports);
 		},
-		async transform(_code, id, ssr) {
+		async transform(_code, id, _ssr) {
 			let code = _code;
 			const [path, _query] = id.split("?");
 			if (/\.mdx?$/.test(path)) {
@@ -81,16 +76,16 @@ function createPlugin(
 				const input = new VFile({ value: code, path });
 
 				code = await transformMdx(input, { ...mdxOptions });
-				// @ts-expect-error
-				const refreshResult = await reactRefresh?.transform?.call(
-					this,
-					code,
-					`${path}.js`,
-					ssr,
-				);
+				// const refreshResult = await reactRefresh?.transform?.call(
+				// 	this,
+				// 	code,
+				// 	`${path}.js`,
+				// 	ssr,
+				// );
 
 				return (
-					refreshResult || {
+					// refreshResult ||
+					{
 						code,
 						map: { mappings: "" },
 					}

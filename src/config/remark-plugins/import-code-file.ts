@@ -104,7 +104,12 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 	};
 }
 
-export function viteAliasCodeImports(): PluginOption {
+export function viteAliasCodeImports(
+	resolver?: (
+		source: string,
+		importer: string,
+	) => Promise<{ id: string } | null>,
+): PluginOption {
 	return {
 		name: "solidbase:vite-alias-code-imports",
 		enforce: "pre",
@@ -122,7 +127,9 @@ export function viteAliasCodeImports(): PluginOption {
 					const file = meta.getString("file");
 					if (!file) continue;
 
-					const resolved = await this.resolve(file, id);
+					const resolved = await (resolver
+						? resolver(file, id)
+						: this.resolve(file, id));
 					if (!resolved) continue;
 					lines[i] = line.replace(file, resolved.id);
 					isDirty = true;

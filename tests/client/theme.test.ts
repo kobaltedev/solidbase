@@ -38,10 +38,12 @@ describe("theme client helpers", () => {
 		prefersDarkValue.mockReturnValue(false);
 		useHead.mockReset();
 		vi.resetModules();
+		// biome-ignore lint/suspicious/noDocumentCookie: test
 		document.cookie = "";
 	});
 
 	it("derives raw theme, variant, and theme from cookies and system preference", async () => {
+		// biome-ignore lint/suspicious/noDocumentCookie: test
 		document.cookie = "theme=system";
 		prefersDarkValue.mockReturnValue(true);
 
@@ -60,6 +62,7 @@ describe("theme client helpers", () => {
 
 	it("writes theme side effects and injects the theme cookie script", async () => {
 		const setAttribute = vi.spyOn(document.documentElement, "setAttribute");
+		// biome-ignore lint/suspicious/noDocumentCookie: test
 		document.cookie = "theme=dark";
 
 		const { setTheme, useThemeListener } = await import(

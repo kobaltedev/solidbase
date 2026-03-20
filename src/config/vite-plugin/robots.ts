@@ -29,6 +29,7 @@ export default function solidBaseRobotsPlugin(
 
 	return createGeneratedAssetPlugin({
 		name: "solidbase:robots",
+		apply: "build",
 		assetDir: ROBOTS_PUBLIC_ASSETS_DIR,
 		write(root) {
 			return writeRobotsAsset(root, config);

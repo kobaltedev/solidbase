@@ -12,8 +12,12 @@ const LLMS_PUBLIC_ASSETS_DIR = join("node_modules", ".solidbase", "llms");
 async function writeLlmsAssets(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
+	resolver: (
+		source: string,
+		importer: string,
+	) => Promise<{ id: string } | null>,
 ) {
-	const documents = await getLlmDocuments(root, config);
+	const documents = await getLlmDocuments(root, config, resolver);
 	const outputDir = join(root, LLMS_PUBLIC_ASSETS_DIR);
 
 	await emptyDir(outputDir);
@@ -40,10 +44,11 @@ export default function solidBaseLlmsPlugin(
 
 	return createGeneratedAssetPlugin({
 		name: "solidbase:llms",
+		apply: "build",
 		assetDir: LLMS_PUBLIC_ASSETS_DIR,
 		watchRoutes: true,
-		write(root) {
-			return writeLlmsAssets(root, config);
+		write(root, resolver) {
+			return writeLlmsAssets(root, config, resolver);
 		},
 	});
 }

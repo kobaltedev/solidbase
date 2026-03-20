@@ -1,8 +1,4 @@
-import type {
-	RobotsConfig,
-	RobotsRule,
-	SolidBaseResolvedConfig,
-} from "./index.js";
+import type { RobotsRule, SolidBaseResolvedConfig } from "./index.js";
 import { getSitemapHostname } from "./index.js";
 
 const DEFAULT_ROBOTS_RULES = [
