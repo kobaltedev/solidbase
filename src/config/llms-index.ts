@@ -1,5 +1,6 @@
 import { toDocumentMarkdown } from "./document-markdown.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
+import { viteAliasCodeImports } from "./remark-plugins/import-code-file.js";
 import { getRoutesIndex, isDefaultLocaleRoute } from "./routes-index.js";
 import type { SidebarConfig } from "./sidebar.js";
 
@@ -84,9 +85,17 @@ function resolveSidebarItems(
 	}));
 }
 
+type ViteAliasTransformer = {
+	transform: (code: string, id: string) => Promise<string | undefined>;
+};
+
 export async function getLlmDocuments(
 	root: string,
 	config: SolidBaseResolvedConfig<any>,
+	resolver: (
+		source: string,
+		importer: string,
+	) => Promise<{ id: string } | null>,
 ): Promise<LlmDocument[]> {
 	if (!config.llms) return [];
 
@@ -97,6 +106,11 @@ export async function getLlmDocuments(
 			const frontmatter = route.frontmatter as LlmFrontmatter;
 
 			if (isExcluded(frontmatter)) return null;
+
+			const source =
+				(await (
+					viteAliasCodeImports(resolver) as ViteAliasTransformer
+				).transform(route.source, route.filePath)) ?? route.source;
 
 			return {
 				title:
@@ -109,7 +123,7 @@ export async function getLlmDocuments(
 						: undefined,
 				routePath: route.routePath,
 				markdownPath: route.markdownPath,
-				content: await toDocumentMarkdown(route.source, {
+				content: await toDocumentMarkdown(source, {
 					config,
 					filePath: route.filePath,
 				}),

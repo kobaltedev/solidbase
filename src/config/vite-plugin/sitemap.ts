@@ -41,6 +41,7 @@ export default function solidBaseSitemapPlugin(
 
 	return createGeneratedAssetPlugin({
 		name: "solidbase:sitemap",
+		apply: "build",
 		assetDir: SITEMAP_PUBLIC_ASSETS_DIR,
 		watchRoutes: true,
 		write(root) {

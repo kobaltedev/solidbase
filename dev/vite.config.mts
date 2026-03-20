@@ -1,6 +1,7 @@
 import { solidStart } from "@solidjs/start/config";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
+import Inspect from "vite-plugin-inspect";
 
 import { createSolidBase, defineTheme } from "../src/config";
 import { createFilesystemSidebar } from "../src/config/sidebar";
@@ -15,6 +16,7 @@ const solidBase = createSolidBase(theme);
 
 export default defineConfig({
 	plugins: [
+		Inspect(),
 		solidBase.plugin({
 			title: "SolidBase Dev",
 			description: "Development playground for the latest SolidBase features",

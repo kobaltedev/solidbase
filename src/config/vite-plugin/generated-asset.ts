@@ -5,8 +5,15 @@ import type { PluginOption } from "vite";
 
 type GeneratedAssetPluginOptions = {
 	name: string;
+	apply?: "serve" | "build";
 	assetDir: string;
-	write(root: string): Promise<void>;
+	write(
+		root: string,
+		resolver: (
+			source: string,
+			importer: string,
+		) => Promise<{ id: string } | null>,
+	): Promise<void>;
 	watchRoutes?: boolean;
 };
 
@@ -26,6 +33,7 @@ export function createGeneratedAssetPlugin(
 
 	return {
 		name: options.name,
+		apply: options.apply,
 		config(viteConfig) {
 			const nitroConfig = (viteConfig as any).nitro ?? {};
 
@@ -48,12 +56,9 @@ export function createGeneratedAssetPlugin(
 			root = resolvedConfig.root;
 		},
 		async buildStart() {
-			await options.write(root);
-		},
-		async handleHotUpdate(ctx) {
-			if (!options.watchRoutes || !isRoutesFile(ctx.file)) return;
-
-			await options.write(root);
+			await options.write(root, (source: string, importer: string) =>
+				this.resolve(source, importer),
+			);
 		},
 	};
 }
