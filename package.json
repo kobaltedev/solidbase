@@ -38,6 +38,16 @@
       "import": "./src/client/index.tsx",
       "types": "./src/client/index.tsx"
     },
+    "./config": {
+      "solid": "./src/config/index.ts",
+      "import": "./src/config/index.ts",
+      "types": "./src/config/index.ts"
+    },
+    "./config/sidebar": {
+      "solid": "./src/config/sidebar.ts",
+      "import": "./src/config/sidebar.ts",
+      "types": "./src/config/sidebar.ts"
+    },
     "./server": {
       "solid": "./src/server.tsx",
       "import": "./src/server.tsx",
@@ -71,6 +81,11 @@
         "solid": "./dist/config/index.js",
         "import": "./dist/config/index.js",
         "types": "./dist/config/index.d.ts"
+      },
+      "./config/sidebar": {
+        "solid": "./dist/config/sidebar.js",
+        "import": "./dist/config/sidebar.js",
+        "types": "./dist/config/sidebar.d.ts"
       },
       "./server": {
         "solid": "./dist/server.jsx",
