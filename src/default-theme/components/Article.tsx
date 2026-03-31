@@ -14,6 +14,7 @@ import { mobileLayout } from "../globals.js";
 import { useSolidBaseContext } from "../utils.js";
 
 import styles from "./Article.module.css";
+import CopyPageLink from "./CopyPageLink.jsx";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
@@ -107,9 +108,15 @@ export default function Article(props: ParentProps) {
 							<LastUpdated />
 						</Show>
 
-						<Show when={pageData()?.editLink && frontmatter()?.editLink}>
-							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
-						</Show>
+						<div class={styles.actions}>
+							<CopyPageLink />
+
+							<Show when={pageData()?.editLink && frontmatter()?.editLink}>
+								<Link href={pageData()?.editLink}>
+									Edit this page on GitHub
+								</Link>
+							</Show>
+						</div>
 					</div>
 
 					<Show when={hasPrev() || hasNext()}>

@@ -40,3 +40,29 @@ export function CrossIcon(props: ComponentProps<"svg">) {
 		</svg>
 	);
 }
+
+export function CopyIcon(props: ComponentProps<"svg">) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M8 7V3C8 2.44772 8.44772 2 9 2H20C20.5523 2 21 2.44772 21 3V17C21 17.5523 20.5523 18 20 18H17V21C17 21.5523 16.5523 22 16 22H4C3.44772 22 3 21.5523 3 21V7C3 6.44772 3.44772 6 4 6H8V7ZM5 8V20H15V8H5ZM10 6H16C16.5523 6 17 6.44772 17 7V16H19V4H10V6Z" />
+		</svg>
+	);
+}
+
+export function CheckIcon(props: ComponentProps<"svg">) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z" />
+		</svg>
+	);
+}
