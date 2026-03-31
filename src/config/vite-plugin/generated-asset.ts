@@ -1,5 +1,5 @@
-import { mkdir, rm } from "node:fs/promises";
-import { sep } from "node:path";
+import { access, mkdir, readFile, rm } from "node:fs/promises";
+import { join, normalize, sep } from "node:path";
 
 import type { PluginOption } from "vite";
 
@@ -30,6 +30,32 @@ export function createGeneratedAssetPlugin(
 	options: GeneratedAssetPluginOptions,
 ): PluginOption {
 	let root = process.cwd();
+	let assetRoot = join(root, options.assetDir);
+
+	async function serveGeneratedAsset(url: string | undefined, res: any) {
+		if (!url || url === "/") return false;
+
+		const pathname = url.split("?")[0] ?? "/";
+		const relativePath = pathname.replace(/^\//, "");
+		if (!relativePath) return false;
+
+		const filePath = normalize(join(assetRoot, relativePath));
+		if (!filePath.startsWith(assetRoot)) return false;
+
+		try {
+			await access(filePath);
+		} catch {
+			return false;
+		}
+
+		const content = await readFile(filePath);
+		if (filePath.endsWith(".md") || filePath.endsWith(".txt")) {
+			res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		}
+		res.statusCode = 200;
+		res.end(content);
+		return true;
+	}
 
 	return {
 		name: options.name,
@@ -54,6 +80,14 @@ export function createGeneratedAssetPlugin(
 		},
 		configResolved(resolvedConfig) {
 			root = resolvedConfig.root;
+			assetRoot = join(root, options.assetDir);
+		},
+		configureServer(server) {
+			server.middlewares.use((req, res, next) => {
+				void serveGeneratedAsset(req.url, res).then((served) => {
+					if (!served) next();
+				});
+			});
 		},
 		async buildStart() {
 			await options.write(root, (source: string, importer: string) =>

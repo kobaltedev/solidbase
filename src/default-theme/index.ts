@@ -1,7 +1,12 @@
-import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig, SidebarItem } from "../config/sidebar.js";
+import type { DefaultThemeTextConfig } from "./text.js";
+
+export type { DefaultThemeTextConfig } from "./text.js";
+export { defaultThemeTextConfig } from "./text.js";
 
 export type DefaultThemeSidebarItemOptions = {
 	status?:
@@ -31,64 +36,35 @@ export type DefaultThemeConfig = {
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
 	search?: SearchConfig;
 	fonts?: { [K in keyof typeof allFonts]?: false } | false;
-	llmActions?: false | Array<DefaultThemeLlmActionType>;
 	text?: Partial<DefaultThemeTextConfig>;
-};
-
-export type DefaultThemeLlmActionType =
-	| "copy"
-	| "markdown"
-	| "chatgpt"
-	| "claude"
-	| "cursor";
-
-export type DefaultThemeTextConfig = {
-	editPage: string;
-	copyPage: string;
-	copiedPage: string;
-	copyPageActions: string;
-	viewMarkdown: string;
-	openInChatGpt: string;
-	openInClaude: string;
-	openInCursor: string;
-};
-
-export const defaultThemeLlmActions: Array<DefaultThemeLlmActionType> = [
-	"copy",
-	"markdown",
-];
-
-export const defaultThemeTextConfig: DefaultThemeTextConfig = {
-	editPage: "Edit this page on GitHub",
-	copyPage: "Copy page for LLM",
-	copiedPage: "Copied page for LLM",
-	copyPageActions: "Open copy page actions",
-	viewMarkdown: "View generated markdown",
-	openInChatGpt: "Open in ChatGPT",
-	openInClaude: "Open in Claude",
-	openInCursor: "Open in Cursor",
 };
 
 type Font = { cssPath: string; preloadFontPath: string; fontType: string };
 
+const require = createRequire(import.meta.url);
+
+function resolvePackageFile(specifier: string) {
+	return pathToFileURL(require.resolve(specifier)).href;
+}
+
 const allFonts = {
 	inter: {
-		cssPath: import.meta.resolve("@fontsource-variable/inter"),
-		preloadFontPath: import.meta.resolve(
+		cssPath: resolvePackageFile("@fontsource-variable/inter"),
+		preloadFontPath: resolvePackageFile(
 			"@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
 		),
 		fontType: "woff2",
 	},
 	lexend: {
-		cssPath: import.meta.resolve("@fontsource-variable/lexend"),
-		preloadFontPath: import.meta.resolve(
+		cssPath: resolvePackageFile("@fontsource-variable/lexend"),
+		preloadFontPath: resolvePackageFile(
 			"@fontsource-variable/lexend/files/lexend-latin-wght-normal.woff2",
 		),
 		fontType: "woff2",
 	},
 	jetbrainsMono: {
-		cssPath: import.meta.resolve("@fontsource-variable/jetbrains-mono"),
-		preloadFontPath: import.meta.resolve(
+		cssPath: resolvePackageFile("@fontsource-variable/jetbrains-mono"),
+		preloadFontPath: resolvePackageFile(
 			"@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2",
 		),
 		fontType: "woff2",
@@ -96,7 +72,7 @@ const allFonts = {
 } satisfies Record<string, Font>;
 
 const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
-	componentsPath: import.meta.resolve("./"),
+	componentsPath: new URL("./", import.meta.url).href,
 	vite(config) {
 		const filteredFonts: Array<Font> = [];
 

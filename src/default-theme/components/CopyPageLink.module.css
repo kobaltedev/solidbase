@@ -1,41 +1,45 @@
-.group {
-	display: inline-flex;
-	align-items: stretch;
-	border-radius: 999px;
-	border: 1px solid
-		color-mix(in hsl, var(--sb-decoration-color) 18%, transparent);
-	background: color-mix(
-		in hsl,
-		var(--sb-background-color) 92%,
-		var(--sb-link-underline-color)
-	);
-	overflow: hidden;
-}
-
 .button {
-	border: 0;
-	background: transparent;
+	--button-bg: var(--sb-background-color);
+	--button-border: color-mix(
+		in hsl,
+		var(--sb-decoration-color) 14%,
+		transparent
+	);
+	--button-text: var(--sb-text-color);
+	--button-hover-bg: color-mix(
+		in hsl,
+		var(--sb-background-color) 88%,
+		var(--sb-brand-color)
+	);
+	--button-hover-border: color-mix(
+		in hsl,
+		var(--sb-decoration-color) 70%,
+		transparent
+	);
+	border: 1px solid var(--button-border);
+	border-radius: 0.5rem;
+	background: var(--button-bg);
 	padding: 0.4rem 0.75rem;
-	color: var(--sb-text-color);
+	font-size: 0.85rem;
+	line-height: 1.2;
+	font-weight: 500;
+	color: var(--button-text);
 	text-decoration: none;
 	outline: none;
 	cursor: pointer;
-	font: inherit;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	gap: 0.35rem;
+	gap: 0.45rem;
 	transition:
 		background-color 0.2s ease,
+		border-color 0.2s ease,
 		color 0.2s ease;
 
 	&:hover,
 	&:focus-visible {
-		background: color-mix(
-			in hsl,
-			var(--sb-link-underline-color) 18%,
-			transparent
-		);
+		background: var(--button-hover-bg);
+		border-color: var(--button-hover-border);
 	}
 
 	&:disabled {
@@ -44,60 +48,30 @@
 	}
 }
 
-.primary {
-	padding-right: 0.6rem;
+.success {
+	--button-bg: color-mix(
+		in hsl,
+		var(--sb-brand-color) 8%,
+		var(--sb-background-color)
+	);
+	--button-border: color-mix(in hsl, var(--sb-brand-color) 26%, transparent);
 }
 
-.trigger {
-	padding-inline: 0.55rem;
-	border-left: 1px solid
-		color-mix(in hsl, var(--sb-decoration-color) 18%, transparent);
+.error {
+	--button-bg: color-mix(in srgb, #d14343 9%, var(--sb-background-color));
+	--button-border: color-mix(in srgb, #d14343 32%, transparent);
+	--button-text: color-mix(in srgb, #d14343 72%, var(--sb-text-color));
+	--button-hover-bg: color-mix(
+		in srgb,
+		#d14343 13%,
+		var(--sb-background-color)
+	);
+	--button-hover-border: color-mix(in srgb, #d14343 42%, transparent);
 }
 
 .icon {
-	width: 0.95rem;
-	height: 0.95rem;
+	width: 0.9rem;
+	height: 0.9rem;
 	flex: none;
-}
-
-.menuContent {
-	z-index: 50;
-	min-width: 14rem;
-	padding: 0.35rem;
-	border-radius: 0.9rem;
-	border: 1px solid
-		color-mix(in hsl, var(--sb-decoration-color) 12%, transparent);
-	background: color-mix(
-		in hsl,
-		var(--sb-background-color) 97%,
-		var(--sb-link-underline-color)
-	);
-	box-shadow:
-		0 14px 40px rgba(15, 23, 42, 0.12),
-		0 2px 10px rgba(15, 23, 42, 0.08);
-}
-
-.menuItem {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
-	width: 100%;
-	padding: 0.6rem 0.75rem;
-	border-radius: 0.65rem;
-	outline: none;
-	cursor: pointer;
-	color: var(--sb-text-color);
-	user-select: none;
-
-	&[data-highlighted] {
-		background: color-mix(
-			in hsl,
-			var(--sb-link-underline-color) 18%,
-			transparent
-		);
-	}
-}
-
-.menuText {
-	white-space: nowrap;
+	opacity: 0.82;
 }
