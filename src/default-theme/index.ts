@@ -31,6 +31,23 @@ export type DefaultThemeConfig = {
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
 	search?: SearchConfig;
 	fonts?: { [K in keyof typeof allFonts]?: false } | false;
+	text?: Partial<DefaultThemeTextConfig>;
+};
+
+export type DefaultThemeTextConfig = {
+	editPage: string;
+	copyPage: string;
+	copiedPage: string;
+	copyPageActions: string;
+	viewMarkdown: string;
+};
+
+export const defaultThemeTextConfig: DefaultThemeTextConfig = {
+	editPage: "Edit this page on GitHub",
+	copyPage: "Copy page for LLM",
+	copiedPage: "Copied page for LLM",
+	copyPageActions: "Open copy page actions",
+	viewMarkdown: "View generated markdown",
 };
 
 type Font = { cssPath: string; preloadFontPath: string; fontType: string };

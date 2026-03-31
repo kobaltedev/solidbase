@@ -2,7 +2,7 @@ import { DropdownMenu } from "@kobalte/core";
 import { createMemo, createSignal, onCleanup, Show } from "solid-js";
 
 import { useCurrentPageData } from "../../client/index.jsx";
-import { useRouteConfig } from "../utils.js";
+import { useRouteConfig, useThemeText } from "../utils.js";
 import styles from "./CopyPageLink.module.css";
 import {
 	ArrowDownIcon,
@@ -30,6 +30,7 @@ function getMarkdownPath() {
 export default function CopyPageLink() {
 	const pageData = useCurrentPageData();
 	const config = useRouteConfig();
+	const text = useThemeText();
 	const [copied, setCopied] = createSignal(false);
 	const [isCopying, setIsCopying] = createSignal(false);
 
@@ -47,9 +48,7 @@ export default function CopyPageLink() {
 
 	const canCopy = createMemo(() => config().llms && !isExcluded());
 
-	const label = createMemo(() =>
-		copied() ? "Copied page for LLM" : "Copy page for LLM",
-	);
+	const label = createMemo(() => (copied() ? text.copiedPage : text.copyPage));
 
 	async function getMarkdownContent() {
 		const markdownPath = getMarkdownPath();
@@ -121,7 +120,7 @@ export default function CopyPageLink() {
 
 					<DropdownMenu.Trigger
 						class={`${styles.button} ${styles.trigger}`}
-						aria-label="Open copy page actions"
+						aria-label={text.copyPageActions}
 					>
 						<ArrowDownIcon class={styles.icon} />
 					</DropdownMenu.Trigger>
@@ -134,7 +133,7 @@ export default function CopyPageLink() {
 							onSelect={() => void handleCopy()}
 						>
 							<CopyIcon class={styles.icon} />
-							<span class={styles.menuText}>Copy page for LLM</span>
+							<span class={styles.menuText}>{text.copyPage}</span>
 						</DropdownMenu.Item>
 
 						<DropdownMenu.Item
@@ -142,7 +141,7 @@ export default function CopyPageLink() {
 							onSelect={handleViewMarkdown}
 						>
 							<ExternalLinkIcon class={styles.icon} />
-							<span class={styles.menuText}>View generated markdown</span>
+							<span class={styles.menuText}>{text.viewMarkdown}</span>
 						</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Portal>

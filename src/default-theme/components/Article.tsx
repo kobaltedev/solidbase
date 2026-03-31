@@ -11,13 +11,14 @@ import {
 } from "../context.jsx";
 import type { RelativePageConfig } from "../frontmatter.js";
 import { mobileLayout } from "../globals.js";
-import { useSolidBaseContext } from "../utils.js";
+import { useSolidBaseContext, useThemeText } from "../utils.js";
 
 import styles from "./Article.module.css";
 import CopyPageLink from "./CopyPageLink.jsx";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
+	const text = useThemeText();
 	const { frontmatter } = useDefaultThemeState();
 
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
@@ -112,9 +113,7 @@ export default function Article(props: ParentProps) {
 							<CopyPageLink />
 
 							<Show when={pageData()?.editLink && frontmatter()?.editLink}>
-								<Link href={pageData()?.editLink}>
-									Edit this page on GitHub
-								</Link>
+								<Link href={pageData()?.editLink}>{text.editPage}</Link>
 							</Show>
 						</div>
 					</div>
