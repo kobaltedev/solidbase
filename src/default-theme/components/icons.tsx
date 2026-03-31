@@ -66,3 +66,17 @@ export function CheckIcon(props: ComponentProps<"svg">) {
 		</svg>
 	);
 }
+
+export function ExternalLinkIcon(props: ComponentProps<"svg">) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+			{...props}
+		>
+			<path d="M13 3V5H17.5858L10.2929 12.2929L11.7071 13.7071L19 6.41421V11H21V3H13Z" />
+			<path d="M5 5H11V7H6.999L7 17H17V13H19V18C19 18.5523 18.5523 19 18 19H6C5.44772 19 5 18.5523 5 18V5Z" />
+		</svg>
+	);
+}
