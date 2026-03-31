@@ -31,8 +31,16 @@ export type DefaultThemeConfig = {
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
 	search?: SearchConfig;
 	fonts?: { [K in keyof typeof allFonts]?: false } | false;
+	llmActions?: false | Array<DefaultThemeLlmActionType>;
 	text?: Partial<DefaultThemeTextConfig>;
 };
+
+export type DefaultThemeLlmActionType =
+	| "copy"
+	| "markdown"
+	| "chatgpt"
+	| "claude"
+	| "cursor";
 
 export type DefaultThemeTextConfig = {
 	editPage: string;
@@ -40,7 +48,15 @@ export type DefaultThemeTextConfig = {
 	copiedPage: string;
 	copyPageActions: string;
 	viewMarkdown: string;
+	openInChatGpt: string;
+	openInClaude: string;
+	openInCursor: string;
 };
+
+export const defaultThemeLlmActions: Array<DefaultThemeLlmActionType> = [
+	"copy",
+	"markdown",
+];
 
 export const defaultThemeTextConfig: DefaultThemeTextConfig = {
 	editPage: "Edit this page on GitHub",
@@ -48,6 +64,9 @@ export const defaultThemeTextConfig: DefaultThemeTextConfig = {
 	copiedPage: "Copied page for LLM",
 	copyPageActions: "Open copy page actions",
 	viewMarkdown: "View generated markdown",
+	openInChatGpt: "Open in ChatGPT",
+	openInClaude: "Open in Claude",
+	openInCursor: "Open in Cursor",
 };
 
 type Font = { cssPath: string; preloadFontPath: string; fontType: string };

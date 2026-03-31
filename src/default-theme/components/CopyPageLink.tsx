@@ -1,7 +1,12 @@
 import { DropdownMenu } from "@kobalte/core";
-import { createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, createSignal, For, onCleanup, Show } from "solid-js";
+import { Dynamic } from "solid-js/web";
 
 import { useCurrentPageData } from "../../client/index.jsx";
+import {
+	type DefaultThemeLlmActionType,
+	defaultThemeLlmActions,
+} from "../index.js";
 import { useRouteConfig, useThemeText } from "../utils.js";
 import styles from "./CopyPageLink.module.css";
 import {
@@ -27,6 +32,17 @@ function getMarkdownPath() {
 	return toMarkdownPath(pathname);
 }
 
+function getPageUrl() {
+	return globalThis.location?.href;
+}
+
+type ResolvedAction = {
+	type: DefaultThemeLlmActionType;
+	label: string;
+	icon: typeof CopyIcon;
+	run: () => void | Promise<void>;
+};
+
 export default function CopyPageLink() {
 	const pageData = useCurrentPageData();
 	const config = useRouteConfig();
@@ -46,9 +62,17 @@ export default function CopyPageLink() {
 		return llms?.exclude;
 	});
 
-	const canCopy = createMemo(() => config().llms && !isExcluded());
+	const configuredActions = createMemo(() => {
+		const actions = config().themeConfig?.llmActions;
 
-	const label = createMemo(() => (copied() ? text.copiedPage : text.copyPage));
+		if (actions === false) return [];
+
+		return actions?.length ? actions : defaultThemeLlmActions;
+	});
+
+	const canCopy = createMemo(
+		() => config().llms && !isExcluded() && configuredActions().length > 0,
+	);
 
 	async function getMarkdownContent() {
 		const markdownPath = getMarkdownPath();
@@ -101,51 +125,139 @@ export default function CopyPageLink() {
 		globalThis.open(markdownPath, "_blank", "noopener,noreferrer");
 	}
 
+	function openPromptUrl(baseUrl: string, param: string) {
+		const pageUrl = getPageUrl();
+
+		if (!pageUrl) return;
+
+		const url = new URL(baseUrl);
+		url.searchParams.set(param, `Read this documentation page: ${pageUrl}`);
+		globalThis.open(url.toString(), "_blank", "noopener,noreferrer");
+	}
+
+	function openCursor() {
+		const pageUrl = getPageUrl();
+
+		if (!pageUrl) return;
+
+		globalThis.location.href = `cursor://anysphere.cursor-deeplink/prompt?text=${encodeURIComponent(
+			`Read this documentation page: ${pageUrl}`,
+		)}`;
+	}
+
+	const actions = createMemo<Array<ResolvedAction>>(() => {
+		const resolved: Array<ResolvedAction> = [];
+
+		for (const action of configuredActions()) {
+			switch (action) {
+				case "copy":
+					resolved.push({
+						type: action,
+						label: copied() ? text.copiedPage : text.copyPage,
+						icon: copied() ? CheckIcon : CopyIcon,
+						run: handleCopy,
+					});
+					break;
+				case "markdown":
+					resolved.push({
+						type: action,
+						label: text.viewMarkdown,
+						icon: ExternalLinkIcon,
+						run: handleViewMarkdown,
+					});
+					break;
+				case "chatgpt":
+					resolved.push({
+						type: action,
+						label: text.openInChatGpt,
+						icon: ExternalLinkIcon,
+						run: () => openPromptUrl("https://chatgpt.com/", "q"),
+					});
+					break;
+				case "claude":
+					resolved.push({
+						type: action,
+						label: text.openInClaude,
+						icon: ExternalLinkIcon,
+						run: () => openPromptUrl("https://claude.ai/new", "q"),
+					});
+					break;
+				case "cursor":
+					resolved.push({
+						type: action,
+						label: text.openInCursor,
+						icon: ExternalLinkIcon,
+						run: openCursor,
+					});
+					break;
+			}
+		}
+
+		return resolved;
+	});
+
+	const primaryAction = createMemo(() => actions()[0]);
+	const menuActions = createMemo(() => actions().slice(1));
+
 	return (
 		<Show when={canCopy()}>
-			<DropdownMenu.Root gutter={8} placement="bottom-end">
-				<div class={styles.group}>
-					<button
-						type="button"
-						class={`${styles.button} ${styles.primary}`}
-						onClick={() => void handleCopy()}
-						disabled={isCopying()}
-						aria-live="polite"
+			<Show when={primaryAction()} fallback={null}>
+				{(action) => (
+					<Show
+						when={menuActions().length > 0}
+						fallback={
+							<button
+								type="button"
+								class={`${styles.button} ${styles.group}`}
+								onClick={() => void action().run()}
+								disabled={isCopying() && action().type === "copy"}
+								aria-live={action().type === "copy" ? "polite" : undefined}
+							>
+								<Dynamic component={action().icon} class={styles.icon} />
+								{action().label}
+							</button>
+						}
 					>
-						<Show when={copied()} fallback={<CopyIcon class={styles.icon} />}>
-							<CheckIcon class={styles.icon} />
-						</Show>
-						{label()}
-					</button>
+						<DropdownMenu.Root gutter={8} placement="bottom-end">
+							<div class={styles.group}>
+								<button
+									type="button"
+									class={`${styles.button} ${styles.primary}`}
+									onClick={() => void action().run()}
+									disabled={isCopying() && action().type === "copy"}
+									aria-live={action().type === "copy" ? "polite" : undefined}
+								>
+									<Dynamic component={action().icon} class={styles.icon} />
+									{action().label}
+								</button>
 
-					<DropdownMenu.Trigger
-						class={`${styles.button} ${styles.trigger}`}
-						aria-label={text.copyPageActions}
-					>
-						<ArrowDownIcon class={styles.icon} />
-					</DropdownMenu.Trigger>
-				</div>
+								<DropdownMenu.Trigger
+									class={`${styles.button} ${styles.trigger}`}
+									aria-label={text.copyPageActions}
+								>
+									<ArrowDownIcon class={styles.icon} />
+								</DropdownMenu.Trigger>
+							</div>
 
-				<DropdownMenu.Portal>
-					<DropdownMenu.Content class={styles.menuContent}>
-						<DropdownMenu.Item
-							class={styles.menuItem}
-							onSelect={() => void handleCopy()}
-						>
-							<CopyIcon class={styles.icon} />
-							<span class={styles.menuText}>{text.copyPage}</span>
-						</DropdownMenu.Item>
-
-						<DropdownMenu.Item
-							class={styles.menuItem}
-							onSelect={handleViewMarkdown}
-						>
-							<ExternalLinkIcon class={styles.icon} />
-							<span class={styles.menuText}>{text.viewMarkdown}</span>
-						</DropdownMenu.Item>
-					</DropdownMenu.Content>
-				</DropdownMenu.Portal>
-			</DropdownMenu.Root>
+							<DropdownMenu.Portal>
+								<DropdownMenu.Content class={styles.menuContent}>
+									<For each={menuActions()}>
+										{(item) => (
+											<DropdownMenu.Item
+												class={styles.menuItem}
+												onSelect={() => void item.run()}
+											>
+												<Dynamic component={item.icon} class={styles.icon} />
+												<span class={styles.menuText}>{item.label}</span>
+											</DropdownMenu.Item>
+										)}
+									</For>
+								</DropdownMenu.Content>
+							</DropdownMenu.Portal>
+						</DropdownMenu.Root>
+					</Show>
+				)}
+			</Show>
 		</Show>
 	);
 }
