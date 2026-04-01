@@ -2,6 +2,16 @@ export { mdxComponents } from "virtual:solidbase/components";
 export { useRouteSolidBaseConfig } from "./config.js";
 export { useSolidBaseContext } from "./context.jsx";
 export {
+	type CopyPageState,
+	canCopyPageMarkdown,
+	clearPageMarkdownCache,
+	copyTextToClipboard,
+	getCurrentPageMarkdown,
+	getCurrentPageMarkdownPath,
+	toMarkdownPath,
+	useCopyPageMarkdown,
+} from "./llms.js";
+export {
 	getLocale,
 	getLocaleLink,
 	type ResolvedLocale,

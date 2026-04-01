@@ -64,6 +64,14 @@ solidBase.plugin({
 
 The button uses the same generated `.md` output that powers `llms.txt`, so the copied content stays aligned with the markdown artifacts emitted by the build.
 
+If you're building a custom theme, you can reuse the same behavior from the client API instead of copying the default theme implementation:
+
+```ts title="theme.tsx"
+import { useCopyPageMarkdown } from "@kobalte/solidbase/client";
+```
+
+The hook exposes copy state, in-flight state, and page eligibility so custom themes can provide their own UI while keeping the same LLMS-backed behavior.
+
 ## What goes into `llms.txt`
 
 SolidBase builds the index from your docs metadata:

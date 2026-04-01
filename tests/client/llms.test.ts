@@ -1,0 +1,128 @@
+// @vitest-environment jsdom
+
+import { createRoot } from "solid-js";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+function setSolidBaseConfig(value: Record<string, unknown>) {
+	const store = ((globalThis as any).__solidBaseConfig ??= {}) as Record<
+		string,
+		unknown
+	>;
+	for (const key of Object.keys(store)) delete store[key];
+	Object.assign(store, value);
+}
+
+const useCurrentMatches = vi.fn();
+
+vi.mock("@solidjs/router", () => ({
+	useCurrentMatches,
+}));
+
+describe("llms client helpers", () => {
+	const pagePath = "tests/fixtures/page.mdx";
+
+	afterEach(() => {
+		useCurrentMatches.mockReset();
+		vi.restoreAllMocks();
+		vi.resetModules();
+		setSolidBaseConfig({});
+		(window as any).$$SolidBase_page_data = undefined;
+		delete (globalThis as any).fetch;
+		delete (globalThis as any).navigator;
+	});
+
+	it("treats llms false as not copyable", async () => {
+		const { canCopyPageMarkdown } = await import("../../src/client/llms.ts");
+
+		expect(canCopyPageMarkdown(true, false)).toBe(false);
+		expect(canCopyPageMarkdown(true, { exclude: true })).toBe(false);
+		expect(canCopyPageMarkdown(true, undefined)).toBe(true);
+		expect(canCopyPageMarkdown(false, undefined)).toBe(false);
+	});
+
+	it("caches fetched markdown by path", async () => {
+		const fetchMock = vi.fn(async () => ({
+			ok: true,
+			text: async () => "# Home",
+		}));
+
+		const { clearPageMarkdownCache, getCurrentPageMarkdown } = await import(
+			"../../src/client/llms.ts"
+		);
+
+		clearPageMarkdownCache();
+
+		await expect(
+			getCurrentPageMarkdown("/guide/getting-started", fetchMock as any),
+		).resolves.toBe("# Home");
+		await expect(
+			getCurrentPageMarkdown("/guide/getting-started", fetchMock as any),
+		).resolves.toBe("# Home");
+
+		expect(fetchMock).toHaveBeenCalledTimes(1);
+		expect(fetchMock).toHaveBeenCalledWith("/guide/getting-started.md", {
+			headers: { Accept: "text/plain" },
+		});
+	});
+
+	it("provides shared copy state for themes", async () => {
+		setSolidBaseConfig({ llms: true, themeConfig: {} });
+		useCurrentMatches.mockReturnValue([
+			{
+				route: { key: { $component: { src: `${pagePath}?import` } } },
+			},
+		]);
+		(window as any).$$SolidBase_page_data = {
+			[pagePath]: {
+				frontmatter: { title: "Hello" },
+			},
+		};
+
+		window.history.replaceState({}, "", "/guide/getting-started");
+
+		(globalThis as any).fetch = vi.fn(async () => ({
+			ok: true,
+			text: async () => "# Getting Started",
+		}));
+		(globalThis as any).navigator = {
+			clipboard: {
+				writeText: vi.fn(async () => undefined),
+			},
+		};
+
+		const { CurrentPageDataProvider } = await import(
+			"../../src/client/page-data.ts"
+		);
+		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
+			"../../src/client/llms.ts"
+		);
+
+		clearPageMarkdownCache();
+
+		let api: ReturnType<typeof useCopyPageMarkdown> | undefined;
+
+		const dispose = createRoot((dispose) => {
+			CurrentPageDataProvider({
+				get children() {
+					api = useCopyPageMarkdown();
+					return null;
+				},
+			} as any);
+			return dispose;
+		});
+
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(api?.canCopy()).toBe(true);
+		await expect(api?.copy()).resolves.toBe(true);
+		expect(api?.state()).toBe("success");
+		expect(
+			(globalThis as any).navigator.clipboard.writeText,
+		).toHaveBeenCalledWith("# Getting Started");
+
+		dispose();
+	});
+});

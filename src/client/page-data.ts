@@ -18,7 +18,7 @@ export interface BaseFrontmatter {
 	title?: string;
 	titleTemplate?: string;
 	description?: string;
-	llms?: { exclude?: boolean };
+	llms?: false | { exclude?: boolean };
 }
 
 interface CurrentPageData {
