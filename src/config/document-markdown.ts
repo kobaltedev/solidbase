@@ -20,6 +20,11 @@ type DocumentMarkdownOptions = {
 	filePath?: string;
 };
 
+const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([
+	remarkCodeTabs,
+	remarkAddClass,
+]);
+
 function renderExpressionValue(value: unknown): string | null {
 	if (value === null || value === undefined || typeof value === "boolean") {
 		return "";
@@ -243,13 +248,12 @@ function remarkNormalizeMdxToMarkdown() {
 	};
 }
 
+function getPluginIdentity(plugin: unknown) {
+	return Array.isArray(plugin) ? plugin[0] : plugin;
+}
+
 function isDocumentOnlySkippedPlugin(plugin: unknown) {
-	return (
-		plugin === remarkCodeTabs ||
-		plugin === remarkAddClass ||
-		(Array.isArray(plugin) &&
-			(plugin[0] === remarkCodeTabs || plugin[0] === remarkAddClass))
-	);
+	return DOCUMENT_ONLY_SKIPPED_PLUGINS.has(getPluginIdentity(plugin));
 }
 
 function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
@@ -262,36 +266,62 @@ function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
 		);
 }
 
-function normalizeTabGroupDirectiveFences(markdown: string) {
-	const stack: Array<"tab-group" | "tab"> = [];
+function preserveAuthoredTabGroups(source: string) {
+	const placeholders = new Map<string, string>();
+	const lines = source.split("\n");
+	const preservedLines: string[] = [];
 
-	return markdown
-		.split("\n")
-		.map((line) => {
-			if (/^:{4,}tab-group(?:\[.*\])?(?:\{.*\})?\s*$/.test(line)) {
-				stack.push("tab-group");
-				return line.replace(/^:{4,}tab-group/, ":::::tab-group");
-			}
+	for (let i = 0; i < lines.length; i++) {
+		const line = lines[i]!;
+		const match = line.match(
+			/^(?<marker>:{4,})tab-group(?:\[.*\])?(?:\{.*\})?\s*$/,
+		);
 
-			if (/^:{3,}tab\[.*\]\s*$/.test(line) && stack.at(-1) === "tab-group") {
-				stack.push("tab");
-				return line.replace(/^:{3,}tab\[/, "::::tab[");
-			}
+		if (!match?.groups?.marker) {
+			preservedLines.push(line);
+			continue;
+		}
 
-			if (/^:{3,}\s*$/.test(line) && stack.length > 0) {
-				const current = stack.pop();
-				return current === "tab" ? "::::" : ":::::";
-			}
+		const marker = match.groups.marker;
+		const endIndex = lines.findIndex(
+			(candidate, index) => index > i && candidate === marker,
+		);
 
-			return line;
-		})
-		.join("\n");
+		if (endIndex === -1) {
+			preservedLines.push(line);
+			continue;
+		}
+
+		const placeholder = `SOLIDBASETABGROUPTOKEN${placeholders.size}`;
+		placeholders.set(placeholder, lines.slice(i, endIndex + 1).join("\n"));
+		preservedLines.push(placeholder);
+		i = endIndex;
+	}
+
+	return {
+		placeholders,
+		source: preservedLines.join("\n"),
+	};
+}
+
+function restoreAuthoredTabGroups(
+	markdown: string,
+	placeholders: Map<string, string>,
+) {
+	let restored = markdown;
+
+	for (const [placeholder, content] of placeholders) {
+		restored = restored.replaceAll(placeholder, content);
+	}
+
+	return restored;
 }
 
 export async function toDocumentMarkdown(
 	source: string,
 	options: DocumentMarkdownOptions = {},
 ) {
+	const preserved = preserveAuthoredTabGroups(source);
 	const processor = unified()
 		.use(remarkParse)
 		.use(remarkMdx)
@@ -301,8 +331,8 @@ export async function toDocumentMarkdown(
 		.use(remarkStringify);
 
 	const file = await processor.process(
-		new VFile({ path: options.filePath, value: source }),
+		new VFile({ path: options.filePath, value: preserved.source }),
 	);
 
-	return normalizeTabGroupDirectiveFences(String(file).trim());
+	return restoreAuthoredTabGroups(String(file).trim(), preserved.placeholders);
 }

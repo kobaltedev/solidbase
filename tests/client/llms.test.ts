@@ -3,6 +3,19 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+async function flushMicrotasks(count = 4) {
+	for (let i = 0; i < count; i++) {
+		await Promise.resolve();
+	}
+}
+
+async function waitForReady(check: () => boolean | undefined, attempts = 8) {
+	for (let i = 0; i < attempts; i++) {
+		if (check()) return;
+		await Promise.resolve();
+	}
+}
+
 function setSolidBaseConfig(value: Record<string, unknown>) {
 	const store = ((globalThis as any).__solidBaseConfig ??= {}) as Record<
 		string,
@@ -48,7 +61,7 @@ describe("llms client helpers", () => {
 	});
 
 	it("treats llms false as not copyable", async () => {
-		const { canCopyPageMarkdown } = await import("../../src/client/llms.ts");
+		const { canCopyPageMarkdown } = await import("../../src/client/page-markdown.ts");
 
 		expect(canCopyPageMarkdown(true, false)).toBe(false);
 		expect(canCopyPageMarkdown(true, { exclude: true })).toBe(false);
@@ -63,7 +76,7 @@ describe("llms client helpers", () => {
 		}));
 
 		const { clearPageMarkdownCache, getCurrentPageMarkdown } = await import(
-			"../../src/client/llms.ts"
+			"../../src/client/page-markdown.ts"
 		);
 
 		clearPageMarkdownCache();
@@ -108,7 +121,7 @@ describe("llms client helpers", () => {
 		};
 
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
-			"../../src/client/llms.ts"
+			"../../src/client/page-markdown.ts"
 		);
 
 		clearPageMarkdownCache();
@@ -120,10 +133,7 @@ describe("llms client helpers", () => {
 			return dispose;
 		});
 
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
+		await flushMicrotasks();
 
 		expect(api?.canCopy()).toBe(true);
 		expect(api?.isReady()).toBe(false);
@@ -167,7 +177,7 @@ describe("llms client helpers", () => {
 
 		const { render } = await import("solid-js/web/dist/web.cjs");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
-			"../../src/client/llms.ts"
+			"../../src/client/page-markdown.ts"
 		);
 
 		clearPageMarkdownCache();
@@ -181,10 +191,7 @@ describe("llms client helpers", () => {
 			return null;
 		}, container);
 
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
+		await flushMicrotasks();
 
 		expect(api?.canCopy()).toBe(true);
 		expect(api?.isReady()).toBe(true);
@@ -240,7 +247,7 @@ describe("llms client helpers", () => {
 
 		const { render } = await import("solid-js/web/dist/web.cjs");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
-			"../../src/client/llms.ts"
+			"../../src/client/page-markdown.ts"
 		);
 
 		clearPageMarkdownCache();
@@ -254,10 +261,10 @@ describe("llms client helpers", () => {
 			return null;
 		}, container);
 
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
+		await flushMicrotasks();
+		await waitForReady(() => api?.isReady());
+
+		expect(api?.isReady()).toBe(true);
 
 		const copyPromise = api?.copy();
 		expect(api?.isCopying()).toBe(true);

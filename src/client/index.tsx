@@ -10,7 +10,7 @@ export {
 	getCurrentPageMarkdownPath,
 	toMarkdownPath,
 	useCopyPageMarkdown,
-} from "./llms.js";
+} from "./page-markdown.js";
 export {
 	getLocale,
 	getLocaleLink,
