@@ -13,6 +13,7 @@ import {
 	isInlineFrontmatterExpression,
 	remarkInlineFrontmatter,
 } from "./remark-plugins/inline-frontmatter.js";
+import { remarkAddClass } from "./remark-plugins/kbd.js";
 
 type DocumentMarkdownOptions = {
 	config?: RemarkPipelineConfig;
@@ -245,7 +246,9 @@ function remarkNormalizeMdxToMarkdown() {
 function isDocumentOnlySkippedPlugin(plugin: unknown) {
 	return (
 		plugin === remarkCodeTabs ||
-		(Array.isArray(plugin) && plugin[0] === remarkCodeTabs)
+		plugin === remarkAddClass ||
+		(Array.isArray(plugin) &&
+			(plugin[0] === remarkCodeTabs || plugin[0] === remarkAddClass))
 	);
 }
 
@@ -257,6 +260,32 @@ function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
 				? remarkDocumentInlineFrontmatter
 				: plugin,
 		);
+}
+
+function normalizeTabGroupDirectiveFences(markdown: string) {
+	const stack: Array<"tab-group" | "tab"> = [];
+
+	return markdown
+		.split("\n")
+		.map((line) => {
+			if (/^:{4,}tab-group(?:\[.*\])?(?:\{.*\})?\s*$/.test(line)) {
+				stack.push("tab-group");
+				return line.replace(/^:{4,}tab-group/, ":::::tab-group");
+			}
+
+			if (/^:{3,}tab\[.*\]\s*$/.test(line) && stack.at(-1) === "tab-group") {
+				stack.push("tab");
+				return line.replace(/^:{3,}tab\[/, "::::tab[");
+			}
+
+			if (/^:{3,}\s*$/.test(line) && stack.length > 0) {
+				const current = stack.pop();
+				return current === "tab" ? "::::" : ":::::";
+			}
+
+			return line;
+		})
+		.join("\n");
 }
 
 export async function toDocumentMarkdown(
@@ -275,5 +304,5 @@ export async function toDocumentMarkdown(
 		new VFile({ path: options.filePath, value: source }),
 	);
 
-	return String(file).trim();
+	return normalizeTabGroupDirectiveFences(String(file).trim());
 }

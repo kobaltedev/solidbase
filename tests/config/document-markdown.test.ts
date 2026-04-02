@@ -101,7 +101,7 @@ describe("toDocumentMarkdown", () => {
 			"  nested: value",
 			"---",
 			"",
-			"Object: {frontmatter.meta}",
+			"Object: {frontmatter.meta.nested}",
 			"",
 			"Broken: {frontmatter.missing?.value}",
 		].join("\n");
@@ -111,7 +111,7 @@ describe("toDocumentMarkdown", () => {
 				config: {},
 				filePath: routeFixturePath("index.mdx"),
 			}),
-		).toBe(["Object: {frontmatter.meta}", "", "Broken:"].join("\n"));
+		).toBe(["Object: value", "", "Broken:"].join("\n"));
 	});
 
 	it("matches a representative rendered-markdown fixture", async () => {
@@ -209,7 +209,7 @@ describe("toDocumentMarkdown", () => {
 			[
 				"```sh",
 				"npm i solidbase@latest",
-				"pnpm add solidbase",
+				"pnpm add solidbase@latest",
 				"yarn add solidbase@latest",
 				"bun add solidbase@latest",
 				"deno add npm:solidbase@latest",
@@ -236,6 +236,7 @@ describe("toDocumentMarkdown", () => {
 
 		expect(markdown).toContain(":::note[Heads up]");
 		expect(markdown).toContain("Use <kbd>Cmd</kbd> + <kbd>K</kbd>.");
+        expect(markdown).toContain(":::")
 		expect(markdown).toContain('<CustomThing tone="loud">Hello</CustomThing>');
 		expect(markdown).not.toContain("DirectiveContainer");
 		expect(markdown).not.toContain("{/* prettier-ignore */}");

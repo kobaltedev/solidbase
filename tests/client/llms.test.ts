@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 
-import { createRoot, createSignal } from "solid-js";
-import { render } from "solid-js/web";
+import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 function setSolidBaseConfig(value: Record<string, unknown>) {
@@ -21,12 +20,25 @@ vi.mock("@solidjs/router", () => ({
 	useLocation,
 }));
 
+vi.mock("../../src/client/config.ts", () => ({
+	useRouteSolidBaseConfig: () => () =>
+		((globalThis as any).__solidBaseConfig ?? {}) as Record<string, unknown>,
+}));
+
+vi.mock("../../src/client/page-data.ts", () => ({
+	useCurrentPageData: () => () => {
+		const pageData = (window as any).$$SolidBase_page_data ?? {};
+		return Object.values(pageData)[0];
+	},
+}));
+
 describe("llms client helpers", () => {
 	const pagePath = "tests/fixtures/page.mdx";
 
 	afterEach(() => {
 		useCurrentMatches.mockReset();
 		useLocation.mockReset();
+		vi.doUnmock("solid-js");
 		vi.restoreAllMocks();
 		vi.resetModules();
 		setSolidBaseConfig({});
@@ -95,9 +107,6 @@ describe("llms client helpers", () => {
 			},
 		};
 
-		const { CurrentPageDataProvider } = await import(
-			"../../src/client/page-data.ts"
-		);
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
 			"../../src/client/llms.ts"
 		);
@@ -107,12 +116,7 @@ describe("llms client helpers", () => {
 		let api: ReturnType<typeof useCopyPageMarkdown> | undefined;
 
 		const dispose = createRoot((dispose) => {
-			CurrentPageDataProvider({
-				get children() {
-					api = useCopyPageMarkdown();
-					return null;
-				},
-			} as any);
+			api = useCopyPageMarkdown();
 			return dispose;
 		});
 
@@ -155,9 +159,13 @@ describe("llms client helpers", () => {
 			},
 		};
 
-		const { CurrentPageDataProvider } = await import(
-			"../../src/client/page-data.ts"
+		vi.doMock("solid-js", async () =>
+			vi.importActual<typeof import("solid-js/dist/solid.cjs")>(
+				"solid-js/dist/solid.cjs",
+			),
 		);
+
+		const { render } = await import("solid-js/web/dist/web.cjs");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
 			"../../src/client/llms.ts"
 		);
@@ -169,12 +177,8 @@ describe("llms client helpers", () => {
 		document.body.append(container);
 
 		const dispose = render(() => {
-			return CurrentPageDataProvider({
-				get children() {
-					api = useCopyPageMarkdown();
-					return null;
-				},
-			} as any);
+			api = useCopyPageMarkdown();
+			return null;
 		}, container);
 
 		await Promise.resolve();
@@ -196,6 +200,12 @@ describe("llms client helpers", () => {
 
 	it("resets copy feedback when navigation changes mid-copy", async () => {
 		setSolidBaseConfig({ llms: true, themeConfig: {} });
+		vi.doMock("solid-js", async () =>
+			vi.importActual<typeof import("solid-js/dist/solid.cjs")>(
+				"solid-js/dist/solid.cjs",
+			),
+		);
+		const { createSignal } = await import("solid-js");
 		const [pathname, setPathname] = createSignal("/guide/getting-started");
 		useLocation.mockReturnValue({
 			get pathname() {
@@ -228,9 +238,7 @@ describe("llms client helpers", () => {
 			},
 		};
 
-		const { CurrentPageDataProvider } = await import(
-			"../../src/client/page-data.ts"
-		);
+		const { render } = await import("solid-js/web/dist/web.cjs");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
 			"../../src/client/llms.ts"
 		);
@@ -242,12 +250,8 @@ describe("llms client helpers", () => {
 		document.body.append(container);
 
 		const dispose = render(() => {
-			return CurrentPageDataProvider({
-				get children() {
-					api = useCopyPageMarkdown();
-					return null;
-				},
-			} as any);
+			api = useCopyPageMarkdown();
+			return null;
 		}, container);
 
 		await Promise.resolve();

@@ -81,11 +81,16 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 
 			node.meta = `title="${filename}" ${node.meta ?? ""}`;
 
-			let fileContent = fs.readFileSync(filePath, "utf8");
+			const resolvedFilePath =
+				filePath.startsWith("./") || filePath.startsWith("../")
+					? path.resolve(file.dirname, filePath)
+					: filePath;
+
+			let fileContent = fs.readFileSync(resolvedFilePath, "utf8");
 
 			const transformResult = options.transform?.(
 				fileContent,
-				filePath,
+				resolvedFilePath,
 				file.path,
 			);
 			if (transformResult !== undefined) fileContent = transformResult;
