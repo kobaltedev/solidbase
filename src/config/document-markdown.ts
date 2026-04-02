@@ -108,6 +108,143 @@ function remarkStripDocumentMetadata() {
 	};
 }
 
+function getJsxAttributeValue(
+	node: { attributes?: Array<{ type: string; name: string; value?: unknown }> },
+	name: string,
+) {
+	return node.attributes?.find((attr) => attr.type === "mdxJsxAttribute" && attr.name === name)
+		?.value;
+}
+
+function createLabelParagraph(label: string) {
+	return {
+		type: "paragraph",
+		children: [
+			{
+				type: "strong",
+				children: [{ type: "text", value: label }],
+			},
+		],
+	};
+}
+
+function normalizeMdxChildren(nodes: any[]): any[] {
+	return nodes.flatMap((node) => {
+		const normalized = normalizeMdxNode(node);
+		if (normalized === null) return [];
+		return Array.isArray(normalized) ? normalized : [normalized];
+	});
+}
+
+function normalizeDirectiveContainer(node: any) {
+	const type = getJsxAttributeValue(node, "type");
+	const title = getJsxAttributeValue(node, "title");
+	const rawChildren = node.children ?? [];
+
+	if (type === "tab-group") {
+		const tabs = rawChildren.filter(
+			(child: any) =>
+				child?.type === "mdxJsxFlowElement" &&
+				getJsxAttributeValue(child, "type") === "tab",
+		);
+
+		if (title === "package-manager") {
+			const codeBlocks = tabs
+				.map((child) => normalizeMdxChildren(child.children ?? []))
+				.flat()
+				.filter((child) => child?.type === "code");
+
+			const lang = codeBlocks[0]?.lang ?? "sh";
+			const value = codeBlocks
+				.map((child) => child.value)
+				.filter((child): child is string => typeof child === "string")
+				.join("\n");
+
+			if (value) {
+				return [
+					{
+						type: "code",
+						lang,
+						value,
+					},
+				];
+			}
+		}
+
+		const tabNames = String(getJsxAttributeValue(node, "tabNames") ?? "")
+			.split("\0")
+			.filter(Boolean);
+
+		return tabs.flatMap((child, index) => {
+			const childTitle = getJsxAttributeValue(child, "title");
+			const childChildren = normalizeMdxChildren(child.children ?? []);
+			const label = tabNames[index] ?? childTitle;
+
+			return [
+				...(typeof label === "string" && label !== " "
+					? [createLabelParagraph(label)]
+					: []),
+				...childChildren,
+			];
+		});
+	}
+
+	const children = normalizeMdxChildren(rawChildren);
+
+	if (type === "tab") {
+		return children;
+	}
+
+	const label =
+		typeof title === "string" && title !== " "
+			? title
+			: typeof type === "string"
+				? type
+				: undefined;
+
+	return [
+		...(label ? [createLabelParagraph(label)] : []),
+		...children,
+	];
+}
+
+function normalizeMdxNode(node: any): any[] | any | null {
+	if (node.type === "mdxFlowExpression" || node.type === "mdxTextExpression") {
+		return null;
+	}
+
+	if (node.type === "mdxJsxTextElement") {
+		return normalizeMdxChildren(node.children ?? []);
+	}
+
+	if (node.type === "mdxJsxFlowElement") {
+		if (node.name === "DirectiveContainer") {
+			return normalizeDirectiveContainer(node);
+		}
+
+		if (node.name === "Steps" || node.name === "Step") {
+			return normalizeMdxChildren(node.children ?? []);
+		}
+
+		return normalizeMdxChildren(node.children ?? []);
+	}
+
+	if (Array.isArray(node.children)) {
+		return {
+			...node,
+			children: normalizeMdxChildren(node.children),
+		};
+	}
+
+	return node;
+}
+
+function remarkNormalizeMdxToMarkdown() {
+	return (tree: any) => {
+		tree.children = normalizeMdxChildren(tree.children ?? []);
+	};
+}
+
 function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
 	return getRemarkPlugins(config).map((plugin) =>
 		plugin === remarkInlineFrontmatter
@@ -125,6 +262,7 @@ export async function toDocumentMarkdown(
 		.use(remarkMdx)
 		.use(getDocumentRemarkPlugins(options.config))
 		.use(remarkStripDocumentMetadata)
+		.use(remarkNormalizeMdxToMarkdown)
 		.use(remarkStringify);
 
 	const file = await processor.process(

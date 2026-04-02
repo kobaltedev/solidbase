@@ -190,9 +190,52 @@ describe("toDocumentMarkdown", () => {
 
 		expect(markdown).toContain("# Home");
 		expect(markdown).toContain("1. [Install](#install)");
-		expect(markdown).toContain('<DirectiveContainer type="note"');
+		expect(markdown).toContain("**note**");
 		expect(markdown).toContain("Welcome to SolidBase.");
-		expect(markdown).toContain('title="example.ts"');
 		expect(markdown).toContain('console.log("hi");');
+		expect(markdown).not.toContain("DirectiveContainer");
+		expect(markdown).not.toContain("mdxJsx");
+	});
+
+	it("collapses package manager tabs into a single shell fence", async () => {
+		const source = ["```package-install", "solidbase@latest", "```"].join("\n");
+
+		expect(
+			await toDocumentMarkdown(source, {
+				config: {},
+				filePath: routeFixturePath("index.mdx"),
+			}),
+		).toBe(
+			[
+				"```sh",
+				"npm i solidbase@latest",
+				"pnpm add solidbase",
+				"yarn add solidbase@latest",
+				"bun add solidbase@latest",
+				"deno add npm:solidbase@latest",
+				"```",
+			].join("\n"),
+		);
+	});
+
+	it("strips remaining mdx jsx and expressions to plain markdown", async () => {
+		const source = [
+			"{/* prettier-ignore */}",
+			"",
+			":::note[Heads up]",
+			"Use <kbd>Cmd</kbd> + <kbd>K</kbd>.",
+			":::",
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: {},
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain("**Heads up**");
+		expect(markdown).toContain("Use Cmd + K.");
+		expect(markdown).not.toContain("DirectiveContainer");
+		expect(markdown).not.toContain("<kbd>");
+		expect(markdown).not.toContain("{/* prettier-ignore */}");
 	});
 });
