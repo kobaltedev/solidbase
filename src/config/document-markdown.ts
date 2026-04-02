@@ -242,13 +242,16 @@ function remarkNormalizeMdxToMarkdown() {
 	};
 }
 
+function isDocumentOnlySkippedPlugin(plugin: unknown) {
+	return (
+		plugin === remarkCodeTabs ||
+		(Array.isArray(plugin) && plugin[0] === remarkCodeTabs)
+	);
+}
+
 function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
 	return getRemarkPlugins(config)
-		.filter((plugin) => {
-			if (plugin === remarkCodeTabs) return false;
-			if (Array.isArray(plugin) && plugin[0] === remarkCodeTabs) return false;
-			return true;
-		})
+		.filter((plugin) => !isDocumentOnlySkippedPlugin(plugin))
 		.map((plugin) =>
 			plugin === remarkInlineFrontmatter
 				? remarkDocumentInlineFrontmatter
