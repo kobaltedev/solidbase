@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { createRoot } from "solid-js";
+import { render } from "solid-js/web";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 function setSolidBaseConfig(value: Record<string, unknown>) {
@@ -13,9 +14,11 @@ function setSolidBaseConfig(value: Record<string, unknown>) {
 }
 
 const useCurrentMatches = vi.fn();
+const useLocation = vi.fn();
 
 vi.mock("@solidjs/router", () => ({
 	useCurrentMatches,
+	useLocation,
 }));
 
 describe("llms client helpers", () => {
@@ -23,6 +26,7 @@ describe("llms client helpers", () => {
 
 	afterEach(() => {
 		useCurrentMatches.mockReset();
+		useLocation.mockReset();
 		vi.restoreAllMocks();
 		vi.resetModules();
 		setSolidBaseConfig({});
@@ -67,6 +71,7 @@ describe("llms client helpers", () => {
 
 	it("provides shared copy state for themes", async () => {
 		setSolidBaseConfig({ llms: true, themeConfig: {} });
+		useLocation.mockReturnValue({ pathname: "/guide/getting-started" });
 		useCurrentMatches.mockReturnValue([
 			{
 				route: { key: { $component: { src: `${pagePath}?import` } } },
@@ -117,6 +122,68 @@ describe("llms client helpers", () => {
 		await Promise.resolve();
 
 		expect(api?.canCopy()).toBe(true);
+		expect(api?.isReady()).toBe(false);
+		await expect(api?.copy()).resolves.toBe(false);
+		expect((globalThis as any).fetch).not.toHaveBeenCalled();
+
+		dispose();
+	});
+
+	it("enables copying after client mount", async () => {
+		setSolidBaseConfig({ llms: true, themeConfig: {} });
+		useLocation.mockReturnValue({ pathname: "/guide/getting-started" });
+		useCurrentMatches.mockReturnValue([
+			{
+				route: { key: { $component: { src: `${pagePath}?import` } } },
+			},
+		]);
+		(window as any).$$SolidBase_page_data = {
+			[pagePath]: {
+				frontmatter: { title: "Hello" },
+			},
+		};
+
+		window.history.replaceState({}, "", "/guide/getting-started");
+
+		(globalThis as any).fetch = vi.fn(async () => ({
+			ok: true,
+			text: async () => "# Getting Started",
+		}));
+		(globalThis as any).navigator = {
+			clipboard: {
+				writeText: vi.fn(async () => undefined),
+			},
+		};
+
+		const { CurrentPageDataProvider } = await import(
+			"../../src/client/page-data.ts"
+		);
+		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
+			"../../src/client/llms.ts"
+		);
+
+		clearPageMarkdownCache();
+
+		let api: ReturnType<typeof useCopyPageMarkdown> | undefined;
+		const container = document.createElement("div");
+		document.body.append(container);
+
+		const dispose = render(() => {
+			return CurrentPageDataProvider({
+				get children() {
+					api = useCopyPageMarkdown();
+					return null;
+				},
+			} as any);
+		}, container);
+
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(api?.canCopy()).toBe(true);
+		expect(api?.isReady()).toBe(true);
 		await expect(api?.copy()).resolves.toBe(true);
 		expect(api?.state()).toBe("success");
 		expect(
@@ -124,5 +191,6 @@ describe("llms client helpers", () => {
 		).toHaveBeenCalledWith("# Getting Started");
 
 		dispose();
+		container.remove();
 	});
 });

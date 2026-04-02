@@ -22,18 +22,7 @@ function getStateIcon(state: CopyPageState) {
 
 export default function CopyPageLink() {
 	const text = useThemeText();
-	const { canCopy, copy, isCopying, state } = useCopyPageMarkdown();
-
-	function label() {
-		switch (state()) {
-			case "success":
-				return text.copiedPage;
-			case "error":
-				return text.copyFailedPage;
-			default:
-				return text.copyPage;
-		}
-	}
+	const { canCopy, copy, isCopying, isReady, state } = useCopyPageMarkdown();
 
 	return (
 		<Show when={canCopy()}>
@@ -45,11 +34,28 @@ export default function CopyPageLink() {
 					[styles.error]: state() === "error",
 				}}
 				onClick={copy}
-				disabled={isCopying()}
+				disabled={!isReady()}
+				aria-busy={isCopying() || undefined}
 				aria-live="polite"
 			>
 				<Dynamic component={getStateIcon(state())} class={styles.icon} />
-				<span>{label()}</span>
+				<span class={styles.labelWrap}>
+					<span class={styles.label} classList={{ [styles.active]: state() === "idle" }}>
+						{text.copyPage}
+					</span>
+					<span
+						class={styles.label}
+						classList={{ [styles.active]: state() === "success" }}
+					>
+						{text.copiedPage}
+					</span>
+					<span
+						class={styles.label}
+						classList={{ [styles.active]: state() === "error" }}
+					>
+						{text.copyFailedPage}
+					</span>
+				</span>
 			</button>
 		</Show>
 	);

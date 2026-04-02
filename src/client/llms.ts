@@ -1,4 +1,5 @@
-import { createSignal, onCleanup } from "solid-js";
+import { useLocation } from "@solidjs/router";
+import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
 import { useRouteSolidBaseConfig } from "./config.js";
 import { type BaseFrontmatter, useCurrentPageData } from "./page-data.js";
@@ -75,37 +76,61 @@ export function clearPageMarkdownCache() {
 }
 
 export function useCopyPageMarkdown() {
+	const location = useLocation();
 	const pageData = useCurrentPageData();
 	const config = useRouteSolidBaseConfig<any>();
 	const [state, setState] = createSignal<CopyPageState>("idle");
 	const [isCopying, setIsCopying] = createSignal(false);
+	const [isClient, setIsClient] = createSignal(false);
 
 	let feedbackTimeout: ReturnType<typeof setTimeout> | undefined;
+
+	onMount(() => {
+		setIsClient(true);
+	});
 
 	onCleanup(() => {
 		if (feedbackTimeout) clearTimeout(feedbackTimeout);
 	});
 
+	createEffect(() => {
+		location.pathname;
+		setState("idle");
+		setIsCopying(false);
+		if (feedbackTimeout) {
+			clearTimeout(feedbackTimeout);
+			feedbackTimeout = undefined;
+		}
+	});
+
 	const canCopy = () =>
 		canCopyPageMarkdown(config().llms, pageData()?.frontmatter.llms);
+	const isReady = () => isClient() && canCopy();
 
 	async function copy() {
-		if (isCopying()) return false;
+		if (!isReady() || isCopying()) return false;
 
+		const startedPathname = location.pathname;
 		setIsCopying(true);
 
 		try {
-			const markdown = await getCurrentPageMarkdown();
+			const markdown = await getCurrentPageMarkdown(startedPathname);
 			await copyTextToClipboard(markdown);
+			if (location.pathname !== startedPathname) return false;
 			setState("success");
 			return true;
 		} catch (error) {
+			if (location.pathname !== startedPathname) return false;
 			console.error("[solidbase] Failed to copy page markdown", error);
 			setState("error");
 			return false;
 		} finally {
 			if (feedbackTimeout) clearTimeout(feedbackTimeout);
-			feedbackTimeout = setTimeout(() => setState("idle"), BUTTON_RESET_MS);
+			if (location.pathname === startedPathname) {
+				feedbackTimeout = setTimeout(() => setState("idle"), BUTTON_RESET_MS);
+			} else {
+				feedbackTimeout = undefined;
+			}
 			setIsCopying(false);
 		}
 	}
@@ -114,6 +139,7 @@ export function useCopyPageMarkdown() {
 		canCopy,
 		copy,
 		isCopying,
+		isReady,
 		state,
 	};
 }

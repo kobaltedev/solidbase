@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, rm } from "node:fs/promises";
+import { access, mkdir, readFile, rm, stat } from "node:fs/promises";
 import { join, normalize, sep } from "node:path";
 
 import type { PluginOption } from "vite";
@@ -47,6 +47,9 @@ export function createGeneratedAssetPlugin(
 		} catch {
 			return false;
 		}
+
+		const fileStat = await stat(filePath);
+		if (!fileStat.isFile()) return false;
 
 		const content = await readFile(filePath);
 		if (filePath.endsWith(".md") || filePath.endsWith(".txt")) {

@@ -16,9 +16,13 @@
 		var(--sb-decoration-color) 70%,
 		transparent
 	);
+	appearance: none;
+	-webkit-appearance: none;
+	box-sizing: border-box;
 	border: 1px solid var(--button-border);
 	border-radius: 0.5rem;
 	background: var(--button-bg);
+	min-height: calc(1.2em + 0.8rem + 2px);
 	padding: 0.4rem 0.75rem;
 	font-size: 0.85rem;
 	line-height: 1.2;
@@ -35,6 +39,10 @@
 		background-color 0.2s ease,
 		border-color 0.2s ease,
 		color 0.2s ease;
+
+	&:active {
+		border-color: var(--button-border);
+	}
 
 	&:hover,
 	&:focus-visible {
@@ -54,12 +62,10 @@
 		var(--sb-brand-color) 8%,
 		var(--sb-background-color)
 	);
-	--button-border: color-mix(in hsl, var(--sb-brand-color) 26%, transparent);
 }
 
 .error {
 	--button-bg: color-mix(in srgb, #d14343 9%, var(--sb-background-color));
-	--button-border: color-mix(in srgb, #d14343 32%, transparent);
 	--button-text: color-mix(in srgb, #d14343 72%, var(--sb-text-color));
 	--button-hover-bg: color-mix(
 		in srgb,
@@ -74,4 +80,18 @@
 	height: 0.9rem;
 	flex: none;
 	opacity: 0.82;
+}
+
+.labelWrap {
+	display: grid;
+}
+
+.label {
+	grid-area: 1 / 1;
+	visibility: hidden;
+	white-space: nowrap;
+}
+
+.active {
+	visibility: visible;
 }
