@@ -85,22 +85,29 @@ export function useCopyPageMarkdown() {
 
 	let feedbackTimeout: ReturnType<typeof setTimeout> | undefined;
 
+	function clearFeedbackTimeout() {
+		if (!feedbackTimeout) return;
+		clearTimeout(feedbackTimeout);
+		feedbackTimeout = undefined;
+	}
+
+	function resetCopyFeedback() {
+		setState("idle");
+		setIsCopying(false);
+		clearFeedbackTimeout();
+	}
+
 	onMount(() => {
 		setIsClient(true);
 	});
 
 	onCleanup(() => {
-		if (feedbackTimeout) clearTimeout(feedbackTimeout);
+		clearFeedbackTimeout();
 	});
 
 	createEffect(() => {
 		location.pathname;
-		setState("idle");
-		setIsCopying(false);
-		if (feedbackTimeout) {
-			clearTimeout(feedbackTimeout);
-			feedbackTimeout = undefined;
-		}
+		resetCopyFeedback();
 	});
 
 	const canCopy = () =>
@@ -115,6 +122,7 @@ export function useCopyPageMarkdown() {
 
 		try {
 			const markdown = await getCurrentPageMarkdown(startedPathname);
+			if (location.pathname !== startedPathname) return false;
 			await copyTextToClipboard(markdown);
 			if (location.pathname !== startedPathname) return false;
 			setState("success");
@@ -125,11 +133,11 @@ export function useCopyPageMarkdown() {
 			setState("error");
 			return false;
 		} finally {
-			if (feedbackTimeout) clearTimeout(feedbackTimeout);
+			clearFeedbackTimeout();
 			if (location.pathname === startedPathname) {
 				feedbackTimeout = setTimeout(() => setState("idle"), BUTTON_RESET_MS);
 			} else {
-				feedbackTimeout = undefined;
+				clearFeedbackTimeout();
 			}
 			setIsCopying(false);
 		}

@@ -264,9 +264,11 @@ describe("toDocumentMarkdown", () => {
 			filePath: routeFixturePath("index.mdx"),
 		});
 
-		expect(markdown).toContain(":::::tab-group[Examples]");
-		expect(markdown).toContain("::::tab[TypeScript]");
-		expect(markdown).toContain("::::tab[JavaScript]");
+		expect(markdown).toContain("tab-group[Examples]");
+		expect(markdown).toContain("tab[TypeScript]");
+		expect(markdown).toContain("tab[JavaScript]");
+		expect(markdown).toContain('console.log("ts");');
+		expect(markdown).toContain('console.log("js");');
 		expect(markdown).not.toContain("DirectiveContainer");
 	});
 

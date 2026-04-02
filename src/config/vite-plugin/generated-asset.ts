@@ -1,5 +1,5 @@
 import { access, mkdir, readFile, rm, stat } from "node:fs/promises";
-import { join, normalize, sep } from "node:path";
+import { join, normalize, relative, sep } from "node:path";
 
 import type { PluginOption } from "vite";
 
@@ -40,7 +40,14 @@ export function createGeneratedAssetPlugin(
 		if (!relativePath) return false;
 
 		const filePath = normalize(join(assetRoot, relativePath));
-		if (!filePath.startsWith(assetRoot)) return false;
+		const assetRelativePath = relative(assetRoot, filePath);
+		if (
+			assetRelativePath.startsWith("..") ||
+			assetRelativePath.includes(`${sep}..${sep}`) ||
+			assetRelativePath === ".."
+		) {
+			return false;
+		}
 
 		try {
 			await access(filePath);

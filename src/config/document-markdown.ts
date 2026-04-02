@@ -266,62 +266,10 @@ function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
 		);
 }
 
-function preserveAuthoredTabGroups(source: string) {
-	const placeholders = new Map<string, string>();
-	const lines = source.split("\n");
-	const preservedLines: string[] = [];
-
-	for (let i = 0; i < lines.length; i++) {
-		const line = lines[i]!;
-		const match = line.match(
-			/^(?<marker>:{4,})tab-group(?:\[.*\])?(?:\{.*\})?\s*$/,
-		);
-
-		if (!match?.groups?.marker) {
-			preservedLines.push(line);
-			continue;
-		}
-
-		const marker = match.groups.marker;
-		const endIndex = lines.findIndex(
-			(candidate, index) => index > i && candidate === marker,
-		);
-
-		if (endIndex === -1) {
-			preservedLines.push(line);
-			continue;
-		}
-
-		const placeholder = `SOLIDBASETABGROUPTOKEN${placeholders.size}`;
-		placeholders.set(placeholder, lines.slice(i, endIndex + 1).join("\n"));
-		preservedLines.push(placeholder);
-		i = endIndex;
-	}
-
-	return {
-		placeholders,
-		source: preservedLines.join("\n"),
-	};
-}
-
-function restoreAuthoredTabGroups(
-	markdown: string,
-	placeholders: Map<string, string>,
-) {
-	let restored = markdown;
-
-	for (const [placeholder, content] of placeholders) {
-		restored = restored.replaceAll(placeholder, content);
-	}
-
-	return restored;
-}
-
 export async function toDocumentMarkdown(
 	source: string,
 	options: DocumentMarkdownOptions = {},
 ) {
-	const preserved = preserveAuthoredTabGroups(source);
 	const processor = unified()
 		.use(remarkParse)
 		.use(remarkMdx)
@@ -331,8 +279,8 @@ export async function toDocumentMarkdown(
 		.use(remarkStringify);
 
 	const file = await processor.process(
-		new VFile({ path: options.filePath, value: preserved.source }),
+		new VFile({ path: options.filePath, value: source }),
 	);
 
-	return restoreAuthoredTabGroups(String(file).trim(), preserved.placeholders);
+	return String(file).trim();
 }

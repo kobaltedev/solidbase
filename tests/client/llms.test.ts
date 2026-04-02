@@ -285,7 +285,7 @@ describe("llms client helpers", () => {
 		expect(api?.state()).toBe("idle");
 		expect(
 			(globalThis as any).navigator.clipboard.writeText,
-		).toHaveBeenCalledWith("# Getting Started");
+		).not.toHaveBeenCalled();
 
 		dispose();
 		container.remove();
