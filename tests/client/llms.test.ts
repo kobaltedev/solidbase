@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { createRoot } from "solid-js";
+import { createRoot, createSignal } from "solid-js";
 import { render } from "solid-js/web";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -186,6 +186,92 @@ describe("llms client helpers", () => {
 		expect(api?.isReady()).toBe(true);
 		await expect(api?.copy()).resolves.toBe(true);
 		expect(api?.state()).toBe("success");
+		expect(
+			(globalThis as any).navigator.clipboard.writeText,
+		).toHaveBeenCalledWith("# Getting Started");
+
+		dispose();
+		container.remove();
+	});
+
+	it("resets copy feedback when navigation changes mid-copy", async () => {
+		setSolidBaseConfig({ llms: true, themeConfig: {} });
+		const [pathname, setPathname] = createSignal("/guide/getting-started");
+		useLocation.mockReturnValue({
+			get pathname() {
+				return pathname();
+			},
+		});
+		useCurrentMatches.mockReturnValue([
+			{
+				route: { key: { $component: { src: `${pagePath}?import` } } },
+			},
+		]);
+		(window as any).$$SolidBase_page_data = {
+			[pagePath]: {
+				frontmatter: { title: "Hello" },
+			},
+		};
+
+		window.history.replaceState({}, "", "/guide/getting-started");
+
+		let resolveFetch: ((value: any) => void) | undefined;
+		(globalThis as any).fetch = vi.fn(
+			() =>
+				new Promise((resolve) => {
+					resolveFetch = resolve;
+				}),
+		);
+		(globalThis as any).navigator = {
+			clipboard: {
+				writeText: vi.fn(async () => undefined),
+			},
+		};
+
+		const { CurrentPageDataProvider } = await import(
+			"../../src/client/page-data.ts"
+		);
+		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
+			"../../src/client/llms.ts"
+		);
+
+		clearPageMarkdownCache();
+
+		let api: ReturnType<typeof useCopyPageMarkdown> | undefined;
+		const container = document.createElement("div");
+		document.body.append(container);
+
+		const dispose = render(() => {
+			return CurrentPageDataProvider({
+				get children() {
+					api = useCopyPageMarkdown();
+					return null;
+				},
+			} as any);
+		}, container);
+
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+		await Promise.resolve();
+
+		const copyPromise = api?.copy();
+		expect(api?.isCopying()).toBe(true);
+
+		setPathname("/guide/customization/extending-themes");
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(api?.state()).toBe("idle");
+		expect(api?.isCopying()).toBe(false);
+
+		resolveFetch?.({
+			ok: true,
+			text: async () => "# Getting Started",
+		});
+
+		await expect(copyPromise).resolves.toBe(false);
+		expect(api?.state()).toBe("idle");
 		expect(
 			(globalThis as any).navigator.clipboard.writeText,
 		).toHaveBeenCalledWith("# Getting Started");

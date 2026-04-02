@@ -3,7 +3,7 @@
 	width: 100dvw;
 	overflow-x: clip;
 	display: grid;
-	grid-template-columns: minmax(12rem, auto) minmax(0, 1fr);
+	grid-template-columns: minmax(12rem, auto) 1fr;
 }
 
 main {
