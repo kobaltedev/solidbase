@@ -20,6 +20,16 @@ type DocumentMarkdownOptions = {
 	filePath?: string;
 };
 
+type MdxNode = {
+	type: string;
+	name?: string;
+	value?: string;
+	lang?: string;
+	data?: unknown;
+	children?: MdxNode[];
+	attributes?: Array<{ type: string; name: string; value?: unknown }>;
+};
+
 const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([
 	remarkCodeTabs,
 	remarkAddClass,
@@ -146,7 +156,7 @@ function createDirectiveContainer(name: string, children: any[], title?: string)
 	return {
 		type: "containerDirective",
 		name,
-		attributes: {},
+		attributes: [],
 		children:
 			hasDirectiveTitle(title)
 				? [createDirectiveLabel(title), ...children]
@@ -154,7 +164,7 @@ function createDirectiveContainer(name: string, children: any[], title?: string)
 	};
 }
 
-function normalizeMdxChildren(nodes: any[]): any[] {
+function normalizeMdxChildren(nodes: MdxNode[]): MdxNode[] {
 	return nodes.flatMap((node) => {
 		const normalized = normalizeMdxNode(node);
 		if (normalized === null) return [];
@@ -162,14 +172,14 @@ function normalizeMdxChildren(nodes: any[]): any[] {
 	});
 }
 
-function normalizeDirectiveContainer(node: any) {
+function normalizeDirectiveContainer(node: MdxNode) {
 	const type = getJsxAttributeValue(node, "type");
 	const title = getJsxAttributeValue(node, "title");
 	const rawChildren = node.children ?? [];
 
 	if (type === "tab-group") {
 		const tabs = rawChildren.filter(
-			(child: any) =>
+			(child: MdxNode) =>
 				child?.type === "mdxJsxFlowElement" &&
 				getJsxAttributeValue(child, "type") === "tab",
 		);
@@ -178,11 +188,11 @@ function normalizeDirectiveContainer(node: any) {
 			const codeBlocks = tabs
 				.map((child) => normalizeMdxChildren(child.children ?? []))
 				.flat()
-				.filter((child) => child?.type === "code");
+				.filter((child: MdxNode) => child?.type === "code");
 
 			const lang = codeBlocks[0]?.lang ?? "sh";
 			const value = codeBlocks
-				.map((child) => child.value)
+				.map((child: MdxNode) => child.value)
 				.filter((child): child is string => typeof child === "string")
 				.join("\n");
 
@@ -199,19 +209,18 @@ function normalizeDirectiveContainer(node: any) {
 	}
 
 	const children = normalizeMdxChildren(rawChildren);
+	const label = hasDirectiveTitle(title) ? title : undefined;
 
 	if (type === "tab") {
-		return createDirectiveContainer("tab", children, title);
+		return createDirectiveContainer("tab", children, label);
 	}
-
-	const label = hasDirectiveTitle(title) ? title : undefined;
 
 	return typeof type === "string"
 		? createDirectiveContainer(type, children, label)
 		: children;
 }
 
-function normalizeMdxNode(node: any): any[] | any | null {
+function normalizeMdxNode(node: MdxNode): MdxNode[] | MdxNode | null {
 	if (node.type === "mdxFlowExpression" || node.type === "mdxTextExpression") {
 		return null;
 	}

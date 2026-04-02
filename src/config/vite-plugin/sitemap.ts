@@ -43,7 +43,6 @@ export default function solidBaseSitemapPlugin(
 		name: "solidbase:sitemap",
 		apply: "build",
 		assetDir: SITEMAP_PUBLIC_ASSETS_DIR,
-		watchRoutes: true,
 		write(root) {
 			return writeSitemapAssets(root, config);
 		},

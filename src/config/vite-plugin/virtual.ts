@@ -109,9 +109,20 @@ export async function transformMdxModule(
 	}
 
 	const source = await readFile(modulePath, "utf8");
+	const aliasCodeImportsPlugin = resolver
+		? viteAliasCodeImports(resolver)
+		: undefined;
+	const transform = aliasCodeImportsPlugin?.transform;
+	const transformResult =
+		typeof transform === "function"
+			? await (transform as any).call({} as any, source, modulePath)
+			: transform?.handler
+				? await (transform.handler as any).call({} as any, source, modulePath)
+				: undefined;
 	const aliasedSource =
-		resolver &&
-		(await viteAliasCodeImports(resolver).transform(source, modulePath));
+		typeof transformResult === "string"
+			? transformResult
+			: transformResult?.code;
 	const llmText = await toDocumentMarkdown(aliasedSource ?? source, {
 		config: {
 			markdown: solidBaseConfig.markdown,

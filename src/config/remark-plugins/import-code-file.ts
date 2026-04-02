@@ -6,7 +6,7 @@ import { MetaOptions } from "@expressive-code/core";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
-import type { PluginOption } from "vite";
+import type { Plugin } from "vite";
 import { isMarkdown } from "../vite-plugin/index.js";
 
 export interface ImportCodeFileOptions {
@@ -114,7 +114,7 @@ export function viteAliasCodeImports(
 		source: string,
 		importer: string,
 	) => Promise<{ id: string } | null>,
-): PluginOption {
+): Plugin {
 	return {
 		name: "solidbase:vite-alias-code-imports",
 		enforce: "pre",

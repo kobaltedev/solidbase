@@ -1,5 +1,5 @@
 import { access, mkdir, readFile, rm, stat } from "node:fs/promises";
-import { join, normalize, relative, sep } from "node:path";
+import { join, normalize, relative } from "node:path";
 
 import type { PluginOption } from "vite";
 
@@ -14,16 +14,11 @@ type GeneratedAssetPluginOptions = {
 			importer: string,
 		) => Promise<{ id: string } | null>,
 	): Promise<void>;
-	watchRoutes?: boolean;
 };
 
 export async function emptyDir(dir: string) {
 	await rm(dir, { recursive: true, force: true });
 	await mkdir(dir, { recursive: true });
-}
-
-export function isRoutesFile(file: string) {
-	return file.includes(`${sep}src${sep}routes${sep}`);
 }
 
 export function createGeneratedAssetPlugin(
@@ -41,11 +36,7 @@ export function createGeneratedAssetPlugin(
 
 		const filePath = normalize(join(assetRoot, relativePath));
 		const assetRelativePath = relative(assetRoot, filePath);
-		if (
-			assetRelativePath.startsWith("..") ||
-			assetRelativePath.includes(`${sep}..${sep}`) ||
-			assetRelativePath === ".."
-		) {
+		if (assetRelativePath === ".." || assetRelativePath.startsWith(`..`)) {
 			return false;
 		}
 
