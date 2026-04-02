@@ -7,6 +7,7 @@ import { VFile } from "vfile";
 
 import type { RemarkPipelineConfig } from "./mdx.js";
 import { getRemarkPlugins } from "./mdx.js";
+import { remarkCodeTabs } from "./remark-plugins/code-tabs.js";
 import {
 	evaluateInlineFrontmatterExpression,
 	isInlineFrontmatterExpression,
@@ -116,15 +117,34 @@ function getJsxAttributeValue(
 		?.value;
 }
 
-function createLabelParagraph(label: string) {
+function hasDirectiveTitle(title: unknown): title is string {
+	return typeof title === "string" && title !== " ";
+}
+
+function createDirectiveLabel(label: string) {
 	return {
 		type: "paragraph",
+		data: {
+			directiveLabel: true,
+		},
 		children: [
 			{
-				type: "strong",
-				children: [{ type: "text", value: label }],
+				type: "text",
+				value: label,
 			},
 		],
+	};
+}
+
+function createDirectiveContainer(name: string, children: any[], title?: string) {
+	return {
+		type: "containerDirective",
+		name,
+		attributes: {},
+		children:
+			hasDirectiveTitle(title)
+				? [createDirectiveLabel(title), ...children]
+				: children,
 	};
 }
 
@@ -170,42 +190,19 @@ function normalizeDirectiveContainer(node: any) {
 				];
 			}
 		}
-
-		const tabNames = String(getJsxAttributeValue(node, "tabNames") ?? "")
-			.split("\0")
-			.filter(Boolean);
-
-		return tabs.flatMap((child, index) => {
-			const childTitle = getJsxAttributeValue(child, "title");
-			const childChildren = normalizeMdxChildren(child.children ?? []);
-			const label = tabNames[index] ?? childTitle;
-
-			return [
-				...(typeof label === "string" && label !== " "
-					? [createLabelParagraph(label)]
-					: []),
-				...childChildren,
-			];
-		});
 	}
 
 	const children = normalizeMdxChildren(rawChildren);
 
 	if (type === "tab") {
-		return children;
+		return createDirectiveContainer("tab", children, title);
 	}
 
-	const label =
-		typeof title === "string" && title !== " "
-			? title
-			: typeof type === "string"
-				? type
-				: undefined;
+	const label = hasDirectiveTitle(title) ? title : undefined;
 
-	return [
-		...(label ? [createLabelParagraph(label)] : []),
-		...children,
-	];
+	return typeof type === "string"
+		? createDirectiveContainer(type, children, label)
+		: children;
 }
 
 function normalizeMdxNode(node: any): any[] | any | null {
@@ -214,7 +211,7 @@ function normalizeMdxNode(node: any): any[] | any | null {
 	}
 
 	if (node.type === "mdxJsxTextElement") {
-		return normalizeMdxChildren(node.children ?? []);
+		return node;
 	}
 
 	if (node.type === "mdxJsxFlowElement") {
@@ -226,7 +223,7 @@ function normalizeMdxNode(node: any): any[] | any | null {
 			return normalizeMdxChildren(node.children ?? []);
 		}
 
-		return normalizeMdxChildren(node.children ?? []);
+		return node;
 	}
 
 	if (Array.isArray(node.children)) {
@@ -246,11 +243,17 @@ function remarkNormalizeMdxToMarkdown() {
 }
 
 function getDocumentRemarkPlugins(config: RemarkPipelineConfig = {}) {
-	return getRemarkPlugins(config).map((plugin) =>
-		plugin === remarkInlineFrontmatter
-			? remarkDocumentInlineFrontmatter
-			: plugin,
-	);
+	return getRemarkPlugins(config)
+		.filter((plugin) => {
+			if (plugin === remarkCodeTabs) return false;
+			if (Array.isArray(plugin) && plugin[0] === remarkCodeTabs) return false;
+			return true;
+		})
+		.map((plugin) =>
+			plugin === remarkInlineFrontmatter
+				? remarkDocumentInlineFrontmatter
+				: plugin,
+		);
 }
 
 export async function toDocumentMarkdown(
