@@ -6,7 +6,6 @@ import MagicString from "magic-string";
 import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { SolidBaseConfig, Theme } from "../index.js";
-import { viteAliasCodeImports } from "../remark-plugins/import-code-file.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
 type VirtualModule<T = void> = {
@@ -85,10 +84,6 @@ export async function transformMdxModule(
 	code: string,
 	id: string,
 	solidBaseConfig: Partial<SolidBaseConfig<any>>,
-	resolver?: (
-		source: string,
-		importer: string,
-	) => Promise<{ id: string } | null>,
 ) {
 	const rootPath = process.env.PWD!;
 
@@ -109,21 +104,7 @@ export async function transformMdxModule(
 	}
 
 	const source = await readFile(modulePath, "utf8");
-	const aliasCodeImportsPlugin = resolver
-		? viteAliasCodeImports(resolver)
-		: undefined;
-	const transform = aliasCodeImportsPlugin?.transform;
-	const transformResult =
-		typeof transform === "function"
-			? await (transform as any).call({} as any, source, modulePath)
-			: transform?.handler
-				? await (transform.handler as any).call({} as any, source, modulePath)
-				: undefined;
-	const aliasedSource =
-		typeof transformResult === "string"
-			? transformResult
-			: transformResult?.code;
-	const llmText = await toDocumentMarkdown(aliasedSource ?? source, {
+	const llmText = await toDocumentMarkdown(source, {
 		config: {
 			markdown: solidBaseConfig.markdown,
 			issueAutolink: solidBaseConfig.issueAutolink ?? false,

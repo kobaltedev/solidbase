@@ -64,13 +64,7 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:post",
 			enforce: "post",
 			transform(code, id) {
-				if (isMarkdown(id))
-					return transformMdxModule(
-						code,
-						id,
-						solidBaseConfig,
-						(source, importer) => this.resolve(source, importer),
-					);
+				if (isMarkdown(id)) return transformMdxModule(code, id, solidBaseConfig);
 			},
 		},
 	];
