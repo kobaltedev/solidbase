@@ -1,3 +1,4 @@
+import { type ClipboardSetter, writeClipboard } from "@solid-primitives/clipboard";
 import { useLocation } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 
@@ -62,13 +63,13 @@ export async function getCurrentPageMarkdown(
 
 export async function copyTextToClipboard(
 	text: string,
-	clipboard = globalThis.navigator?.clipboard,
+	writeText: ClipboardSetter = writeClipboard,
 ) {
-	if (!clipboard?.writeText) {
+	if (!globalThis.navigator?.clipboard?.writeText) {
 		throw new Error("Clipboard API unavailable");
 	}
 
-	await clipboard.writeText(text);
+	await writeText(text);
 }
 
 export function clearPageMarkdownCache() {

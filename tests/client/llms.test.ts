@@ -3,6 +3,10 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+const { writeClipboardMock } = vi.hoisted(() => ({
+	writeClipboardMock: vi.fn(async () => undefined),
+}));
+
 async function flushMicrotasks(count = 4) {
 	for (let i = 0; i < count; i++) {
 		await Promise.resolve();
@@ -33,6 +37,10 @@ vi.mock("@solidjs/router", () => ({
 	useLocation,
 }));
 
+vi.mock("@solid-primitives/clipboard", () => ({
+	writeClipboard: writeClipboardMock,
+}));
+
 vi.mock("../../src/client/config.ts", () => ({
 	useRouteSolidBaseConfig: () => () =>
 		((globalThis as any).__solidBaseConfig ?? {}) as Record<string, unknown>,
@@ -51,6 +59,7 @@ describe("llms client helpers", () => {
 	afterEach(() => {
 		useCurrentMatches.mockReset();
 		useLocation.mockReset();
+		writeClipboardMock.mockReset();
 		vi.doUnmock("solid-js");
 		vi.restoreAllMocks();
 		vi.resetModules();
@@ -197,9 +206,7 @@ describe("llms client helpers", () => {
 		expect(api?.isReady()).toBe(true);
 		await expect(api?.copy()).resolves.toBe(true);
 		expect(api?.state()).toBe("success");
-		expect(
-			(globalThis as any).navigator.clipboard.writeText,
-		).toHaveBeenCalledWith("# Getting Started");
+		expect(writeClipboardMock).toHaveBeenCalledWith("# Getting Started");
 
 		dispose();
 		container.remove();
@@ -283,9 +290,7 @@ describe("llms client helpers", () => {
 
 		await expect(copyPromise).resolves.toBe(false);
 		expect(api?.state()).toBe("idle");
-		expect(
-			(globalThis as any).navigator.clipboard.writeText,
-		).not.toHaveBeenCalled();
+		expect(writeClipboardMock).not.toHaveBeenCalled();
 
 		dispose();
 		container.remove();
