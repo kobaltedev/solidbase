@@ -44,6 +44,7 @@ export default function solidBaseLlmsPlugin(
 
 	return createGeneratedAssetPlugin({
 		name: "solidbase:llms",
+        apply: "build",
 		assetDir: LLMS_PUBLIC_ASSETS_DIR,
 		write(root, resolver) {
 			return writeLlmsAssets(root, config, resolver);
