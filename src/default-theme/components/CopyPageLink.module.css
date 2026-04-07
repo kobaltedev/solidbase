@@ -25,6 +25,7 @@
 	min-height: calc(1.2em + 0.8rem + 2px);
 	padding: 0.4rem 0.75rem;
 	font-size: 0.85rem;
+    max-height: calc(1.2em + 0.8rem + 2px);
 	line-height: 1.2;
 	font-weight: 500;
 	color: var(--button-text);

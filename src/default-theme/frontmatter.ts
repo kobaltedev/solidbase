@@ -10,6 +10,7 @@ export function useDefaultThemeFrontmatter() {
 
 		data.editLink ??= true;
 		data.lastUpdated ??= true;
+		data.copyButton ??= data.layout !== "home";
 
 		if (data?.layout === "home") {
 			data.sidebar = false;
@@ -41,6 +42,7 @@ interface DefaultThemeBaseFrontmatter {
 	next?: RelativePageConfig;
 	editLink?: boolean;
 	lastUpdated?: boolean;
+	copyButton?: boolean;
 }
 
 interface HeroActionConfig {

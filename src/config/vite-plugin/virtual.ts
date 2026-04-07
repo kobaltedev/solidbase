@@ -3,9 +3,11 @@ import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
+import type { PluginContext } from "vite";
 import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { SolidBaseConfig, Theme } from "../index.js";
+import { viteAliasCodeImports } from "../remark-plugins/import-code-file.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
 
 type VirtualModule<T = void> = {
@@ -84,6 +86,7 @@ export async function transformMdxModule(
 	code: string,
 	id: string,
 	solidBaseConfig: Partial<SolidBaseConfig<any>>,
+	resolver?: PluginContext["resolve"],
 ) {
 	const rootPath = process.env.PWD!;
 
@@ -104,7 +107,21 @@ export async function transformMdxModule(
 	}
 
 	const source = await readFile(modulePath, "utf8");
-	const llmText = await toDocumentMarkdown(source, {
+	const resolvedSource =
+		resolver === undefined
+			? source
+			: ((await (
+					viteAliasCodeImports((source, importer) =>
+						resolver(source, importer),
+					) as {
+						transform: (
+							code: string,
+							id: string,
+						) => Promise<string | undefined>;
+					}
+				).transform(source, modulePath)) ??
+				source);
+	const llmText = await toDocumentMarkdown(resolvedSource, {
 		config: {
 			markdown: solidBaseConfig.markdown,
 			issueAutolink: solidBaseConfig.issueAutolink ?? false,

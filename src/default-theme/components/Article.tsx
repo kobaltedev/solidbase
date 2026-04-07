@@ -102,10 +102,6 @@ export default function Article(props: ParentProps) {
 						{(data) => <Features features={data()} />}
 					</Show>
 
-					<div class={styles.topActions}>
-						<CopyPageLink />
-					</div>
-
 					{props.children}
 
 					<div class={styles.info}>
