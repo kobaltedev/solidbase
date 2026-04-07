@@ -10,6 +10,38 @@ You can use the default theme as-is, or customize it to fit your needs. For more
 
 To access the variables used by the default theme, refer to the [CSS Variables](/reference/default-theme/css-variables) reference.
 
+## Page Actions
+
+Page action badges are configured in two parts:
+
+```ts
+{
+	themeConfig: {
+		actions: {
+			icons: {
+				npm: "<svg />",
+				gh: GitHubIcon,
+			},
+		},
+	},
+}
+```
+
+Then on a page:
+
+```md
+---
+actions:
+  - icon: npm
+    label: 0.2.4
+  - icon: gh
+    label: source
+    url: https://github.com/kobaltedev/solidbase
+---
+```
+
+Icon values can be either a raw SVG string or a Solid component.
+
 ## Components
 
 The default theme includes the following components that can be used in your markdown files and customized to fit your needs:
@@ -19,6 +51,7 @@ The default theme includes the following components that can be used in your mar
 - [`LastUpdated`](/reference/default-theme/components/last-updated)
 - [`Link`](/reference/default-theme/components/link)
 - [`LocaleSelector`](/reference/default-theme/components/locale-selector)
+- `PageActions`
 - [`TableOfContents`](/reference/default-theme/components/toc)
 - [`ThemeSelector`](/reference/default-theme/components/theme-selector)
 - [`Hero`](/reference/default-theme/components/hero)

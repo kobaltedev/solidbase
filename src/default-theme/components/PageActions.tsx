@@ -5,6 +5,7 @@ import { Dynamic } from "solid-js/web";
 import type { PageActionConfig } from "../frontmatter.js";
 import type {
 	DefaultThemeActionIcon,
+	DefaultThemeActionIconConfig,
 	DefaultThemeActionIconComponent,
 } from "../index.js";
 import { useRouteConfig } from "../utils.js";
@@ -18,7 +19,7 @@ function isIconComponent(
 
 function isIconConfig(
 	icon: DefaultThemeActionIcon | undefined,
-): icon is Exclude<DefaultThemeActionIcon, string | DefaultThemeActionIconComponent> {
+): icon is DefaultThemeActionIconConfig {
 	return typeof icon === "object" && icon !== null;
 }
 
@@ -48,7 +49,7 @@ function PageActionBadge(props: { action: PageActionConfig }) {
 			</Show>
 			<Show when={iconSvg()}>
 				{(svg) => (
-					<span
+					<div
 						class={styles.badgeIcon}
 						aria-hidden="true"
 						innerHTML={svg()}

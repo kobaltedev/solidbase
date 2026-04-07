@@ -48,7 +48,7 @@ interface DefaultThemeBaseFrontmatter {
 
 export interface PageActionConfig {
 	icon?: string;
-	label?: string;
+	label: string;
 	url?: string;
 }
 
