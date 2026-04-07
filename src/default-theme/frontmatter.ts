@@ -43,6 +43,13 @@ interface DefaultThemeBaseFrontmatter {
 	editLink?: boolean;
 	lastUpdated?: boolean;
 	copyButton?: boolean;
+	actions?: Array<PageActionConfig>;
+}
+
+export interface PageActionConfig {
+	icon?: string;
+	label?: string;
+	url?: string;
 }
 
 interface HeroActionConfig {

@@ -1,6 +1,8 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+const NpmIcon = () => null;
+
 function setSolidBaseConfig(value: Record<string, unknown>) {
 	const store = ((globalThis as any).__solidBaseConfig ??= {}) as Record<
 		string,
@@ -32,6 +34,12 @@ describe("route config helper", () => {
 		setSolidBaseConfig({
 			title: "Docs",
 			themeConfig: {
+				actions: {
+					icons: {
+						npm: NpmIcon,
+						gh: "<svg />",
+					},
+				},
 				nav: { title: "Default" },
 				sidebar: { "/": [] },
 			},
@@ -47,6 +55,12 @@ describe("route config helper", () => {
 			expect(config()).toMatchObject({
 				title: "Docs",
 				themeConfig: {
+						actions: {
+							icons: {
+								npm: NpmIcon,
+								gh: "<svg />",
+							},
+						},
 					nav: { title: "Localized" },
 					sidebar: { "/": [] },
 				},

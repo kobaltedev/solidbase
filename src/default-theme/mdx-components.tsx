@@ -10,18 +10,19 @@ import {
 	type ComponentProps,
 	children,
 	createSignal,
-	For,
 	type ParentProps,
 	Show,
 	splitProps,
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.js";
+import { useDefaultThemeComponents } from "./context.js";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
 	const frontmatter = useDefaultThemeFrontmatter();
+	const { PageActions } = useDefaultThemeComponents();
 
 	return (
 		<div class={styles.actions}>
@@ -33,11 +34,7 @@ export function h1(props: ComponentProps<"h1">) {
 					</div>
 				</Show>
 			</div>
-			<div class={styles.badges}>
-				<div class={styles.badge}>Badge 1</div>
-				<div class={styles.badge}>Badge 2</div>
-				<div class={styles.badge}>Badge 3</div>
-			</div>
+			<PageActions actions={frontmatter()?.actions} />
 		</div>
 	);
 }

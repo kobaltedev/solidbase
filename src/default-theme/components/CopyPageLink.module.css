@@ -30,7 +30,6 @@
 	font-weight: 500;
 	color: var(--button-text);
 	text-decoration: none;
-	outline: none;
 	cursor: pointer;
 	display: inline-flex;
 	align-items: center;
@@ -49,6 +48,10 @@
 	&:focus-visible {
 		background: var(--button-hover-bg);
 		border-color: var(--button-hover-border);
+	}
+
+	&:focus-visible {
+		outline: auto;
 	}
 
 	&:disabled {
