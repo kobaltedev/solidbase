@@ -2,7 +2,7 @@
 title: Article
 actions:
   - icon: npm
-    label: 0.13.11
+    label: since 0.0.9
   - icon: source
     label: Source
     url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Article.tsx
@@ -12,8 +12,29 @@ actions:
 
 ## Edit Link
 
-TODO
+Shows the configured edit link for the current page.
+
+Requirements:
+
+- global `editPath` must be configured
+- page `editLink` frontmatter must not be `false`
+
+The link target comes from `pageData().editLink`.
 
 ## Last Updated
 
-The last updated date is extracted using git at compile time.
+Last updated rendering is handled by [`LastUpdated`](/reference/default-theme/components/last-updated).
+
+Copy button behavior is handled by [`CopyPageLink`](/reference/default-theme/components/copy-page-link).
+
+## Other Responsibilities
+
+The component also:
+
+- includes landing-page [`Hero`](/reference/default-theme/components/hero) and [`Features`](/reference/default-theme/components/features)
+- includes heading badges through [`PageActions`](/reference/default-theme/components/page-actions)
+- wraps the page content
+- manages previous and next navigation
+- includes the [`Footer`](/reference/default-theme/components/footer) when enabled
+- places [`TableOfContents`](/reference/default-theme/components/toc) in the aside on non-mobile layouts
+- adds keyboard support for selecting expressive-code blocks

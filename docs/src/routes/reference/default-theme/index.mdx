@@ -1,10 +1,16 @@
 ---
 title: Default Theme
+actions:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/tree/main/src/default-theme
 ---
 
 # Default Theme
 
-SolidBase includes a default theme that provides a clean, minimal design out of the box. It includes components for layout, navigation, and other common UI elements.
+SolidBase includes a default theme for documentation sites.
 
 You can use the default theme as-is, or customize it to fit your needs. For more information on customizing the default theme, refer to the [Extending Themes](/guide/customization/extending-themes#extending-the-default-theme) guide.
 
@@ -12,46 +18,37 @@ To access the variables used by the default theme, refer to the [CSS Variables](
 
 ## Page Actions
 
-Page action badges are configured in two parts:
+Page action badges are rendered by [`PageActions`](/reference/default-theme/components/page-actions).
 
-```ts
-{
-	themeConfig: {
-		actions: {
-			icons: {
-				npm: "<svg />",
-				gh: GitHubIcon,
-			},
-		},
-	},
-}
-```
+Configuration lives in:
 
-Then on a page:
+- page frontmatter `actions`
+- `themeConfig.actions.icons`
 
-```md
----
-actions:
-  - icon: npm
-    label: 0.2.4
-  - icon: gh
-    label: source
-    url: https://github.com/kobaltedev/solidbase
----
-```
+## Theme Config
 
-Icon values can be either a raw SVG string or a Solid component.
+`themeConfig` supports these default-theme keys:
+
+- `footer`: `boolean`
+- `socialLinks`: `Record<string, string | { link: string; logo?: string; label?: string }>`
+- `actions`: `{ icons?: Record<string, string | Component | { svg: string } | { component: Component }> }`
+- `nav`: `Array<{ text: string; link: string; activeMatch?: string }>`
+- `sidebar`: `SidebarConfig`
+- `search`: `object`
+- `fonts`: `{ inter?: false; lexend?: false; jetbrainsMono?: false } | false`
+- `text`: `Partial<DefaultThemeTextConfig>`
 
 ## Components
 
 The default theme includes the following components that can be used in your markdown files and customized to fit your needs:
 - [`Article`](/reference/default-theme/components/article)
+- [`CopyPageLink`](/reference/default-theme/components/copy-page-link)
 - [`Footer`](/reference/default-theme/components/footer)
 - [`Header`](/reference/default-theme/components/header)
 - [`LastUpdated`](/reference/default-theme/components/last-updated)
 - [`Link`](/reference/default-theme/components/link)
 - [`LocaleSelector`](/reference/default-theme/components/locale-selector)
-- `PageActions`
+- [`PageActions`](/reference/default-theme/components/page-actions)
 - [`TableOfContents`](/reference/default-theme/components/toc)
 - [`ThemeSelector`](/reference/default-theme/components/theme-selector)
 - [`Hero`](/reference/default-theme/components/hero)

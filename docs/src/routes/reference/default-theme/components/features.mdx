@@ -1,7 +1,32 @@
 ---
 title: Features
+actions:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Features.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Landing-page feature grid.
+
+## Props
+
+```ts
+function Features(props: {
+  features: Array<{
+    icon?: string;
+    title?: string;
+    details?: string;
+  }>;
+}): JSX.Element;
+```
+
+## Behavior
+
+- creates one card per feature
+- `icon` is injected as HTML
+- `title` becomes the card heading
+- `details` becomes the body copy

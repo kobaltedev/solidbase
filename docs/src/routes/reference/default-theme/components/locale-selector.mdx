@@ -1,7 +1,26 @@
 ---
 title: Locale Selector
+actions:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/LocaleSelector.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Locale switcher for multi-locale sites.
+
+## Data Source
+
+- `useLocale().locales`
+- `useLocale().currentLocale()`
+- `useLocale().setLocale()`
+
+## Behavior
+
+- omitted when fewer than two locales are configured
+- uses Kobalte `Select`
+- displays each locale's `config.label`
+- updates the active locale through `setLocale`

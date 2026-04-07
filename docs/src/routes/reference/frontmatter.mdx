@@ -1,18 +1,24 @@
 ---
 title: Frontmatter Config
+actions:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/frontmatter.ts
 ---
 
 # Frontmatter Config
 
-TODO
+Page frontmatter controls per-page metadata and default-theme behavior.
 
-Most of these are specific to the default theme and will be moved eventually.
-
-https://github.com/kobaltedev/solidbase/blob/528eeb758f061a0e05afca1ff4a0b50843b86f07/src/client/page-data.ts#L56
+Most keys below are interpreted by the default theme.
 
 ## Title
 
-The page title is assigned from the `title` value:
+Type: `string`
+
+Used for the page title and document title template interpolation.
 
 ```md
 ---
@@ -34,11 +40,63 @@ The title is formatted from the config:
 
 ## Layout
 
-More options such as `layout` are available in the [Default Theme](/reference/default-theme) reference.
+Type: `"home" | undefined`
+
+`layout: home` enables the default landing page layout.
+
+Effects:
+
+- disables sidebar navigation
+- disables footer and table of contents
+- disables previous and next navigation
+- disables edit link and last updated metadata
+- sets `copyButton` to `false`
+
+More layout-specific options are available in the [Default Theme](/reference/default-theme) reference.
+
+## Default Theme Page Options
+
+These keys are available on normal documentation pages:
+
+| Key | Type | Default |
+| --- | --- | --- |
+| `sidebar` | `boolean` | `true` |
+| `footer` | `boolean` | `true` |
+| `toc` | `boolean` | `true` on non-home pages |
+| `editLink` | `boolean` | `true` |
+| `lastUpdated` | `boolean` | `true` |
+| `copyButton` | `boolean` | `true` on non-home pages |
+
+## Previous and Next
+
+Type:
+
+```ts
+type RelativePageConfig =
+  | string
+  | false
+  | {
+      text?: string;
+      link?: string;
+    };
+```
+
+Keys:
+
+- `prev`
+- `next`
+
+Behavior:
+
+- `false` disables the generated link
+- `string` overrides the link text
+- `{ text, link }` overrides text and target
 
 ## Actions
 
-The default theme supports page-level action badges with the `actions` frontmatter key.
+The default theme supports page-level action badges with the `actions` key.
+
+Rendered by [`PageActions`](/reference/default-theme/components/page-actions).
 
 ```md
 ---
@@ -58,9 +116,34 @@ Each action supports:
 - `label`: the badge text
 - `url`: optional link target. When omitted, the badge renders as static text
 
+## Landing Page Options
+
+These keys are used when `layout: home` is enabled:
+
+| Key | Type |
+| --- | --- |
+| `hero` | [`HeroConfig`](/reference/default-theme/landing#hero) |
+| `features` | [`FeaturesConfig[]`](/reference/default-theme/landing#features) |
+
+`hero` supports:
+
+- `name?: string`
+- `text?: string`
+- `tagline?: string`
+- `image?: { src: string; alt?: string }`
+- `actions?: Array<{ theme?: string; text?: string; link?: string }>`
+
+`features` items support:
+
+- `icon?: string`
+- `title?: string`
+- `details?: string`
+
 ## LLMs
 
-The `llms` frontmatter key controls whether a page is included in generated LLMS documents.
+Type: `false | { exclude?: boolean } | undefined`
+
+Controls whether the page is included in generated LLMS documents.
 
 ```md
 ---
@@ -74,7 +157,9 @@ You can also write `llms: false` to exclude the page entirely.
 
 ## Sitemap
 
-The `sitemap` frontmatter key controls whether a page is included in generated sitemap output.
+Type: `false | { exclude?: boolean } | undefined`
+
+Controls whether the page is included in generated sitemap output.
 
 ```md
 ---

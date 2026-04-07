@@ -1,0 +1,32 @@
+---
+title: Copy Page Link
+actions:
+  - icon: npm
+    label: since 0.5.0
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/CopyPageLink.tsx
+---
+
+# {frontmatter.title}
+
+Page-heading control for copying the current page's generated markdown.
+
+## Data Source
+
+- [`useCopyPageMarkdown`](/reference/runtime-api#usecopypagemarkdown)
+- `themeConfig.text`
+
+## Behavior
+
+- omitted when page markdown copying is unavailable
+- exposes idle, success, and error states
+- disables interaction until the client is ready
+- updates its icon for each copy state
+- uses the localized theme text labels for button content
+
+## State Labels
+
+- idle: `copyPage`
+- success: `copiedPage`
+- error: `copyFailedPage`
