@@ -52,7 +52,7 @@ export async function getCurrentPageMarkdown(
 	}
 
 	const response = await fetchImpl(markdownPath, {
-		headers: { Accept: "text/plain" },
+		headers: { Accept: "text/markdown" },
 	});
 
 	if (!response.ok) {

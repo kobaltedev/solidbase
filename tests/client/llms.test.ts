@@ -101,7 +101,7 @@ describe("llms client helpers", () => {
 
 		expect(fetchMock).toHaveBeenCalledTimes(1);
 		expect(fetchMock).toHaveBeenCalledWith("/guide/getting-started.md", {
-			headers: { Accept: "text/plain" },
+			headers: { Accept: "text/markdown" },
 		});
 	});
 
