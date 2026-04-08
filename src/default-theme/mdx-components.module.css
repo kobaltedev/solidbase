@@ -6,7 +6,7 @@
 	line-height: 1.11;
 }
 
-.badges {
+.actions {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
