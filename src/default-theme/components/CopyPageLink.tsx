@@ -23,9 +23,10 @@ function getStateIcon(state: CopyPageState) {
 export default function CopyPageLink() {
 	const text = useThemeText();
 	const { canCopy, copy, isCopying, isReady, state } = useCopyPageMarkdown();
+	const canShow = () => !import.meta.env.DEV && canCopy();
 
 	return (
-		<Show when={canCopy()}>
+		<Show when={canShow()}>
 			<button
 				type="button"
 				class={styles.button}
