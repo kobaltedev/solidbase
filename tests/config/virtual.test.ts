@@ -10,20 +10,6 @@ describe("transformMdxModule", () => {
 		process.env.PWD = previousPwd;
 	});
 
-	it("embeds llmText using the same transformed markdown output", async () => {
-		const modulePath = routeFixturePath("index.mdx");
-
-		const code = await transformMdxModule(
-			"export default function Page() {}",
-			modulePath,
-			{ markdown: {} },
-		);
-
-		expect(code).toContain('llmText: "# Home');
-		expect(code).toContain("Welcome to SolidBase.");
-		expect(code).toContain("```md\\n{frontmatter.product}\\n```");
-	});
-
 	it("supports nested vite ids and function edit links", async () => {
 		const modulePath = routeFixturePath("guide", "getting-started.mdx");
 
@@ -36,11 +22,11 @@ describe("transformMdxModule", () => {
 			},
 		);
 
-		expect(code).toContain("Getting Started");
 		expect(code).toContain("https://example.com/edit/");
 		expect(code).toContain(
 			"/tests/fixtures/src/routes/guide/getting-started.mdx",
 		);
+		expect(code).not.toContain("llmText:");
 	});
 
 	it("works for markdown files without frontmatter", async () => {
@@ -51,6 +37,7 @@ describe("transformMdxModule", () => {
 			{ markdown: {} },
 		);
 
-		expect(code).toContain('llmText: "Just plain markdown."');
+		expect(code).toContain("frontmatter:");
+		expect(code).not.toContain("llmText:");
 	});
 });

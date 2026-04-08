@@ -69,7 +69,6 @@ export default function solidBaseVitePlugin(
 						code,
 						id,
 						solidBaseConfig,
-						this.resolve.bind(this),
 					);
 			},
 		},

@@ -43,7 +43,6 @@ describe("page data helpers", () => {
 		(window as any).$$SolidBase_page_data = {
 			[pagePath]: {
 				frontmatter: { title: "Hello", description: "World" },
-				llmText: "Hello world",
 			},
 		};
 
@@ -69,7 +68,6 @@ describe("page data helpers", () => {
 		await Promise.resolve();
 		await Promise.resolve();
 
-		expect((pageData?.() as any)?.llmText).toBe("Hello world");
 		expect(frontmatter?.()).toEqual({
 			title: "Hello",
 			description: "World",
