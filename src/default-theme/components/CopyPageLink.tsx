@@ -23,10 +23,9 @@ function getStateIcon(state: CopyPageState) {
 export default function CopyPageLink() {
 	const text = useThemeText();
 	const { canCopy, copy, isCopying, isReady, state } = useCopyPageMarkdown();
-	const canShow = () => !import.meta.env.DEV && canCopy();
 
 	return (
-		<Show when={canShow()}>
+		<Show when={canCopy()}>
 			<button
 				type="button"
 				class={styles.button}
@@ -35,7 +34,7 @@ export default function CopyPageLink() {
 					[styles.error]: state() === "error",
 				}}
 				onClick={copy}
-				disabled={!isReady()}
+				disabled={!isReady() || import.meta.env.DEV}
 				aria-busy={isCopying() || undefined}
 				aria-live="polite"
 			>
