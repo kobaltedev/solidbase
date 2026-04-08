@@ -1,11 +1,11 @@
 ---
-title: Page Actions
-actions:
+title: Badges
+badges:
   - icon: npm
     label: since 0.5.0
   - icon: source
     label: Source
-    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/PageActions.tsx
+url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Badges.tsx
 ---
 
 # {frontmatter.title}
@@ -15,8 +15,8 @@ Badge row shown underneath a page heading.
 ## Props
 
 ```ts
-function PageActions(props: {
-  actions?: Array<{
+function Badges(props: {
+  badges?: Array<{
     icon?: string;
     label: string;
     url?: string;
@@ -26,13 +26,13 @@ function PageActions(props: {
 
 ## Data Source
 
-- page frontmatter `actions`
-- `themeConfig.actions.icons`
+- page frontmatter `badges`
+- `themeConfig.badges.icons`
 
 ## Behavior
 
-- omitted when no actions are provided
-- resolves `action.icon` from `themeConfig.actions.icons`
+- omitted when no badges are provided
+- resolves `badge.icon` from `themeConfig.badges.icons`
 - supports icon values as raw SVG strings
 - supports icon values as Solid components
 - uses linked badges when `url` is present

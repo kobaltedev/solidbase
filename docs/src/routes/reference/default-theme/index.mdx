@@ -18,12 +18,12 @@ To access the variables used by the default theme, refer to the [CSS Variables](
 
 ## Page Actions
 
-Page action badges are rendered by [`PageActions`](/reference/default-theme/components/page-actions).
+Page action badges are rendered by [`Badges`](/reference/default-theme/components/badges).
 
 Configuration lives in:
 
-- page frontmatter `actions`
-- `themeConfig.actions.icons`
+- page frontmatter `badges`
+- `themeConfig.badges.icons`
 
 ## Theme Config
 
@@ -31,7 +31,7 @@ Configuration lives in:
 
 - `footer`: `boolean`
 - `socialLinks`: `Record<string, string | { link: string; logo?: string; label?: string }>`
-- `actions`: `{ icons?: Record<string, string | Component | { svg: string } | { component: Component }> }`
+- `badges`: `{ icons?: Record<string, string | Component | { svg: string } | { component: Component }> }`
 - `nav`: `Array<{ text: string; link: string; activeMatch?: string }>`
 - `sidebar`: `SidebarConfig`
 - `search`: `object`
@@ -42,13 +42,13 @@ Configuration lives in:
 
 The default theme includes the following components that can be used in your markdown files and customized to fit your needs:
 - [`Article`](/reference/default-theme/components/article)
+- [`Badges`](/reference/default-theme/components/badges)
 - [`CopyPageLink`](/reference/default-theme/components/copy-page-link)
 - [`Footer`](/reference/default-theme/components/footer)
 - [`Header`](/reference/default-theme/components/header)
 - [`LastUpdated`](/reference/default-theme/components/last-updated)
 - [`Link`](/reference/default-theme/components/link)
 - [`LocaleSelector`](/reference/default-theme/components/locale-selector)
-- [`PageActions`](/reference/default-theme/components/page-actions)
 - [`TableOfContents`](/reference/default-theme/components/toc)
 - [`ThemeSelector`](/reference/default-theme/components/theme-selector)
 - [`Hero`](/reference/default-theme/components/hero)

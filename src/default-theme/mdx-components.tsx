@@ -22,19 +22,19 @@ import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
 	const frontmatter = useDefaultThemeFrontmatter();
-	const { PageActions } = useDefaultThemeComponents();
+	const { Badges } = useDefaultThemeComponents();
 
 	return (
 		<div class={styles.actions}>
 			<div class={styles.title}>
 				<h1 class={styles.h1} {...props} />
 				<Show when={frontmatter()?.copyButton !== false}>
-					<div class={styles.badgeAction}>
+					<div class={styles.pageAction}>
 						<CopyPageLink />
 					</div>
 				</Show>
 			</div>
-			<PageActions actions={frontmatter()?.actions} />
+			<Badges badges={frontmatter()?.badges} />
 		</div>
 	);
 }

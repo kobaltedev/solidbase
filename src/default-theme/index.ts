@@ -1,9 +1,8 @@
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
-
+import type { Component, JSX } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig, SidebarItem } from "../config/sidebar.js";
-import type { Component, JSX } from "solid-js";
 import type { DefaultThemeTextConfig } from "./text.js";
 
 export type { DefaultThemeTextConfig } from "./text.js";
@@ -26,29 +25,31 @@ export interface DefaultThemeSidebarItemOptionCustomStatus {
 export type DefaultThemeSidebarItem =
 	SidebarItem<DefaultThemeSidebarItemOptions>;
 
-export type DefaultThemeActionIconComponent = Component<{
-	class?: string;
-}> | Component<JSX.SvgSVGAttributes<SVGSVGElement>>;
+export type DefaultThemeBadgeIconComponent =
+	| Component<{
+			class?: string;
+	  }>
+	| Component<JSX.SvgSVGAttributes<SVGSVGElement>>;
 
-export interface DefaultThemeSvgActionIcon {
+export interface DefaultThemeSvgBadgeIcon {
 	svg: string;
 }
 
-export interface DefaultThemeComponentActionIcon {
-	component: DefaultThemeActionIconComponent;
+export interface DefaultThemeComponentBadgeIcon {
+	component: DefaultThemeBadgeIconComponent;
 }
 
-export type DefaultThemeActionIconConfig =
-	| DefaultThemeSvgActionIcon
-	| DefaultThemeComponentActionIcon;
+export type DefaultThemeBadgeIconConfig =
+	| DefaultThemeSvgBadgeIcon
+	| DefaultThemeComponentBadgeIcon;
 
-export type DefaultThemeActionIcon =
+export type DefaultThemeBadgeIcon =
 	| string
-	| DefaultThemeActionIconComponent
-	| DefaultThemeActionIconConfig;
+	| DefaultThemeBadgeIconComponent
+	| DefaultThemeBadgeIconConfig;
 
-export interface DefaultThemeActionsConfig {
-	icons?: Record<string, DefaultThemeActionIcon>;
+export interface DefaultThemeBadgesConfig {
+	icons?: Record<string, DefaultThemeBadgeIcon>;
 }
 
 export type DefaultThemeConfig = {
@@ -58,7 +59,7 @@ export type DefaultThemeConfig = {
 			| string
 			| Omit<SocialLink, "type">;
 	};
-	actions?: DefaultThemeActionsConfig;
+	badges?: DefaultThemeBadgesConfig;
 	nav?: Array<NavItem>;
 	sidebar?: SidebarConfig<DefaultThemeSidebarItem>;
 	search?: SearchConfig;

@@ -43,10 +43,10 @@ interface DefaultThemeBaseFrontmatter {
 	editLink?: boolean;
 	lastUpdated?: boolean;
 	copyButton?: boolean;
-	actions?: Array<PageActionConfig>;
+	badges?: Array<BadgesConfig>;
 }
 
-export interface PageActionConfig {
+export interface BadgeConfig {
 	icon?: string;
 	label: string;
 	url?: string;
@@ -66,7 +66,7 @@ export interface HeroConfig {
 		src: string;
 		alt?: string;
 	};
-	actions?: Array<HeroActionConfig>;
+	badges?: Array<HeroActionConfig>;
 }
 
 export interface FeaturesConfig {

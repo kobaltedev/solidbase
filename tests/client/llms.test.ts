@@ -70,7 +70,9 @@ describe("llms client helpers", () => {
 	});
 
 	it("treats llms false as not copyable", async () => {
-		const { canCopyPageMarkdown } = await import("../../src/client/page-markdown.ts");
+		const { canCopyPageMarkdown } = await import(
+			"../../src/client/page-markdown.ts"
+		);
 
 		expect(canCopyPageMarkdown(true, false)).toBe(false);
 		expect(canCopyPageMarkdown(true, { exclude: true })).toBe(false);

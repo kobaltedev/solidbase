@@ -2,16 +2,6 @@ export { mdxComponents } from "virtual:solidbase/components";
 export { useRouteSolidBaseConfig } from "./config.js";
 export { useSolidBaseContext } from "./context.jsx";
 export {
-	type CopyPageState,
-	canCopyPageMarkdown,
-	clearPageMarkdownCache,
-	copyTextToClipboard,
-	getCurrentPageMarkdown,
-	getCurrentPageMarkdownPath,
-	toMarkdownPath,
-	useCopyPageMarkdown,
-} from "./page-markdown.js";
-export {
 	getLocale,
 	getLocaleLink,
 	type ResolvedLocale,
@@ -23,6 +13,16 @@ export {
 	useCurrentPageData,
 	useFrontmatter,
 } from "./page-data.js";
+export {
+	type CopyPageState,
+	canCopyPageMarkdown,
+	clearPageMarkdownCache,
+	copyTextToClipboard,
+	getCurrentPageMarkdown,
+	getCurrentPageMarkdownPath,
+	toMarkdownPath,
+	useCopyPageMarkdown,
+} from "./page-markdown.js";
 export { usePreferredLanguage } from "./preferred-language.js";
 export { SolidBaseRoot } from "./Root.jsx";
 export type * from "./sidebar.js";

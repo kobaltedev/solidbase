@@ -94,14 +94,14 @@ Behavior:
 
 ## Actions
 
-The default theme supports page-level action badges with the `actions` key.
+The default theme supports page-level action badges with the `badges` key.
 
-Rendered by [`PageActions`](/reference/default-theme/components/page-actions).
+Rendered by [`Badges`](/reference/default-theme/components/badges).
 
 ```md
 ---
 title: Disclosure
-actions:
+badges:
   - icon: npm
     label: 0.2.4
   - icon: gh
@@ -112,7 +112,7 @@ actions:
 
 Each action supports:
 
-- `icon`: a key resolved from `themeConfig.actions.icons`
+- `icon`: a key resolved from `themeConfig.badges.icons`
 - `label`: the badge text
 - `url`: optional link target. When omitted, the badge renders as static text
 

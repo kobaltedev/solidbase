@@ -55,12 +55,12 @@ describe("route config helper", () => {
 			expect(config()).toMatchObject({
 				title: "Docs",
 				themeConfig: {
-						actions: {
-							icons: {
-								npm: NpmIcon,
-								gh: "<svg />",
-							},
+					actions: {
+						icons: {
+							npm: NpmIcon,
+							gh: "<svg />",
 						},
+					},
 					nav: { title: "Localized" },
 					sidebar: { "/": [] },
 				},

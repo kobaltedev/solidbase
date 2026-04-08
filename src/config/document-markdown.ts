@@ -30,10 +30,7 @@ type MdxNode = {
 	attributes?: Array<{ type: string; name: string; value?: unknown }>;
 };
 
-const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([
-	remarkCodeTabs,
-	remarkAddClass,
-]);
+const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([remarkCodeTabs, remarkAddClass]);
 
 function renderExpressionValue(value: unknown): string | null {
 	if (value === null || value === undefined || typeof value === "boolean") {
@@ -129,8 +126,9 @@ function getJsxAttributeValue(
 	node: { attributes?: Array<{ type: string; name: string; value?: unknown }> },
 	name: string,
 ) {
-	return node.attributes?.find((attr) => attr.type === "mdxJsxAttribute" && attr.name === name)
-		?.value;
+	return node.attributes?.find(
+		(attr) => attr.type === "mdxJsxAttribute" && attr.name === name,
+	)?.value;
 }
 
 function hasDirectiveTitle(title: unknown): title is string {
@@ -152,15 +150,18 @@ function createDirectiveLabel(label: string) {
 	};
 }
 
-function createDirectiveContainer(name: string, children: any[], title?: string) {
+function createDirectiveContainer(
+	name: string,
+	children: any[],
+	title?: string,
+) {
 	return {
 		type: "containerDirective",
 		name,
 		attributes: [],
-		children:
-			hasDirectiveTitle(title)
-				? [createDirectiveLabel(title), ...children]
-				: children,
+		children: hasDirectiveTitle(title)
+			? [createDirectiveLabel(title), ...children]
+			: children,
 	};
 }
 
@@ -186,8 +187,7 @@ function normalizeDirectiveContainer(node: MdxNode) {
 
 		if (title === "package-manager") {
 			const codeBlocks = tabs
-				.map((child) => normalizeMdxChildren(child.children ?? []))
-				.flat()
+				.flatMap((child) => normalizeMdxChildren(child.children ?? []))
 				.filter((child: MdxNode) => child?.type === "code");
 
 			const lang = codeBlocks[0]?.lang ?? "sh";

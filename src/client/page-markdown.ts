@@ -1,4 +1,7 @@
-import { type ClipboardSetter, writeClipboard } from "@solid-primitives/clipboard";
+import {
+	type ClipboardSetter,
+	writeClipboard,
+} from "@solid-primitives/clipboard";
 import { useLocation } from "@solidjs/router";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 

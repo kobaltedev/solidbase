@@ -1,34 +1,34 @@
-import { Badge } from "@kobalte/core/badge";
-import { type ParentProps, For, Show } from "solid-js";
+import { Badge as KBBadge } from "@kobalte/core/badge";
+import { For, type ParentProps, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
-import type { PageActionConfig } from "../frontmatter.js";
+import type { BadgeConfig } from "../frontmatter.js";
 import type {
-	DefaultThemeActionIcon,
-	DefaultThemeActionIconConfig,
-	DefaultThemeActionIconComponent,
+	DefaultThemeBadgeIcon,
+	DefaultThemeBadgeIconComponent,
+	DefaultThemeBadgeIconConfig,
 } from "../index.js";
 import { useRouteConfig } from "../utils.js";
-import styles from "./PageActions.module.css";
+import styles from "./Badges.module.css";
 
 function isIconComponent(
-	icon: DefaultThemeActionIcon | undefined,
-): icon is DefaultThemeActionIconComponent {
+	icon: DefaultThemeBadgeIcon | undefined,
+): icon is DefaultThemeBadgeIconComponent {
 	return typeof icon === "function";
 }
 
 function isIconConfig(
-	icon: DefaultThemeActionIcon | undefined,
-): icon is DefaultThemeActionIconConfig {
+	icon: DefaultThemeBadgeIcon | undefined,
+): icon is DefaultThemeBadgeIconConfig {
 	return typeof icon === "object" && icon !== null;
 }
 
-function PageActionBadge(props: { action: PageActionConfig }) {
+function Badge(props: { badge: BadgeConfig }) {
 	const config = useRouteConfig();
 	const icon = () => {
-		const key = props.action.icon;
+		const key = props.badge.icon;
 		if (!key) return undefined;
-		return config().themeConfig?.actions?.icons?.[key];
+		return config().themeConfig?.badges?.icons?.[key];
 	};
 	const iconSvg = () => {
 		const value = icon();
@@ -49,49 +49,45 @@ function PageActionBadge(props: { action: PageActionConfig }) {
 			</Show>
 			<Show when={iconSvg()}>
 				{(svg) => (
-					<div
-						class={styles.badgeIcon}
-						aria-hidden="true"
-						innerHTML={svg()}
-					/>
+					<div class={styles.badgeIcon} aria-hidden="true" innerHTML={svg()} />
 				)}
 			</Show>
-			<span>{props.action.label}</span>
+			<span>{props.badge.label}</span>
 		</>
 	);
 
 	return (
 		<Show
-			when={props.action.url}
+			when={props.badge.url}
 			fallback={
-				<Badge class={styles.badge} textValue={props.action.label}>
+				<KBBadge class={styles.badge} textValue={props.badge.label}>
 					{content()}
-				</Badge>
+				</KBBadge>
 			}
 		>
 			{(url) => (
-				<Badge
+				<KBBadge
 					as="a"
 					class={`${styles.badge} ${styles.badgeLink}`}
 					href={url()}
 					target={url().includes("//") ? "_blank" : undefined}
 					rel={url().includes("//") ? "noopener noreferrer" : undefined}
-					textValue={props.action.label}
+					textValue={props.badge.label}
 				>
 					{content()}
-				</Badge>
+				</KBBadge>
 			)}
 		</Show>
 	);
 }
 
-export default function PageActions(
-	props: ParentProps<{ actions?: Array<PageActionConfig> }>,
+export default function Badges(
+	props: ParentProps<{ badges?: Array<BadgeConfig> }>,
 ) {
 	return (
-		<Show when={props.actions?.length}>
+		<Show when={props.badges?.length}>
 			<div class={styles.badges}>
-				<For each={props.actions}>{(action) => <PageActionBadge action={action} />}</For>
+				<For each={props.badges}>{(badge) => <Badge badge={badge} />}</For>
 				{props.children}
 			</div>
 		</Show>

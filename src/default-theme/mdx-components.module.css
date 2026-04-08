@@ -6,7 +6,7 @@
 	line-height: 1.11;
 }
 
-.actions {
+.badges {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -20,7 +20,7 @@
 	justify-content: space-between;
 	gap: 1rem;
 	width: 100%;
-    margin-bottom: 0.25rem;
+	margin-bottom: 0.25rem;
 }
 
 .title > .h1 {
@@ -29,7 +29,7 @@
 	margin-bottom: 0;
 }
 
-.badgeAction {
+.pageAction {
 	display: flex;
 	margin-left: auto;
 }

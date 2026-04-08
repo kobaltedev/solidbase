@@ -236,7 +236,7 @@ describe("toDocumentMarkdown", () => {
 
 		expect(markdown).toContain(":::note[Heads up]");
 		expect(markdown).toContain("Use <kbd>Cmd</kbd> + <kbd>K</kbd>.");
-        expect(markdown).toContain(":::")
+		expect(markdown).toContain(":::");
 		expect(markdown).toContain('<CustomThing tone="loud">Hello</CustomThing>');
 		expect(markdown).not.toContain("DirectiveContainer");
 		expect(markdown).not.toContain("{/* prettier-ignore */}");

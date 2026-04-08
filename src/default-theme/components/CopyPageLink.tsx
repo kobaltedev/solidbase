@@ -40,7 +40,10 @@ export default function CopyPageLink() {
 			>
 				<Dynamic component={getStateIcon(state())} class={styles.icon} />
 				<span class={styles.labelWrap}>
-					<span class={styles.label} classList={{ [styles.active]: state() === "idle" }}>
+					<span
+						class={styles.label}
+						classList={{ [styles.active]: state() === "idle" }}
+					>
 						{text.copyPage}
 					</span>
 					<span

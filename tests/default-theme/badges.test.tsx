@@ -20,7 +20,7 @@ const ComponentIcon = (props: { class?: string }) => (
 	</svg>
 );
 
-describe("PageActions", () => {
+describe("PageBadges", () => {
 	afterEach(() => {
 		setSolidBaseConfig({});
 		vi.doUnmock("../../src/default-theme/utils.js");
@@ -30,7 +30,7 @@ describe("PageActions", () => {
 	it("renders linked and static badges with configured icons", async () => {
 		setSolidBaseConfig({
 			themeConfig: {
-				actions: {
+				badges: {
 					icons: {
 						npm: `<svg data-testid="svg-icon" viewBox="0 0 10 10" fill="currentColor"><rect width="10" height="10" /></svg>`,
 						gh: ComponentIcon,
@@ -48,13 +48,13 @@ describe("PageActions", () => {
 		}));
 
 		const { renderToString } = await import("solid-js/web");
-		const { default: PageActions } = await import(
-			"../../src/default-theme/components/PageActions.tsx"
+		const { default: Badges } = await import(
+			"../../src/default-theme/components/Badges.tsx"
 		);
 
 		const html = renderToString(() => (
-			<PageActions
-				actions={[
+			<Badges
+				badges={[
 					{ icon: "npm", label: "0.13.11" },
 					{
 						icon: "gh",
@@ -71,13 +71,11 @@ describe("PageActions", () => {
 		expect(html).toContain("fallback");
 		expect(html).toContain('data-testid="svg-icon"');
 		expect(html).toContain('data-testid="component-icon"');
-		expect(html).toContain(
-			'href="https://github.com/kobaltedev/solidbase"',
-		);
+		expect(html).toContain('href="https://github.com/kobaltedev/solidbase"');
 		expect(html.match(/<a\b/g)?.length ?? 0).toBe(1);
 	});
 
-	it("renders nothing when there are no actions", async () => {
+	it("renders nothing when there are no badges", async () => {
 		vi.doMock("../../src/default-theme/utils.js", () => ({
 			useRouteConfig: () => () =>
 				((globalThis as any).__solidBaseConfig ?? {}) as Record<
@@ -87,10 +85,10 @@ describe("PageActions", () => {
 		}));
 
 		const { renderToString } = await import("solid-js/web");
-		const { default: PageActions } = await import(
-			"../../src/default-theme/components/PageActions.tsx"
+		const { default: Badges } = await import(
+			"../../src/default-theme/components/Badges.tsx"
 		);
 
-		expect(renderToString(() => <PageActions actions={[]} />)).toBe("");
+		expect(renderToString(() => <Badges badge={[]} />)).toBe("");
 	});
 });
