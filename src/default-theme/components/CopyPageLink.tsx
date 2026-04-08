@@ -7,12 +7,14 @@ import {
 } from "../../client/index.jsx";
 import { useThemeText } from "../utils.js";
 import styles from "./CopyPageLink.module.css";
-import { CheckIcon, CopyIcon, CrossIcon } from "./icons.jsx";
+import Check from "~icons/ri/check-line";
+import CrossIcon from "~icons/ri/close-circle-line";
+import CopyIcon from "~icons/ri/copy-line";
 
 function getStateIcon(state: CopyPageState) {
 	switch (state) {
 		case "success":
-			return CheckIcon;
+			return Check;
 		case "error":
 			return CrossIcon;
 		default:
