@@ -50,7 +50,10 @@ export function createGeneratedAssetPlugin(
 		if (!fileStat.isFile()) return false;
 
 		const content = await readFile(filePath);
-		if (filePath.endsWith(".md") || filePath.endsWith(".txt")) {
+		if (filePath.endsWith(".md")) {
+			res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+			res.setHeader("Content-Disposition", "inline");
+		} else if (filePath.endsWith(".txt")) {
 			res.setHeader("Content-Type", "text/plain; charset=utf-8");
 		}
 		res.statusCode = 200;
