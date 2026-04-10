@@ -1,15 +1,14 @@
 import { Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
-
+import Check from "~icons/ri/check-fill";
+import CrossIcon from "~icons/ri/close-circle-line";
+import CopyIcon from "~icons/ri/file-copy-line";
 import {
 	type CopyPageState,
 	useCopyPageMarkdown,
 } from "../../client/index.jsx";
 import { useThemeText } from "../utils.js";
 import styles from "./CopyPageLink.module.css";
-import Check from '~icons/ri/check-fill';
-import CrossIcon from '~icons/ri/close-circle-line';
-import CopyIcon from '~icons/ri/file-copy-line';
 
 function getStateIcon(state: CopyPageState) {
 	switch (state) {

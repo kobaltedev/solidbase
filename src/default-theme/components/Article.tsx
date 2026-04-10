@@ -14,7 +14,6 @@ import { mobileLayout } from "../globals.js";
 import { useSolidBaseContext, useThemeText } from "../utils.js";
 
 import styles from "./Article.module.css";
-import CopyPageLink from "./CopyPageLink.jsx";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();

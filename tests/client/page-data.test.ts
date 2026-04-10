@@ -49,13 +49,13 @@ describe("page data helpers", () => {
 		const { CurrentPageDataProvider, useCurrentPageData, useFrontmatter } =
 			await import("../../src/client/page-data.ts");
 
-		let pageData: ReturnType<typeof useCurrentPageData> | undefined;
+		let _pageData: ReturnType<typeof useCurrentPageData> | undefined;
 		let frontmatter: ReturnType<typeof useFrontmatter<any>> | undefined;
 
 		const dispose = createRoot((dispose) => {
 			CurrentPageDataProvider({
 				get children() {
-					pageData = useCurrentPageData();
+					_pageData = useCurrentPageData();
 					frontmatter = useFrontmatter();
 					return null;
 				},
