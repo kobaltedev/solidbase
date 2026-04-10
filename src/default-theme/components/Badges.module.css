@@ -1,0 +1,79 @@
+.badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+	width: 100%;
+}
+
+.badge {
+	--badge-bg: var(--sb-background-color);
+	--badge-border: color-mix(
+		in hsl,
+		var(--sb-decoration-color) 14%,
+		transparent
+	);
+	--badge-text: var(--sb-text-color);
+	--badge-hover-bg: color-mix(
+		in hsl,
+		var(--sb-background-color) 88%,
+		var(--sb-brand-color)
+	);
+	--badge-hover-border: color-mix(
+		in hsl,
+		var(--sb-decoration-color) 70%,
+		transparent
+	);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	box-sizing: border-box;
+	border: 1px solid var(--badge-border);
+	border-radius: 0.5rem;
+	background: var(--badge-bg);
+	min-height: calc(1.2em + 0.8rem + 2px);
+	padding: 0.4rem 0.75rem;
+	font-size: 0.85rem;
+	line-height: 1.2;
+	font-weight: 500;
+	color: var(--badge-text);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.badgeLink {
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.badgeLink:hover,
+.badgeLink:focus-visible {
+	background: var(--badge-hover-bg);
+	border-color: var(--badge-hover-border);
+}
+
+.badge :global(svg) {
+	width: 0.85rem;
+	height: 0.85rem;
+	flex: none;
+}
+
+.badgeIcon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: none;
+}
+
+.badgeIcon:empty {
+	display: none;
+}
+
+.badgeIcon :global(svg) {
+	width: 0.85rem;
+	height: 0.85rem;
+	display: block;
+}

@@ -6,7 +6,7 @@ import { MetaOptions } from "@expressive-code/core";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import type { VFile } from "vfile";
-import type { PluginOption } from "vite";
+import type { Plugin } from "vite";
 import { isMarkdown } from "../vite-plugin/index.js";
 
 export interface ImportCodeFileOptions {
@@ -75,17 +75,18 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 				? Number.parseInt(res.groups.to, 10)
 				: undefined;
 
+			const resolvedFilePath = path.resolve(file.dirname, filePath);
 			const filename = path.basename(filePath);
 			const fileExt = filename.split(".").slice(-1)[0];
 			if (langFile) node.lang = fileExt;
 
 			node.meta = `title="${filename}" ${node.meta ?? ""}`;
 
-			let fileContent = fs.readFileSync(filePath, "utf8");
+			let fileContent = fs.readFileSync(resolvedFilePath, "utf8");
 
 			const transformResult = options.transform?.(
 				fileContent,
-				filePath,
+				resolvedFilePath,
 				file.path,
 			);
 			if (transformResult !== undefined) fileContent = transformResult;
@@ -109,7 +110,7 @@ export function viteAliasCodeImports(
 		source: string,
 		importer: string,
 	) => Promise<{ id: string } | null>,
-): PluginOption {
+): Plugin {
 	return {
 		name: "solidbase:vite-alias-code-imports",
 		enforce: "pre",

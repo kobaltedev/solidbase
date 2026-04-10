@@ -1,8 +1,43 @@
 ---
 title: Hero
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Hero.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Landing-page hero block.
+
+## Props
+
+```ts
+function Hero(props: {
+  data: {
+    name?: string;
+    text?: string;
+    tagline?: string;
+    image?: {
+      src: string;
+      alt?: string;
+    };
+    actions?: Array<{
+      theme?: string;
+      text?: string;
+      link?: string;
+    }>;
+  };
+}): JSX.Element;
+```
+
+## Behavior
+
+- uses page `frontmatter.title` as the main heading
+- includes `text`, `tagline`, and `image` when present
+- includes action links from `data.actions`
+- external action links open in a new tab
+- action `theme` defaults to `brand`
     

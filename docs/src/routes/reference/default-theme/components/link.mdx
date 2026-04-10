@@ -1,8 +1,23 @@
 ---
 title: Link
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Link.tsx
 ---
 
 # {frontmatter.title}
 
+Used for theme-owned links such as edit links and skip links.
 
-TODO
+## Props
+
+Accepts standard anchor element props.
+
+## Behavior
+
+- adds default theme link styling
+- treats URLs containing `://` as outbound
+- adds `target="_blank"` and `rel="noopener noreferrer"` to outbound links

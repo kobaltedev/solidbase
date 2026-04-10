@@ -1,5 +1,11 @@
 ---
 title: Runtime API
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/tree/main/src/client
 ---
 
 # Runtime API
@@ -11,37 +17,53 @@ These are the same primitives used to build the default theme.
 
 ### `useSolidBaseContext`
 
-Provides access to the SolidBase config, locale, and page title.
-The config will have the locale's `themeConfig` spread onto its own `themeConfig`.
+Provides access to the active SolidBase config and computed page title.
+
+The returned config already has the active locale's `themeConfig` merged into it.
 
 ```ts
 function useSolidBaseContext<ThemeConfig>(): SolidBaseContextValue<ThemeConfig>;
 
 interface SolidBaseContextValue<ThemeConfig> {
   config: Accessor<SolidBaseResolvedConfig<ThemeConfig>>;
-  locale: ReturnType<typeof useLocale>;
-  title: Accessor<string>;
+  metaTitle: Accessor<string>;
 }
 ```
 
 ### `useCurrentPageData`
 
-Provides access to the data for the current page,
-including frontmatter, table of contents, and `lastUpdated`.
+Provides access to the data for the current page.
 
 ```ts
 interface CurrentPageData {
-  frontmatter: Record<string, any>;
-  toc?: Array<TableOfContentsItem>;
+  frontmatter: BaseFrontmatter;
+  toc?: Array<TableOfContentsItemData>;
   editLink?: string;
   lastUpdated?: number;
 }
 
-interface TableOfContentsItem {
+interface BaseFrontmatter {
+  title?: string;
+  titleTemplate?: string;
+  description?: string;
+  llms?: false | { exclude?: boolean };
+}
+
+interface TableOfContentsItemData {
   title: string;
   href: string;
-  children: Array<TableOfContentsItem>;
+  children: Array<TableOfContentsItemData>;
 }
+```
+
+### `useFrontmatter`
+
+Returns the current page's frontmatter, cast to the requested type.
+
+```ts
+function useFrontmatter<T extends Record<string, any>>(): Accessor<
+  T | undefined
+>;
 ```
 
 ## Theme
@@ -62,7 +84,7 @@ Updates the current theme.
 function setTheme(theme: "light" | "dark" | "system"): void;
 ```
 
-### `getThemVariant`
+### `getThemeVariant`
 
 Similar to `getTheme`, but indicates whether the theme is being derived from system preferences.
 This is intended to be used in theme switchers.
@@ -83,9 +105,7 @@ interface UseLocale {
   locales: Array<ResolvedLocale<any>>;
   currentLocale: Accessor<ResolvedLocale<any>>;
   setLocale(locale: ResolvedLocale<any>): void;
-  // Applies the current locale's path prefix (if there is one) to the given path
   applyPathPrefix(path: string): `/${string}`;
-  // The current path without the locale prefix
   routePath: Accessor<`/${string}`>;
 }
 
@@ -102,10 +122,10 @@ interface ResolvedLocale<ThemeConfig> {
 function getLocale(path?: string): ResolvedLocale<any>;
 ```
 
-Returns the locale for the provided or path.
+Returns the locale for the provided path.
+
 If `path` is not provided then on the server the request `pathname` will be used,
 and on the client `location.pathname` will be used.
-This is mostly intended for `getHtmlProps`.
 
 ### `getLocaleLink`
 
@@ -123,4 +143,55 @@ Manages the user's preferred language for TypeScript/JavaScript toggles in code 
 
 ```ts
 function usePreferredLanguage(): [Accessor<"ts" | "js">, Setter<"ts" | "js">];
+```
+
+## Page Markdown Copy Helpers
+
+### `canCopyPageMarkdown`
+
+```ts
+function canCopyPageMarkdown(
+  configLlms: boolean | undefined,
+  llms: false | { exclude?: boolean } | undefined,
+): boolean;
+```
+
+### `getCurrentPageMarkdownPath`
+
+```ts
+function getCurrentPageMarkdownPath(pathname?: string): string | undefined;
+```
+
+### `getCurrentPageMarkdown`
+
+Fetches the current page's generated markdown.
+
+```ts
+function getCurrentPageMarkdown(
+  pathname?: string,
+  fetchImpl?: typeof fetch,
+): Promise<string>;
+```
+
+### `copyTextToClipboard`
+
+```ts
+function copyTextToClipboard(
+  text: string,
+  writeText?: ClipboardSetter,
+): Promise<void>;
+```
+
+### `useCopyPageMarkdown`
+
+```ts
+type CopyPageState = "idle" | "success" | "error";
+
+function useCopyPageMarkdown(): {
+  canCopy: Accessor<boolean>;
+  copy: () => Promise<boolean>;
+  isCopying: Accessor<boolean>;
+  isReady: Accessor<boolean>;
+  state: Accessor<CopyPageState>;
+};
 ```

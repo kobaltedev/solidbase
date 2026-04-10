@@ -6,6 +6,10 @@
 	grid-template-columns: minmax(12rem, auto) 1fr;
 }
 
+main {
+	min-width: 0;
+}
+
 .skipnav {
 	position: fixed;
 	top: 0;

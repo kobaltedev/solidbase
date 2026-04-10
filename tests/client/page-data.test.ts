@@ -43,20 +43,19 @@ describe("page data helpers", () => {
 		(window as any).$$SolidBase_page_data = {
 			[pagePath]: {
 				frontmatter: { title: "Hello", description: "World" },
-				llmText: "Hello world",
 			},
 		};
 
 		const { CurrentPageDataProvider, useCurrentPageData, useFrontmatter } =
 			await import("../../src/client/page-data.ts");
 
-		let pageData: ReturnType<typeof useCurrentPageData> | undefined;
+		let _pageData: ReturnType<typeof useCurrentPageData> | undefined;
 		let frontmatter: ReturnType<typeof useFrontmatter<any>> | undefined;
 
 		const dispose = createRoot((dispose) => {
 			CurrentPageDataProvider({
 				get children() {
-					pageData = useCurrentPageData();
+					_pageData = useCurrentPageData();
 					frontmatter = useFrontmatter();
 					return null;
 				},
@@ -69,7 +68,6 @@ describe("page data helpers", () => {
 		await Promise.resolve();
 		await Promise.resolve();
 
-		expect((pageData?.() as any)?.llmText).toBe("Hello world");
 		expect(frontmatter?.()).toEqual({
 			title: "Hello",
 			description: "World",

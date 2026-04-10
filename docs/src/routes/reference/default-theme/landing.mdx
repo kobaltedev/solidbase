@@ -1,5 +1,11 @@
 ---
 title: Landing
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/docs/src/routes/index.mdx
 ---
 
 # Landing
@@ -16,6 +22,59 @@ features: ...
 ---
 ```
 
-TODO
+## Required Setup
 
-https://github.com/kobaltedev/solidbase/blob/main/docs/src/routes/index.mdx?plain=1
+- set `layout: home`
+- configure `hero`
+- optionally configure `features`
+
+## `hero`
+
+Rendered by the [`Hero`](/reference/default-theme/components/hero) component.
+
+Type:
+
+```ts
+type HeroConfig = {
+  name?: string;
+  text?: string;
+  tagline?: string;
+  image?: {
+    src: string;
+    alt?: string;
+  };
+  actions?: Array<{
+    theme?: string;
+    text?: string;
+    link?: string;
+  }>;
+};
+```
+
+Notes:
+
+- `title` still comes from frontmatter
+- `hero.text` renders above the tagline
+- `hero.tagline` renders with emphasized landing-page styling
+- `hero.actions` renders CTA links
+- external hero action links open in a new tab
+
+## `features`
+
+Rendered by the [`Features`](/reference/default-theme/components/features) component.
+
+Type:
+
+```ts
+type FeaturesConfig = {
+  icon?: string;
+  title?: string;
+  details?: string;
+};
+```
+
+Notes:
+
+- `icon` is rendered as HTML
+- `title` renders as the feature heading
+- `details` renders as the feature body copy

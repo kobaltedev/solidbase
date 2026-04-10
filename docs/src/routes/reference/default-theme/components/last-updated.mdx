@@ -1,9 +1,24 @@
 ---
 title: Last Updated
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/LastUpdated.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Displays the current page timestamp.
 
-The last updated date is extracted using git at compile time.
+## Data Source
+
+- reads `pageData().lastUpdated`
+- formats the date with the global `lastUpdated` config
+
+## Behavior
+
+- shows `Last updated: ?` when no valid timestamp is available
+- uses `Intl.DateTimeFormat` with the active runtime locale
+- defaults come from the global SolidBase config

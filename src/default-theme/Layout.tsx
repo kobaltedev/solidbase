@@ -29,6 +29,7 @@ import {
 	useDefaultThemeComponents,
 	useDefaultThemeState,
 } from "./context.jsx";
+import { defaultThemeComponents } from "./default-components.js";
 import { mobileLayout } from "./globals.js";
 import { usePace } from "./pace.js";
 import { useRouteConfig } from "./utils.js";
@@ -48,7 +49,7 @@ export default (props: ParentProps) => {
 
 	return (
 		<DefaultThemeStateProvider>
-			<DefaultThemeComponentsProvider>
+			<DefaultThemeComponentsProvider components={defaultThemeComponents}>
 				<SidebarProvider config={config().themeConfig?.sidebar}>
 					<Layout>{props.children}</Layout>
 				</SidebarProvider>

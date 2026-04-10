@@ -10,6 +10,7 @@ export function useDefaultThemeFrontmatter() {
 
 		data.editLink ??= true;
 		data.lastUpdated ??= true;
+		data.copyButton ??= data.layout !== "home";
 
 		if (data?.layout === "home") {
 			data.sidebar = false;
@@ -41,6 +42,14 @@ interface DefaultThemeBaseFrontmatter {
 	next?: RelativePageConfig;
 	editLink?: boolean;
 	lastUpdated?: boolean;
+	copyButton?: boolean;
+	badges?: Array<BadgeConfig>;
+}
+
+export interface BadgeConfig {
+	icon?: string;
+	label: string;
+	url?: string;
 }
 
 interface HeroActionConfig {
@@ -57,7 +66,7 @@ export interface HeroConfig {
 		src: string;
 		alt?: string;
 	};
-	actions?: Array<HeroActionConfig>;
+	badges?: Array<HeroActionConfig>;
 }
 
 export interface FeaturesConfig {

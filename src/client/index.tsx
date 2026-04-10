@@ -13,6 +13,16 @@ export {
 	useCurrentPageData,
 	useFrontmatter,
 } from "./page-data.js";
+export {
+	type CopyPageState,
+	canCopyPageMarkdown,
+	clearPageMarkdownCache,
+	copyTextToClipboard,
+	getCurrentPageMarkdown,
+	getCurrentPageMarkdownPath,
+	toMarkdownPath,
+	useCopyPageMarkdown,
+} from "./page-markdown.js";
 export { usePreferredLanguage } from "./preferred-language.js";
 export { SolidBaseRoot } from "./Root.jsx";
 export type * from "./sidebar.js";

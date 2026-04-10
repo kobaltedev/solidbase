@@ -16,10 +16,28 @@ import {
 	splitProps,
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
+import CopyPageLink from "../default-theme/components/CopyPageLink.js";
+import { useDefaultThemeComponents } from "./context.js";
+import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 import styles from "./mdx-components.module.css";
 
 export function h1(props: ComponentProps<"h1">) {
-	return <h1 class={styles.h1} {...props} />;
+	const frontmatter = useDefaultThemeFrontmatter();
+	const { Badges } = useDefaultThemeComponents();
+
+	return (
+		<div class={styles.actions}>
+			<div class={styles.title}>
+				<h1 class={styles.h1} {...props} />
+				<Show when={frontmatter()?.copyButton !== false}>
+					<div class={styles.pageAction}>
+						<CopyPageLink />
+					</div>
+				</Show>
+			</div>
+			<Badges badges={frontmatter()?.badges} />
+		</div>
+	);
 }
 
 export function h2(props: ComponentProps<"h2">) {

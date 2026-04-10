@@ -1,7 +1,28 @@
 ---
 title: Header
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Header.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Top navigation, locale controls, theme controls, and mobile navigation affordances.
+
+## Uses
+
+- `themeConfig.nav`
+- `themeConfig.logo`
+- sidebar state from the default-theme context
+- page table of contents data
+
+## Behavior
+
+- shows desktop nav links when `themeConfig.nav` is set
+- uses a mobile nav dialog on small screens
+- includes [`LocaleSelector`](/reference/default-theme/components/locale-selector) and [`ThemeSelector`](/reference/default-theme/components/theme-selector)
+- shows mobile sidebar and table-of-contents toggles only when content exists
+- marks nav links active using `activeMatch` or the item `link`

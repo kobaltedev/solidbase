@@ -10,6 +10,12 @@
 	margin: 0 auto;
 }
 
+.topActions {
+	display: flex;
+	justify-content: flex-end;
+	margin: 0 0 1.25rem;
+}
+
 .aside {
 	position: sticky;
 	top: calc(var(--sb-header-height) + 2rem);
@@ -46,7 +52,6 @@
 	margin: 4rem 0 1rem;
 	display: flex;
 	justify-content: space-between;
-	white-space: nowrap;
 	flex-wrap: wrap;
 	gap: 0.5rem;
 }

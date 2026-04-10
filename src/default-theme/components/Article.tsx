@@ -11,12 +11,13 @@ import {
 } from "../context.jsx";
 import type { RelativePageConfig } from "../frontmatter.js";
 import { mobileLayout } from "../globals.js";
-import { useSolidBaseContext } from "../utils.js";
+import { useSolidBaseContext, useThemeText } from "../utils.js";
 
 import styles from "./Article.module.css";
 
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
+	const text = useThemeText();
 	const { frontmatter } = useDefaultThemeState();
 
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
@@ -107,9 +108,11 @@ export default function Article(props: ParentProps) {
 							<LastUpdated />
 						</Show>
 
-						<Show when={pageData()?.editLink && frontmatter()?.editLink}>
-							<Link href={pageData()?.editLink}>Edit this page on GitHub</Link>
-						</Show>
+						<div class={styles.actions}>
+							<Show when={pageData()?.editLink && frontmatter()?.editLink}>
+								<Link href={pageData()?.editLink}>{text.editPage}</Link>
+							</Show>
+						</div>
 					</div>
 
 					<Show when={hasPrev() || hasNext()}>

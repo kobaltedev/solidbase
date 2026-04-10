@@ -1,0 +1,40 @@
+---
+title: Badges
+badges:
+  - icon: npm
+    label: since 0.5.0
+  - icon: source
+    label: Source
+url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/Badges.tsx
+---
+
+# {frontmatter.title}
+
+Badge row shown underneath a page heading.
+
+## Props
+
+```ts
+function Badges(props: {
+  badges?: Array<{
+    icon?: string;
+    label: string;
+    url?: string;
+  }>;
+}): JSX.Element;
+```
+
+## Data Source
+
+- page frontmatter `badges`
+- `themeConfig.badges.icons`
+
+## Behavior
+
+- omitted when no badges are provided
+- resolves `badge.icon` from `themeConfig.badges.icons`
+- supports icon values as raw SVG strings
+- supports icon values as Solid components
+- uses linked badges when `url` is present
+- uses static badges when `url` is omitted
+- falls back to label-only badges when an icon key is missing

@@ -3,8 +3,45 @@
 	font-weight: 400;
 	font-size: 2.25em;
 	margin-top: 0;
-	margin-bottom: 0.88em;
 	line-height: 1.11;
+}
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	gap: 0.9rem;
+	width: 100%;
+}
+
+.title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+	margin-bottom: 0.25rem;
+}
+
+.title > .h1 {
+	flex: 1 1 auto;
+	min-width: 0;
+	margin-bottom: 0;
+}
+
+.pageAction {
+	display: flex;
+	margin-left: auto;
+}
+
+@media screen and (max-width: 40rem) {
+	.title {
+		flex-wrap: wrap;
+	}
+
+	.badgeAction {
+		margin-left: 0;
+	}
 }
 
 .h2,

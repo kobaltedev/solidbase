@@ -1,9 +1,8 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { parse } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
-import { toDocumentMarkdown } from "../document-markdown.js";
 import { getGitTimestamp } from "../git.js";
 import type { SolidBaseConfig, Theme } from "../index.js";
 import { SolidBaseTOC } from "../remark-plugins/toc.js";
@@ -103,15 +102,6 @@ export async function transformMdxModule(
 		lastUpdated = await getGitTimestamp(modulePath);
 	}
 
-	const source = await readFile(modulePath, "utf8");
-	const llmText = await toDocumentMarkdown(source, {
-		config: {
-			markdown: solidBaseConfig.markdown,
-			issueAutolink: solidBaseConfig.issueAutolink ?? false,
-		},
-		filePath: modulePath,
-	});
-
 	const s = new MagicString(code);
 
 	s.append(`
@@ -120,7 +110,6 @@ export async function transformMdxModule(
 			toc: typeof ${SolidBaseTOC} !== "undefined" ? ${SolidBaseTOC} : undefined,
 			editLink: "${modulePathLink}",
 			lastUpdated: ${lastUpdated},
-			llmText: ${JSON.stringify(llmText)},
 		};
 
 		if (typeof window !== "undefined") {

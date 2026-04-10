@@ -1,5 +1,5 @@
-import { mkdir, rm } from "node:fs/promises";
-import { sep } from "node:path";
+import { access, mkdir, readFile, rm, stat } from "node:fs/promises";
+import { join, normalize, relative } from "node:path";
 
 import type { PluginOption } from "vite";
 
@@ -14,7 +14,6 @@ type GeneratedAssetPluginOptions = {
 			importer: string,
 		) => Promise<{ id: string } | null>,
 	): Promise<void>;
-	watchRoutes?: boolean;
 };
 
 export async function emptyDir(dir: string) {
@@ -22,14 +21,45 @@ export async function emptyDir(dir: string) {
 	await mkdir(dir, { recursive: true });
 }
 
-export function isRoutesFile(file: string) {
-	return file.includes(`${sep}src${sep}routes${sep}`);
-}
-
 export function createGeneratedAssetPlugin(
 	options: GeneratedAssetPluginOptions,
 ): PluginOption {
 	let root = process.cwd();
+	let assetRoot = join(root, options.assetDir);
+
+	async function serveGeneratedAsset(url: string | undefined, res: any) {
+		if (!url || url === "/") return false;
+
+		const pathname = url.split("?")[0] ?? "/";
+		const relativePath = pathname.replace(/^\//, "");
+		if (!relativePath) return false;
+
+		const filePath = normalize(join(assetRoot, relativePath));
+		const assetRelativePath = relative(assetRoot, filePath);
+		if (assetRelativePath === ".." || assetRelativePath.startsWith(`..`)) {
+			return false;
+		}
+
+		try {
+			await access(filePath);
+		} catch {
+			return false;
+		}
+
+		const fileStat = await stat(filePath);
+		if (!fileStat.isFile()) return false;
+
+		const content = await readFile(filePath);
+		if (filePath.endsWith(".md")) {
+			res.setHeader("Content-Type", "text/markdown; charset=utf-8");
+			res.setHeader("Content-Disposition", "inline");
+		} else if (filePath.endsWith(".txt")) {
+			res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		}
+		res.statusCode = 200;
+		res.end(content);
+		return true;
+	}
 
 	return {
 		name: options.name,
@@ -54,6 +84,14 @@ export function createGeneratedAssetPlugin(
 		},
 		configResolved(resolvedConfig) {
 			root = resolvedConfig.root;
+			assetRoot = join(root, options.assetDir);
+		},
+		configureServer(server) {
+			server.middlewares.use((req, res, next) => {
+				void serveGeneratedAsset(req.url, res).then((served) => {
+					if (!served) next();
+				});
+			});
 		},
 		async buildStart() {
 			await options.write(root, (source: string, importer: string) =>

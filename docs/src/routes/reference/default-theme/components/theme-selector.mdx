@@ -1,7 +1,26 @@
 ---
 title: Theme Selector
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/ThemeSelector.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Light, dark, and system theme switcher.
+
+## Options
+
+- `light`
+- `dark`
+- `system`
+
+## Behavior
+
+- uses Kobalte `Select`
+- reads the current selection from `getThemeVariant()`
+- persists changes with `setTheme()`
+- refreshes its label on mount so client theme state replaces any server guess

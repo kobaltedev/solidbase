@@ -1,7 +1,25 @@
 ---
 title: Table of Contents
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/TableOfContents.tsx
 ---
 
 # {frontmatter.title}
 
-TODO
+Page table of contents.
+
+## Data Source
+
+- `useCurrentPageData()?.toc`
+
+## Behavior
+
+- omitted when no table of contents exists
+- highlights the section nearest the current scroll position
+- scrolls the active TOC item into view when needed
+- clicking an item scrolls to the matching heading
+- handles nested headings recursively

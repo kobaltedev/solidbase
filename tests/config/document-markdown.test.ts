@@ -101,7 +101,7 @@ describe("toDocumentMarkdown", () => {
 			"  nested: value",
 			"---",
 			"",
-			"Object: {frontmatter.meta}",
+			"Object: {frontmatter.meta.nested}",
 			"",
 			"Broken: {frontmatter.missing?.value}",
 		].join("\n");
@@ -111,7 +111,7 @@ describe("toDocumentMarkdown", () => {
 				config: {},
 				filePath: routeFixturePath("index.mdx"),
 			}),
-		).toBe(["Object: {frontmatter.meta}", "", "Broken:"].join("\n"));
+		).toBe(["Object: value", "", "Broken:"].join("\n"));
 	});
 
 	it("matches a representative rendered-markdown fixture", async () => {
@@ -190,9 +190,109 @@ describe("toDocumentMarkdown", () => {
 
 		expect(markdown).toContain("# Home");
 		expect(markdown).toContain("1. [Install](#install)");
-		expect(markdown).toContain('<DirectiveContainer type="note"');
+		expect(markdown).toContain(":::note");
 		expect(markdown).toContain("Welcome to SolidBase.");
-		expect(markdown).toContain('title="example.ts"');
 		expect(markdown).toContain('console.log("hi");');
+		expect(markdown).not.toContain("DirectiveContainer");
+		expect(markdown).not.toContain("mdxJsx");
+	});
+
+	it("collapses package manager tabs into a single shell fence", async () => {
+		const source = ["```package-install", "solidbase@latest", "```"].join("\n");
+
+		expect(
+			await toDocumentMarkdown(source, {
+				config: {},
+				filePath: routeFixturePath("index.mdx"),
+			}),
+		).toBe(
+			[
+				"```sh",
+				"npm i solidbase@latest",
+				"pnpm add solidbase@latest",
+				"yarn add solidbase@latest",
+				"bun add solidbase@latest",
+				"deno add npm:solidbase@latest",
+				"```",
+			].join("\n"),
+		);
+	});
+
+	it("preserves unknown jsx while still normalizing directives", async () => {
+		const source = [
+			"{/* prettier-ignore */}",
+			"",
+			":::note[Heads up]",
+			"Use <kbd>Cmd</kbd> + <kbd>K</kbd>.",
+			":::",
+			"",
+			'<CustomThing tone="loud">Hello</CustomThing>',
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: {},
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain(":::note[Heads up]");
+		expect(markdown).toContain("Use <kbd>Cmd</kbd> + <kbd>K</kbd>.");
+		expect(markdown).toContain(":::");
+		expect(markdown).toContain('<CustomThing tone="loud">Hello</CustomThing>');
+		expect(markdown).not.toContain("DirectiveContainer");
+		expect(markdown).not.toContain("{/* prettier-ignore */}");
+	});
+
+	it("preserves authored tab-group syntax as-is", async () => {
+		const source = [
+			":::::tab-group[Examples]",
+			"::::tab[TypeScript]",
+			"```ts",
+			'console.log("ts");',
+			"```",
+			"::::",
+			"",
+			"::::tab[JavaScript]",
+			"```js",
+			'console.log("js");',
+			"```",
+			"::::",
+			":::::",
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: {},
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain("tab-group[Examples]");
+		expect(markdown).toContain("tab[TypeScript]");
+		expect(markdown).toContain("tab[JavaScript]");
+		expect(markdown).toContain('console.log("ts");');
+		expect(markdown).toContain('console.log("js");');
+		expect(markdown).not.toContain("DirectiveContainer");
+	});
+
+	it("preserves authored tab code fences as-is", async () => {
+		const source = [
+			'```md tab title="Markdown"',
+			"[SolidJS](https://www.solidjs.com)",
+			"[SolidBase on GitHub](https://github.com/kobaltedev/solidbase)",
+			"```",
+			"",
+			'```html tab title="HTML Output"',
+			'<a href="https://www.solidjs.com" target="_blank" rel="noopener noreferrer">SolidJS</a>',
+			'<a href="https://github.com/kobaltedev/solidbase" target="_blank" rel="noopener noreferrer">SolidBase on GitHub</a>',
+			"```",
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: {},
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain('```md tab title="Markdown"');
+		expect(markdown).toContain('```html tab title="HTML Output"');
+		expect(markdown).not.toContain("tab-group");
+		expect(markdown).not.toContain("DirectiveContainer");
 	});
 });

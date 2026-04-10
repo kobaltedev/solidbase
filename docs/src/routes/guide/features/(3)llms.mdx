@@ -15,33 +15,35 @@ import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
 const theme = defineTheme({
-	componentsPath: import.meta.resolve("./src/solidbase-theme"),
-	extends: defaultTheme,
+  componentsPath: import.meta.resolve("./src/solidbase-theme"),
+  extends: defaultTheme,
 });
 
 const solidBase = createSolidBase(theme);
 
 export default {
-	...solidBase.startConfig({
-		ssr: true,
-	}),
-	plugins: [
-		solidBase.plugin({
-			title: "My Docs",
-			description: "Documentation for my project",
-			llms: true,
-			themeConfig: {
-				sidebar: {
-					"/": [
-						{
-							title: "Guide",
-							items: [{ title: "Getting Started", link: "/guide/getting-started" }],
-						},
-					],
-				},
-			},
-		}),
-	],
+  ...solidBase.startConfig({
+    ssr: true,
+  }),
+  plugins: [
+    solidBase.plugin({
+      title: "My Docs",
+      description: "Documentation for my project",
+      llms: true,
+      themeConfig: {
+        sidebar: {
+          "/": [
+            {
+              title: "Guide",
+              items: [
+                { title: "Getting Started", link: "/guide/getting-started" },
+              ],
+            },
+          ],
+        },
+      },
+    }),
+  ],
 };
 ```
 
@@ -49,6 +51,26 @@ Once enabled, the build emits:
 
 - `llms.txt` at the site root
 - one `.md` file per markdown route, such as `index.md` and `guide/getting-started.md`
+
+## Default theme page actions
+
+When you use the default theme, enabling `llms: true` also adds a page-level copy button that copies the generated markdown for the current page.
+
+```ts title="app.config.ts"
+solidBase.plugin({
+  llms: true,
+});
+```
+
+The button uses the same generated `.md` output that powers `llms.txt`, so the copied content stays aligned with the markdown artifacts emitted by the build.
+
+If you're building a custom theme, you can reuse the same behavior from the client API instead of copying the default theme implementation:
+
+```ts title="theme.tsx"
+import { useCopyPageMarkdown } from "@kobalte/solidbase/client";
+```
+
+The hook exposes copy state, in-flight state, and page eligibility so custom themes can provide their own UI while keeping the same LLMS-backed behavior.
 
 ## What goes into `llms.txt`
 

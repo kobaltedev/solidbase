@@ -1,19 +1,49 @@
 ---
 title: Default Theme
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/tree/main/src/default-theme
 ---
 
 # Default Theme
 
-SolidBase includes a default theme that provides a clean, minimal design out of the box. It includes components for layout, navigation, and other common UI elements.
+SolidBase includes a default theme for documentation sites.
 
 You can use the default theme as-is, or customize it to fit your needs. For more information on customizing the default theme, refer to the [Extending Themes](/guide/customization/extending-themes#extending-the-default-theme) guide.
 
 To access the variables used by the default theme, refer to the [CSS Variables](/reference/default-theme/css-variables) reference.
 
+## Page Actions
+
+Page action badges are rendered by [`Badges`](/reference/default-theme/components/badges).
+
+Configuration lives in:
+
+- page frontmatter `badges`
+- `themeConfig.badges.icons`
+
+## Theme Config
+
+`themeConfig` supports these default-theme keys:
+
+- `footer`: `boolean`
+- `socialLinks`: `Record<string, string | { link: string; logo?: string; label?: string }>`
+- `badges`: `{ icons?: Record<string, string | Component | { svg: string } | { component: Component }> }`
+- `nav`: `Array<{ text: string; link: string; activeMatch?: string }>`
+- `sidebar`: `SidebarConfig`
+- `search`: `object`
+- `fonts`: `{ inter?: false; lexend?: false; jetbrainsMono?: false } | false`
+- `text`: `Partial<DefaultThemeTextConfig>`
+
 ## Components
 
 The default theme includes the following components that can be used in your markdown files and customized to fit your needs:
 - [`Article`](/reference/default-theme/components/article)
+- [`Badges`](/reference/default-theme/components/badges)
+- [`CopyPageLink`](/reference/default-theme/components/copy-page-link)
 - [`Footer`](/reference/default-theme/components/footer)
 - [`Header`](/reference/default-theme/components/header)
 - [`LastUpdated`](/reference/default-theme/components/last-updated)

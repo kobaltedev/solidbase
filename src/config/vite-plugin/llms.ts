@@ -46,7 +46,6 @@ export default function solidBaseLlmsPlugin(
 		name: "solidbase:llms",
 		apply: "build",
 		assetDir: LLMS_PUBLIC_ASSETS_DIR,
-		watchRoutes: true,
 		write(root, resolver) {
 			return writeLlmsAssets(root, config, resolver);
 		},
