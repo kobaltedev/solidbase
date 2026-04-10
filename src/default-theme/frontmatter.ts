@@ -43,7 +43,7 @@ interface DefaultThemeBaseFrontmatter {
 	editLink?: boolean;
 	lastUpdated?: boolean;
 	copyButton?: boolean;
-	badges?: Array<BadgesConfig>;
+	badges?: Array<BadgeConfig>;
 }
 
 export interface BadgeConfig {

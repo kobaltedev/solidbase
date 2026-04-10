@@ -13,6 +13,7 @@ import {
 	type ParentProps,
 	Show,
 	splitProps,
+	For
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.js";
