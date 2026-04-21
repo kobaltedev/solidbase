@@ -1,4 +1,4 @@
-import { createRoot, createSignal } from "solid-js";
+import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const pathname = vi.fn<() => string>(() => "/router/fr");
@@ -125,9 +125,8 @@ describe("solidbase route client helpers", () => {
 			"../../src/client/routes.ts"
 		);
 
+		pathname.mockReturnValue("/");
 		createRoot((dispose) => {
-			const [currentPathname, setCurrentPathname] = createSignal("/");
-			pathname.mockImplementation(currentPathname);
 			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
 
 			SolidBaseRoutesContextProvider({
@@ -147,8 +146,20 @@ describe("solidbase route client helpers", () => {
 				"fr",
 				"es",
 			]);
+			dispose();
+		});
 
-			setCurrentPathname("/router");
+		pathname.mockReturnValue("/router");
+		createRoot((dispose) => {
+			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
+
+			SolidBaseRoutesContextProvider({
+				get children() {
+					helpers = useSolidBaseRoutes();
+					return null;
+				},
+			} as any);
+
 			expect(helpers?.current()).toEqual({
 				project: "router",
 				version: "latest",

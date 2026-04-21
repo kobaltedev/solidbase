@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { createRoot, createSignal } from "solid-js";
+import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
@@ -231,9 +231,8 @@ describe("locale client helpers", () => {
 			"../../src/client/routes.ts"
 		);
 
+		pathname.mockReturnValue("/");
 		createRoot((dispose) => {
-			const [currentPathname, setCurrentPathname] = createSignal("/");
-			pathname.mockImplementation(currentPathname);
 			let value: ReturnType<typeof useLocale> | undefined;
 
 			SolidBaseRoutesContextProvider({
@@ -253,8 +252,24 @@ describe("locale client helpers", () => {
 				"Français",
 				"Español",
 			]);
+			dispose();
+		});
 
-			setCurrentPathname("/router");
+		pathname.mockReturnValue("/router");
+		createRoot((dispose) => {
+			let value: ReturnType<typeof useLocale> | undefined;
+
+			SolidBaseRoutesContextProvider({
+				get children() {
+					return LocaleContextProvider({
+						get children() {
+							value = useLocale();
+							return null;
+						},
+					} as any);
+				},
+			} as any);
+
 			const routerLocales = value?.locales ?? [];
 			expect(routerLocales.map((locale) => locale.config.label)).toEqual([
 				"English",
