@@ -64,14 +64,21 @@ describe("locale client helpers", () => {
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
 		);
+		const { SolidBaseRoutesContextProvider } = await import(
+			"../../src/client/routes.ts"
+		);
 
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			LocaleContextProvider({
+			SolidBaseRoutesContextProvider({
 				get children() {
-					value = useLocale();
-					return null;
+					return LocaleContextProvider({
+						get children() {
+							value = useLocale();
+							return null;
+						},
+					} as any);
 				},
 			} as any);
 
@@ -106,5 +113,72 @@ describe("locale client helpers", () => {
 		expect(getLocale("/de/docs/setup").code).toBe("de");
 		expect(getLocale("/docs/setup").code).toBe("en-US");
 		expect(getLocaleLink(getLocale("/de/docs/setup"))).toBe("/de/docs/");
+	});
+
+	it("uses routes.locale options and navigation when routes are configured", async () => {
+		document.documentElement.lang = "";
+		setSolidBaseConfig({
+			lang: "en-US",
+			routes: {
+				path: "/{project}/{locale}",
+				project: {
+					default: "solid",
+					values: {
+						solid: { path: "", label: "Solid" },
+						router: { path: "router", label: "Router" },
+					},
+				},
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", label: "English", lang: "en-US" },
+						fr: { path: "fr", label: "Français", lang: "fr-FR" },
+						es: { path: "es", label: "Español", lang: "es-ES" },
+					},
+				},
+				include: [
+					{ project: ["solid", "router"], locale: ["en", "fr"] },
+					{ project: "solid", locale: "es" },
+				],
+			},
+		});
+		pathname.mockReturnValue("/router/fr");
+
+		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
+			"../../src/client/locale.ts"
+		);
+		const { SolidBaseRoutesContextProvider } = await import(
+			"../../src/client/routes.ts"
+		);
+
+		createRoot((dispose) => {
+			let value: ReturnType<typeof useLocale> | undefined;
+
+			SolidBaseRoutesContextProvider({
+				get children() {
+					return LocaleContextProvider({
+						get children() {
+							value = useLocale();
+							return null;
+						},
+					} as any);
+				},
+			} as any);
+
+			expect(value?.currentLocale().code).toBe("fr-FR");
+			expect(value?.locales.map((locale) => locale.config.label)).toEqual([
+				"English",
+				"Français",
+			]);
+			expect(getLocaleLink(value!.locales[0]!)).toBe("/router");
+			expect(getLocaleLink(value!.locales[1]!)).toBe("/router/fr");
+
+			void value?.setLocale(value!.locales[0]!);
+			dispose();
+		});
+
+		await Promise.resolve();
+		expect(navigate).toHaveBeenCalledWith("/router");
+		expect(document.documentElement.lang).toBe("en-US");
 	});
 });

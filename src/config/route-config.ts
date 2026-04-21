@@ -42,6 +42,8 @@ type RouteTemplateSegment =
 	| { type: "static"; value: string }
 	| { type: "axis"; name: string };
 
+const ROUTES_RESERVED_KEYS = new Set(["path", "include"]);
+
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -73,6 +75,17 @@ export function getSolidBaseRouteAxisNames(
 	return getSolidBaseRouteAxes(routes).map(([name]) => name);
 }
 
+function getSolidBaseRouteAxisMap(routes: SolidBaseRoutesConfig | undefined) {
+	return new Map(getSolidBaseRouteAxes(routes));
+}
+
+function assertSolidBaseRouteConfig(
+	condition: unknown,
+	message: string,
+): asserts condition {
+	if (!condition) throw new Error(`[SolidBase]: ${message}`);
+}
+
 function trimSlashes(value: string) {
 	return value.replace(/^\/+|\/+$/g, "");
 }
@@ -97,6 +110,151 @@ function getRouteTemplateSegments(path: string): RouteTemplateSegment[] {
 			if (match) return { type: "axis", name: match[1]! };
 			return { type: "static", value: segment };
 		});
+}
+
+function getRouteTemplateAxisNames(path: string) {
+	return getRouteTemplateSegments(path)
+		.filter((segment): segment is { type: "axis"; name: string } => {
+			return segment.type === "axis";
+		})
+		.map((segment) => segment.name);
+}
+
+function toRuleValues(value: string | string[]) {
+	return Array.isArray(value) ? value : [value];
+}
+
+function validateRouteRule(
+	rule: SolidBaseRouteRule,
+	axisMap: Map<string, SolidBaseRouteAxisConfig>,
+	source: string,
+) {
+	for (const [axisName, value] of Object.entries(rule)) {
+		const axis = axisMap.get(axisName);
+		assertSolidBaseRouteConfig(
+			axis,
+			"`" + source + "` references unknown route axis `" + axisName + "`.",
+		);
+
+		for (const valueName of toRuleValues(value)) {
+			assertSolidBaseRouteConfig(
+				Object.hasOwn(axis.values, valueName),
+				"`" +
+					source +
+					"` references unknown `" +
+					axisName +
+					"` value `" +
+					valueName +
+					"`.",
+			);
+		}
+	}
+}
+
+function getInternalRouteValueEntries(axis: SolidBaseRouteAxisConfig) {
+	return Object.entries(axis.values).filter(([, value]) => !value.href);
+}
+
+function matchRoutePathSegment(
+	axis: SolidBaseRouteAxisConfig,
+	pathSegment: string | undefined,
+) {
+	const entries = getInternalRouteValueEntries(axis);
+	const defaultEntry = entries.find(([valueName]) => valueName === axis.default);
+	const explicitMatch =
+		pathSegment === undefined
+			? undefined
+			: entries.find(([, value]) => {
+					const valuePath = trimSlashes(value.path ?? "");
+					return valuePath !== "" && pathSegment === valuePath;
+				});
+
+	if (explicitMatch) return explicitMatch;
+	if (!defaultEntry) return undefined;
+
+	const defaultPath = trimSlashes(defaultEntry[1].path ?? defaultEntry[0]);
+	return defaultPath === "" ? defaultEntry : undefined;
+}
+
+function getRouteValuePath(valueName: string, value: SolidBaseRouteValueConfig) {
+	return trimSlashes(value.path ?? valueName);
+}
+
+export function validateSolidBaseRoutesConfig(
+	routes: SolidBaseRoutesConfig | undefined,
+	overrides: RouteConfigValue[] = [],
+	overrideConfigKeys: Iterable<string> = [],
+) {
+	if (!routes) return;
+
+	const axisMap = getSolidBaseRouteAxisMap(routes);
+	const configKeys = new Set(overrideConfigKeys);
+	const placeholders = getRouteTemplateAxisNames(routes.path);
+
+	assertSolidBaseRouteConfig(
+		placeholders.length > 0,
+		"`routes.path` must include at least one route axis placeholder.",
+	);
+
+	for (const key of Object.keys(routes)) {
+		if (ROUTES_RESERVED_KEYS.has(key)) continue;
+		assertSolidBaseRouteConfig(
+			axisMap.has(key),
+			"`routes." + key + "` must include `default` and `values`.",
+		);
+	}
+
+	for (const axisName of placeholders) {
+		assertSolidBaseRouteConfig(
+			axisMap.has(axisName),
+			"`routes.path` references unknown route axis `" + axisName + "`.",
+		);
+	}
+
+	for (const [axisName, axis] of axisMap) {
+		assertSolidBaseRouteConfig(
+			placeholders.includes(axisName),
+			"`routes." +
+				axisName +
+				"` must be included in `routes.path` as `{" +
+				axisName +
+				"}`.",
+		);
+		assertSolidBaseRouteConfig(
+			Object.hasOwn(axis.values, axis.default),
+			"`routes." +
+				axisName +
+				".default` must reference a key in `routes." +
+				axisName +
+				".values`.",
+		);
+	}
+
+	for (const rule of routes.include ?? []) {
+		validateRouteRule(rule, axisMap, "routes.include");
+	}
+
+	for (const override of overrides) {
+		const selectors: SolidBaseRouteRule = {};
+
+		for (const [key, value] of Object.entries(override)) {
+			if (axisMap.has(key)) {
+				assertSolidBaseRouteConfig(
+					typeof value === "string" || Array.isArray(value),
+					"`overrides` selector `" + key + "` must be a string or string array.",
+				);
+				selectors[key] = value;
+				continue;
+			}
+
+			assertSolidBaseRouteConfig(
+				configKeys.has(key),
+				"`overrides` contains unknown config key or route axis `" + key + "`.",
+			);
+		}
+
+		validateRouteRule(selectors, axisMap, "overrides");
+	}
 }
 
 export function normalizeSolidBaseRouteSelection(
@@ -157,7 +315,7 @@ export function buildSolidBaseRoutePath(
 		return undefined;
 	}
 
-	const axes = new Map(getSolidBaseRouteAxes(routes));
+	const axes = getSolidBaseRouteAxisMap(routes);
 	const pathSegments = getRouteTemplateSegments(routes.path).map((segment) => {
 		if (segment.type === "static") return segment.value;
 
@@ -172,47 +330,40 @@ export function buildSolidBaseRoutePath(
 	return normalizeRoutePath(pathSegments.join("/"));
 }
 
-export function getSolidBaseRouteSelections(
-	routes: SolidBaseRoutesConfig | undefined,
-) {
-	const axes = getSolidBaseRouteAxes(routes);
-	if (axes.length === 0) return [];
-
-	const selections = axes.reduce<SolidBaseRouteSelection[]>(
-		(acc, [axisName, axisConfig]) => {
-			const next: SolidBaseRouteSelection[] = [];
-
-			for (const selection of acc) {
-				for (const [valueName, value] of Object.entries(axisConfig.values)) {
-					if (value.href) continue;
-					next.push({ ...selection, [axisName]: valueName });
-				}
-			}
-
-			return next;
-		},
-		[{}],
-	);
-
-	return selections.filter((selection) =>
-		isSolidBaseRouteIncluded(routes, selection),
-	);
-}
-
 export function getSolidBaseRouteSelectionForPath(
 	routes: SolidBaseRoutesConfig | undefined,
 	path: string,
 ) {
-	const normalizedPath = normalizeRoutePath(path);
-	const selections = getSolidBaseRouteSelections(routes).sort((a, b) => {
-		const aPath = buildSolidBaseRoutePath(routes, a) ?? "/";
-		const bPath = buildSolidBaseRoutePath(routes, b) ?? "/";
-		return bPath.length - aPath.length;
-	});
+	if (!routes) return undefined;
 
-	return selections.find(
-		(selection) => buildSolidBaseRoutePath(routes, selection) === normalizedPath,
-	);
+	const axes = getSolidBaseRouteAxisMap(routes);
+	const pathSegments = trimSlashes(path).split("/").filter(Boolean);
+	const selection: SolidBaseRouteSelection = {};
+	let pathIndex = 0;
+
+	for (const segment of getRouteTemplateSegments(routes.path)) {
+		if (segment.type === "static") {
+			if (pathSegments[pathIndex] !== segment.value) return undefined;
+			pathIndex++;
+			continue;
+		}
+
+		const axis = axes.get(segment.name);
+		if (!axis) return undefined;
+
+		const matched = matchRoutePathSegment(axis, pathSegments[pathIndex]);
+
+		if (!matched) return undefined;
+
+		const [valueName, value] = matched;
+		selection[segment.name] = valueName;
+
+		if (getRouteValuePath(valueName, value) !== "") pathIndex++;
+	}
+
+	if (pathIndex !== pathSegments.length) return undefined;
+
+	return isSolidBaseRouteIncluded(routes, selection) ? selection : undefined;
 }
 
 export function getSolidBaseRouteOptions(
@@ -222,20 +373,17 @@ export function getSolidBaseRouteOptions(
 ): SolidBaseRouteOption[] {
 	if (!routes) return [];
 
-	const axis = getSolidBaseRouteAxes(routes).find(
-		([name]) => name === axisName,
-	);
+	const axis = getSolidBaseRouteAxisMap(routes).get(axisName);
 	if (!axis) return [];
 
-	const [name, config] = axis;
 	const normalized = normalizeSolidBaseRouteSelection(routes, current) ?? {};
 	const options: SolidBaseRouteOption[] = [];
 
-	for (const [valueName, value] of Object.entries(config.values)) {
+	for (const [valueName, value] of Object.entries(axis.values)) {
 		if (value.href) {
 			options.push({
 				name: valueName,
-				axis: name,
+				axis: axisName,
 				href: value.href,
 				isExternal: true,
 				meta: value,
@@ -252,7 +400,7 @@ export function getSolidBaseRouteOptions(
 
 		options.push({
 			name: valueName,
-			axis: name,
+			axis: axisName,
 			path: buildSolidBaseRoutePath(routes, selection),
 			isExternal: false,
 			selection,
