@@ -1,45 +1,29 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { Select } from "@kobalte/core/select";
 import { useNavigate } from "@solidjs/router";
-import { createMemo, For, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import {
 	getSolidBaseRouteFallbackOptions,
-	isSolidBaseRouteAxisConfig,
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
 import { useSolidBaseRoute } from "../../client/index.jsx";
-import styles from "./ThemeSelector.module.css";
+import styles from "./VersionSelector.module.css";
 
-const LOCALE_AXIS = "locale";
+const VERSION_AXIS = "version";
 
-export default function RouteSelector() {
-	const axes = createMemo(() => {
-		const routes = solidBaseConfig.routes;
-		if (!routes) return [];
-
-		return Object.entries(routes)
-			.filter(([name, value]) => {
-				return name !== LOCALE_AXIS && isSolidBaseRouteAxisConfig(value);
-			})
-			.map(([name]) => name);
-	});
-
-	return <For each={axes()}>{(axis) => <RouteAxisSelector axis={axis} />}</For>;
-}
-
-function RouteAxisSelector(props: { axis: string }) {
+export default function VersionSelector() {
 	const navigate = useNavigate();
 	const current = useSolidBaseRoute();
 	const options = createMemo(() =>
 		getSolidBaseRouteFallbackOptions(
 			solidBaseConfig.routes,
-			props.axis,
+			VERSION_AXIS,
 			current(),
 		),
 	);
 	const currentOption = createMemo(() =>
-		options().find((option) => option.name === current()[props.axis]),
+		options().find((option) => option.name === current()[VERSION_AXIS]),
 	);
 
 	const getOptionLabel = (option: SolidBaseRouteOption) => {
@@ -48,7 +32,7 @@ function RouteAxisSelector(props: { axis: string }) {
 
 	const onChange = (option: SolidBaseRouteOption | null) => {
 		if (!option) return;
-		if (option.name === current()[props.axis]) return;
+		if (option.name === current()[VERSION_AXIS]) return;
 
 		if (option.href) {
 			globalThis.location.href = option.href;
@@ -79,12 +63,13 @@ function RouteAxisSelector(props: { axis: string }) {
 						</Select.Item>
 					)}
 				>
-					<Select.Trigger
-						class={styles.trigger}
-						aria-label={`Change ${props.axis}`}
-					>
+					<Select.Trigger class={styles.trigger} aria-label="Change version">
 						<Select.Value<SolidBaseRouteOption>>
-							{(state) => getOptionLabel(state.selectedOption())}
+							{(state) => (
+								<span class={styles.label}>
+									{getOptionLabel(state.selectedOption())}
+								</span>
+							)}
 						</Select.Value>
 					</Select.Trigger>
 					<Select.Portal>

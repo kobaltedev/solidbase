@@ -7,9 +7,10 @@ import Hero from "./components/Hero.jsx";
 import LastUpdated from "./components/LastUpdated.jsx";
 import Link from "./components/Link.jsx";
 import LocaleSelector from "./components/LocaleSelector.jsx";
-import RouteSelector from "./components/RouteSelector.jsx";
+import ProjectSelector from "./components/ProjectSelector.jsx";
 import TableOfContents from "./components/TableOfContents.jsx";
 import ThemeSelector from "./components/ThemeSelector.jsx";
+import VersionSelector from "./components/VersionSelector.jsx";
 
 export const defaultThemeComponents = {
 	Article,
@@ -19,9 +20,10 @@ export const defaultThemeComponents = {
 	LastUpdated,
 	Link,
 	LocaleSelector,
-	RouteSelector,
+	ProjectSelector,
 	TableOfContents,
 	ThemeSelector,
+	VersionSelector,
 	Hero,
 	Features,
 };

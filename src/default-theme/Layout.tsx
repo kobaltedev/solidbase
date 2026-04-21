@@ -59,7 +59,7 @@ export default (props: ParentProps) => {
 };
 
 function Layout(props: ParentProps) {
-	const { Header, Article, Link } = useDefaultThemeComponents();
+	const { Header, Article, Link, ProjectSelector } = useDefaultThemeComponents();
 	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
 
@@ -137,6 +137,7 @@ function Layout(props: ParentProps) {
 							fallback={
 								<aside class={styles.sidenav}>
 									<div class={styles["sidenav-content"]}>
+										<ProjectSelector />
 										<Navigation sidebar={sidebar()} />
 									</div>
 								</aside>
@@ -157,6 +158,7 @@ function Layout(props: ParentProps) {
 													</Show>
 												</a>
 											</div>
+											<ProjectSelector />
 											<Navigation sidebar={sidebar()} />
 										</div>
 									</Dialog.Content>

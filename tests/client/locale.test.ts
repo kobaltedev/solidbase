@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { createRoot } from "solid-js";
+import { createRoot, createSignal } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
@@ -184,5 +184,86 @@ describe("locale client helpers", () => {
 		await Promise.resolve();
 		expect(navigate).toHaveBeenCalledWith("/router/about");
 		expect(document.documentElement.lang).toBe("en-US");
+	});
+
+	it("returns route-backed locale options for the current route selection", async () => {
+		setSolidBaseConfig({
+			lang: "en-US",
+			routes: {
+				path: "/{project}/{version}/{locale}",
+				project: {
+					default: "solid",
+					values: {
+						solid: { path: "", label: "Solid" },
+						router: { path: "router", label: "Router" },
+					},
+				},
+				version: {
+					default: "latest",
+					values: {
+						latest: { path: "", label: "Latest" },
+						v1: { path: "v1", label: "v1" },
+					},
+				},
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", label: "English", lang: "en-US" },
+						fr: { path: "fr", label: "Français", lang: "fr-FR" },
+						es: { path: "es", label: "Español", lang: "es-ES" },
+					},
+				},
+				include: [
+					{
+						project: ["solid", "router"],
+						version: "latest",
+						locale: ["en", "fr"],
+					},
+					{ project: "solid", version: "latest", locale: "es" },
+					{ project: "solid", version: "v1", locale: ["en", "fr"] },
+				],
+			},
+		});
+		const { LocaleContextProvider, useLocale } = await import(
+			"../../src/client/locale.ts"
+		);
+		const { SolidBaseRoutesContextProvider } = await import(
+			"../../src/client/routes.ts"
+		);
+
+		createRoot((dispose) => {
+			const [currentPathname, setCurrentPathname] = createSignal("/");
+			pathname.mockImplementation(currentPathname);
+			let value: ReturnType<typeof useLocale> | undefined;
+
+			SolidBaseRoutesContextProvider({
+				get children() {
+					return LocaleContextProvider({
+						get children() {
+							value = useLocale();
+							return null;
+						},
+					} as any);
+				},
+			} as any);
+
+			const rootLocales = value?.locales ?? [];
+			expect(rootLocales.map((locale) => locale.config.label)).toEqual([
+				"English",
+				"Français",
+				"Español",
+			]);
+
+			setCurrentPathname("/router");
+			const routerLocales = value?.locales ?? [];
+			expect(routerLocales.map((locale) => locale.config.label)).toEqual([
+				"English",
+				"Français",
+			]);
+			expect(routerLocales.some((locale) => locale.option?.name === "es")).toBe(
+				false,
+			);
+			dispose();
+		});
 	});
 });

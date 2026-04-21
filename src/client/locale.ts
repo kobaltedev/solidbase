@@ -144,7 +144,10 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 	const locales = createMemo(() => {
 		if (!solidBaseConfig.routes) return legacyLocales;
 
-		return routes.options(LOCALE_AXIS).map(routeOptionToLocale);
+		const match = currentRouteMatch();
+		if (!match) return [];
+
+		return routes.options(LOCALE_AXIS, match.selection).map(routeOptionToLocale);
 	});
 
 	const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);
@@ -155,9 +158,8 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 		},
 		currentLocale,
 		setLocale: (locale: ResolvedLocale<any>) => {
-			const routePath =
-				locale.option &&
-				getSolidBaseRoutePathWithRest(
+			if (locale.option) {
+				const routePath = getSolidBaseRoutePathWithRest(
 					solidBaseConfig.routes,
 					{
 						...routes.current(),
@@ -166,12 +168,18 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 					currentRouteMatch()?.restPath ?? "/",
 				);
 
-			const searchValue = routePath ?? getLocaleLink(locale);
+				if (!routePath) return;
+
+				startTransition(() => navigate(routePath)).then(() => {
+					document.documentElement.lang = locale.code;
+				});
+				return;
+			}
+
+			const searchValue = getLocaleLink(locale);
 
 			startTransition(() =>
-				navigate(
-					routePath ? searchValue : `${searchValue}${match()?.params.rest ?? ""}`,
-				),
+				navigate(`${searchValue}${match()?.params.rest ?? ""}`),
 			).then(() => {
 				document.documentElement.lang = locale.code;
 			});

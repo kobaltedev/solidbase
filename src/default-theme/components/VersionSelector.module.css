@@ -1,0 +1,67 @@
+.root {
+	font-size: 0.85rem;
+}
+
+.item {
+	padding: 0.3rem 0.5rem;
+	list-style-type: none;
+	border-radius: var(--sb-border-radius);
+	cursor: var(--sb-button-cursor);
+
+	&:hover,
+	&:focus {
+		outline: none;
+		background: color-mix(in hsl, var(--sb-text-color) 7.5%, transparent);
+	}
+
+	&[data-selected] {
+		color: var(--sb-active-link-color);
+	}
+}
+
+.trigger {
+	appearance: none;
+	display: inline-flex;
+	align-items: center;
+	padding: 0.2rem 0.45rem;
+	background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
+	border: none;
+	outline: none;
+	border-radius: calc(var(--sb-border-radius) * 0.75);
+	color: color-mix(in hsl, var(--sb-text-color) 82%, transparent);
+	line-height: 1;
+	cursor: var(--sb-button-cursor);
+	transition-property: background-color, opacity, color;
+	transition-timing-function: var(--sb-transition-timing);
+	transition-duration: 0.15s;
+
+	&:hover,
+	&:focus,
+	&[data-expanded] {
+		background: color-mix(in hsl, var(--sb-text-color) 15%, transparent);
+		color: var(--sb-heading-color);
+	}
+}
+
+.label {
+	min-width: 0;
+}
+
+.content {
+	z-index: 51;
+	color: var(--sb-text-color);
+	background: color-mix(
+		in hsl,
+		var(--sb-background-color) 95%,
+		var(--sb-tint-color-opposite)
+	);
+	border-radius: var(--sb-border-radius);
+	min-width: max-content;
+}
+
+.list {
+	min-width: max-content;
+	padding: 0.25rem;
+	display: flex;
+	flex-direction: column;
+}

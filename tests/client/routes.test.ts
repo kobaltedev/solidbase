@@ -1,4 +1,4 @@
-import { createRoot } from "solid-js";
+import { createRoot, createSignal } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const pathname = vi.fn<() => string>(() => "/router/fr");
@@ -47,6 +47,7 @@ const routes = {
 	},
 	include: [
 		{ project: ["solid", "router"], version: "latest", locale: ["en", "fr"] },
+		{ project: "solid", version: "latest", locale: "es" },
 		{ project: "solid", version: "v1", locale: ["en", "fr", "es"] },
 	],
 };
@@ -113,6 +114,50 @@ describe("solidbase route client helpers", () => {
 			expect(helpers?.path({ project: "solid", version: "v1" })).toBe(
 				"/v1/fr",
 			);
+			dispose();
+		});
+	});
+
+	it("returns locale options for the current route selection", async () => {
+		setSolidBaseConfig({ routes });
+
+		const { SolidBaseRoutesContextProvider, useSolidBaseRoutes } = await import(
+			"../../src/client/routes.ts"
+		);
+
+		createRoot((dispose) => {
+			const [currentPathname, setCurrentPathname] = createSignal("/");
+			pathname.mockImplementation(currentPathname);
+			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
+
+			SolidBaseRoutesContextProvider({
+				get children() {
+					helpers = useSolidBaseRoutes();
+					return null;
+				},
+			} as any);
+
+			expect(helpers?.current()).toEqual({
+				project: "solid",
+				version: "latest",
+				locale: "en",
+			});
+			expect(helpers?.options("locale").map((option) => option.name)).toEqual([
+				"en",
+				"fr",
+				"es",
+			]);
+
+			setCurrentPathname("/router");
+			expect(helpers?.current()).toEqual({
+				project: "router",
+				version: "latest",
+				locale: "en",
+			});
+			expect(helpers?.options("locale").map((option) => option.name)).toEqual([
+				"en",
+				"fr",
+			]);
 			dispose();
 		});
 	});
