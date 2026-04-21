@@ -206,4 +206,111 @@ describe("buildSitemapEntries", () => {
 			},
 		]);
 	});
+
+	it("uses routes.locale for alternates and include filtering", () => {
+		const entries = buildSitemapEntries(
+			"https://example.com",
+			{
+				lang: "en-US",
+				routes: {
+					path: "/{version}/{locale}",
+					version: {
+						default: "latest",
+						values: {
+							latest: { path: "" },
+							v1: { path: "v1" },
+						},
+					},
+					locale: {
+						default: "en",
+						values: {
+							en: { path: "", lang: "en-US" },
+							fr: { path: "fr", lang: "fr-FR" },
+							es: { path: "es", lang: "es-ES" },
+						},
+					},
+					include: [
+						{ version: "latest", locale: ["en", "fr"] },
+						{ version: "v1", locale: ["en", "es"] },
+					],
+				},
+			} as any,
+			[
+				{
+					routePath: "/",
+					markdownPath: "/index.md",
+					filePath: "/tmp/src/routes/index.mdx",
+					source: "",
+					frontmatter: { title: "Home" },
+				},
+				{
+					routePath: "/fr",
+					markdownPath: "/fr.md",
+					filePath: "/tmp/src/routes/fr/index.mdx",
+					source: "",
+					frontmatter: { title: "Accueil" },
+				},
+				{
+					routePath: "/v1",
+					markdownPath: "/v1.md",
+					filePath: "/tmp/src/routes/v1/index.mdx",
+					source: "",
+					frontmatter: { title: "v1" },
+				},
+				{
+					routePath: "/v1/es",
+					markdownPath: "/v1/es.md",
+					filePath: "/tmp/src/routes/v1/es/index.mdx",
+					source: "",
+					frontmatter: { title: "v1 ES" },
+				},
+				{
+					routePath: "/v1/fr",
+					markdownPath: "/v1/fr.md",
+					filePath: "/tmp/src/routes/v1/fr/index.mdx",
+					source: "",
+					frontmatter: { title: "v1 FR" },
+				},
+			],
+		);
+
+		expect(entries).toEqual([
+			{
+				routePath: "/",
+				url: "https://example.com/",
+				alternates: [
+					{ hreflang: "en-US", href: "https://example.com/" },
+					{ hreflang: "fr-FR", href: "https://example.com/fr" },
+					{ hreflang: "x-default", href: "https://example.com/" },
+				],
+			},
+			{
+				routePath: "/fr",
+				url: "https://example.com/fr",
+				alternates: [
+					{ hreflang: "en-US", href: "https://example.com/" },
+					{ hreflang: "fr-FR", href: "https://example.com/fr" },
+					{ hreflang: "x-default", href: "https://example.com/" },
+				],
+			},
+			{
+				routePath: "/v1",
+				url: "https://example.com/v1",
+				alternates: [
+					{ hreflang: "en-US", href: "https://example.com/v1" },
+					{ hreflang: "es-ES", href: "https://example.com/v1/es" },
+					{ hreflang: "x-default", href: "https://example.com/v1" },
+				],
+			},
+			{
+				routePath: "/v1/es",
+				url: "https://example.com/v1/es",
+				alternates: [
+					{ hreflang: "en-US", href: "https://example.com/v1" },
+					{ hreflang: "es-ES", href: "https://example.com/v1/es" },
+					{ hreflang: "x-default", href: "https://example.com/v1" },
+				],
+			},
+		]);
+	});
 });

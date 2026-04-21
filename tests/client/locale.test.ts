@@ -142,7 +142,7 @@ describe("locale client helpers", () => {
 				],
 			},
 		});
-		pathname.mockReturnValue("/router/fr");
+		pathname.mockReturnValue("/router/fr/about");
 
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
@@ -166,19 +166,23 @@ describe("locale client helpers", () => {
 			} as any);
 
 			expect(value?.currentLocale().code).toBe("fr-FR");
+			expect(value?.routePath()).toBe("/about");
 			expect(value?.locales.map((locale) => locale.config.label)).toEqual([
 				"English",
 				"Français",
 			]);
 			expect(getLocaleLink(value!.locales[0]!)).toBe("/router");
 			expect(getLocaleLink(value!.locales[1]!)).toBe("/router/fr");
+			expect(value?.applyPathPrefix("about")).toBe("/router/fr/about");
+			expect(value?.applyPathPrefix("/about")).toBe("/router/fr/about");
+			expect(value?.applyPathPrefix("/router/fr")).toBe("/router/fr");
 
 			void value?.setLocale(value!.locales[0]!);
 			dispose();
 		});
 
 		await Promise.resolve();
-		expect(navigate).toHaveBeenCalledWith("/router");
+		expect(navigate).toHaveBeenCalledWith("/router/about");
 		expect(document.documentElement.lang).toBe("en-US");
 	});
 });

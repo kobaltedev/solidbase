@@ -36,6 +36,11 @@ export type SolidBaseRouteOption = {
 	meta: SolidBaseRouteValueConfig;
 };
 
+export type SolidBaseRoutePathMatch = {
+	selection: SolidBaseRouteSelection;
+	restPath: `/${string}`;
+};
+
 type RouteConfigValue = Record<string, unknown>;
 
 type RouteTemplateSegment =
@@ -334,6 +339,13 @@ export function getSolidBaseRouteSelectionForPath(
 	routes: SolidBaseRoutesConfig | undefined,
 	path: string,
 ) {
+	return getSolidBaseRouteMatchForPath(routes, path)?.selection;
+}
+
+export function getSolidBaseRouteMatchForPath(
+	routes: SolidBaseRoutesConfig | undefined,
+	path: string,
+) {
 	if (!routes) return undefined;
 
 	const axes = getSolidBaseRouteAxisMap(routes);
@@ -361,9 +373,23 @@ export function getSolidBaseRouteSelectionForPath(
 		if (getRouteValuePath(valueName, value) !== "") pathIndex++;
 	}
 
-	if (pathIndex !== pathSegments.length) return undefined;
+	if (!isSolidBaseRouteIncluded(routes, selection)) return undefined;
 
-	return isSolidBaseRouteIncluded(routes, selection) ? selection : undefined;
+	return {
+		selection,
+		restPath: normalizeRoutePath(pathSegments.slice(pathIndex).join("/")),
+	} satisfies SolidBaseRoutePathMatch;
+}
+
+export function getSolidBaseRoutePathWithRest(
+	routes: SolidBaseRoutesConfig | undefined,
+	selection: Partial<SolidBaseRouteSelection>,
+	restPath: string,
+) {
+	const routePath = buildSolidBaseRoutePath(routes, selection);
+	if (!routePath) return undefined;
+
+	return normalizeRoutePath(`${routePath}/${restPath}`);
 }
 
 export function getSolidBaseRouteOptions(

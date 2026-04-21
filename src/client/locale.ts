@@ -7,7 +7,9 @@ import { getRequestEvent, isServer } from "solid-js/web";
 import type { LocaleConfig } from "../config/index.js";
 import {
 	buildSolidBaseRoutePath,
+	getSolidBaseRouteMatchForPath,
 	getSolidBaseRouteOptions,
+	getSolidBaseRoutePathWithRest,
 	getSolidBaseRouteSelectionForPath,
 	type SolidBaseRouteOption,
 } from "../config/route-config.js";
@@ -118,12 +120,27 @@ function getLocaleForPath(path: string) {
 	return getRouteLocaleForPath(path) ?? getLegacyLocaleForPath(path);
 }
 
+function normalizeClientPath(path: string): `/${string}` {
+	return (path.startsWith("/") ? path : `/${path}`) as `/${string}`;
+}
+
+function isExternalPath(path: string) {
+	return path.includes("://") || path.startsWith("//");
+}
+
+function isPathWithinPrefix(path: string, prefix: string) {
+	return path === prefix || path.startsWith(`${prefix}/`);
+}
+
 const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const routes = useSolidBaseRoutes();
 
 	const currentLocale = createMemo(() => getLocaleForPath(location.pathname));
+	const currentRouteMatch = createMemo(() =>
+		getSolidBaseRouteMatchForPath(solidBaseConfig.routes, location.pathname),
+	);
 	const locales = createMemo(() => {
 		if (!solidBaseConfig.routes) return legacyLocales;
 
@@ -140,10 +157,14 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 		setLocale: (locale: ResolvedLocale<any>) => {
 			const routePath =
 				locale.option &&
-				buildSolidBaseRoutePath(solidBaseConfig.routes, {
-					...routes.current(),
-					[LOCALE_AXIS]: locale.option.name,
-				});
+				getSolidBaseRoutePathWithRest(
+					solidBaseConfig.routes,
+					{
+						...routes.current(),
+						[LOCALE_AXIS]: locale.option.name,
+					},
+					currentRouteMatch()?.restPath ?? "/",
+				);
 
 			const searchValue = routePath ?? getLocaleLink(locale);
 
@@ -156,6 +177,33 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			});
 		},
 		applyPathPrefix: (_path: string): `/${string}` => {
+			if (solidBaseConfig.routes && !isExternalPath(_path)) {
+				const path = normalizeClientPath(_path);
+				const pathMatch = getSolidBaseRouteMatchForPath(
+					solidBaseConfig.routes,
+					path,
+				);
+				const pathPrefix =
+					pathMatch &&
+					buildSolidBaseRoutePath(solidBaseConfig.routes, pathMatch.selection);
+
+				if (
+					pathPrefix &&
+					pathPrefix !== "/" &&
+					isPathWithinPrefix(path, pathPrefix)
+				) {
+					return path;
+				}
+
+				const routePath = getSolidBaseRoutePathWithRest(
+					solidBaseConfig.routes,
+					routes.current(),
+					path,
+				);
+
+				if (routePath) return routePath;
+			}
+
 			let path = _path;
 			const link = getLocaleLink(currentLocale());
 
@@ -168,6 +216,9 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			return `${link}${path}` as `/${string}`;
 		},
 		routePath: () => {
+			const routePath = currentRouteMatch()?.restPath;
+			if (routePath) return routePath;
+
 			const rest = match()?.params.rest;
 
 			if (!rest) return "/";
