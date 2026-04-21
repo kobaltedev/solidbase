@@ -113,6 +113,7 @@ interface ResolvedLocale<ThemeConfig> {
   code: string;
   isRoot?: boolean;
   config: LocaleConfig<ThemeConfig>;
+  option?: SolidBaseRouteOption;
 }
 ```
 
@@ -134,6 +135,56 @@ function getLocaleLink(locale: ResolvedLocale<any>): `/${string}`;
 ```
 
 Returns the root path for the provided locale.
+
+## Routes
+
+### `useSolidBaseRoutes`
+
+Returns route config helpers for the current `routes` selection.
+
+```ts
+function useSolidBaseRoutes(): {
+  routes: SolidBaseRoutesConfig | undefined;
+  current: Accessor<SolidBaseRouteSelection>;
+  path(selection: Partial<SolidBaseRouteSelection>): `/${string}` | undefined;
+  options(
+    axis: string,
+    selection?: Partial<SolidBaseRouteSelection>,
+  ): SolidBaseRouteOption[];
+};
+
+type SolidBaseRouteSelection = Record<string, string>;
+
+type SolidBaseRouteOption = {
+  name: string;
+  axis: string;
+  path?: string;
+  href?: string;
+  isExternal: boolean;
+  selection?: SolidBaseRouteSelection;
+  meta: SolidBaseRouteValueConfig;
+};
+```
+
+`current()` returns the active route axis values for the current pathname. `path(...)` returns an internal route prefix for the provided partial selection merged over the current selection. `options(...)` returns valid options for an axis and filters internal values through `routes.include`.
+
+### `useSolidBaseRoute`
+
+Returns the current route selection accessor.
+
+```ts
+function useSolidBaseRoute(): Accessor<SolidBaseRouteSelection>;
+```
+
+### `useSolidBaseRouteOptions`
+
+Returns route options for one axis using the current route selection.
+
+```ts
+function useSolidBaseRouteOptions(
+  axis: string,
+): Accessor<SolidBaseRouteOption[]>;
+```
 
 ## Preferred Language
 

@@ -1,0 +1,27 @@
+---
+title: Version Selector
+badges:
+  - icon: npm
+    label: since 0.0.9
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/default-theme/components/VersionSelector.tsx
+---
+
+# {frontmatter.title}
+
+Version switcher for sites that configure `routes.version`.
+
+## Data Source
+
+- `useSolidBaseRoute()`
+- `getSolidBaseRouteFallbackOptions(routes, "version", currentSelection)`
+
+## Behavior
+
+- omitted when fewer than two version options are available
+- uses Kobalte `Select`
+- displays each version option's `meta.label` when provided, otherwise the option name
+- navigates to the selected version's route root
+- scopes available versions to the current project
+- supports external version values through `href`
