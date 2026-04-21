@@ -4,7 +4,10 @@ import { defineConfig } from "vite";
 import Inspect from "vite-plugin-inspect";
 
 import { createSolidBase, defineTheme } from "../src/config";
-import { createFilesystemSidebar } from "../src/config/sidebar";
+import {
+	createFilesystemSidebar,
+	type SidebarItemWithMeta,
+} from "../src/config/sidebar";
 import defaultTheme from "../src/default-theme";
 
 const theme = defineTheme({
@@ -13,6 +16,21 @@ const theme = defineTheme({
 });
 
 const solidBase = createSolidBase(theme);
+
+function getSidebarFileName(item: SidebarItemWithMeta) {
+	const segments = item.filePath.split(/[\\/]/);
+	return segments[segments.length - 1];
+}
+
+function createDevSidebar(route: string, hiddenFolders: string[] = []) {
+	return createFilesystemSidebar(route, {
+		filter: (item) => {
+			if (hiddenFolders.includes(getSidebarFileName(item) ?? "")) return false;
+			if ("items" in item) return true;
+			return /\.(md|mdx)$/.test(item.filePath);
+		},
+	});
+}
 
 export default defineConfig({
 	plugins: [
@@ -66,9 +84,59 @@ export default defineConfig({
 				],
 			},
 			overrides: [
-				{ project: "router", title: "Router Demo" },
-				{ version: "v1", title: "SolidBase v1 Demo" },
-				{ locale: "fr", titleTemplate: ":title - Demo SolidBase" },
+				{
+					locale: "fr",
+					titleTemplate: ":title - Demo SolidBase",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/fr"),
+						},
+					},
+				},
+				{
+					locale: "es",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/es"),
+						},
+					},
+				},
+				{
+					project: "router",
+					title: "Router Demo",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/router", ["fr"]),
+						},
+					},
+				},
+				{
+					version: "v1",
+					title: "SolidBase v1 Demo",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/v1", ["fr"]),
+						},
+					},
+				},
+				{
+					project: "router",
+					locale: "fr",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/router/fr"),
+						},
+					},
+				},
+				{
+					version: "v1",
+					locale: "fr",
+					themeConfig: {
+						sidebar: {
+							"/": createDevSidebar("./src/routes/v1/fr"),
+						},
+					},
+				},
 				{
 					project: "solidbase",
 					version: "v1",
@@ -78,12 +146,7 @@ export default defineConfig({
 			],
 			themeConfig: {
 				sidebar: {
-					"/": createFilesystemSidebar("./src/routes", {
-						filter: (item) => {
-							if ("items" in item) return true;
-							return /\.(md|mdx)$/.test(item.filePath);
-						},
-					}),
+					"/": createDevSidebar("./src/routes", ["es", "fr", "router", "v1"]),
 				},
 			},
 		}),

@@ -23,7 +23,7 @@ export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 	const [navRef, setNavRef] = createSignal<HTMLElement>();
 
-	const { ThemeSelector, LocaleSelector, TableOfContents } =
+	const { ThemeSelector, LocaleSelector, RouteSelector, TableOfContents } =
 		useDefaultThemeComponents();
 
 	const {
@@ -98,6 +98,7 @@ export default function Header() {
 									)}
 								</Show>
 								<div class={styles["nav-popup-selectors"]}>
+									<RouteSelector />
 									<LocaleSelector />
 									<ThemeSelector />
 								</div>
@@ -127,6 +128,7 @@ export default function Header() {
 							</For>
 						)}
 					</Show>
+					<RouteSelector />
 					<LocaleSelector />
 					<ThemeSelector />
 				</div>
