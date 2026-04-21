@@ -1,18 +1,14 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { Select } from "@kobalte/core/select";
-import { useLocation, useNavigate } from "@solidjs/router";
+import { useNavigate } from "@solidjs/router";
 import { createMemo, For, Show } from "solid-js";
 
 import {
-	getSolidBaseRouteMatchForPath,
-	getSolidBaseRoutePathWithRest,
+	getSolidBaseRouteFallbackOptions,
 	isSolidBaseRouteAxisConfig,
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
-import {
-	useSolidBaseRoute,
-	useSolidBaseRouteOptions,
-} from "../../client/index.jsx";
+import { useSolidBaseRoute } from "../../client/index.jsx";
 import styles from "./ThemeSelector.module.css";
 
 const LOCALE_AXIS = "locale";
@@ -33,10 +29,15 @@ export default function RouteSelector() {
 }
 
 function RouteAxisSelector(props: { axis: string }) {
-	const location = useLocation();
 	const navigate = useNavigate();
 	const current = useSolidBaseRoute();
-	const options = useSolidBaseRouteOptions(props.axis);
+	const options = createMemo(() =>
+		getSolidBaseRouteFallbackOptions(
+			solidBaseConfig.routes,
+			props.axis,
+			current(),
+		),
+	);
 	const currentOption = createMemo(() =>
 		options().find((option) => option.name === current()[props.axis]),
 	);
@@ -45,28 +46,16 @@ function RouteAxisSelector(props: { axis: string }) {
 		return typeof option.meta.label === "string" ? option.meta.label : option.name;
 	};
 
-	const getOptionPath = (option: SolidBaseRouteOption) => {
-		if (!option.selection) return undefined;
-
-		return getSolidBaseRoutePathWithRest(
-			solidBaseConfig.routes,
-			option.selection,
-			getSolidBaseRouteMatchForPath(
-				solidBaseConfig.routes,
-				location.pathname,
-			)?.restPath ?? "/",
-		);
-	};
-
 	const onChange = (option: SolidBaseRouteOption | null) => {
 		if (!option) return;
+		if (option.name === current()[props.axis]) return;
+
 		if (option.href) {
 			globalThis.location.href = option.href;
 			return;
 		}
 
-		const path = getOptionPath(option);
-		if (path) navigate(path);
+		if (option.path) navigate(option.path);
 	};
 
 	return (
@@ -78,7 +67,6 @@ function RouteAxisSelector(props: { axis: string }) {
 					options={options()}
 					optionValue="name"
 					optionTextValue={getOptionLabel}
-					allowDuplicateSelectionEvents
 					onChange={onChange}
 					gutter={8}
 					sameWidth={false}

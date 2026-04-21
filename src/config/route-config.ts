@@ -160,6 +160,29 @@ function getInternalRouteValueEntries(axis: SolidBaseRouteAxisConfig) {
 	return Object.entries(axis.values).filter(([, value]) => !value.href);
 }
 
+function getSolidBaseRouteSelections(routes: SolidBaseRoutesConfig | undefined) {
+	const axes = getSolidBaseRouteAxes(routes);
+	const selections: SolidBaseRouteSelection[] = [];
+
+	const visit = (index: number, selection: SolidBaseRouteSelection) => {
+		const entry = axes[index];
+		if (!entry) {
+			if (isSolidBaseRouteIncluded(routes, selection)) {
+				selections.push(selection);
+			}
+			return;
+		}
+
+		const [axisName, axis] = entry;
+		for (const [valueName] of getInternalRouteValueEntries(axis)) {
+			visit(index + 1, { ...selection, [axisName]: valueName });
+		}
+	};
+
+	visit(0, {});
+	return selections;
+}
+
 function matchRoutePathSegment(
 	axis: SolidBaseRouteAxisConfig,
 	pathSegment: string | undefined,
@@ -392,6 +415,66 @@ export function getSolidBaseRoutePathWithRest(
 	return normalizeRoutePath(`${routePath}/${restPath}`);
 }
 
+export function getSolidBaseRouteFallbackSelection(
+	routes: SolidBaseRoutesConfig | undefined,
+	current: Partial<SolidBaseRouteSelection> = {},
+	next: Partial<SolidBaseRouteSelection> = {},
+	options: { lockedAxes?: string[] } = {},
+) {
+	if (!routes) return undefined;
+
+	const normalizedCurrent = normalizeSolidBaseRouteSelection(routes, current) ?? {};
+	const axisMap = getSolidBaseRouteAxisMap(routes);
+	const lockedSelection: Partial<SolidBaseRouteSelection> = {};
+
+	for (const axisName of options.lockedAxes ?? []) {
+		const valueName = normalizedCurrent[axisName];
+		if (valueName) lockedSelection[axisName] = valueName;
+	}
+
+	const requiredSelection = {
+		...lockedSelection,
+		...next,
+	};
+	const required = normalizeSolidBaseRouteSelection(routes, {
+		...normalizedCurrent,
+		...requiredSelection,
+	});
+	if (!required) return undefined;
+
+	let fallback: SolidBaseRouteSelection | undefined;
+	let fallbackScore = -1;
+
+	for (const selection of getSolidBaseRouteSelections(routes)) {
+		if (
+			Object.entries(requiredSelection).some(([axisName]) => {
+				return selection[axisName] !== required[axisName];
+			})
+		) {
+			continue;
+		}
+
+		let score = 0;
+		for (const [axisName, axis] of axisMap) {
+			if (selection[axisName] === normalizedCurrent[axisName]) {
+				score += 100;
+				continue;
+			}
+
+			if (selection[axisName] === axis.default) {
+				score += 10;
+			}
+		}
+
+		if (score > fallbackScore) {
+			fallback = selection;
+			fallbackScore = score;
+		}
+	}
+
+	return fallback;
+}
+
 export function getSolidBaseRouteOptions(
 	routes: SolidBaseRoutesConfig | undefined,
 	axisName: string,
@@ -423,6 +506,56 @@ export function getSolidBaseRouteOptions(
 		};
 
 		if (!isSolidBaseRouteIncluded(routes, selection)) continue;
+
+		options.push({
+			name: valueName,
+			axis: axisName,
+			path: buildSolidBaseRoutePath(routes, selection),
+			isExternal: false,
+			selection,
+			meta: value,
+		});
+	}
+
+	return options;
+}
+
+export function getSolidBaseRouteFallbackOptions(
+	routes: SolidBaseRoutesConfig | undefined,
+	axisName: string,
+	current: Partial<SolidBaseRouteSelection> = {},
+): SolidBaseRouteOption[] {
+	if (!routes) return [];
+
+	const axis = getSolidBaseRouteAxisMap(routes).get(axisName);
+	if (!axis) return [];
+
+	const axisNames = getRouteTemplateAxisNames(routes.path);
+	const axisIndex = axisNames.indexOf(axisName);
+	const lockedAxes = axisIndex > 0 ? axisNames.slice(0, axisIndex) : [];
+	const options: SolidBaseRouteOption[] = [];
+
+	for (const [valueName, value] of Object.entries(axis.values)) {
+		if (value.href) {
+			options.push({
+				name: valueName,
+				axis: axisName,
+				href: value.href,
+				isExternal: true,
+				meta: value,
+			});
+			continue;
+		}
+
+		const selection = getSolidBaseRouteFallbackSelection(
+			routes,
+			current,
+			{
+				[axisName]: valueName,
+			},
+			{ lockedAxes },
+		);
+		if (!selection) continue;
 
 		options.push({
 			name: valueName,

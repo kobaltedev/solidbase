@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import {
 	buildSolidBaseRoutePath,
+	getSolidBaseRouteFallbackOptions,
+	getSolidBaseRouteFallbackSelection,
 	getSolidBaseRouteSelectionForPath,
 	getSolidBaseRouteOptions,
 	isSolidBaseRouteIncluded,
@@ -128,6 +130,60 @@ describe("route config helpers", () => {
 				href: "https://v0.solidjs.com",
 				isExternal: true,
 			},
+		]);
+	});
+
+	it("falls back invalid route axes when resolving cross-axis options", () => {
+		expect(
+			getSolidBaseRouteFallbackSelection(
+				routes,
+				{ project: "solid", version: "v1", locale: "fr" },
+				{ project: "router" },
+			),
+		).toEqual({
+			project: "router",
+			version: "latest",
+			locale: "fr",
+		});
+		expect(
+			getSolidBaseRouteFallbackSelection(
+				routes,
+				{ project: "solid", version: "v1", locale: "es" },
+				{ project: "router" },
+			),
+		).toEqual({
+			project: "router",
+			version: "latest",
+			locale: "en",
+		});
+		expect(
+			getSolidBaseRouteFallbackSelection(
+				routes,
+				{ project: "router", version: "latest", locale: "fr" },
+				{ version: "v1" },
+				{ lockedAxes: ["project"] },
+			),
+		).toBeUndefined();
+		expect(
+			getSolidBaseRouteFallbackOptions(routes, "project", {
+				project: "solid",
+				version: "v1",
+				locale: "fr",
+			}),
+		).toMatchObject([
+			{ name: "solid", path: "/v1/fr" },
+			{ name: "router", path: "/router/fr" },
+			{ name: "start", path: "/start/fr" },
+		]);
+		expect(
+			getSolidBaseRouteFallbackOptions(routes, "version", {
+				project: "router",
+				version: "latest",
+				locale: "fr",
+			}),
+		).toMatchObject([
+			{ name: "latest", path: "/router/fr" },
+			{ name: "v0", href: "https://v0.solidjs.com" },
 		]);
 	});
 
