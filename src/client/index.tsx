@@ -25,6 +25,12 @@ export {
 } from "./page-markdown.js";
 export { usePreferredLanguage } from "./preferred-language.js";
 export { SolidBaseRoot } from "./Root.jsx";
+export {
+	SolidBaseRoutesContextProvider,
+	useSolidBaseRoute,
+	useSolidBaseRouteOptions,
+	useSolidBaseRoutes,
+} from "./routes.js";
 export type * from "./sidebar.js";
 export { SidebarProvider, usePrevNext, useSidebar } from "./sidebar.js";
 export {

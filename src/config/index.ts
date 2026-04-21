@@ -7,6 +7,10 @@ import type { PluginOption } from "vite";
 import defaultTheme from "../default-theme/index.js";
 import { type MdxOptions, solidBaseMdx } from "./mdx.js";
 import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
+import type {
+	SolidBaseRouteRule,
+	SolidBaseRoutesConfig,
+} from "./route-config.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
 
 export interface SolidBaseConfig<ThemeConfig> {
@@ -21,6 +25,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
 	locales?: Record<string, LocaleConfig<ThemeConfig>>;
+	routes?: SolidBaseRoutesConfig;
+	overrides?: Array<SolidBaseRouteOverride<ThemeConfig>>;
 	themeConfig?: ThemeConfig;
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
@@ -54,6 +60,9 @@ export type LocaleConfig<ThemeConfig> = {
 	link?: string;
 	themeConfig?: ThemeConfig;
 };
+
+export type SolidBaseRouteOverride<ThemeConfig> = SolidBaseRouteRule &
+	Partial<Omit<SolidBaseConfig<ThemeConfig>, "routes" | "overrides">>;
 
 export type SitemapConfig = {
 	hostname?: string;
