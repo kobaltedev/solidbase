@@ -3,8 +3,8 @@
   "type": "module",
   "private": "true",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" VITE_SOLIDBASE_DEV=true vite dev",
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=8192\" vite build"
+    "dev": "cross-env VITE_SOLIDBASE_DEV=true vite dev",
+    "build": "cross-env vite build"
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
@@ -13,7 +13,7 @@
     "@solidjs/start": "https://pkg.pr.new/solidjs/solid-start/@solidjs/start@2080",
     "nitro": "3.0.260311-beta",
     "solid-js": "^1.9.9",
-    "vite": "^8.0.0"
+    "vite": "8.0.0"
   },
   "engines": {
     "node": ">=22.12"
