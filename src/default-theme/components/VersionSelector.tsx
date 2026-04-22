@@ -1,4 +1,5 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
+import { Popover } from "@kobalte/core/popover";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
 import { useSolidBaseRoute } from "../../client/index.jsx";
@@ -7,7 +8,6 @@ import {
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
 import styles from "./VersionSelector.module.css";
-import { Popover } from "@kobalte/core/popover";
 
 const VERSION_AXIS = "version";
 
@@ -42,10 +42,12 @@ export default function VersionSelector() {
 					sameWidth
 					placement="bottom-start"
 				>
-					<Popover.Trigger class={styles.trigger} aria-label="Change project" disabled={options().length <= 1}>
-						<span class={styles.label}>
-							{getOptionLabel(current())}
-						</span>
+					<Popover.Trigger
+						class={styles.trigger}
+						aria-label="Change project"
+						disabled={options().length <= 1}
+					>
+						<span class={styles.label}>{getOptionLabel(current())}</span>
 
 						<Show when={options().length > 1}>
 							<IconExpandUpDownLine class={styles.icon} aria-hidden />

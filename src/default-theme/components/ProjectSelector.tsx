@@ -44,9 +44,7 @@ export default function ProjectSelector() {
 					placement="bottom-start"
 				>
 					<Popover.Trigger class={styles.trigger} aria-label="Change project">
-						<span class={styles.label}>
-							{getOptionLabel(current())}
-						</span>
+						<span class={styles.label}>{getOptionLabel(current())}</span>
 						<IconExpandUpDownLine class={styles.icon} aria-hidden />
 					</Popover.Trigger>
 					<Popover.Portal>
