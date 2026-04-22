@@ -39,7 +39,7 @@ export default defineConfig({
 				version: {
 					default: "latest",
 					values: {
-						latest: { path: "", label: `v${SBVersion}` },
+						latest: { path: "", label: `v${SBVersion.replace("-dev", "")}` },
 					},
 				},
 				locale: {
