@@ -2,8 +2,8 @@ import { solidBaseConfig } from "virtual:solidbase/config";
 import { Select } from "@kobalte/core/select";
 import { useNavigate } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
-import { useSolidBaseRoute } from "../../client/index.jsx";
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
+import { useSolidBaseRoute } from "../../client/index.jsx";
 import {
 	getSolidBaseRouteFallbackOptions,
 	type SolidBaseRouteOption,

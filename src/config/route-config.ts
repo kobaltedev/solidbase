@@ -138,7 +138,7 @@ function validateRouteRule(
 		const axis = axisMap.get(axisName);
 		assertSolidBaseRouteConfig(
 			axis,
-			"`" + source + "` references unknown route axis `" + axisName + "`.",
+			`\`${source}\` references unknown route axis \`${axisName}\`.`,
 		);
 
 		for (const valueName of toRuleValues(value)) {
@@ -235,14 +235,14 @@ export function validateSolidBaseRoutesConfig(
 		if (ROUTES_RESERVED_KEYS.has(key)) continue;
 		assertSolidBaseRouteConfig(
 			axisMap.has(key),
-			"`routes." + key + "` must include `default` and `values`.",
+			`\`routes.${key}\` must include \`default\` and \`values\`.`,
 		);
 	}
 
 	for (const axisName of placeholders) {
 		assertSolidBaseRouteConfig(
 			axisMap.has(axisName),
-			"`routes.path` references unknown route axis `" + axisName + "`.",
+			`\`routes.path\` references unknown route axis \`${axisName}\`.`,
 		);
 	}
 
@@ -286,7 +286,7 @@ export function validateSolidBaseRoutesConfig(
 
 			assertSolidBaseRouteConfig(
 				configKeys.has(key),
-				"`overrides` contains unknown config key or route axis `" + key + "`.",
+				`\`overrides\` contains unknown config key or route axis \`${key}\`.`,
 			);
 		}
 
