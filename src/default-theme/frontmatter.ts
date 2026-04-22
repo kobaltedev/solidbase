@@ -66,7 +66,7 @@ export interface HeroConfig {
 		src: string;
 		alt?: string;
 	};
-	badges?: Array<HeroActionConfig>;
+	actions?: Array<HeroActionConfig>;
 }
 
 export interface FeaturesConfig {

@@ -4,7 +4,6 @@ import {
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
-import { A } from "@solidjs/router";
 import {
 	type Accessor,
 	type ComponentProps,
@@ -65,7 +64,7 @@ export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 	const autoHeading = () => props["data-auto-heading"] === "";
 
 	return (
-		<A
+		<a
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
 			class={autoHeading() ? styles["a-auto"] : styles.a}
