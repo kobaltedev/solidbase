@@ -28,13 +28,15 @@ export function SolidBaseRoot(
 
 	const base = () => (
 		<Suspense>
-			<LocaleContextProvider>
-				<CurrentPageDataProvider {...props.currentPageData}>
-					<MDXProvider components={mdxComponents}>
-						<Inner>{props.children}</Inner>
-					</MDXProvider>
-				</CurrentPageDataProvider>
-			</LocaleContextProvider>
+			<SolidBaseRoutesContextProvider>
+				<LocaleContextProvider>
+					<CurrentPageDataProvider {...props.currentPageData}>
+						<MDXProvider components={mdxComponents}>
+							<Inner>{props.children}</Inner>
+						</MDXProvider>
+					</CurrentPageDataProvider>
+				</LocaleContextProvider>
+			</SolidBaseRoutesContextProvider>
 		</Suspense>
 	);
 
@@ -50,6 +52,7 @@ export function SolidBaseRoot(
 
 import { LocaleContextProvider } from "./locale.js";
 import { CurrentPageDataProvider, useCurrentPageData } from "./page-data.js";
+import { SolidBaseRoutesContextProvider } from "./routes.js";
 
 export function Inner(props: ParentProps) {
 	const config = useRouteSolidBaseConfig();

@@ -55,6 +55,8 @@ interface SolidBaseConfig<ThemeConfig> {
   robots?: boolean | RobotsConfig;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
+  routes?: SolidBaseRoutesConfig;
+  overrides?: Array<SolidBaseRouteOverride<ThemeConfig>>;
   themeConfig?: ThemeConfig;
   editPath?: string | ((path: string) => string);
   lastUpdated?: Intl.DateTimeFormatOptions | false;
@@ -85,8 +87,95 @@ There are several options for setting site-wide metadata and behavior. These opt
 Set `siteUrl` to the canonical public URL for your site. SolidBase uses it as the shared base for generated sitemap URLs, `robots.txt`, and default Open Graph URL metadata.
 
 :::note
-For multilingual support, you can use the `locales` option to define different configurations for each locale. More details can be found in the [Internationalization guide](/guide/features/i18n).
+For multilingual support, use the `routes.locale` option. More details can be found in the [Internationalization guide](/guide/features/i18n).
 :::
+
+### Routes
+
+Use `routes` when a site has route dimensions such as project, version, or locale.
+
+```ts title="app.config.ts"
+// ..
+routes: {
+    path: "/{project}/{version}/{locale}",
+    project: {
+        default: "solidbase",
+        values: {
+            solidbase: { path: "", label: "SolidBase" },
+            router: { path: "router", label: "Router" },
+        },
+    },
+    version: {
+        default: "latest",
+        values: {
+            latest: { path: "", label: "Latest" },
+            v1: { path: "v1", label: "v1" },
+            v0: { href: "https://v0.example.com", label: "v0" },
+        },
+    },
+    locale: {
+        default: "en",
+        values: {
+            en: { path: "", label: "English", lang: "en-US" },
+            fr: { path: "fr", label: "Français", lang: "fr-FR" },
+        },
+    },
+    include: [
+        {
+            project: ["solidbase", "router"],
+            version: "latest",
+            locale: ["en", "fr"],
+        },
+        {
+            project: "solidbase",
+            version: "v1",
+            locale: "en",
+        },
+    ],
+},
+// ..
+```
+
+`routes.path` defines the URL prefix template. Each `{placeholder}` must match a route axis in the same object.
+
+Each route axis has:
+
+- `default`: the default value name.
+- `values`: the allowed values for that axis.
+- `values.*.path`: the URL segment for an internal value. Use an empty string for the default root segment.
+- `values.*.href`: an external link for selector options that should navigate away from the current site.
+- `values.*.label`, `title`, `status`, `lang`, and other metadata: client-facing metadata available to custom themes through the route APIs.
+
+`include` is an allowlist for valid internal route combinations. If omitted, all internal combinations are valid. External values with `href` are not included in generated route combinations.
+
+Use `overrides` to change SolidBase config for matching route selections:
+
+```ts title="app.config.ts"
+// ..
+overrides: [
+    {
+        project: "router",
+        title: "Router Docs",
+        themeConfig: {
+					socialLinks: {
+						github: "https://github.com/solidjs/solid-router",
+						discord: "https://discord.com/invite/solidjs",
+					},
+        }
+    },
+    {
+        locale: "fr",
+        titleTemplate: ":title - Documentation française",
+    },
+    {
+        project: "solidbase",
+        version: "v1",
+    },
+],
+// ..
+```
+
+Route override selectors use route axis names. Override config is applied over the base config, and `themeConfig` is shallow-merged with the base `themeConfig`.
 
 #### Miscellaneous options
 

@@ -3,7 +3,12 @@ import {
 	normalizeSiteUrl,
 	type SolidBaseResolvedConfig,
 } from "./index.js";
-import { getRoutesIndex, type RouteIndexEntry } from "./routes-index.js";
+import {
+	getRouteLocaleMetadata,
+	getRoutesIndex,
+	isRouteIncludedByConfig,
+	type RouteIndexEntry,
+} from "./routes-index.js";
 
 type SitemapFrontmatter = {
 	sitemap?: boolean | { exclude?: boolean };
@@ -19,81 +24,6 @@ export type SitemapEntry = {
 	url: string;
 	alternates: SitemapAlternate[];
 };
-
-type LocaleRouteInfo = {
-	locale: string;
-	hreflang: string;
-	groupPath: string;
-	isDefaultLocale: boolean;
-};
-
-type LocaleDefinition = {
-	locale: string;
-	prefix: string;
-	hreflang: string;
-};
-
-function normalizeLocalePrefix(prefix: string) {
-	if (prefix === "/") return "/";
-	return prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
-}
-
-function getLocaleDefinitions(config: SolidBaseResolvedConfig<any>) {
-	const locales = config.locales ?? {};
-	const definitions: LocaleDefinition[] = [
-		{
-			locale: "root",
-			prefix: "/",
-			hreflang: config.lang,
-		},
-	];
-
-	for (const [locale, localeConfig] of Object.entries(locales)) {
-		if (locale === "root") continue;
-
-		definitions.push({
-			locale,
-			prefix: normalizeLocalePrefix(localeConfig.link ?? `/${locale}/`),
-			hreflang: localeConfig.lang ?? locale,
-		});
-	}
-
-	return definitions.sort((a, b) => b.prefix.length - a.prefix.length);
-}
-
-function getLocaleRouteInfo(
-	routePath: string,
-	localeDefinitions: LocaleDefinition[],
-	defaultHreflang: string,
-): LocaleRouteInfo {
-	for (const definition of localeDefinitions) {
-		if (definition.locale === "root") continue;
-		if (routePath === definition.prefix) {
-			return {
-				locale: definition.locale,
-				hreflang: definition.hreflang,
-				groupPath: "/",
-				isDefaultLocale: false,
-			};
-		}
-
-		if (routePath.startsWith(`${definition.prefix}/`)) {
-			return {
-				locale: definition.locale,
-				hreflang: definition.hreflang,
-				groupPath: routePath.slice(definition.prefix.length),
-				isDefaultLocale: false,
-			};
-		}
-	}
-
-	return {
-		locale: "root",
-		hreflang: defaultHreflang,
-		groupPath: routePath,
-		isDefaultLocale: true,
-	};
-}
 
 function isSitemapExcluded(frontmatter: SitemapFrontmatter) {
 	if (frontmatter.sitemap === false) return true;
@@ -113,9 +43,10 @@ export function buildSitemapEntries(
 	config: SolidBaseResolvedConfig<any>,
 	routes: RouteIndexEntry[],
 ): SitemapEntry[] {
-	const localeDefinitions = getLocaleDefinitions(config);
 	const includedRoutes = routes.filter(
-		(route) => !isSitemapExcluded(route.frontmatter as SitemapFrontmatter),
+		(route) =>
+			!isSitemapExcluded(route.frontmatter as SitemapFrontmatter) &&
+			isRouteIncludedByConfig(route.routePath, config),
 	);
 
 	const groups = new Map<
@@ -130,11 +61,7 @@ export function buildSitemapEntries(
 	>();
 
 	for (const route of includedRoutes) {
-		const localeInfo = getLocaleRouteInfo(
-			route.routePath,
-			localeDefinitions,
-			config.lang,
-		);
+		const localeInfo = getRouteLocaleMetadata(route.routePath, config);
 		const entry = {
 			routePath: route.routePath,
 			url: toAbsoluteUrl(hostname, route.routePath),
@@ -153,11 +80,7 @@ export function buildSitemapEntries(
 
 	return includedRoutes
 		.map((route) => {
-			const localeInfo = getLocaleRouteInfo(
-				route.routePath,
-				localeDefinitions,
-				config.lang,
-			);
+			const localeInfo = getRouteLocaleMetadata(route.routePath, config);
 			const variants = groups.get(localeInfo.groupPath) ?? [];
 
 			return {

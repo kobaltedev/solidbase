@@ -5,20 +5,20 @@ import { type ResolvedLocale, useLocale } from "../../client/index.jsx";
 import styles from "./ThemeSelector.module.css";
 
 export default function LocaleSelector<ThemeConfig>() {
-	const { locales, currentLocale, setLocale } = useLocale();
+	const locale = useLocale();
 
 	return (
-		<Show when={locales.length > 1}>
+		<Show when={locale.locales.length > 1}>
 			{(_) => {
 				return (
 					<Select<ResolvedLocale<ThemeConfig>>
 						class={styles.root}
-						value={currentLocale()}
-						options={locales}
+						value={locale.currentLocale()}
+						options={locale.locales}
 						optionValue="code"
 						optionTextValue={(v) => v.config.label}
 						allowDuplicateSelectionEvents
-						onChange={(option) => option && setLocale(option)}
+						onChange={(option) => option && locale.setLocale(option)}
 						gutter={8}
 						sameWidth={false}
 						placement="bottom"

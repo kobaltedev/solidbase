@@ -114,4 +114,39 @@ describe("isDefaultLocaleRoute", () => {
 		expect(isDefaultLocaleRoute("/documentation", config)).toBe(false);
 		expect(isDefaultLocaleRoute("/documentation/api", config)).toBe(false);
 	});
+
+	it("uses routes.locale when route config is present", () => {
+		const config = {
+			lang: "en-US",
+			routes: {
+				path: "/{project}/{version}/{locale}",
+				project: {
+					default: "solid",
+					values: {
+						solid: { path: "" },
+						router: { path: "router" },
+					},
+				},
+				version: {
+					default: "latest",
+					values: {
+						latest: { path: "" },
+						v1: { path: "v1" },
+					},
+				},
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", lang: "en-US" },
+						fr: { path: "fr", lang: "fr-FR" },
+					},
+				},
+			},
+		} as any;
+
+		expect(isDefaultLocaleRoute("/router/guide", config)).toBe(true);
+		expect(isDefaultLocaleRoute("/router/fr/guide", config)).toBe(false);
+		expect(isDefaultLocaleRoute("/v1/api", config)).toBe(true);
+		expect(isDefaultLocaleRoute("/v1/fr/api", config)).toBe(false);
+	});
 });

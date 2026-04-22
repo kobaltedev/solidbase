@@ -7,7 +7,29 @@ import type { PluginOption } from "vite";
 import defaultTheme from "../default-theme/index.js";
 import { type MdxOptions, solidBaseMdx } from "./mdx.js";
 import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
+import type { SolidBaseRoutesConfig } from "./route-config.js";
+import { validateSolidBaseRoutesConfig as validateRoutes } from "./route-config.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
+
+const SOLID_BASE_OVERRIDE_CONFIG_KEYS = [
+	"title",
+	"titleTemplate",
+	"description",
+	"siteUrl",
+	"llms",
+	"sitemap",
+	"robots",
+	"logo",
+	"issueAutolink",
+	"lang",
+	"locales",
+	"themeConfig",
+	"editPath",
+	"lastUpdated",
+	"markdown",
+	"icons",
+	"autoImport",
+];
 
 export interface SolidBaseConfig<ThemeConfig> {
 	title?: string;
@@ -21,6 +43,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
 	locales?: Record<string, LocaleConfig<ThemeConfig>>;
+	routes?: SolidBaseRoutesConfig;
+	overrides?: Array<SolidBaseRouteOverride<ThemeConfig>>;
 	themeConfig?: ThemeConfig;
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
@@ -54,6 +78,11 @@ export type LocaleConfig<ThemeConfig> = {
 	link?: string;
 	themeConfig?: ThemeConfig;
 };
+
+export type SolidBaseRouteOverride<ThemeConfig> = Partial<
+	Omit<SolidBaseConfig<ThemeConfig>, "routes" | "overrides">
+> &
+	Record<string, unknown>;
 
 export type SitemapConfig = {
 	hostname?: string;
@@ -98,6 +127,12 @@ export function createSolidBase<ThemeConfig>(
 			lastUpdated: { dateStyle: "short", timeStyle: "short" },
 			...solidBaseConfig,
 		};
+
+		validateRoutes(
+			sbConfig.routes,
+			sbConfig.overrides,
+			SOLID_BASE_OVERRIDE_CONFIG_KEYS,
+		);
 
 		{
 			let t: ThemeDefinition<any> | undefined = theme;

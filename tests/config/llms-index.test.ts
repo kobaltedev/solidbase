@@ -134,6 +134,81 @@ describe("getLlmDocuments", () => {
 		expect(index).not.toContain("/fr/guide/getting-started.md");
 	});
 
+	it("defaults llms.txt to routes.locale default documents", () => {
+		const index = buildLlmsIndex(
+			undefined,
+			{
+				...config,
+				themeConfig: {},
+				routes: {
+					path: "/{version}/{locale}",
+					version: {
+						default: "latest",
+						values: {
+							latest: { path: "" },
+							v1: { path: "v1" },
+						},
+					},
+					locale: {
+						default: "en",
+						values: {
+							en: { path: "", lang: "en-US" },
+							fr: { path: "fr", lang: "fr-FR" },
+							es: { path: "es", lang: "es-ES" },
+						},
+					},
+					include: [
+						{ version: "latest", locale: ["en", "fr"] },
+						{ version: "v1", locale: ["en", "es"] },
+					],
+				},
+			},
+			[
+				{
+					title: "Home",
+					description: "Latest English",
+					routePath: "/",
+					markdownPath: "/index.md",
+					content: "Home",
+				},
+				{
+					title: "Accueil",
+					description: "Latest French",
+					routePath: "/fr",
+					markdownPath: "/fr.md",
+					content: "Accueil",
+				},
+				{
+					title: "v1",
+					description: "v1 English",
+					routePath: "/v1",
+					markdownPath: "/v1.md",
+					content: "v1",
+				},
+				{
+					title: "v1 ES",
+					description: "v1 Spanish",
+					routePath: "/v1/es",
+					markdownPath: "/v1/es.md",
+					content: "v1 ES",
+				},
+				{
+					title: "v1 FR",
+					description: "Invalid by include",
+					routePath: "/v1/fr",
+					markdownPath: "/v1/fr.md",
+					content: "v1 FR",
+				},
+			],
+		);
+
+		expect(index).toContain("- [Home](/index.md): Latest English");
+		expect(index).toContain("- [v1](/v1.md): v1 English");
+		expect(index).not.toContain("/fr.md");
+		expect(index).not.toContain("/v1/es.md");
+		expect(index).not.toContain("/v1/fr.md");
+	});
+
 	it("renders nav sections and nested sidebar groups as headings", () => {
 		const index = buildLlmsIndex(
 			undefined,

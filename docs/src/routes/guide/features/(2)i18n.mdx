@@ -16,15 +16,24 @@ export default defineConfig({
 	plugins: [
 		solidBase.plugin({
 			...
-			lang: "en", // default lang without route prefix
-			locales: {
-				fr: {
-					label: "Français",
+			routes: {
+				path: "/{locale}",
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", label: "English", lang: "en-US" },
+						fr: { path: "fr", label: "Français", lang: "fr-FR" },
+					},
+				},
+			},
+			overrides: [
+				{
+					locale: "fr",
 					themeConfig: {
 						...
 					},
 				},
-			},
+			],
 			...
 		}),
 	],
@@ -48,3 +57,11 @@ src
 ## Theme Configuration
 
 Similar to the theme configuration for the default locale, you can provide a `themeConfig` for each locale to customize the theme for that specific language. To learn more about how to adjust the theme configuration, refer to the [Theme Configuration section within the config page](/guide/config#theme-configuration).
+
+## Locale API
+
+The default theme and custom themes can keep using `useLocale()` for locale-specific UI.
+
+When `routes.locale` is configured, `useLocale().locales` is derived from the current route selection. For example, if `/router` only includes English and French, the locale selector only receives those two locales even if another project also includes Spanish.
+
+Use the generic route APIs when custom UI needs to read non-locale route axes such as project or version.

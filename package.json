@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.0.0-dev",
+  "version": "0.5.0",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "sideEffects": true,
@@ -26,6 +26,7 @@
   "author": "jer3m01 <jer3m01@jer3m01.com>",
   "contributors": [
     "Brendan Allan <brendonovich@outlook.com>",
+    "Sarah Gerrard <gerrardsarah@gmail.com>",
     "dev-rb <43100342+dev-rb@users.noreply.github.com>"
   ],
   "license": "MIT",

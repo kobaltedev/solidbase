@@ -48,6 +48,17 @@
 	font-size: 1.25em;
 }
 
+.logo-cluster {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+}
+
+.version-selector {
+	display: flex;
+	align-items: center;
+}
+
 .mobile-menu,
 .mobile-nav-menu {
 	appearance: none;

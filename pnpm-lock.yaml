@@ -284,7 +284,7 @@ importers:
         specifier: ^1.9.9
         version: 1.9.11
       vite:
-        specifier: ^8.0.0
+        specifier: 8.0.0
         version: 8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(tsx@4.21.0)(yaml@2.8.2)
     devDependencies:
       '@iconify-json/ri':

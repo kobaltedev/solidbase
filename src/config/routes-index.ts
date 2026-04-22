@@ -4,8 +4,16 @@ import { extname, join, relative } from "node:path";
 import matter from "gray-matter";
 
 import type { SolidBaseResolvedConfig } from "./index.js";
+import {
+	buildSolidBaseRoutePath,
+	getSolidBaseRouteMatchForPath,
+	getSolidBaseRoutePathWithRest,
+	isSolidBaseRouteAxisConfig,
+	type SolidBaseRouteAxisConfig,
+} from "./route-config.js";
 
 const MARKDOWN_EXTENSIONS = new Set([".md", ".mdx"]);
+const LOCALE_AXIS = "locale";
 
 export type RouteIndexEntry = {
 	filePath: string;
@@ -72,6 +80,62 @@ function normalizeLocalePrefix(prefix: string) {
 	return prefix.endsWith("/") ? prefix.slice(0, -1) : prefix;
 }
 
+export type RouteLocaleInfo = {
+	locale: string;
+	hreflang: string;
+	groupPath: string;
+	isDefaultLocale: boolean;
+};
+
+function getRouteLocaleAxis(
+	config: SolidBaseResolvedConfig<any>,
+): SolidBaseRouteAxisConfig | undefined {
+	const axis = config.routes?.[LOCALE_AXIS];
+	return isSolidBaseRouteAxisConfig(axis) ? axis : undefined;
+}
+
+function getRouteLocaleHreflang(
+	locale: string,
+	axis: SolidBaseRouteAxisConfig,
+	config: SolidBaseResolvedConfig<any>,
+) {
+	const value = axis.values[locale];
+	if (typeof value?.lang === "string") return value.lang;
+	if (locale === axis.default) return config.lang;
+	return locale;
+}
+
+function getRouteLocaleInfo(
+	routePath: string,
+	config: SolidBaseResolvedConfig<any>,
+): RouteLocaleInfo | undefined {
+	const axis = getRouteLocaleAxis(config);
+	const match = getSolidBaseRouteMatchForPath(config.routes, routePath);
+	const locale = match?.selection[LOCALE_AXIS];
+
+	if (!axis || !match || !locale) return undefined;
+
+	const defaultSelection = {
+		...match.selection,
+		[LOCALE_AXIS]: axis.default,
+	};
+	const defaultPath =
+		getSolidBaseRoutePathWithRest(
+			config.routes,
+			defaultSelection,
+			match.restPath,
+		) ??
+		buildSolidBaseRoutePath(config.routes, defaultSelection) ??
+		routePath;
+
+	return {
+		locale,
+		hreflang: getRouteLocaleHreflang(locale, axis, config),
+		groupPath: defaultPath,
+		isDefaultLocale: locale === axis.default,
+	};
+}
+
 export function getNonRootLocalePrefixes(config: SolidBaseResolvedConfig<any>) {
 	return Object.entries(config.locales ?? {})
 		.filter(([locale]) => locale !== "root")
@@ -80,10 +144,68 @@ export function getNonRootLocalePrefixes(config: SolidBaseResolvedConfig<any>) {
 		);
 }
 
+function getLegacyLocaleInfo(
+	routePath: string,
+	config: SolidBaseResolvedConfig<any>,
+): RouteLocaleInfo {
+	for (const [locale, localeConfig] of Object.entries(config.locales ?? {})) {
+		if (locale === "root") continue;
+
+		const prefix = normalizeLocalePrefix(localeConfig.link ?? `/${locale}/`);
+
+		if (routePath === prefix) {
+			return {
+				locale,
+				hreflang: localeConfig.lang ?? locale,
+				groupPath: "/",
+				isDefaultLocale: false,
+			};
+		}
+
+		if (routePath.startsWith(`${prefix}/`)) {
+			return {
+				locale,
+				hreflang: localeConfig.lang ?? locale,
+				groupPath: routePath.slice(prefix.length),
+				isDefaultLocale: false,
+			};
+		}
+	}
+
+	return {
+		locale: "root",
+		hreflang: config.lang,
+		groupPath: routePath,
+		isDefaultLocale: true,
+	};
+}
+
+export function getRouteLocaleMetadata(
+	routePath: string,
+	config: SolidBaseResolvedConfig<any>,
+) {
+	return (
+		getRouteLocaleInfo(routePath, config) ??
+		getLegacyLocaleInfo(routePath, config)
+	);
+}
+
+export function isRouteIncludedByConfig(
+	routePath: string,
+	config: SolidBaseResolvedConfig<any>,
+) {
+	if (!config.routes) return true;
+	return Boolean(getSolidBaseRouteMatchForPath(config.routes, routePath));
+}
+
 export function isDefaultLocaleRoute(
 	routePath: string,
 	config: SolidBaseResolvedConfig<any>,
 ) {
+	const routeLocale = getRouteLocaleInfo(routePath, config);
+	if (config.routes) return routeLocale?.isDefaultLocale ?? false;
+	if (routeLocale) return routeLocale.isDefaultLocale;
+
 	const localePrefixes = getNonRootLocalePrefixes(config);
 
 	return !localePrefixes.some(

@@ -3,7 +3,7 @@ import { solidStart } from "@solidjs/start/config";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
-
+import { version as SBVersion } from "../package.json";
 import { createSolidBase, defineTheme } from "../src/config";
 import { createFilesystemSidebar } from "../src/config/sidebar";
 import defaultTheme from "../src/default-theme";
@@ -34,9 +34,25 @@ export default defineConfig({
 					languageSwitcher: false,
 				},
 			},
-			locales: {
-				fr: {
-					label: "Français",
+			routes: {
+				path: "/{version}/{locale}",
+				version: {
+					default: "latest",
+					values: {
+						latest: { path: "", label: `v${SBVersion}` },
+					},
+				},
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", label: "English", lang: "en" },
+						fr: { path: "fr", label: "Français", lang: "fr-FR" },
+					},
+				},
+			},
+			overrides: [
+				{
+					locale: "fr",
 					themeConfig: {
 						nav: [
 							{
@@ -81,7 +97,7 @@ export default defineConfig({
 						},
 					},
 				},
-			},
+			],
 			editPath: "https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				badges: {

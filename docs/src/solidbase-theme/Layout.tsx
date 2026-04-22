@@ -12,7 +12,7 @@ import { useLocation } from "@solidjs/router";
 import { type ComponentProps, Show } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
-import { OGImage } from "./og-image";
+// import { OGImage } from "./og-image"; // re enable after start 2 viite 8 release
 
 export default function (props: ComponentProps<typeof Layout>) {
 	const frontmatter = useDefaultThemeFrontmatter();
@@ -76,7 +76,7 @@ function OpenGraph() {
 				).toString()}
 			/>
 			<Meta name="twitter:card" content="summary_large_image" />
-			<OGImage />
+			{/*<OGImage />*/}
 		</>
 	);
 }

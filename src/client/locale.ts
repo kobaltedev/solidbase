@@ -5,17 +5,66 @@ import { createMemo, startTransition } from "solid-js";
 import { getRequestEvent, isServer } from "solid-js/web";
 
 import type { LocaleConfig } from "../config/index.js";
+import {
+	buildSolidBaseRoutePath,
+	getSolidBaseRouteMatchForPath,
+	getSolidBaseRouteOptions,
+	getSolidBaseRoutePathWithRest,
+	getSolidBaseRouteSelectionForPath,
+	type SolidBaseRouteOption,
+} from "../config/route-config.js";
+import { useSolidBaseRoutes } from "./routes.js";
 
 export const DEFAULT_LANG_CODE = "en-US";
 export const DEFAULT_LANG_LABEL = "English";
+const LOCALE_AXIS = "locale";
 
 export interface ResolvedLocale<ThemeConfig> {
 	code: string;
 	isRoot?: boolean;
 	config: LocaleConfig<ThemeConfig>;
+	option?: SolidBaseRouteOption;
 }
 
-const locales = (() => {
+function getRouteLocaleAxis() {
+	const axis = solidBaseConfig.routes?.[LOCALE_AXIS];
+	if (
+		axis &&
+		typeof axis === "object" &&
+		"default" in axis &&
+		"values" in axis
+	) {
+		return axis;
+	}
+
+	return undefined;
+}
+
+function routeOptionToLocale(
+	option: SolidBaseRouteOption,
+): ResolvedLocale<any> {
+	return {
+		code: option.meta.lang
+			? String(option.meta.lang)
+			: option.name === getRouteLocaleAxis()?.default
+				? (solidBaseConfig.lang ?? DEFAULT_LANG_CODE)
+				: option.name,
+		isRoot: option.name === getRouteLocaleAxis()?.default,
+		option,
+		config: {
+			label:
+				typeof option.meta.label === "string"
+					? option.meta.label
+					: option.name === getRouteLocaleAxis()?.default
+						? DEFAULT_LANG_LABEL
+						: option.name,
+			lang: typeof option.meta.lang === "string" ? option.meta.lang : undefined,
+			link: option.path,
+		},
+	};
+}
+
+const legacyLocales = (() => {
 	let rootHandled = false;
 
 	const array: Array<ResolvedLocale<any>> = Object.entries(
@@ -46,28 +95,94 @@ const locales = (() => {
 	return array;
 })();
 
-function getLocaleForPath(path: string) {
-	for (const locale of locales) {
+function getLegacyLocaleForPath(path: string) {
+	for (const locale of legacyLocales) {
 		if (locale.isRoot) continue;
 
 		if (path.startsWith(locale.config.link ?? `/${locale.code}`)) return locale;
 	}
 
-	return locales.find((l) => l.isRoot)!;
+	return legacyLocales.find((l) => l.isRoot)!;
+}
+
+function getRouteLocaleForPath(path: string) {
+	const selection = getSolidBaseRouteSelectionForPath(
+		solidBaseConfig.routes,
+		path,
+	);
+	const value = selection?.[LOCALE_AXIS];
+	if (!value) return undefined;
+
+	const option = getSolidBaseRouteOptions(solidBaseConfig.routes, LOCALE_AXIS, {
+		...selection,
+		[LOCALE_AXIS]: value,
+	}).find((option) => option.name === value);
+
+	return option ? routeOptionToLocale(option) : undefined;
+}
+
+function getLocaleForPath(path: string) {
+	return getRouteLocaleForPath(path) ?? getLegacyLocaleForPath(path);
+}
+
+function normalizeClientPath(path: string): `/${string}` {
+	return (path.startsWith("/") ? path : `/${path}`) as `/${string}`;
+}
+
+function isExternalPath(path: string) {
+	return path.includes("://") || path.startsWith("//");
+}
+
+function isPathWithinPrefix(path: string, prefix: string) {
+	return path === prefix || path.startsWith(`${prefix}/`);
 }
 
 const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 	const location = useLocation();
 	const navigate = useNavigate();
+	const routes = useSolidBaseRoutes();
 
 	const currentLocale = createMemo(() => getLocaleForPath(location.pathname));
+	const currentRouteMatch = createMemo(() =>
+		getSolidBaseRouteMatchForPath(solidBaseConfig.routes, location.pathname),
+	);
+	const locales = createMemo(() => {
+		if (!solidBaseConfig.routes) return legacyLocales;
+
+		const match = currentRouteMatch();
+		if (!match) return [];
+
+		return routes
+			.options(LOCALE_AXIS, match.selection)
+			.map(routeOptionToLocale);
+	});
 
 	const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);
 
 	return {
-		locales,
+		get locales() {
+			return locales();
+		},
 		currentLocale,
 		setLocale: (locale: ResolvedLocale<any>) => {
+			if (locale.option) {
+				const routePath = getSolidBaseRoutePathWithRest(
+					solidBaseConfig.routes,
+					{
+						...routes.current(),
+						[LOCALE_AXIS]: locale.option.name,
+					},
+					currentRouteMatch()?.restPath ?? "/",
+				);
+
+				if (!routePath) return;
+
+				startTransition(() => navigate(routePath)).then(() => {
+					document.documentElement.lang = locale.code;
+				});
+				return;
+			}
+
 			const searchValue = getLocaleLink(locale);
 
 			startTransition(() =>
@@ -77,6 +192,33 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			});
 		},
 		applyPathPrefix: (_path: string): `/${string}` => {
+			if (solidBaseConfig.routes && !isExternalPath(_path)) {
+				const path = normalizeClientPath(_path);
+				const pathMatch = getSolidBaseRouteMatchForPath(
+					solidBaseConfig.routes,
+					path,
+				);
+				const pathPrefix =
+					pathMatch &&
+					buildSolidBaseRoutePath(solidBaseConfig.routes, pathMatch.selection);
+
+				if (
+					pathPrefix &&
+					pathPrefix !== "/" &&
+					isPathWithinPrefix(path, pathPrefix)
+				) {
+					return path;
+				}
+
+				const routePath = getSolidBaseRoutePathWithRest(
+					solidBaseConfig.routes,
+					routes.current(),
+					path,
+				);
+
+				if (routePath) return routePath;
+			}
+
 			let path = _path;
 			const link = getLocaleLink(currentLocale());
 
@@ -89,6 +231,9 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			return `${link}${path}` as `/${string}`;
 		},
 		routePath: () => {
+			const routePath = currentRouteMatch()?.restPath;
+			if (routePath) return routePath;
+
 			const rest = match()?.params.rest;
 
 			if (!rest) return "/";
@@ -111,7 +256,9 @@ export function useLocale() {
 }
 
 export const getLocaleLink = (locale: ResolvedLocale<any>): `/${string}` =>
-	locale.config?.link ?? (`/${locale.isRoot ? "" : `${locale.code}/`}` as any);
+	(locale.option?.path ??
+		locale.config?.link ??
+		`/${locale.isRoot ? "" : `${locale.code}/`}`) as any;
 
 export function getLocale(_path?: string) {
 	let path = _path;

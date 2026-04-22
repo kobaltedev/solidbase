@@ -18,7 +18,7 @@ export default function Hero(props: { data: HeroConfig }) {
 					{(t) => <p class={styles.tagline}>{t()}</p>}
 				</Show>
 
-				<Show when={data().badges}>
+				<Show when={data().actions}>
 					{(actions) => (
 						<div class={styles.actions}>
 							<For each={actions()}>

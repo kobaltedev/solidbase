@@ -1,7 +1,11 @@
 import { toDocumentMarkdown } from "./document-markdown.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import { viteAliasCodeImports } from "./remark-plugins/import-code-file.js";
-import { getRoutesIndex, isDefaultLocaleRoute } from "./routes-index.js";
+import {
+	getRoutesIndex,
+	isDefaultLocaleRoute,
+	isRouteIncludedByConfig,
+} from "./routes-index.js";
 import type { SidebarConfig } from "./sidebar.js";
 
 type LlmFrontmatter = {
@@ -106,6 +110,7 @@ export async function getLlmDocuments(
 			const frontmatter = route.frontmatter as LlmFrontmatter;
 
 			if (isExcluded(frontmatter)) return null;
+			if (!isRouteIncludedByConfig(route.routePath, config)) return null;
 
 			const source =
 				(await (

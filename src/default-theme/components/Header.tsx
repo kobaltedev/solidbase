@@ -23,7 +23,7 @@ export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 	const [navRef, setNavRef] = createSignal<HTMLElement>();
 
-	const { ThemeSelector, LocaleSelector, TableOfContents } =
+	const { ThemeSelector, LocaleSelector, VersionSelector, TableOfContents } =
 		useDefaultThemeComponents();
 
 	const {
@@ -50,14 +50,19 @@ export default function Header() {
 	return (
 		<header class={styles.header}>
 			<div>
-				<a
-					href={getLocaleLink(locale.currentLocale())}
-					class={styles["logo-link"]}
-				>
-					<Show when={config().logo} fallback={<span>{config().title}</span>}>
-						<img src={config().logo} alt={config().title} />
-					</Show>
-				</a>
+				<div class={styles["logo-cluster"]}>
+					<a
+						href={getLocaleLink(locale.currentLocale())}
+						class={styles["logo-link"]}
+					>
+						<Show when={config().logo} fallback={<span>{config().title}</span>}>
+							<img src={config().logo} alt={config().title} />
+						</Show>
+					</a>
+					<div class={styles["version-selector"]}>
+						<VersionSelector />
+					</div>
+				</div>
 				<div class={styles["top-nav"]}>
 					<Dialog open={navOpen()} onOpenChange={setNavOpen} modal={false}>
 						<Dialog.Trigger
