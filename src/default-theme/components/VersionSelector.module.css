@@ -21,9 +21,9 @@
 
 .trigger {
 	appearance: none;
-	display: inline-flex;
+	display: flex;
 	align-items: center;
-	padding: 0.2rem 0.45rem;
+	padding: 1px;
 	background: color-mix(in hsl, var(--sb-text-color) 10%, transparent);
 	border: none;
 	outline: none;
@@ -43,8 +43,18 @@
 	}
 }
 
-.label {
+.labelSegment {
 	min-width: 0;
+	padding: 0.1rem 0.25rem;
+	line-height: 1;
+}
+
+.iconSegment {
+	display: flex;
+	padding-right: 2px;
+	align-items: center;
+	justify-content: center;
+	align-self: stretch;
 }
 
 .content {
@@ -64,4 +74,11 @@
 	padding: 0.25rem;
 	display: flex;
 	flex-direction: column;
+}
+
+.icon {
+	width: 0.75rem;
+	height: 0.75rem;
+	flex: 0 0 auto;
+	color: color-mix(in hsl, var(--sb-text-color) 55%, transparent);
 }

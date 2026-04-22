@@ -34,9 +34,19 @@ export default defineConfig({
 					languageSwitcher: false,
 				},
 			},
-			locales: {
-				fr: {
-					label: "Français",
+			routes: {
+				path: "/{locale}",
+				locale: {
+					default: "en",
+					values: {
+						en: { path: "", label: "English", lang: "en" },
+						fr: { path: "fr", label: "Français", lang: "fr-FR" },
+					},
+				},
+			},
+			overrides: [
+				{
+					locale: "fr",
 					themeConfig: {
 						nav: [
 							{
@@ -81,7 +91,7 @@ export default defineConfig({
 						},
 					},
 				},
-			},
+			],
 			editPath: "https://github.com/kobaltedev/solidbase/edit/main/docs/:path",
 			themeConfig: {
 				badges: {

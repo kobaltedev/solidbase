@@ -2,12 +2,12 @@ import { solidBaseConfig } from "virtual:solidbase/config";
 import { Select } from "@kobalte/core/select";
 import { useNavigate } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
-
+import { useSolidBaseRoute } from "../../client/index.jsx";
+import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
 import {
 	getSolidBaseRouteFallbackOptions,
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
-import { useSolidBaseRoute } from "../../client/index.jsx";
 import styles from "./VersionSelector.module.css";
 
 const VERSION_AXIS = "version";
@@ -27,7 +27,9 @@ export default function VersionSelector() {
 	);
 
 	const getOptionLabel = (option: SolidBaseRouteOption) => {
-		return typeof option.meta.label === "string" ? option.meta.label : option.name;
+		return typeof option.meta.label === "string"
+			? option.meta.label
+			: option.name;
 	};
 
 	const onChange = (option: SolidBaseRouteOption | null) => {
@@ -66,11 +68,16 @@ export default function VersionSelector() {
 					<Select.Trigger class={styles.trigger} aria-label="Change version">
 						<Select.Value<SolidBaseRouteOption>>
 							{(state) => (
-								<span class={styles.label}>
+								<div class={styles.labelSegment}>
 									{getOptionLabel(state.selectedOption())}
-								</span>
+								</div>
 							)}
 						</Select.Value>
+						<Show when={options().length > 1}>
+							<div class={styles.iconSegment} aria-hidden>
+								<IconExpandUpDownLine class={styles.icon} />
+							</div>
+						</Show>
 					</Select.Trigger>
 					<Select.Portal>
 						<Select.Content class={styles.content}>

@@ -40,12 +40,14 @@ function getRouteLocaleAxis() {
 	return undefined;
 }
 
-function routeOptionToLocale(option: SolidBaseRouteOption): ResolvedLocale<any> {
+function routeOptionToLocale(
+	option: SolidBaseRouteOption,
+): ResolvedLocale<any> {
 	return {
 		code: option.meta.lang
 			? String(option.meta.lang)
 			: option.name === getRouteLocaleAxis()?.default
-				? solidBaseConfig.lang ?? DEFAULT_LANG_CODE
+				? (solidBaseConfig.lang ?? DEFAULT_LANG_CODE)
 				: option.name,
 		isRoot: option.name === getRouteLocaleAxis()?.default,
 		option,
@@ -104,7 +106,10 @@ function getLegacyLocaleForPath(path: string) {
 }
 
 function getRouteLocaleForPath(path: string) {
-	const selection = getSolidBaseRouteSelectionForPath(solidBaseConfig.routes, path);
+	const selection = getSolidBaseRouteSelectionForPath(
+		solidBaseConfig.routes,
+		path,
+	);
 	const value = selection?.[LOCALE_AXIS];
 	if (!value) return undefined;
 
@@ -147,7 +152,9 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 		const match = currentRouteMatch();
 		if (!match) return [];
 
-		return routes.options(LOCALE_AXIS, match.selection).map(routeOptionToLocale);
+		return routes
+			.options(LOCALE_AXIS, match.selection)
+			.map(routeOptionToLocale);
 	});
 
 	const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);

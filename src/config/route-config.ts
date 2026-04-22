@@ -160,7 +160,9 @@ function getInternalRouteValueEntries(axis: SolidBaseRouteAxisConfig) {
 	return Object.entries(axis.values).filter(([, value]) => !value.href);
 }
 
-function getSolidBaseRouteSelections(routes: SolidBaseRoutesConfig | undefined) {
+function getSolidBaseRouteSelections(
+	routes: SolidBaseRoutesConfig | undefined,
+) {
 	const axes = getSolidBaseRouteAxes(routes);
 	const selections: SolidBaseRouteSelection[] = [];
 
@@ -188,7 +190,9 @@ function matchRoutePathSegment(
 	pathSegment: string | undefined,
 ) {
 	const entries = getInternalRouteValueEntries(axis);
-	const defaultEntry = entries.find(([valueName]) => valueName === axis.default);
+	const defaultEntry = entries.find(
+		([valueName]) => valueName === axis.default,
+	);
 	const explicitMatch =
 		pathSegment === undefined
 			? undefined
@@ -204,7 +208,10 @@ function matchRoutePathSegment(
 	return defaultPath === "" ? defaultEntry : undefined;
 }
 
-function getRouteValuePath(valueName: string, value: SolidBaseRouteValueConfig) {
+function getRouteValuePath(
+	valueName: string,
+	value: SolidBaseRouteValueConfig,
+) {
 	return trimSlashes(value.path ?? valueName);
 }
 
@@ -269,7 +276,9 @@ export function validateSolidBaseRoutesConfig(
 			if (axisMap.has(key)) {
 				assertSolidBaseRouteConfig(
 					typeof value === "string" || Array.isArray(value),
-					"`overrides` selector `" + key + "` must be a string or string array.",
+					"`overrides` selector `" +
+						key +
+						"` must be a string or string array.",
 				);
 				selectors[key] = value;
 				continue;
@@ -423,7 +432,8 @@ export function getSolidBaseRouteFallbackSelection(
 ) {
 	if (!routes) return undefined;
 
-	const normalizedCurrent = normalizeSolidBaseRouteSelection(routes, current) ?? {};
+	const normalizedCurrent =
+		normalizeSolidBaseRouteSelection(routes, current) ?? {};
 	const axisMap = getSolidBaseRouteAxisMap(routes);
 	const lockedSelection: Partial<SolidBaseRouteSelection> = {};
 

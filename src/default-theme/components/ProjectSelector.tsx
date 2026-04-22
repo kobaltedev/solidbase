@@ -4,11 +4,11 @@ import { useNavigate } from "@solidjs/router";
 import { createMemo, Show } from "solid-js";
 
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
+import { useSolidBaseRoute } from "../../client/index.jsx";
 import {
 	getSolidBaseRouteFallbackOptions,
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
-import { useSolidBaseRoute } from "../../client/index.jsx";
 import styles from "./ProjectSelector.module.css";
 
 const PROJECT_AXIS = "project";
@@ -28,7 +28,9 @@ export default function ProjectSelector() {
 	);
 
 	const getOptionLabel = (option: SolidBaseRouteOption) => {
-		return typeof option.meta.label === "string" ? option.meta.label : option.name;
+		return typeof option.meta.label === "string"
+			? option.meta.label
+			: option.name;
 	};
 
 	const onChange = (option: SolidBaseRouteOption | null) => {

@@ -150,7 +150,9 @@ describe("createSolidBase", () => {
 
 	it("rejects route paths that reference unknown axes", async () => {
 		const { createSolidBase } = await import("../../src/config/index.ts");
-		const solidBase = createSolidBase({ componentsPath: "/themes/custom" } as any);
+		const solidBase = createSolidBase({
+			componentsPath: "/themes/custom",
+		} as any);
 
 		expect(() =>
 			solidBase.plugin({
@@ -164,7 +166,9 @@ describe("createSolidBase", () => {
 
 	it("rejects route axes that are missing from the path", async () => {
 		const { createSolidBase } = await import("../../src/config/index.ts");
-		const solidBase = createSolidBase({ componentsPath: "/themes/custom" } as any);
+		const solidBase = createSolidBase({
+			componentsPath: "/themes/custom",
+		} as any);
 
 		expect(() =>
 			solidBase.plugin({
@@ -178,7 +182,9 @@ describe("createSolidBase", () => {
 
 	it("rejects route defaults that are not route values", async () => {
 		const { createSolidBase } = await import("../../src/config/index.ts");
-		const solidBase = createSolidBase({ componentsPath: "/themes/custom" } as any);
+		const solidBase = createSolidBase({
+			componentsPath: "/themes/custom",
+		} as any);
 
 		expect(() =>
 			solidBase.plugin({
@@ -195,7 +201,9 @@ describe("createSolidBase", () => {
 
 	it("rejects include rules with unknown axes or values", async () => {
 		const { createSolidBase } = await import("../../src/config/index.ts");
-		const solidBase = createSolidBase({ componentsPath: "/themes/custom" } as any);
+		const solidBase = createSolidBase({
+			componentsPath: "/themes/custom",
+		} as any);
 
 		expect(() =>
 			solidBase.plugin({
@@ -218,7 +226,9 @@ describe("createSolidBase", () => {
 
 	it("rejects overrides with unknown route selectors or values", async () => {
 		const { createSolidBase } = await import("../../src/config/index.ts");
-		const solidBase = createSolidBase({ componentsPath: "/themes/custom" } as any);
+		const solidBase = createSolidBase({
+			componentsPath: "/themes/custom",
+		} as any);
 
 		expect(() =>
 			solidBase.plugin({

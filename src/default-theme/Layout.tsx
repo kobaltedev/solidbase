@@ -59,7 +59,8 @@ export default (props: ParentProps) => {
 };
 
 function Layout(props: ParentProps) {
-	const { Header, Article, Link, ProjectSelector } = useDefaultThemeComponents();
+	const { Header, Article, Link, ProjectSelector } =
+		useDefaultThemeComponents();
 	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
 

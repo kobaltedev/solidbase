@@ -141,7 +141,7 @@ export function getNonRootLocalePrefixes(config: SolidBaseResolvedConfig<any>) {
 		.filter(([locale]) => locale !== "root")
 		.map(([locale, localeConfig]) =>
 			normalizeLocalePrefix(localeConfig.link ?? `/${locale}/`),
-	);
+		);
 }
 
 function getLegacyLocaleInfo(
@@ -185,7 +185,8 @@ export function getRouteLocaleMetadata(
 	config: SolidBaseResolvedConfig<any>,
 ) {
 	return (
-		getRouteLocaleInfo(routePath, config) ?? getLegacyLocaleInfo(routePath, config)
+		getRouteLocaleInfo(routePath, config) ??
+		getLegacyLocaleInfo(routePath, config)
 	);
 }
 

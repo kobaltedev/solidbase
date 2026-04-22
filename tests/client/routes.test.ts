@@ -111,9 +111,7 @@ describe("solidbase route client helpers", () => {
 				{ name: "latest", path: "/router/fr", isExternal: false },
 				{ name: "v0", href: "https://v0.solidjs.com", isExternal: true },
 			]);
-			expect(helpers?.path({ project: "solid", version: "v1" })).toBe(
-				"/v1/fr",
-			);
+			expect(helpers?.path({ project: "solid", version: "v1" })).toBe("/v1/fr");
 			dispose();
 		});
 	});
