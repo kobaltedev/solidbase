@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.5.0-dev",
+  "version": "0.5.1-dev",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "sideEffects": true,

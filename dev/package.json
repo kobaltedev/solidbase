@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
+    "@kobalte/core": "0.13.11",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "https://pkg.pr.new/solidjs/solid-start/@solidjs/start@2080",
     "nitro": "3.0.260311-beta",

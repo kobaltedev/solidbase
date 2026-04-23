@@ -45,6 +45,7 @@ import { remarkAddClass } from "./remark-plugins/kbd.js";
 import { remarkMdxFrontmatter } from "./remark-plugins/mdx-frontmatter.js";
 import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs.js";
 import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
+import { remarkPreview } from "./remark-plugins/preview.js";
 import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
 import { remarkSteps } from "./remark-plugins/steps.js";
 import { remarkTabGroup } from "./remark-plugins/tab-group.js";
@@ -210,7 +211,7 @@ export function getRemarkPlugins(sbConfig: RemarkPipelineConfig) {
 	if (sbConfig.markdown?.toc !== false)
 		remarkPlugins.push([remarkTOC, sbConfig.markdown?.toc]);
 
-	remarkPlugins.push(remarkDirectiveContainers, remarkAddClass);
+	remarkPlugins.push(remarkPreview, remarkDirectiveContainers, remarkAddClass);
 
 	if (sbConfig.issueAutolink !== false)
 		remarkPlugins.push([remarkIssueAutolink, sbConfig.issueAutolink]);

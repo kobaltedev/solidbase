@@ -237,6 +237,9 @@ importers:
 
   dev:
     dependencies:
+      '@kobalte/core':
+        specifier: 0.13.11
+        version: 0.13.11(solid-js@1.9.11)
       '@kobalte/solidbase':
         specifier: workspace:*
         version: link:..

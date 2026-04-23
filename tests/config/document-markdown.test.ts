@@ -295,4 +295,34 @@ describe("toDocumentMarkdown", () => {
 		expect(markdown).not.toContain("tab-group");
 		expect(markdown).not.toContain("DirectiveContainer");
 	});
+
+	it("preserves authored preview directives as-is", async () => {
+		const source = [
+			":::preview",
+			"<Button />",
+			"",
+			"---",
+			"",
+			'```tsx tab title="index.tsx"',
+			"const Button = () => null;",
+			"```",
+			"",
+			'```css tab title="style.css"',
+			".button {}",
+			"```",
+			":::",
+		].join("\n");
+
+		const markdown = await toDocumentMarkdown(source, {
+			config: {},
+			filePath: routeFixturePath("index.mdx"),
+		});
+
+		expect(markdown).toContain(":::preview");
+		expect(markdown).toContain("<Button />");
+		expect(markdown).toContain('```tsx tab title="index.tsx"');
+		expect(markdown).toContain('```css tab title="style.css"');
+		expect(markdown).toMatch(/\n(\*\*\*|---)\n/);
+		expect(markdown).not.toContain("<Preview");
+	});
 });

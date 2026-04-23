@@ -259,6 +259,99 @@ Hi this is B
 
 `[key]` is used for syncing and persistance.
 
+## Previews
+
+Use the `preview` directive to show rendered content in a framed preview.
+For the full syntax and validation contract, see the [Preview Directive reference](/reference/preview-directive).
+
+````mdx
+:::preview
+<PreviewCard />
+:::
+````
+
+:::preview
+<div class="not-prose" style="display: grid; gap: 0.35rem; min-width: 11rem; padding: 1rem; border: 1px solid color-mix(in hsl, currentColor 16%, transparent); border-radius: 0.75rem; background: color-mix(in hsl, currentColor 4%, transparent);">
+  <strong style="font-size: 0.95rem;">Preview card</strong>
+  <span style="font-size: 0.85rem; opacity: 0.72;">Rendered MDX appears here.</span>
+</div>
+:::
+
+Add a thematic break (`---`) to include a lower panel with supporting content.
+The lower panel can contain code tabs, prose, directives, or any other MDX content.
+
+`````mdx
+:::preview
+<PreviewCard />
+
+---
+
+```tsx tab title="index.tsx"
+export function PreviewCard() {
+  return (
+    <div class="preview-card">
+      <strong>Preview card</strong>
+      <span>Rendered MDX appears here.</span>
+    </div>
+  );
+}
+```
+
+```css tab title="style.css"
+.preview-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+```
+:::
+`````
+
+:::preview
+<div class="not-prose" style="display: grid; gap: 0.35rem; min-width: 11rem; padding: 1rem; border: 1px solid color-mix(in hsl, currentColor 16%, transparent); border-radius: 0.75rem; background: color-mix(in hsl, currentColor 4%, transparent);">
+  <strong style="font-size: 0.95rem;">Preview card</strong>
+  <span style="font-size: 0.85rem; opacity: 0.72;">Rendered MDX appears here.</span>
+</div>
+
+---
+
+```tsx tab title="index.tsx"
+export function PreviewCard() {
+  return (
+    <div class="preview-card">
+      <strong>Preview card</strong>
+      <span>Rendered MDX appears here.</span>
+    </div>
+  );
+}
+```
+
+```css tab title="style.css"
+.preview-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+```
+:::
+
+If a preview contains nested container directives, use a longer fence for the outer preview.
+This keeps the inner directive closing fence from closing the preview.
+
+````mdx
+::::preview
+<PreviewCard />
+
+---
+
+:::tip
+Use a longer outer fence when the panel contains another directive.
+:::
+::::
+````
+
 ## GitHub Flavored Markown
 
 In addition to the standard markdown syntax, SolidBase also supports several GitHub Flavored Markdown (GFM) extensions.
@@ -422,7 +515,7 @@ A note[^1]
 
 ## Code Blocks
 
-SolidBase uses [Expressive Code](https://expressive-code.com/) to highlight code blocks. Expressive Code is a fast and flexible syntax highlighter that supports a wide range of programming languages as well as additional features like line highlighting, line numbers, collapsible sections, code tabs, and more. The list of supported languages is [available on GitHub]](https://github.com/antfu/textmate-grammars-themes/blob/main/packages/tm-grammars/README.md)
+SolidBase uses [Expressive Code](https://expressive-code.com/) to highlight code blocks. Expressive Code is a fast and flexible syntax highlighter that supports a wide range of programming languages as well as additional features like line highlighting, line numbers, collapsible sections, code tabs, and more. The list of supported languages is [available on GitHub](https://github.com/antfu/textmate-grammars-themes/blob/main/packages/tm-grammars/README.md)
 
 To use Expressive Code, simply wrap your code in triple backticks (```) and specify the language after the opening backticks. This will enable syntax highlighting for that language.
 
