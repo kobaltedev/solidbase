@@ -393,7 +393,7 @@ a[data-footnote-ref] {
 	outline: none;
 	background: none;
 	border: none;
-	padding: 0.55rem 0.75rem;
+	padding: 5.5px 18px;
 	z-index: 2;
 	position: relative;
 	overflow: hidden;
@@ -506,15 +506,16 @@ a[data-footnote-ref] {
 			border-right: none;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
-			background: var(--sb-code-background-color);
+			background: var(--sb-background-color);
 		}
 
 		.tabs-trigger {
+			padding: 0.25rem 0.5rem;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 
 			&[data-selected] {
-				background: transparent;
+				background: var(--sb-code-background-color);
 			}
 		}
 
