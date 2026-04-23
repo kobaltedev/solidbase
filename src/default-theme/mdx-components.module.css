@@ -364,19 +364,26 @@ a[data-footnote-ref] {
 	border: 1.5px solid var(--sb-code-background-color);
 	border-bottom: 1.5px solid
 		color-mix(
-			in hsl,
 			var(--sb-code-background-color) 95%,
 			var(--sb-tint-color-opposite)
 		);
 }
 
 .tabs-indicator {
-	background: var(--sb-code-background-color);
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 2px;
+	background: var(--sb-active-link-color);
 	transition:
-		transform 150ms,
-		width 50ms;
+		transform 180ms var(--sb-transition-timing),
+		width 180ms var(--sb-transition-timing);
 	z-index: 1;
 	overflow: hidden;
+
+	&[data-resizing="true"] {
+		transition: none;
+	}
 }
 
 .tabs-trigger {
@@ -411,15 +418,6 @@ a[data-footnote-ref] {
 
 	&[data-selected] {
 		background: var(--sb-code-background-color);
-
-		&::before {
-			content: "";
-			height: 100%;
-			width: 100%;
-			inset: 0;
-			position: absolute;
-			border-bottom: 2px solid var(--sb-active-link-color);
-		}
 	}
 }
 
@@ -506,11 +504,7 @@ a[data-footnote-ref] {
 			border-right: none;
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
-			background: color-mix(
-				in hsl,
-				var(--sb-code-background-color) 88%,
-				var(--sb-tint-color-opposite)
-			);
+			background: var(--sb-code-background-color);
 		}
 
 		.tabs-trigger {

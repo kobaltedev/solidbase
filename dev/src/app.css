@@ -13,9 +13,6 @@ body {
 	border-radius: 0.75rem;
 	border: 1px solid rgb(20 20 20 / 0.12);
 	background: rgb(255 255 255 / 0.92);
-	box-shadow:
-		0 16px 32px rgb(15 23 42 / 0.08),
-		inset 0 1px 0 rgb(255 255 255 / 0.5);
 	overflow: hidden;
 }
 
@@ -110,9 +107,6 @@ body {
 html[data-theme*="dark"] .sb-preview-demo-accordion {
 	border-color: rgb(255 255 255 / 0.14);
 	background: rgb(17 17 17 / 0.92);
-	box-shadow:
-		0 20px 40px rgb(0 0 0 / 0.28),
-		inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
 
 html[data-theme*="dark"] .sb-preview-demo-item + .sb-preview-demo-item {
