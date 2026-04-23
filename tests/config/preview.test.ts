@@ -65,13 +65,7 @@ describe("remarkPreview", () => {
 
 	it("only treats top-level dividers as structural", async () => {
 		const tree: any = await transformPreview(
-			[
-				":::preview",
-				":::details",
-				"---",
-				":::",
-				":::",
-			].join("\n"),
+			[":::preview", ":::details", "---", ":::", ":::"].join("\n"),
 		);
 
 		const preview = tree.children[0];
@@ -87,7 +81,9 @@ describe("remarkPreview", () => {
 			.use(remarkPreview)
 			.use(remarkDirectiveContainers);
 		const tree: any = await processor.run(
-			processor.parse([":::preview", ":::note", "Body", ":::", ":::"].join("\n")),
+			processor.parse(
+				[":::preview", ":::note", "Body", ":::", ":::"].join("\n"),
+			),
 		);
 
 		const preview = tree.children[0];
@@ -101,7 +97,9 @@ describe("remarkPreview", () => {
 	});
 
 	it("rejects empty preview stages", async () => {
-		await expect(transformPreview([":::preview", "---", "Body", ":::"].join("\n"))).rejects.toThrow(
+		await expect(
+			transformPreview([":::preview", "---", "Body", ":::"].join("\n")),
+		).rejects.toThrow(
 			"preview directives must have content before the divider",
 		);
 	});

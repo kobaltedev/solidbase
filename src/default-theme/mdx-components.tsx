@@ -16,11 +16,7 @@ import {
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.js";
-import {
-	Preview,
-	PreviewPanel,
-	PreviewStage,
-} from "./components/Preview.js";
+import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.js";
 import { useDefaultThemeComponents } from "./context.js";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 import styles from "./mdx-components.module.css";

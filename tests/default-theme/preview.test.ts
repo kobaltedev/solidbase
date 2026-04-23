@@ -10,7 +10,9 @@ const tempDirs: string[] = [];
 
 async function resolvePnpmPackagePath(prefix: string, subpath: string) {
 	const pnpmDir = resolve(__dirname, "../../node_modules/.pnpm");
-	const entry = (await readdir(pnpmDir)).find((name) => name.startsWith(prefix));
+	const entry = (await readdir(pnpmDir)).find((name) =>
+		name.startsWith(prefix),
+	);
 
 	if (!entry) {
 		throw new Error(`Missing pnpm package for ${prefix}`);
@@ -50,12 +52,15 @@ async function loadPreviewComponents() {
 		),
 	]);
 
-	const entryPath = resolve(__dirname, "../../src/default-theme/components/Preview.tsx");
+	const entryPath = resolve(
+		__dirname,
+		"../../src/default-theme/components/Preview.tsx",
+	);
 	const source = await readFile(entryPath, "utf8");
 	const transformed = await babelCore.transformAsync(
 		source.replace(
 			'import styles from "../mdx-components.module.css";',
-			'const styles = new Proxy({}, { get: (_, key) => String(key) });',
+			"const styles = new Proxy({}, { get: (_, key) => String(key) });",
 		),
 		{
 			filename: entryPath,
@@ -82,7 +87,9 @@ async function loadPreviewComponents() {
 describe("default theme preview components", () => {
 	afterEach(async () => {
 		await Promise.all(
-			tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })),
+			tempDirs
+				.splice(0)
+				.map((dir) => rm(dir, { recursive: true, force: true })),
 		);
 	});
 
@@ -108,7 +115,8 @@ describe("default theme preview components", () => {
 
 	it("renders a two-panel shell without altering panel content", async () => {
 		const { renderToString } = await import("solid-js/web");
-		const { Preview, PreviewPanel, PreviewStage } = await loadPreviewComponents();
+		const { Preview, PreviewPanel, PreviewStage } =
+			await loadPreviewComponents();
 
 		const html = renderToString(() =>
 			createComponent(Preview, {

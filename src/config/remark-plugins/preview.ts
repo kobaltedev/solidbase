@@ -1,5 +1,5 @@
-import type { VFile } from "vfile";
 import { visit } from "unist-util-visit";
+import type { VFile } from "vfile";
 
 function createMdxJsxFlowElement(
 	name: string,
