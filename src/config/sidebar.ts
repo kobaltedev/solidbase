@@ -125,12 +125,11 @@ function getMatterData(filePath: string): { title?: string } & {} {
 
 function formatTitle(filePath: string): string {
 	return removeParenthesesGroups(
-		stripExtension(filePath)
+		stripExtension(filePath))
 			.substring(1)
 			.split("-")
 			.map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-			.join(" "),
-	);
+			.join(" ");
 }
 
 function removeParenthesesGroups(s: string) {
