@@ -168,12 +168,12 @@ export function DirectiveContainer(
 							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
 								{preferredLanguage() === "ts" ? title : jsTitle}
 							</Tabs.Trigger>
-							);
-						})}
-						<Tabs.Indicator class={styles["tabs-indicator"]} />
-						{props.withTsJsToggle === "true" && (
-							<input
-								type="checkbox"
+						);
+					})}
+					<Tabs.Indicator class={styles["tabs-indicator"]} />
+					{props.withTsJsToggle === "true" && (
+						<input
+							type="checkbox"
 							checked
 							title="Toggle language"
 							aria-label="Toggle TS/JS"

@@ -364,6 +364,7 @@ a[data-footnote-ref] {
 	border: 1.5px solid var(--sb-code-background-color);
 	border-bottom: 1.5px solid
 		color-mix(
+			in hsl,
 			var(--sb-code-background-color) 95%,
 			var(--sb-tint-color-opposite)
 		);
@@ -378,8 +379,9 @@ a[data-footnote-ref] {
 	transition:
 		transform 180ms var(--sb-transition-timing),
 		width 180ms var(--sb-transition-timing);
-	z-index: 1;
+	z-index: 3;
 	overflow: hidden;
+	pointer-events: none;
 
 	&[data-resizing="true"] {
 		transition: none;

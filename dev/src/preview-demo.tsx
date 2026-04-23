@@ -1,6 +1,24 @@
 import { Accordion } from "@kobalte/core/accordion";
 import { For } from "solid-js";
 
+function ChevronDownIcon(props: { class?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			class={props.class}
+			aria-hidden="true"
+		>
+			<path
+				fill="currentColor"
+				d="m12 13.171 4.95-4.95 1.414 1.415L12 16 5.636 9.636 7.05 8.222z"
+			/>
+		</svg>
+	);
+}
+
 const accordionItems = [
 	{
 		value: "item-1",
@@ -21,19 +39,19 @@ const accordionItems = [
 
 export function PreviewAccordionExample() {
 	return (
-			<div class="sb-preview-demo-accordion-wrap">
-				<Accordion
-					class="sb-preview-demo-accordion"
-					defaultValue={["item-1"]}
-					collapsible
-				>
+		<div class="sb-preview-demo-accordion-wrap">
+			<Accordion
+				class="sb-preview-demo-accordion"
+				defaultValue={["item-1"]}
+				collapsible
+			>
 				<For each={accordionItems}>
 					{(item) => (
 						<Accordion.Item class="sb-preview-demo-item" value={item.value}>
 							<Accordion.Header class="sb-preview-demo-header">
 								<Accordion.Trigger class="sb-preview-demo-trigger">
 									<span>{item.title}</span>
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="chevron-icon"><path fill="currentColor" d="m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z"/></svg>
+									<ChevronDownIcon class="chevron-icon" />
 								</Accordion.Trigger>
 							</Accordion.Header>
 							<Accordion.Content class="sb-preview-demo-content">
@@ -42,10 +60,10 @@ export function PreviewAccordionExample() {
 						</Accordion.Item>
 					)}
 				</For>
-				</Accordion>
-			</div>
-		);
-	}
+			</Accordion>
+		</div>
+	);
+}
 
 const cardItems = [
 	{

@@ -1,0 +1,109 @@
+---
+title: Preview Directive
+badges:
+  - icon: npm
+    label: next
+  - icon: source
+    label: Source
+    url: https://github.com/kobaltedev/solidbase/blob/main/src/config/remark-plugins/preview.ts
+---
+
+# {frontmatter.title}
+
+The `preview` directive renders MDX content inside the default theme preview shell.
+
+## Syntax
+
+````mdx
+:::preview
+<RenderedExample />
+
+---
+
+```tsx tab title="index.tsx"
+export function RenderedExample() {
+  return <button>Save</button>;
+}
+```
+:::
+````
+
+## Structure
+
+| Part | Required | Description |
+| --- | --- | --- |
+| `:::preview` | Yes | Starts the preview directive. Titles are not supported. |
+| Content before `---` | Yes | Rendered into the `PreviewStage` slot. |
+| First top-level `---` | No | Splits the preview stage from the supporting panel. |
+| Content after `---` | Yes, when `---` exists | Rendered into the `PreviewPanel` slot. |
+| Closing fence | Yes | Ends the directive. Use a longer fence when nesting other directives. |
+
+## Rendered Components
+
+A `preview` directive renders through these MDX components:
+
+| Component | Purpose |
+| --- | --- |
+| `Preview` | Wraps the whole preview block. |
+| `PreviewStage` | Wraps rendered content above the divider. |
+| `PreviewPanel` | Wraps supporting content below the divider. |
+
+Custom themes should provide all three components when overriding the MDX component map.
+
+## Validation
+
+The parser rejects:
+
+| Invalid input | Reason |
+| --- | --- |
+| Empty `:::preview` | The stage is required. |
+| `:::preview` with only `---` | The stage and panel are both empty. |
+| `:::preview` with empty content before `---` | The stage is required. |
+| `:::preview` with empty content after `---` | A divider requires panel content. |
+| `:::preview Title` | Preview directive titles are not supported. |
+
+## Divider Behavior
+
+Only the first top-level thematic break splits the preview.
+
+Additional thematic breaks after the first divider stay inside `PreviewPanel`.
+
+## Nested Directives
+
+When a preview contains another container directive, use a longer outer fence.
+
+```mdx
+::::preview
+<RenderedExample />
+
+---
+
+:::tip
+Use a longer outer fence when the panel contains another directive.
+:::
+::::
+```
+
+## Preview-Only Example
+
+```mdx
+:::preview
+<RenderedExample />
+:::
+```
+
+## Preview With Panel Example
+
+````mdx
+:::preview
+<RenderedExample />
+
+---
+
+```tsx tab title="index.tsx"
+export function RenderedExample() {
+  return <button>Save</button>;
+}
+```
+:::
+````
