@@ -14,6 +14,7 @@ import {
 	remarkInlineFrontmatter,
 } from "./remark-plugins/inline-frontmatter.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
+import { remarkPreview } from "./remark-plugins/preview.js";
 
 type DocumentMarkdownOptions = {
 	config?: RemarkPipelineConfig;
@@ -30,7 +31,11 @@ type MdxNode = {
 	attributes?: Array<{ type: string; name: string; value?: unknown }>;
 };
 
-const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([remarkCodeTabs, remarkAddClass]);
+const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([
+	remarkCodeTabs,
+	remarkPreview,
+	remarkAddClass,
+]);
 
 function renderExpressionValue(value: unknown): string | null {
 	if (value === null || value === undefined || typeof value === "boolean") {
