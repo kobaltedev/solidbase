@@ -49,6 +49,11 @@
       "import": "./src/config/sidebar.ts",
       "types": "./src/config/sidebar.ts"
     },
+    "./config/route": {
+      "solid": "./src/config/route-config.ts",
+      "import": "./src/config/route-config.ts",
+      "types": "./src/config/route-config.ts"
+    },
     "./server": {
       "solid": "./src/server.tsx",
       "import": "./src/server.tsx",
@@ -87,6 +92,11 @@
         "solid": "./dist/config/sidebar.js",
         "import": "./dist/config/sidebar.js",
         "types": "./dist/config/sidebar.d.ts"
+      },
+      "./config/route": {
+        "solid": "./src/config/route-config.js",
+        "import": "./src/config/route-config.js",
+        "types": "./src/config/route-config.d.ts"
       },
       "./server": {
         "solid": "./dist/server.jsx",

@@ -11,9 +11,6 @@ import type { SolidBaseRoutesConfig } from "./route-config.js";
 import { validateSolidBaseRoutesConfig as validateRoutes } from "./route-config.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
 
-export type { SolidBaseRouteOption } from "./route-config.js";
-export { getSolidBaseRouteFallbackOptions } from "./route-config.js";
-
 const SOLID_BASE_OVERRIDE_CONFIG_KEYS = [
 	"title",
 	"titleTemplate",
