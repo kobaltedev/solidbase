@@ -1,6 +1,6 @@
 {
   "name": "@kobalte/solidbase",
-  "version": "0.6.2-dev",
+  "version": "0.6.3-dev",
   "description": "Fully featured, fully customisable static site generation for SolidStart",
   "type": "module",
   "sideEffects": true,
@@ -49,6 +49,11 @@
       "import": "./src/config/sidebar.ts",
       "types": "./src/config/sidebar.ts"
     },
+    "./config/route": {
+      "solid": "./src/config/route-config.ts",
+      "import": "./src/config/route-config.ts",
+      "types": "./src/config/route-config.ts"
+    },
     "./server": {
       "solid": "./src/server.tsx",
       "import": "./src/server.tsx",
@@ -87,6 +92,11 @@
         "solid": "./dist/config/sidebar.js",
         "import": "./dist/config/sidebar.js",
         "types": "./dist/config/sidebar.d.ts"
+      },
+      "./config/route": {
+        "solid": "./src/config/route-config.js",
+        "import": "./src/config/route-config.js",
+        "types": "./src/config/route-config.d.ts"
       },
       "./server": {
         "solid": "./dist/server.jsx",
