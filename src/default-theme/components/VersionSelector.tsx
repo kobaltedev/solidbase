@@ -42,7 +42,7 @@ export default function VersionSelector() {
 				>
 					<Popover.Trigger
 						class={styles.trigger}
-						aria-label="Change project"
+						aria-label="Change version"
 						disabled={options().length <= 1}
 					>
 						<span class={styles.label}>{getOptionLabel(current())}</span>
