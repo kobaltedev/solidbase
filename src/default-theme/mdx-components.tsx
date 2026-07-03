@@ -17,7 +17,7 @@ import {
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
 import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.jsx";
-import { useDefaultThemeComponents } from "./context.js";
+import { useDefaultThemeComponents } from "./context.jsx";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 import styles from "./mdx-components.module.css";
 
