@@ -15,7 +15,7 @@ import {
 } from "solid-js";
 import { Dynamic } from "solid-js/web";
 
-import { useLocale, useThemeListener } from "../client/index.js";
+import { useLocale, useThemeListener } from "../client/index.jsx";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import {
 	type SidebarItemLink,
