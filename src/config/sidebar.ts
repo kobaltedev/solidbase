@@ -30,6 +30,7 @@ export type SidebarItemWithMeta<T = {}> = SidebarItem<T> & {
 export interface FilesystemSidebarOptions {
 	filter?: (item: SidebarItemWithMeta) => boolean;
 	sort?: (a: SidebarItemWithMeta, b: SidebarItemWithMeta) => number;
+	transform?: (item: SidebarItemWithMeta) => SidebarItemWithMeta;
 }
 
 export function createFilesystemSidebar<Item = SidebarItem>(
@@ -48,6 +49,7 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 			if (b.filePath > a.filePath) return -1;
 			return 0;
 		},
+		transform: (item) => item,
 		...options,
 	};
 
@@ -61,6 +63,7 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 		return items
 			.filter(resolvedOptions.filter)
 			.sort(resolvedOptions.sort)
+			.map(resolvedOptions.transform)
 			.map((item) => {
 				if ("items" in item)
 					return stripMeta({
@@ -89,7 +92,7 @@ function traverse(
 		const matterData = getMatterData(filePath);
 
 		return {
-			title: getMatterData(filePath).title ?? title,
+			title: matterData.sidebarTitle ?? matterData.title ?? title,
 			link: `/${removeParenthesesGroups(stripExtension(path.relative(baseFolder, filePath)))}`
 				.replace(/\/index$/, "")
 				.replaceAll("//", "/"),
@@ -119,7 +122,9 @@ function stripExtension(filePath: string): string {
 	return `${path.parse(filePath).dir}/${path.parse(filePath).name}`;
 }
 
-function getMatterData(filePath: string): { title?: string } & {} {
+function getMatterData(
+	filePath: string,
+): { sidebarTitle?: string; title?: string } & {} {
 	return matter.read(filePath).data;
 }
 
