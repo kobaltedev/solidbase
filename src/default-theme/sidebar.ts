@@ -28,9 +28,10 @@ export function createDefaultThemeFilesystemSidebar<
 	return createFilesystemSidebar(route, {
 		transform: (item) => {
 			const i = item as SidebarItemWithMeta & Item;
-			if ("sidebarStatus" in item.matterData)
+			if (Object.hasOwn(item.matterData, "sidebarStatus"))
 				i.status = item.matterData.sidebarStatus;
-			else if ("status" in item.matterData) i.status = item.matterData.status;
+			else if (Object.hasOwn(item.matterData, "status"))
+				i.status = item.matterData.status;
 			return i;
 		},
 		...options,
