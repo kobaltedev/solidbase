@@ -1,7 +1,6 @@
-import { Collapsible } from "@kobalte/core/collapsible";
 // @refresh reload
+import { Collapsible } from "@kobalte/core/collapsible";
 import { Dialog } from "@kobalte/core/dialog";
-import { Title } from "@solidjs/meta";
 import { A } from "@solidjs/router";
 import {
 	createEffect,
