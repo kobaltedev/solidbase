@@ -2,28 +2,18 @@ import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { Component, JSX } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
-import type { SidebarConfig, SidebarItem } from "../config/sidebar.js";
+import type { SidebarConfig } from "../config/sidebar.js";
+import type { DefaultThemeSidebarItem } from "./sidebar.js";
 import type { DefaultThemeTextConfig } from "./text.js";
 
+export type {
+	DefaultThemeSidebarItem,
+	DefaultThemeSidebarItemOptionCustomStatus,
+	DefaultThemeSidebarItemOptions,
+} from "./sidebar.js";
+export { createDefaultThemeFilesystemSidebar } from "./sidebar.js";
 export type { DefaultThemeTextConfig } from "./text.js";
 export { defaultThemeTextConfig } from "./text.js";
-
-export type DefaultThemeSidebarItemOptions = {
-	status?:
-		| "new"
-		| "updated"
-		| "next"
-		| DefaultThemeSidebarItemOptionCustomStatus;
-};
-
-export interface DefaultThemeSidebarItemOptionCustomStatus {
-	text: string;
-	color: string;
-	textColor?: string;
-}
-
-export type DefaultThemeSidebarItem =
-	SidebarItem<DefaultThemeSidebarItemOptions>;
 
 export type DefaultThemeBadgeIconComponent =
 	| Component<{
