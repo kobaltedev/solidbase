@@ -63,7 +63,16 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 		return items
 			.filter(resolvedOptions.filter)
 			.sort(resolvedOptions.sort)
-			.map(resolvedOptions.transform)
+			.map((item) => {
+				if ("items" in item)
+					return {
+						...item,
+						items: (item.items as SidebarItemWithMeta[]).map(
+							resolvedOptions.transform,
+						),
+					};
+				return resolvedOptions.transform(item);
+			})
 			.map((item) => {
 				if ("items" in item)
 					return stripMeta({
