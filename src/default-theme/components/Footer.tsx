@@ -1,4 +1,4 @@
-import { For, ParentProps, Show } from "solid-js";
+import { For, type ParentProps, Show } from "solid-js";
 import type { SocialLink } from "../index.js";
 import { useRouteConfig } from "../utils.js";
 import styles from "./Footer.module.css";
