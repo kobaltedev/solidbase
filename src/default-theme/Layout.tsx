@@ -101,8 +101,6 @@ function Layout(props: ParentProps) {
 
 	return (
 		<>
-			<Title>{config().title}</Title>
-
 			<div class={styles.skipnav}>
 				<Link
 					href="#main-content"
