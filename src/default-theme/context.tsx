@@ -8,8 +8,8 @@ const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
 	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
 		const parent = useDefaultThemeComponentsContext() as any;
 		return {
-			...parent,
 			...props.components,
+			...parent,
 		} as ThemeComponents;
 	});
 
