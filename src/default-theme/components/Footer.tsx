@@ -19,7 +19,7 @@ export default function Footer() {
 		<footer class={styles.footer}>
 			<div>
 				<Show when={config().logo} fallback={<span>{config().title}</span>}>
-					<img src={config().logo} alt={config().title} />
+					<img src={config().logo} alt={config().title} class={styles.logo} />
 				</Show>
 				{config().description}
 			</div>

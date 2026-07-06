@@ -6,6 +6,11 @@
 	display: flex;
 	justify-content: space-between;
 
+	.logo {
+		height: 1rem;
+		width: max-content;
+	}
+
 	& > div {
 		display: flex;
 		flex-direction: column;
