@@ -1,5 +1,6 @@
 import { createMemo } from "solid-js";
 import { type BaseFrontmatter, useFrontmatter } from "../client/index.jsx";
+import type { DefaultThemeSidebarItemOptions } from "./sidebar.js";
 
 export function useDefaultThemeFrontmatter() {
 	const frontmatter = useFrontmatter<DefaultThemeFrontmatter>();
@@ -44,6 +45,9 @@ interface DefaultThemeBaseFrontmatter {
 	lastUpdated?: boolean;
 	copyButton?: boolean;
 	badges?: Array<BadgeConfig>;
+	sidebarTitle?: string;
+	sidebarStatus?: DefaultThemeSidebarItemOptions["status"];
+	status?: DefaultThemeSidebarItemOptions["status"];
 }
 
 export interface BadgeConfig {
