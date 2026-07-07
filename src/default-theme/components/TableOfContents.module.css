@@ -61,6 +61,10 @@
 		min-width: 12rem;
 		outline: none;
 
+		[data-theme*="light"] & {
+			opacity: 0.75;
+		}
+
 		&:hover,
 		&:focus-visible {
 			background: color-mix(
