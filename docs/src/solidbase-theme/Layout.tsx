@@ -1,27 +1,18 @@
-import {
-	mdxComponents,
-	useLocale,
-	useSolidBaseContext,
-} from "@kobalte/solidbase/client";
-import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
+import { useLocale, useSolidBaseContext } from "@kobalte/solidbase/client";
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.jsx";
 import { useDefaultThemeFrontmatter } from "@kobalte/solidbase/default-theme/frontmatter.js";
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
-import { type ComponentProps, Show } from "solid-js";
+import type { ComponentProps } from "solid-js";
 
 // import { OGImage } from "./og-image"; // re enable after start 2 viite 8 release
 
 export default function (props: ComponentProps<typeof Layout>) {
-	const frontmatter = useDefaultThemeFrontmatter();
-
 	return (
 		<>
 			<OpenGraph />
-			<DefaultThemeComponentsProvider
-				components={{}}
-			>
+			<DefaultThemeComponentsProvider components={{}}>
 				<Layout {...props} />
 			</DefaultThemeComponentsProvider>
 		</>
