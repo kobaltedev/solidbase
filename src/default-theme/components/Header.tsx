@@ -56,7 +56,12 @@ export default function Header() {
 						class={styles["logo-link"]}
 					>
 						<Show when={config().logo} fallback={<span>{config().title}</span>}>
-							<img src={config().logo} alt={config().title} />
+							<img
+								src={config().logo}
+								alt={config().title}
+								height={16}
+								width={100}
+							/>
 						</Show>
 					</a>
 					<div class={styles["version-selector"]}>
