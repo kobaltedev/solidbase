@@ -57,7 +57,7 @@
 		transition-property: background-color, opacity, color;
 		transition-timing-function: var(--sb-transition-timing);
 		transition-duration: 0.15s;
-		opacity: 0.5;
+		opacity: 0.6;
 		min-width: 12rem;
 		outline: none;
 
