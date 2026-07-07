@@ -62,12 +62,7 @@ export function Inner(props: ParentProps) {
 		const titleTemplate =
 			pageData()?.frontmatter.titleTemplate ?? config().titleTemplate;
 
-		const title = pageData()?.frontmatter?.title;
-		if (!title) {
-			const title = config().title;
-			if (titleTemplate) return `${title} - ${titleTemplate}`;
-			return title;
-		}
+		const title = pageData()?.frontmatter?.title ?? config().title;
 
 		if (titleTemplate?.includes(":title"))
 			return titleTemplate.replace(":title", title);

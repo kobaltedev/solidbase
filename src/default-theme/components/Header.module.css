@@ -46,6 +46,10 @@
 	color: var(--sb-heading-color);
 	font-family: var(--sb-font-headings);
 	font-size: 1.25em;
+
+	> img {
+		height: 1rem;
+	}
 }
 
 .logo-cluster {

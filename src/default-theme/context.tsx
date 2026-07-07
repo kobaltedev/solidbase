@@ -5,13 +5,25 @@ import type { ThemeComponents } from "./default-components.js";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 
 const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
-	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
-		const parent = useDefaultThemeComponentsContext() as any;
-		return {
-			...parent,
-			...props.components,
-		} as ThemeComponents;
-	});
+	createContextProvider(
+		(props: { components?: Partial<ThemeComponents>; force?: boolean }) => {
+			const parent = (useDefaultThemeComponentsContext() ?? {
+				$$SolidBase_force: false,
+			}) as any;
+			if (parent.$$SolidBase_force)
+				return {
+					...props.components,
+					...parent,
+					$$SolidBase_force: props.force,
+				} as ThemeComponents;
+
+			return {
+				...parent,
+				...props.components,
+				$$SolidBase_force: props.force,
+			} as ThemeComponents;
+		},
+	);
 
 export function useDefaultThemeComponents() {
 	return (

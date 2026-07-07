@@ -1,46 +1,18 @@
-import {
-	mdxComponents,
-	useLocale,
-	useSolidBaseContext,
-} from "@kobalte/solidbase/client";
-import Article from "@kobalte/solidbase/default-theme/components/Article.jsx";
+import { useLocale, useSolidBaseContext } from "@kobalte/solidbase/client";
 import { DefaultThemeComponentsProvider } from "@kobalte/solidbase/default-theme/context.jsx";
 import { useDefaultThemeFrontmatter } from "@kobalte/solidbase/default-theme/frontmatter.js";
 import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
-import { type ComponentProps, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
+import type { ComponentProps } from "solid-js";
 
-// import { OGImage } from "./og-image"; // re enable after start 2 viite 8 release
+// import { OGImage } from "./og-image"; // re enable after start 2 vite 8 release
 
 export default function (props: ComponentProps<typeof Layout>) {
-	const frontmatter = useDefaultThemeFrontmatter();
-
 	return (
 		<>
 			<OpenGraph />
-			<DefaultThemeComponentsProvider
-				components={{
-					Article: (props) => (
-						<Article {...props}>
-							<Show when={frontmatter()?.layout !== "home"}>
-								<Dynamic
-									component={mdxComponents.DirectiveContainer}
-									type="warning"
-									title="SolidBase is currently in Beta!"
-								>
-									<Dynamic component={mdxComponents.p}>
-										Some options may not fully work or be documented.
-									</Dynamic>
-								</Dynamic>
-								<br />
-							</Show>
-							{props.children}
-						</Article>
-					),
-				}}
-			>
+			<DefaultThemeComponentsProvider components={{}}>
 				<Layout {...props} />
 			</DefaultThemeComponentsProvider>
 		</>
