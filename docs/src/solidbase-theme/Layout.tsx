@@ -6,7 +6,7 @@ import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
 import type { ComponentProps } from "solid-js";
 
-// import { OGImage } from "./og-image"; // re enable after start 2 viite 8 release
+// import { OGImage } from "./og-image"; // re enable after start 2 vite 8 release
 
 export default function (props: ComponentProps<typeof Layout>) {
 	return (

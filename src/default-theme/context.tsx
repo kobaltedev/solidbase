@@ -7,16 +7,20 @@ import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
 	createContextProvider(
 		(props: { components?: Partial<ThemeComponents>; force?: boolean }) => {
-			const parent = useDefaultThemeComponentsContext() as any;
-			if (parent.force)
+			const parent = (useDefaultThemeComponentsContext() ?? {
+				$$SolidBase_force: false,
+			}) as any;
+			if (parent.$$SolidBase_force)
 				return {
 					...props.components,
-					...parent.components,
+					...parent,
+					$$SolidBase_force: props.force,
 				} as ThemeComponents;
 
 			return {
-				...parent.components,
+				...parent,
 				...props.components,
+				$$SolidBase_force: props.force,
 			} as ThemeComponents;
 		},
 	);
