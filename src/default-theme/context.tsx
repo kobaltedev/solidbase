@@ -5,10 +5,15 @@ import type { ThemeComponents } from "./default-components.js";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 
 const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
-	createContextProvider((props: { components?: Partial<ThemeComponents> }) => {
+	createContextProvider((props: { components?: Partial<ThemeComponents>, force?: boolean }) => {
 		const parent = useDefaultThemeComponentsContext() as any;
+		if (parent.force) return {
+			...props.components,
+			...parent.components,
+		} as ThemeComponents;
+
 		return {
-			...parent,
+			...parent.components,
 			...props.components,
 		} as ThemeComponents;
 	});

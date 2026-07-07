@@ -10,7 +10,6 @@ import Layout from "@kobalte/solidbase/default-theme/Layout.jsx";
 import { Meta } from "@solidjs/meta";
 import { useLocation } from "@solidjs/router";
 import { type ComponentProps, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
 
 // import { OGImage } from "./og-image"; // re enable after start 2 viite 8 release
 
@@ -21,25 +20,7 @@ export default function (props: ComponentProps<typeof Layout>) {
 		<>
 			<OpenGraph />
 			<DefaultThemeComponentsProvider
-				components={{
-					Article: (props) => (
-						<Article {...props}>
-							<Show when={frontmatter()?.layout !== "home"}>
-								<Dynamic
-									component={mdxComponents.DirectiveContainer}
-									type="warning"
-									title="SolidBase is currently in Beta!"
-								>
-									<Dynamic component={mdxComponents.p}>
-										Some options may not fully work or be documented.
-									</Dynamic>
-								</Dynamic>
-								<br />
-							</Show>
-							{props.children}
-						</Article>
-					),
-				}}
+				components={{}}
 			>
 				<Layout {...props} />
 			</DefaultThemeComponentsProvider>
