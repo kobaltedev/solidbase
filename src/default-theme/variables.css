@@ -9,7 +9,7 @@ html,
 	--sb-heading-color: hsl(240, 6%, 10%);
 	--sb-text-color: hsl(240, 5%, 26%);
 	--sb-link-underline-color: hsl(199, 95%, 74%);
-	--sb-active-link-color: hsl(200, 98%, 39%);
+	--sb-active-link-color: hsl(200, 98%, 37%);
 	--sb-code-text-color: hsl(201, 90%, 27%);
 	--sb-highlight-background-color: hsl(204, 94%, 95%);
 	--sb-decoration-color: hsl(240, 5%, 54%);
@@ -65,6 +65,7 @@ html,
 	--sb-heading-color: hsl(0, 0%, 100%);
 	--sb-text-color: hsl(240, 5%, 85%);
 	--sb-link-underline-color: hsl(201, 90%, 27%);
+	--sb-active-link-color: hsl(200, 98%, 39%);
 	--sb-code-text-color: hsl(199, 95%, 74%);
 	--sb-highlight-background-color: hsl(202, 80%, 14%);
 
