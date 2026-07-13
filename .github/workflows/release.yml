@@ -28,7 +28,7 @@ jobs:
           cache: pnpm
 
       # Trusted Publishing
-      - run: npm install -g npm@latest
+      - run: npm install -g npm@12.0.1
 
       - name: Install dependencies
         run: pnpm install
