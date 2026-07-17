@@ -10,11 +10,13 @@ export default function DocSearch(props: {
 	const id = props.docsearch.container ?? "docsearch";
 
 	onMount(() => {
-		//@ts-expect-error: docsearch not callable?
-		docsearch({
-			container: `#${id}`,
-			...props.docsearch,
-		});
+		setTimeout(() => {
+			//@ts-expect-error: docsearch not callable?
+			docsearch({
+				container: `#${id}`,
+				...props.docsearch,
+			});
+		})
 	});
 
 	return <div id={id} class={styles.docsearch} />;
