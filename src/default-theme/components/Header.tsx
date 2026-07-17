@@ -18,6 +18,7 @@ import {
 } from "../context.jsx";
 import { useRouteConfig } from "../utils.js";
 import styles from "./Header.module.css";
+import DocSearch from "./vendor/DocSearch.jsx";
 
 export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
@@ -108,12 +109,18 @@ export default function Header() {
 									)}
 								</Show>
 								<div class={styles["nav-popup-selectors"]}>
+									<Show when={config().themeConfig?.search?.docsearch}>
+										{(docsearch) => <DocSearch docsearch={docsearch()} />}
+									</Show>
 									<LocaleSelector />
 									<ThemeSelector />
 								</div>
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog>
+					<Show when={config().themeConfig?.search?.docsearch}>
+						{(docsearch) => <DocSearch docsearch={docsearch()} />}
+					</Show>
 					<Show when={config().themeConfig?.nav}>
 						{(nav) => (
 							<For each={nav()}>

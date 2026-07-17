@@ -1,5 +1,6 @@
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import type { DocSearchProps } from "@docsearch/js";
 import type { Component, JSX } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
@@ -146,13 +147,15 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 });
 export default defaultTheme;
 
-export type SearchConfig = {};
+export interface SearchConfig {
+	docsearch?: Omit<DocSearchProps, "container">;
+}
 
-export type NavItem = {
+export interface NavItem {
 	text: string;
 	link: string;
 	activeMatch?: string;
-};
+}
 
 export interface SocialLink {
 	type: "discord" | "github" | "opencollective" | "custom";

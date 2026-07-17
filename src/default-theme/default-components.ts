@@ -11,10 +11,12 @@ import ProjectSelector from "./components/ProjectSelector.jsx";
 import TableOfContents from "./components/TableOfContents.jsx";
 import ThemeSelector from "./components/ThemeSelector.jsx";
 import VersionSelector from "./components/VersionSelector.jsx";
+import DocSearch from "./components/vendor/DocSearch.jsx";
 
 export const defaultThemeComponents = {
 	Article,
 	Badges,
+	DocSearch,
 	Footer,
 	Header,
 	LastUpdated,

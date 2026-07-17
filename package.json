@@ -153,6 +153,7 @@
     "@alloc/quick-lru": "^5.2.0",
     "@bprogress/core": "^1.3.4",
     "@docsearch/css": "^3.9.0",
+    "@docsearch/js": "^4.6.3",
     "@expressive-code/core": "^0.41.7",
     "@expressive-code/plugin-collapsible-sections": "^0.41.7",
     "@expressive-code/plugin-frames": "^0.41.7",
