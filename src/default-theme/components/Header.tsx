@@ -18,6 +18,7 @@ import {
 } from "../context.jsx";
 import { useRouteConfig } from "../utils.js";
 import styles from "./Header.module.css";
+import DocSearch from "./vendor/DocSearch.jsx";
 
 export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
@@ -136,6 +137,9 @@ export default function Header() {
 								}}
 							</For>
 						)}
+					</Show>
+					<Show when={config().themeConfig?.search?.docsearch}>
+						{(docsearch) => <DocSearch docsearch={docsearch()}/>}
 					</Show>
 					<LocaleSelector />
 					<ThemeSelector />

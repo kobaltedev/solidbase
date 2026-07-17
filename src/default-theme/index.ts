@@ -5,6 +5,7 @@ import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
 import type { DefaultThemeSidebarItem } from "./sidebar.js";
 import type { DefaultThemeTextConfig } from "./text.js";
+import { DocSearchProps } from "@docsearch/js";
 
 export type {
 	DefaultThemeSidebarItem,
@@ -146,9 +147,11 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 });
 export default defaultTheme;
 
-export type SearchConfig = {};
+export interface SearchConfig {
+	docsearch?: Omit<DocSearchProps, "container"> & {container?: string};
+};
 
-export type NavItem = {
+export interface NavItem {
 	text: string;
 	link: string;
 	activeMatch?: string;

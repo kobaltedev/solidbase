@@ -1,5 +1,6 @@
 import Article from "./components/Article.jsx";
 import Badges from "./components/Badges.jsx";
+import DocSearch from "./components/vendor/DocSearch.jsx";
 import Features from "./components/Features.jsx";
 import Footer from "./components/Footer.jsx";
 import Header from "./components/Header.jsx";
@@ -15,6 +16,7 @@ import VersionSelector from "./components/VersionSelector.jsx";
 export const defaultThemeComponents = {
 	Article,
 	Badges,
+	DocSearch,
 	Footer,
 	Header,
 	LastUpdated,
