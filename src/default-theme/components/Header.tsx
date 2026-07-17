@@ -115,6 +115,9 @@ export default function Header() {
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog>
+					<Show when={config().themeConfig?.search?.docsearch}>
+						{(docsearch) => <DocSearch docsearch={docsearch()} />}
+					</Show>
 					<Show when={config().themeConfig?.nav}>
 						{(nav) => (
 							<For each={nav()}>
@@ -137,9 +140,6 @@ export default function Header() {
 								}}
 							</For>
 						)}
-					</Show>
-					<Show when={config().themeConfig?.search?.docsearch}>
-						{(docsearch) => <DocSearch docsearch={docsearch()}/>}
 					</Show>
 					<LocaleSelector />
 					<ThemeSelector />

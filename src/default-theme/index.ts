@@ -1,11 +1,11 @@
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import type { DocSearchProps } from "@docsearch/js";
 import type { Component, JSX } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
 import type { DefaultThemeSidebarItem } from "./sidebar.js";
 import type { DefaultThemeTextConfig } from "./text.js";
-import { DocSearchProps } from "@docsearch/js";
 
 export type {
 	DefaultThemeSidebarItem,
@@ -148,14 +148,14 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 export default defaultTheme;
 
 export interface SearchConfig {
-	docsearch?: Omit<DocSearchProps, "container"> & {container?: string};
-};
+	docsearch?: Omit<DocSearchProps, "container"> & { container?: string };
+}
 
 export interface NavItem {
 	text: string;
 	link: string;
 	activeMatch?: string;
-};
+}
 
 export interface SocialLink {
 	type: "discord" | "github" | "opencollective" | "custom";

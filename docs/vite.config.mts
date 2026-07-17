@@ -124,6 +124,13 @@ export default defineConfig({
 					"/guide": createFilesystemSidebar("./src/routes/guide"),
 					"/reference": createFilesystemSidebar("./src/routes/reference"),
 				},
+				search: {
+					docsearch: {
+						appId: "QAS0JNC31U",
+						indexName: "SolidBase Docs",
+						apiKey: "768424fdd93c7150a7a017eb556fa8a3",
+					},
+				},
 			},
 		}),
 		solidStart(solidBase.startConfig()),
