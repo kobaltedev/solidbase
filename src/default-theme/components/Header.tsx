@@ -82,9 +82,6 @@ export default function Header() {
 
 						<Dialog.Portal mount={navRef()}>
 							<Dialog.Content class={styles["nav-popup"]}>
-								<Show when={config().themeConfig?.search?.docsearch}>
-									{(docsearch) => <DocSearch docsearch={docsearch()} />}
-								</Show>
 								<Show when={config().themeConfig?.nav}>
 									{(nav) => (
 										<For each={nav()}>
@@ -112,6 +109,9 @@ export default function Header() {
 									)}
 								</Show>
 								<div class={styles["nav-popup-selectors"]}>
+									<Show when={config().themeConfig?.search?.docsearch}>
+										{(docsearch) => <DocSearch docsearch={docsearch()} />}
+									</Show>
 									<LocaleSelector />
 									<ThemeSelector />
 								</div>
