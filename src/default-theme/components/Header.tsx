@@ -82,6 +82,16 @@ export default function Header() {
 
 						<Dialog.Portal mount={navRef()}>
 							<Dialog.Content class={styles["nav-popup"]}>
+								<Show when={config().themeConfig?.search?.docsearch}>
+									{(docsearch) => (
+										<DocSearch
+											docsearch={{
+												...docsearch(),
+												container: "docsearch-mobile",
+											}}
+										/>
+									)}
+								</Show>
 								<Show when={config().themeConfig?.nav}>
 									{(nav) => (
 										<For each={nav()}>

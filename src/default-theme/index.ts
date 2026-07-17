@@ -148,7 +148,7 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 export default defaultTheme;
 
 export interface SearchConfig {
-	docsearch?: Omit<DocSearchProps, "container"> & { container?: string };
+	docsearch?: Omit<DocSearchProps, "container">;
 }
 
 export interface NavItem {
