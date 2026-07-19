@@ -39,15 +39,15 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 ): Item[] {
 	const folder = path.join(process.cwd(), route);
 
+	const collator = new Intl.Collator(undefined, { numeric: true });
+
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
 		filter: (item) => {
 			return item.matterData?.excludeFromSidebar !== true;
 		},
 		sort: (a, b) => {
 			if (stripExtension(a.filePath).endsWith("index")) return -1;
-			if (a.filePath > b.filePath) return 1;
-			if (b.filePath > a.filePath) return -1;
-			return 0;
+			return collator.compare(a.filePath, b.filePath);
 		},
 		transform: (item) => item,
 		...options,
