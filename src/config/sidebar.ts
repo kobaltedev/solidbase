@@ -43,7 +43,10 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
 		filter: (item) => {
-			return item.matterData?.excludeFromSidebar !== true;
+			return (
+				item.matterData?.excludeFromSidebar !== true &&
+				!path.parse(item.filePath).name.startsWith("(_)")
+			);
 		},
 		sort: (a, b) => {
 			if (stripExtension(a.filePath).endsWith("index")) return -1;
