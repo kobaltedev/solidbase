@@ -141,7 +141,7 @@ describe("createSolidBase", () => {
 			solidBase.plugin({
 				routes: validRoutes,
 				overrides: [
-					{ version: "v1", title: "v1" },
+					{ version: "v1", versionLabel: "v1 (legacy)", title: "v1" },
 					{ locale: ["en", "fr"], themeConfig: { nav: [] } },
 				],
 			}),

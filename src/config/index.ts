@@ -26,6 +26,7 @@ const SOLID_BASE_OVERRIDE_CONFIG_KEYS = [
 	"issueAutolink",
 	"lang",
 	"locales",
+	"versionLabel",
 	"themeConfig",
 	"editPath",
 	"lastUpdated",
@@ -46,6 +47,7 @@ export interface SolidBaseConfig<ThemeConfig> {
 	issueAutolink?: IssueAutoLinkConfig | false;
 	lang?: string;
 	locales?: Record<string, LocaleConfig<ThemeConfig>>;
+	versionLabel?: string;
 	routes?: SolidBaseRoutesConfig;
 	overrides?: Array<SolidBaseRouteOverride<ThemeConfig>>;
 	themeConfig?: ThemeConfig;

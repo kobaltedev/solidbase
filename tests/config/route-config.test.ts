@@ -227,6 +227,7 @@ describe("route config helpers", () => {
 						project: "solid",
 						version: "v1",
 						locale: "fr",
+						versionLabel: "v1 (legacy)",
 						title: "Solid v1 FR",
 					},
 				],
@@ -236,6 +237,7 @@ describe("route config helpers", () => {
 
 		expect(config).toMatchObject({
 			title: "Solid v1 FR",
+			versionLabel: "v1 (legacy)",
 			themeConfig: {
 				nav: ["solid"],
 				sidebar: { "/fr": [] },
