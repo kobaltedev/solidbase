@@ -45,7 +45,9 @@ export default function VersionSelector() {
 						aria-label="Change version"
 						disabled={options().length <= 1}
 					>
-						<span class={styles.label}>{getOptionLabel(current())}</span>
+						<span class={styles.label}>
+							{config().versionLabel ?? getOptionLabel(current())}
+						</span>
 
 						<Show when={options().length > 1}>
 							<IconExpandUpDownLine class={styles.icon} aria-hidden />
