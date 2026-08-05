@@ -11,6 +11,7 @@ import {
 	getSolidBaseRouteOptions,
 	getSolidBaseRoutePathWithRest,
 	getSolidBaseRouteSelectionForPath,
+	resolveSolidBaseRouteValueOverrides,
 	type SolidBaseRouteOption,
 } from "../config/route-config.js";
 import { useSolidBaseRoutes } from "./routes.js";
@@ -113,10 +114,22 @@ function getRouteLocaleForPath(path: string) {
 	const value = selection?.[LOCALE_AXIS];
 	if (!value) return undefined;
 
-	const option = getSolidBaseRouteOptions(solidBaseConfig.routes, LOCALE_AXIS, {
-		...selection,
-		[LOCALE_AXIS]: value,
-	}).find((option) => option.name === value);
+	const option = getSolidBaseRouteOptions(
+		solidBaseConfig.routes,
+		LOCALE_AXIS,
+		{
+			...selection,
+			[LOCALE_AXIS]: value,
+		},
+		resolveSolidBaseRouteValueOverrides(
+			solidBaseConfig.routes,
+			solidBaseConfig.overrides ?? [],
+			{
+				...selection,
+				[LOCALE_AXIS]: value,
+			},
+		),
+	).find((option) => option.name === value);
 
 	return option ? routeOptionToLocale(option) : undefined;
 }

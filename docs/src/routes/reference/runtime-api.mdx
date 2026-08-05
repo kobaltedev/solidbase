@@ -151,9 +151,15 @@ function useSolidBaseRoutes(): {
     axis: string,
     selection?: Partial<SolidBaseRouteSelection>,
   ): SolidBaseRouteOption[];
+  routeOverride: Accessor<SolidBaseRouteValueOverride>;
 };
 
 type SolidBaseRouteSelection = Record<string, string>;
+
+type SolidBaseRouteValueOverride = Record<
+  string,
+  Record<string, SolidBaseRouteValueConfig>
+>;
 
 type SolidBaseRouteOption = {
   name: string;
@@ -166,7 +172,7 @@ type SolidBaseRouteOption = {
 };
 ```
 
-`current()` returns the active route axis values for the current pathname. `path(...)` returns an internal route prefix for the provided partial selection merged over the current selection. `options(...)` returns valid options for an axis and filters internal values through `routes.include`.
+`current()` returns the active route axis values for the current pathname. `path(...)` returns an internal route prefix for the provided partial selection merged over the current selection. `options(...)` returns valid options for an axis and filters internal values through `routes.include`. `routeOverride()` returns the merged `route` override patches for the current selection, applied to the `meta` of options.
 
 ### `useSolidBaseRoute`
 

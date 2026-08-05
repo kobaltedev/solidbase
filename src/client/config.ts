@@ -2,7 +2,10 @@ import { solidBaseConfig } from "virtual:solidbase/config";
 import { type Accessor, createMemo } from "solid-js";
 
 import type { SolidBaseResolvedConfig } from "../config/index.js";
-import { resolveSolidBaseRouteConfig } from "../config/route-config.js";
+import {
+	resolveSolidBaseRouteConfig,
+	resolveSolidBaseRouteValueOverrides,
+} from "../config/route-config.js";
 import { useLocale } from "./locale.js";
 import { useSolidBaseRoute } from "./routes.js";
 
@@ -18,10 +21,16 @@ export function useRouteSolidBaseConfig<ThemeConfig>(): Accessor<
 			currentRoute(),
 		);
 		const localeConfig = currentLocale().config.themeConfig ?? {};
+		const routeOverride = resolveSolidBaseRouteValueOverrides(
+			solidBaseConfig.routes,
+			solidBaseConfig.overrides ?? [],
+			currentRoute(),
+		);
 
 		return {
 			...routeConfig,
 			themeConfig: { ...routeConfig.themeConfig, ...localeConfig },
+			routeOverride,
 		};
 	});
 }

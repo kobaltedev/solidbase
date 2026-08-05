@@ -18,7 +18,12 @@ export default function VersionSelector() {
 
 	const current = useSolidBaseRoute();
 	const options = createMemo(() =>
-		getSolidBaseRouteFallbackOptions(config().routes, VERSION_AXIS, current()),
+		getSolidBaseRouteFallbackOptions(
+			config().routes,
+			VERSION_AXIS,
+			current(),
+			config().routeOverride,
+		),
 	);
 	const currentOption = createMemo(() =>
 		options().find((option) => option.name === current()[VERSION_AXIS]),
@@ -45,9 +50,7 @@ export default function VersionSelector() {
 						aria-label="Change version"
 						disabled={options().length <= 1}
 					>
-						<span class={styles.label}>
-							{config().versionLabel ?? getOptionLabel(current())}
-						</span>
+						<span class={styles.label}>{getOptionLabel(current())}</span>
 
 						<Show when={options().length > 1}>
 							<IconExpandUpDownLine class={styles.icon} aria-hidden />

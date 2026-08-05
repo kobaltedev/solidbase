@@ -55,7 +55,6 @@ interface SolidBaseConfig<ThemeConfig> {
   robots?: boolean | RobotsConfig;
   lang?: string;
   locales?: Record<string, LocaleConfig<ThemeConfig>>;
-    versionLabel?: string;
   routes?: SolidBaseRoutesConfig;
   overrides?: Array<SolidBaseRouteOverride<ThemeConfig>>;
   themeConfig?: ThemeConfig;
@@ -171,13 +170,17 @@ overrides: [
     {
         project: "solidbase",
         version: "v1",
-        versionLabel: "v1 (legacy)",
+        route: {
+            version: {
+                v1: { label: "v1 (legacy)" },
+            },
+        },
     },
 ],
 // ..
 ```
 
-Route override selectors use route axis names. Override config is applied over the base config, and `themeConfig` is shallow-merged with the base `themeConfig`. Use `versionLabel` to replace the active version selector label for a matching route without changing the version label shown elsewhere.
+Route override selectors use route axis names. Override config is applied over the base config, and `themeConfig` is shallow-merged with the base `themeConfig`. Use the `route` key to patch route axis value metadata for a matching route — for example, renaming a version's `label` only when browsing that version's routes. Route value patches cannot change `path`, `href`, or `lang`; those are fixed by the `routes` config.
 
 #### Miscellaneous options
 

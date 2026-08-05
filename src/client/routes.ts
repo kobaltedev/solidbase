@@ -8,6 +8,7 @@ import {
 	getSolidBaseRouteOptions,
 	getSolidBaseRouteSelectionForPath,
 	normalizeSolidBaseRouteSelection,
+	resolveSolidBaseRouteValueOverrides,
 	type SolidBaseRouteOption,
 	type SolidBaseRouteSelection,
 } from "../config/route-config.js";
@@ -24,6 +25,13 @@ const [SolidBaseRoutesContextProvider, useSolidBaseRoutesContext] =
 				normalizeSolidBaseRouteSelection(solidBaseConfig.routes) ??
 				{},
 		);
+		const routeOverride = createMemo(() =>
+			resolveSolidBaseRouteValueOverrides(
+				solidBaseConfig.routes,
+				solidBaseConfig.overrides ?? [],
+				current(),
+			),
+		);
 
 		return {
 			routes: solidBaseConfig.routes,
@@ -38,7 +46,9 @@ const [SolidBaseRoutesContextProvider, useSolidBaseRoutesContext] =
 					solidBaseConfig.routes,
 					axis,
 					selection ?? current(),
+					routeOverride(),
 				),
+			routeOverride,
 		};
 	});
 

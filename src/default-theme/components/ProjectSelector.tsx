@@ -1,4 +1,3 @@
-import { solidBaseConfig } from "virtual:solidbase/config";
 import { Popover } from "@kobalte/core/popover";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
@@ -8,6 +7,7 @@ import {
 	getSolidBaseRouteFallbackOptions,
 	type SolidBaseRouteOption,
 } from "../../config/route-config.js";
+import { useRouteConfig } from "../utils.js";
 import styles from "./ProjectSelector.module.css";
 
 const PROJECT_AXIS = "project";
@@ -16,11 +16,13 @@ export default function ProjectSelector() {
 	const [open, setOpen] = createSignal(false);
 
 	const current = useSolidBaseRoute();
+	const config = useRouteConfig();
 	const options = createMemo(() =>
 		getSolidBaseRouteFallbackOptions(
-			solidBaseConfig.routes,
+			config().routes,
 			PROJECT_AXIS,
 			current(),
+			config().routeOverride,
 		),
 	);
 	const currentOption = createMemo(() =>

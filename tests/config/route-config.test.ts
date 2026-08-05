@@ -8,7 +8,9 @@ import {
 	getSolidBaseRouteSelectionForPath,
 	isSolidBaseRouteIncluded,
 	resolveSolidBaseRouteConfig,
+	resolveSolidBaseRouteValueOverrides,
 	type SolidBaseRoutesConfig,
+	validateSolidBaseRoutesConfig,
 } from "../../src/config/route-config.ts";
 
 const routes = {
@@ -227,7 +229,11 @@ describe("route config helpers", () => {
 						project: "solid",
 						version: "v1",
 						locale: "fr",
-						versionLabel: "v1 (legacy)",
+						route: {
+							version: {
+								v1: { label: "v1 (legacy)" },
+							},
+						},
 						title: "Solid v1 FR",
 					},
 				],
@@ -237,7 +243,6 @@ describe("route config helpers", () => {
 
 		expect(config).toMatchObject({
 			title: "Solid v1 FR",
-			versionLabel: "v1 (legacy)",
 			themeConfig: {
 				nav: ["solid"],
 				sidebar: { "/fr": [] },
@@ -245,5 +250,222 @@ describe("route config helpers", () => {
 			},
 		});
 		expect("overrides" in config).toBe(false);
+	});
+
+	it("resolves matching route value overrides in order", () => {
+		const overrides = [
+			{
+				project: "solid",
+				route: {
+					version: { v1: { label: "v1", status: "Archived" } },
+				},
+			},
+			{
+				locale: "fr",
+				route: {
+					version: {
+						v1: "v1 (legacy)",
+						latest: "Dernière",
+					},
+				},
+			},
+		];
+
+		expect(
+			resolveSolidBaseRouteValueOverrides(routes, overrides, {
+				project: "solid",
+				version: "v1",
+				locale: "fr",
+			}),
+		).toEqual({
+			version: {
+				v1: { label: "v1 (legacy)", status: "Archived" },
+				latest: { label: "Dernière" },
+			},
+		});
+
+		expect(
+			resolveSolidBaseRouteValueOverrides(routes, overrides, {
+				project: "router",
+				version: "v1",
+				locale: "fr",
+			}),
+		).toEqual({
+			version: {
+				v1: { label: "v1 (legacy)" },
+				latest: { label: "Dernière" },
+			},
+		});
+
+		expect(
+			resolveSolidBaseRouteValueOverrides(routes, overrides, {
+				project: "solid",
+				version: "v1",
+				locale: "en",
+			}),
+		).toEqual({
+			version: {
+				v1: { label: "v1", status: "Archived" },
+			},
+		});
+	});
+
+	it("applies route value overrides to option metadata", () => {
+		const routeOverride = resolveSolidBaseRouteValueOverrides(
+			routes,
+			[
+				{
+					version: "v1",
+					route: {
+						version: {
+							v1: { label: "v1 (legacy)" },
+							v0: { label: "v0 (legacy)" },
+						},
+						project: { router: { label: "Router v1" } },
+					},
+				},
+			],
+			{ project: "solid", version: "v1", locale: "fr" },
+		);
+
+		expect(
+			getSolidBaseRouteFallbackOptions(
+				routes,
+				"version",
+				{
+					project: "solid",
+					version: "v1",
+					locale: "fr",
+				},
+				routeOverride,
+			),
+		).toMatchObject([
+			{ name: "latest", meta: { label: "Latest" } },
+			{ name: "v1", meta: { label: "v1 (legacy)", status: "Legacy" } },
+			{
+				name: "v0",
+				href: "https://v0.solidjs.com",
+				meta: { label: "v0 (legacy)" },
+			},
+		]);
+
+		expect(
+			getSolidBaseRouteFallbackOptions(
+				routes,
+				"project",
+				{
+					project: "solid",
+					version: "v1",
+					locale: "fr",
+				},
+				routeOverride,
+			),
+		).toMatchObject([
+			{ name: "solid", meta: { label: "Solid" } },
+			{ name: "router", meta: { label: "Router v1" } },
+			{ name: "start", meta: { label: "SolidStart" } },
+		]);
+
+		expect(
+			getSolidBaseRouteOptions(
+				routes,
+				"locale",
+				{
+					project: "solid",
+					version: "v1",
+					locale: "fr",
+				},
+				routeOverride,
+			).map((option) => option.meta.label),
+		).toEqual(["English", "Français", "Español"]);
+	});
+
+	it("validates route override selectors and value overrides", () => {
+		expect(() =>
+			validateSolidBaseRoutesConfig(
+				routes,
+				[{ version: "v1", route: { project: { nope: { label: "x" } } } }],
+				[],
+			),
+		).toThrow("unknown `project` value `nope`");
+
+		expect(() =>
+			validateSolidBaseRoutesConfig(
+				routes,
+				[{ version: "v1", route: { nope: { v1: { label: "x" } } } }],
+				[],
+			),
+		).toThrow("unknown route axis `nope`");
+
+		expect(() =>
+			validateSolidBaseRoutesConfig(
+				routes,
+				[{ version: "v1", route: "nope" }],
+				[],
+			),
+		).toThrow("`overrides.route` must be an object");
+
+		expect(() =>
+			validateSolidBaseRoutesConfig(
+				routes,
+				[{ version: "v1", route: { version: { v1: "v1 (legacy)" } } }],
+				[],
+			),
+		).not.toThrow();
+	});
+
+	it("rejects route value overrides for path, href and lang", () => {
+		for (const key of ["path", "href", "lang"]) {
+			expect(() =>
+				validateSolidBaseRoutesConfig(
+					routes,
+					[
+						{
+							version: "v1",
+							route: {
+								version: { v1: { label: "x", [key]: "nope" } },
+							},
+						},
+					],
+					[],
+				),
+			).toThrow(`overrides.route.version.v1.${key}\` cannot be overridden`);
+		}
+
+		expect(() =>
+			validateSolidBaseRoutesConfig(
+				routes,
+				[
+					{
+						version: "v1",
+						route: { version: { v1: { label: "ok", status: "Legacy" } } },
+					},
+				],
+				[],
+			),
+		).not.toThrow();
+	});
+
+	it("strips path, href and lang from resolved route value overrides", () => {
+		expect(
+			resolveSolidBaseRouteValueOverrides(
+				routes,
+				[
+					{
+						version: "v1",
+						route: {
+							version: {
+								v1: { label: "v1 (legacy)", path: "x", href: "y", lang: "z" },
+							},
+						},
+					},
+				],
+				{ project: "solid", version: "v1", locale: "fr" },
+			),
+		).toEqual({
+			version: {
+				v1: { label: "v1 (legacy)" },
+			},
+		});
 	});
 });

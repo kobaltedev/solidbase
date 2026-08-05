@@ -6,8 +6,6 @@ export type SolidBaseRouteValueConfig = {
 	path?: string;
 	href?: string;
 	label?: string;
-	title?: string;
-	status?: string;
 	lang?: string;
 } & Record<string, unknown>;
 
@@ -41,6 +39,17 @@ export type SolidBaseRoutePathMatch = {
 	restPath: `/${string}`;
 };
 
+export type SolidBaseRouteValueOverrideConfig = {
+	label?: string;
+	title?: string;
+	status?: string;
+} & Record<string, unknown>;
+
+export type SolidBaseRouteValueOverride = Record<
+	string,
+	Record<string, SolidBaseRouteValueOverrideConfig>
+>;
+
 type RouteConfigValue = Record<string, unknown>;
 
 type RouteTemplateSegment =
@@ -48,6 +57,8 @@ type RouteTemplateSegment =
 	| { type: "axis"; name: string };
 
 const ROUTES_RESERVED_KEYS = new Set(["path", "include"]);
+const ROUTE_OVERRIDE_KEY = "route";
+const ROUTE_OVERRIDE_RESERVED_KEYS = new Set(["path", "href", "lang"]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -284,6 +295,65 @@ export function validateSolidBaseRoutesConfig(
 				continue;
 			}
 
+			if (key === ROUTE_OVERRIDE_KEY) {
+				assertSolidBaseRouteConfig(
+					isRecord(value),
+					"`overrides.route` must be an object of route axis value overrides.",
+				);
+
+				for (const [axisName, values] of Object.entries(value)) {
+					const axis = axisMap.get(axisName);
+					assertSolidBaseRouteConfig(
+						axis,
+						"`overrides.route." +
+							axisName +
+							"` references unknown route axis `" +
+							axisName +
+							"`.",
+					);
+					assertSolidBaseRouteConfig(
+						isRecord(values),
+						"`overrides.route." +
+							axisName +
+							"` must be an object of `" +
+							axisName +
+							"` value overrides.",
+					);
+
+					for (const valueName of Object.keys(values)) {
+						assertSolidBaseRouteConfig(
+							Object.hasOwn(axis.values, valueName),
+							"`overrides.route." +
+								axisName +
+								"` references unknown `" +
+								axisName +
+								"` value `" +
+								valueName +
+								"`.",
+						);
+					}
+
+					for (const [valueName, patch] of Object.entries(values)) {
+						if (!isRecord(patch)) continue;
+
+						for (const key of Object.keys(patch)) {
+							assertSolidBaseRouteConfig(
+								!ROUTE_OVERRIDE_RESERVED_KEYS.has(key),
+								"`overrides.route." +
+									axisName +
+									"." +
+									valueName +
+									"." +
+									key +
+									"` cannot be overridden.",
+							);
+						}
+					}
+				}
+
+				continue;
+			}
+
 			assertSolidBaseRouteConfig(
 				configKeys.has(key),
 				`\`overrides\` contains unknown config key or route axis \`${key}\`.`,
@@ -489,6 +559,7 @@ export function getSolidBaseRouteOptions(
 	routes: SolidBaseRoutesConfig | undefined,
 	axisName: string,
 	current: Partial<SolidBaseRouteSelection> = {},
+	routeOverride: SolidBaseRouteValueOverride = {},
 ): SolidBaseRouteOption[] {
 	if (!routes) return [];
 
@@ -497,15 +568,21 @@ export function getSolidBaseRouteOptions(
 
 	const normalized = normalizeSolidBaseRouteSelection(routes, current) ?? {};
 	const options: SolidBaseRouteOption[] = [];
+	const axisOverride = routeOverride[axisName];
 
 	for (const [valueName, value] of Object.entries(axis.values)) {
+		const meta = {
+			...value,
+			...axisOverride?.[valueName],
+		};
+
 		if (value.href) {
 			options.push({
 				name: valueName,
 				axis: axisName,
 				href: value.href,
 				isExternal: true,
-				meta: value,
+				meta,
 			});
 			continue;
 		}
@@ -523,7 +600,7 @@ export function getSolidBaseRouteOptions(
 			path: buildSolidBaseRoutePath(routes, selection),
 			isExternal: false,
 			selection,
-			meta: value,
+			meta,
 		});
 	}
 
@@ -534,6 +611,7 @@ export function getSolidBaseRouteFallbackOptions(
 	routes: SolidBaseRoutesConfig | undefined,
 	axisName: string,
 	current: Partial<SolidBaseRouteSelection> = {},
+	routeOverride: SolidBaseRouteValueOverride = {},
 ): SolidBaseRouteOption[] {
 	if (!routes) return [];
 
@@ -544,15 +622,21 @@ export function getSolidBaseRouteFallbackOptions(
 	const axisIndex = axisNames.indexOf(axisName);
 	const lockedAxes = axisIndex > 0 ? axisNames.slice(0, axisIndex) : [];
 	const options: SolidBaseRouteOption[] = [];
+	const axisOverride = routeOverride[axisName];
 
 	for (const [valueName, value] of Object.entries(axis.values)) {
+		const meta = {
+			...value,
+			...axisOverride?.[valueName],
+		};
+
 		if (value.href) {
 			options.push({
 				name: valueName,
 				axis: axisName,
 				href: value.href,
 				isExternal: true,
-				meta: value,
+				meta,
 			});
 			continue;
 		}
@@ -573,16 +657,32 @@ export function getSolidBaseRouteFallbackOptions(
 			path: buildSolidBaseRoutePath(routes, selection),
 			isExternal: false,
 			selection,
-			meta: value,
+			meta,
 		});
 	}
 
 	return options;
 }
 
+function toRouteValuePatch(value: unknown): SolidBaseRouteValueOverrideConfig {
+	if (typeof value === "string") return { label: value };
+	if (isRecord(value)) {
+		const patch: SolidBaseRouteValueOverrideConfig = {};
+
+		for (const [key, item] of Object.entries(value)) {
+			if (ROUTE_OVERRIDE_RESERVED_KEYS.has(key)) continue;
+			patch[key] = item;
+		}
+
+		return patch;
+	}
+	return {};
+}
+
 function splitRouteOverride(override: RouteConfigValue, axisNames: string[]) {
 	const selectors: SolidBaseRouteRule = {};
 	const config: RouteConfigValue = {};
+	const routeOverrides: SolidBaseRouteValueOverride = {};
 
 	for (const [key, value] of Object.entries(override)) {
 		if (axisNames.includes(key)) {
@@ -592,10 +692,25 @@ function splitRouteOverride(override: RouteConfigValue, axisNames: string[]) {
 			continue;
 		}
 
-		if (key !== "routes" && key !== "overrides") config[key] = value;
+		if (key === "routes" || key === "overrides") continue;
+
+		if (key === ROUTE_OVERRIDE_KEY) {
+			if (isRecord(value)) {
+				for (const [axisName, values] of Object.entries(value)) {
+					if (!isRecord(values)) continue;
+					const axisOverrides = (routeOverrides[axisName] ??= {});
+					for (const [valueName, patch] of Object.entries(values)) {
+						axisOverrides[valueName] = toRouteValuePatch(patch);
+					}
+				}
+			}
+			continue;
+		}
+
+		config[key] = value;
 	}
 
-	return { selectors, config };
+	return { selectors, config, routeOverrides };
 }
 
 function mergeRouteConfig<T extends RouteConfigValue>(
@@ -617,6 +732,41 @@ function mergeRouteConfig<T extends RouteConfigValue>(
 	}
 
 	return result as T;
+}
+
+export function resolveSolidBaseRouteValueOverrides(
+	routes: SolidBaseRoutesConfig | undefined,
+	overrides: RouteConfigValue[],
+	selection: Partial<SolidBaseRouteSelection>,
+): SolidBaseRouteValueOverride {
+	const result: SolidBaseRouteValueOverride = {};
+	if (!routes) return result;
+
+	const normalized = normalizeSolidBaseRouteSelection(routes, selection);
+	if (!normalized) return result;
+
+	const axisNames = getSolidBaseRouteAxisNames(routes);
+
+	for (const override of overrides) {
+		const { selectors, routeOverrides } = splitRouteOverride(
+			override,
+			axisNames,
+		);
+
+		if (!matchesSolidBaseRouteRule(normalized, selectors)) continue;
+
+		for (const [axisName, values] of Object.entries(routeOverrides)) {
+			const axisResult = (result[axisName] ??= {});
+			for (const [valueName, patch] of Object.entries(values)) {
+				axisResult[valueName] = {
+					...axisResult[valueName],
+					...patch,
+				};
+			}
+		}
+	}
+
+	return result;
 }
 
 export function resolveSolidBaseRouteConfig<T extends RouteConfigValue>(
