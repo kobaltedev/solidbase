@@ -3,3 +3,5 @@ packages:
   - "docs"
   - "dev"
   # - "examples/*"
+allowBuilds:
+  esbuild: false

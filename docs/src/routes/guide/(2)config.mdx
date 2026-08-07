@@ -180,7 +180,7 @@ overrides: [
 // ..
 ```
 
-Route override selectors use route axis names. Override config is applied over the base config, and `themeConfig` is shallow-merged with the base `themeConfig`. Use the `route` key to patch route axis value metadata for a matching route — for example, renaming a version's `label` only when browsing that version's routes. Route value patches cannot change `path`, `href`, or `lang`; those are fixed by the `routes` config.
+Route override selectors use route axis names. Override config is applied over the base config, and `themeConfig` is merged with the base `themeConfig`. Use the `route` key to patch route axis value metadata for a matching route — for example, renaming a version's `label` only when browsing that version's routes. `path`, `href`, and `lang` cannot be changed.
 
 #### Miscellaneous options
 

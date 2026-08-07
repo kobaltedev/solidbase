@@ -3,11 +3,8 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
 import { useSolidBaseRoute } from "../../client/index.jsx";
-import {
-	getSolidBaseRouteFallbackOptions,
-	type SolidBaseRouteOption,
-} from "../../config/route-config.js";
-import { useRouteConfig } from "../utils.js";
+import { useSolidBaseRouteFallbackOptions } from "../../client/routes.js";
+import type { SolidBaseRouteOption } from "../../config/route-config.js";
 import styles from "./ProjectSelector.module.css";
 
 const PROJECT_AXIS = "project";
@@ -16,15 +13,7 @@ export default function ProjectSelector() {
 	const [open, setOpen] = createSignal(false);
 
 	const current = useSolidBaseRoute();
-	const config = useRouteConfig();
-	const options = createMemo(() =>
-		getSolidBaseRouteFallbackOptions(
-			config().routes,
-			PROJECT_AXIS,
-			current(),
-			config().routeOverride,
-		),
-	);
+	const options = useSolidBaseRouteFallbackOptions(PROJECT_AXIS);
 	const currentOption = createMemo(() =>
 		options().find((option) => option.name === current()[PROJECT_AXIS]),
 	);

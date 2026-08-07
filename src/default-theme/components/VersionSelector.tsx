@@ -2,11 +2,8 @@ import { Popover } from "@kobalte/core/popover";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
 import { useSolidBaseRoute } from "../../client/index.jsx";
-import {
-	getSolidBaseRouteFallbackOptions,
-	type SolidBaseRouteOption,
-} from "../../config/route-config.js";
-import { useRouteConfig } from "../utils.js";
+import { useSolidBaseRouteFallbackOptions } from "../../client/routes.js";
+import type { SolidBaseRouteOption } from "../../config/route-config.js";
 import styles from "./VersionSelector.module.css";
 
 const VERSION_AXIS = "version";
@@ -14,17 +11,8 @@ const VERSION_AXIS = "version";
 export default function VersionSelector() {
 	const [open, setOpen] = createSignal(false);
 
-	const config = useRouteConfig();
-
 	const current = useSolidBaseRoute();
-	const options = createMemo(() =>
-		getSolidBaseRouteFallbackOptions(
-			config().routes,
-			VERSION_AXIS,
-			current(),
-			config().routeOverride,
-		),
-	);
+	const options = useSolidBaseRouteFallbackOptions(VERSION_AXIS);
 	const currentOption = createMemo(() =>
 		options().find((option) => option.name === current()[VERSION_AXIS]),
 	);
