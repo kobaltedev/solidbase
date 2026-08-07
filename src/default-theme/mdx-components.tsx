@@ -12,6 +12,7 @@ import {
 	For,
 	type ParentProps,
 	Show,
+	type Signal,
 	splitProps,
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
@@ -194,13 +195,16 @@ export function DirectiveContainer(
 
 		if (!props.title) return tabs();
 
-		const [openTab, setOpenTab] = makePersisted(createSignal(tabNames![0]!), {
-			name: `tab-group:${props.title}`,
-			sync: messageSync(new BroadcastChannel("tab-group")),
-			storage: cookieStorage.withOptions({
-				expires: new Date(Date.now() + 3e10),
-			}),
-		});
+		const [openTab, setOpenTab] = makePersisted<string, Signal<string>>(
+			createSignal(tabNames![0]!),
+			{
+				name: `tab-group:${props.title}`,
+				sync: messageSync(new BroadcastChannel("tab-group")),
+				storage: cookieStorage.withOptions({
+					expires: new Date(Date.now() + 3e10),
+				}),
+			},
+		);
 
 		return tabs(openTab, setOpenTab);
 	}

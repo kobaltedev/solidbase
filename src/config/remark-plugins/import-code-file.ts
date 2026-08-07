@@ -63,7 +63,7 @@ export function remarkImportCodeFile(options: ImportCodeFileOptions = {}) {
 					attr,
 				);
 
-			if (!res || !res.groups || !res.groups.path) {
+			if (!res?.groups?.path) {
 				throw new Error(`Unable to parse file path ${attr}`);
 			}
 			const filePath = res.groups.path;

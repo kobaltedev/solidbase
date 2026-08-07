@@ -170,7 +170,7 @@
     "@solid-primitives/media": "^2.3.5",
     "@solid-primitives/platform": "^0.1.2",
     "@solid-primitives/scroll": "^2.1.5",
-    "@solid-primitives/storage": "^4.3.4",
+    "@solid-primitives/storage": "^4.4.0",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
     "cross-spawn": "^7.0.6",
