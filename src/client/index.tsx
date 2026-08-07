@@ -29,6 +29,7 @@ export {
 	SolidBaseRoutesContextProvider,
 	useSolidBaseRoute,
 	useSolidBaseRouteOptions,
+	useSolidBaseRouteFallbackOptions,
 	useSolidBaseRoutes,
 } from "./routes.js";
 export type * from "./sidebar.js";
