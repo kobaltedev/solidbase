@@ -45,6 +45,10 @@
 	.article {
 		margin: 2rem 1.25rem;
 	}
+
+	.aside {
+		display: none;
+	}
 }
 
 .info {

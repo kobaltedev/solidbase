@@ -10,7 +10,6 @@ import {
 	useDefaultThemeState,
 } from "../context.jsx";
 import type { RelativePageConfig } from "../frontmatter.js";
-import { mobileLayout } from "../globals.js";
 import { useSolidBaseContext, useThemeText } from "../utils.js";
 
 import styles from "./Article.module.css";
@@ -18,7 +17,7 @@ import styles from "./Article.module.css";
 export default function Article(props: ParentProps) {
 	const { config } = useSolidBaseContext();
 	const text = useThemeText();
-	const { frontmatter } = useDefaultThemeState();
+	const { frontmatter, mobileLayout } = useDefaultThemeState();
 
 	const { TableOfContents, Link, LastUpdated, Footer, Hero, Features } =
 		useDefaultThemeComponents();

@@ -29,7 +29,6 @@ import {
 	useDefaultThemeState,
 } from "./context.jsx";
 import { defaultThemeComponents } from "./default-components.js";
-import { mobileLayout } from "./globals.js";
 import { usePace } from "./pace.js";
 import { useRouteConfig } from "./utils.js";
 
@@ -60,7 +59,8 @@ export default (props: ParentProps) => {
 function Layout(props: ParentProps) {
 	const { Header, Article, Link, ProjectSelector } =
 		useDefaultThemeComponents();
-	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
+	const { sidebarOpen, setSidebarOpen, frontmatter, mobileLayout } =
+		useDefaultThemeState();
 	const config = useRouteConfig();
 
 	const sidebar = useSidebar<DefaultThemeSidebarItemOptions>();

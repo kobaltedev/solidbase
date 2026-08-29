@@ -1,4 +1,5 @@
 import { createContextProvider } from "@solid-primitives/context";
+import { createMediaQuery } from "@solid-primitives/media";
 import { createSignal } from "solid-js";
 
 import type { ThemeComponents } from "./default-components.js";
@@ -38,12 +39,14 @@ export function useDefaultThemeComponents() {
 
 const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
 	createContextProvider(() => {
+		const mobileLayout = createMediaQuery("(max-width: 1100px)", false);
 		const [sidebarOpen, setSidebarOpen] = createSignal(false);
 		const [tocOpen, setTocOpen] = createSignal(false);
 		const [navOpen, setNavOpen] = createSignal(false);
 		const frontmatter = useDefaultThemeFrontmatter();
 
 		return {
+			mobileLayout,
 			sidebarOpen,
 			setSidebarOpen,
 			tocOpen,

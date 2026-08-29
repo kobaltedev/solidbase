@@ -49,6 +49,10 @@ main {
 		grid-template-columns: 1fr;
 	}
 
+	aside.sidenav {
+		display: none;
+	}
+
 	.sidenav {
 		position: fixed;
 		left: 0;
