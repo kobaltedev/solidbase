@@ -94,6 +94,7 @@ describe("route config helper", () => {
 		pathname.mockReturnValue("/v1/fr");
 		setSolidBaseConfig({
 			title: "Docs",
+			description: "Documentation",
 			routes: {
 				path: "/{version}/{locale}",
 				version: {
@@ -119,6 +120,7 @@ describe("route config helper", () => {
 				{
 					version: "v1",
 					title: "Docs v1",
+					description: "Legacy documentation",
 					themeConfig: {
 						sidebar: { "/v1": [] },
 					},
@@ -131,6 +133,9 @@ describe("route config helper", () => {
 		);
 		const { SolidBaseRoutesContextProvider } = await import(
 			"../../src/client/routes.ts"
+		);
+		const { resolveDocumentMetadata } = await import(
+			"../../src/client/document-metadata.ts"
 		);
 
 		createRoot((dispose) => {
@@ -145,10 +150,15 @@ describe("route config helper", () => {
 
 			expect(config?.()).toMatchObject({
 				title: "Docs v1",
+				description: "Legacy documentation",
 				themeConfig: {
 					nav: { title: "Localized" },
 					sidebar: { "/v1": [] },
 				},
+			});
+			expect(resolveDocumentMetadata(config!(), { title: "Install" })).toEqual({
+				description: "Legacy documentation",
+				title: "Install - Docs v1",
 			});
 			dispose();
 		});

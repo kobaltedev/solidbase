@@ -5,10 +5,21 @@ import { Layout, mdxComponents } from "virtual:solidbase/components";
 // as different modules, resulting in this file getting its own MDXContext (id `file://.../mdx.js),
 // and the MDX files sharing another (id `@kobalte/solidbase/mdx`).
 import { MDXProvider } from "virtual:solidbase/mdx";
-import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import { createMemo, onMount, type ParentProps, Suspense } from "solid-js";
+import { Link, Meta, MetaProvider, Title } from "@solidjs/meta";
+import { useLocation } from "@solidjs/router";
+import {
+	createMemo,
+	onMount,
+	type ParentProps,
+	Show,
+	Suspense,
+} from "solid-js";
 import { useRouteSolidBaseConfig } from "./config.js";
 import { SolidBaseContext } from "./context.jsx";
+import {
+	resolveDocumentMetadata,
+	resolveHeadMetadata,
+} from "./document-metadata.js";
 
 export function SolidBaseRoot(
 	props: ParentProps & {
@@ -56,26 +67,45 @@ import { SolidBaseRoutesContextProvider } from "./routes.js";
 
 export function Inner(props: ParentProps) {
 	const config = useRouteSolidBaseConfig();
+	const location = useLocation();
 	const pageData = useCurrentPageData();
-
-	const metaTitle = createMemo(() => {
-		const titleTemplate =
-			pageData()?.frontmatter.titleTemplate ?? config().titleTemplate;
-
-		const title = pageData()?.frontmatter?.title ?? config().title;
-
-		if (titleTemplate?.includes(":title"))
-			return titleTemplate.replace(":title", title);
-		return `${title} - ${titleTemplate ?? config().title}`;
-	});
-
-	const description = () =>
-		pageData()?.frontmatter?.description ?? config().description;
+	// @solidjs/meta cannot retract tags from an incomplete SSR pass.
+	const metadata = createMemo(() =>
+		resolveHeadMetadata(config(), pageData(), location),
+	);
+	const metaTitle = () =>
+		metadata()?.title ?? resolveDocumentMetadata(config()).title;
 
 	return (
 		<SolidBaseContext.Provider value={{ config, metaTitle }}>
-			<Title>{metaTitle()}</Title>
-			{description() && <Meta name="description" content={description()} />}
+			<Show when={metadata()} keyed>
+				{(head) => (
+					<>
+						<Title>{head.title}</Title>
+						<Show when={head.description} keyed>
+							{(description) => (
+								<>
+									<Meta name="description" content={description} />
+									<Meta property="og:description" content={description} />
+									<Meta name="twitter:description" content={description} />
+								</>
+							)}
+						</Show>
+						<Meta property="og:title" content={head.title} />
+						<Meta property="og:type" content="website" />
+						<Show when={head.canonicalUrl} keyed>
+							{(url) => (
+								<>
+									<Link rel="canonical" href={url} />
+									<Meta property="og:url" content={url} />
+								</>
+							)}
+						</Show>
+						<Meta name="twitter:card" content="summary" />
+						<Meta name="twitter:title" content={head.title} />
+					</>
+				)}
+			</Show>
 			<Layout>{props.children}</Layout>
 		</SolidBaseContext.Provider>
 	);

@@ -1,4 +1,3 @@
-gt pul
 <div align="center">
   <a href="https://github.com/kobaltedev/solidbase" target="_blank"><img width="400" src="https://raw.githubusercontent.com/kobaltedev/solidbase/refs/heads/main/.github/solidbase.png" alt="SolidBase"></a>
 </div>

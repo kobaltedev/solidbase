@@ -76,7 +76,7 @@ There are several options for setting site-wide metadata and behavior. These opt
 // ..
 {
     title: "My Documentation Site",
-    titleTemplate: "%s - MySite",
+    titleTemplate: ":title - MySite",
     description: "A comprehensive guide to MySite.",
     siteUrl: "https://docs.example.com",
     logo: "/logo.png",
@@ -85,6 +85,10 @@ There are several options for setting site-wide metadata and behavior. These opt
 ```
 
 Set `siteUrl` to the canonical public URL for your site. SolidBase uses it as the shared base for generated sitemap URLs, `robots.txt`, and default Open Graph URL metadata.
+
+SolidBase resolves `title`, `titleTemplate`, and `description` from the active route config. Page frontmatter overrides those values. Client-side navigation updates the document title, description, Open Graph metadata, and Twitter metadata for the new route.
+
+When `siteUrl` is set, SolidBase also emits a canonical link and `og:url`. The URL uses the route pathname without its query string or hash. Without `siteUrl`, these URL tags are omitted.
 
 :::note
 For multilingual support, use the `routes.locale` option. More details can be found in the [Internationalization guide](/guide/features/i18n).
