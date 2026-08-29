@@ -18,14 +18,19 @@ import {
 } from "../context.jsx";
 import { useRouteConfig } from "../utils.js";
 import styles from "./Header.module.css";
-import DocSearch from "./vendor/DocSearch.jsx";
 
 export default function Header() {
 	const [tocRef, setTocRef] = createSignal<HTMLElement>();
 	const [navRef, setNavRef] = createSignal<HTMLElement>();
 
-	const { ThemeSelector, LocaleSelector, VersionSelector, TableOfContents } =
-		useDefaultThemeComponents();
+	const {
+		DocSearch,
+		LocalSearch,
+		ThemeSelector,
+		LocaleSelector,
+		VersionSelector,
+		TableOfContents,
+	} = useDefaultThemeComponents();
 
 	const {
 		tocOpen,
@@ -47,6 +52,18 @@ export default function Header() {
 		sidebar()!.items.length > 0;
 	const hasToc = () =>
 		frontmatter()?.toc !== false && tocContent() && tocContent()!.length > 0;
+	const SearchControl = (props: { shortcut?: boolean }) => (
+		<Show
+			when={config().themeConfig?.search?.local}
+			fallback={
+				<Show when={config().themeConfig?.search?.docsearch}>
+					{(docsearch) => <DocSearch docsearch={docsearch()} />}
+				</Show>
+			}
+		>
+			<LocalSearch shortcut={props.shortcut} />
+		</Show>
+	);
 
 	return (
 		<header class={styles.header}>
@@ -109,18 +126,14 @@ export default function Header() {
 									)}
 								</Show>
 								<div class={styles["nav-popup-selectors"]}>
-									<Show when={config().themeConfig?.search?.docsearch}>
-										{(docsearch) => <DocSearch docsearch={docsearch()} />}
-									</Show>
+									<SearchControl />
 									<LocaleSelector />
 									<ThemeSelector />
 								</div>
 							</Dialog.Content>
 						</Dialog.Portal>
 					</Dialog>
-					<Show when={config().themeConfig?.search?.docsearch}>
-						{(docsearch) => <DocSearch docsearch={docsearch()} />}
-					</Show>
+					<SearchControl shortcut />
 					<Show when={config().themeConfig?.nav}>
 						{(nav) => (
 							<For each={nav()}>

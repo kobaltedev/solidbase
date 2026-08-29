@@ -13,6 +13,7 @@ type GeneratedAssetPluginOptions = {
 			source: string,
 			importer: string,
 		) => Promise<{ id: string } | null>,
+		watch: (filePath: string) => void,
 	): Promise<void>;
 };
 
@@ -26,6 +27,21 @@ export function createGeneratedAssetPlugin(
 ): PluginOption {
 	let root = process.cwd();
 	let assetRoot = join(root, options.assetDir);
+	let watchedFiles = new Set<string>();
+
+	async function writeAssets(context: any) {
+		const nextWatchedFiles = new Set<string>();
+		await options.write(
+			root,
+			(source, importer) => context.resolve(source, importer),
+			(filePath) => {
+				const normalizedPath = normalize(filePath);
+				nextWatchedFiles.add(normalizedPath);
+				context.addWatchFile(normalizedPath);
+			},
+		);
+		watchedFiles = nextWatchedFiles;
+	}
 
 	async function serveGeneratedAsset(url: string | undefined, res: any) {
 		if (!url || url === "/") return false;
@@ -55,6 +71,8 @@ export function createGeneratedAssetPlugin(
 			res.setHeader("Content-Disposition", "inline");
 		} else if (filePath.endsWith(".txt")) {
 			res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		} else if (filePath.endsWith(".js") || filePath.endsWith(".mjs")) {
+			res.setHeader("Content-Type", "text/javascript; charset=utf-8");
 		}
 		res.statusCode = 200;
 		res.end(content);
@@ -94,9 +112,10 @@ export function createGeneratedAssetPlugin(
 			});
 		},
 		async buildStart() {
-			await options.write(root, (source: string, importer: string) =>
-				this.resolve(source, importer),
-			);
+			await writeAssets(this);
+		},
+		async watchChange(id) {
+			if (watchedFiles.has(normalize(id))) await writeAssets(this);
 		},
 	};
 }

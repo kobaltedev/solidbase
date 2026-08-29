@@ -155,11 +155,7 @@ export default defineConfig({
 					"/": createDevSidebar("./src/routes", ["es", "fr", "router", "v1"]),
 				},
 				search: {
-					docsearch: {
-						appId: "QAS0JNC31U",
-						indexName: "SolidBase Docs",
-						apiKey: "768424fdd93c7150a7a017eb556fa8a3",
-					},
+					local: true,
 				},
 			},
 		}),

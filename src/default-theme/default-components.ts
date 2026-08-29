@@ -1,3 +1,4 @@
+import { lazy } from "solid-js";
 import Article from "./components/Article.jsx";
 import Badges from "./components/Badges.jsx";
 import Features from "./components/Features.jsx";
@@ -13,6 +14,8 @@ import ThemeSelector from "./components/ThemeSelector.jsx";
 import VersionSelector from "./components/VersionSelector.jsx";
 import DocSearch from "./components/vendor/DocSearch.jsx";
 
+const LocalSearch = lazy(() => import("./components/LocalSearch.jsx"));
+
 export const defaultThemeComponents = {
 	Article,
 	Badges,
@@ -21,6 +24,7 @@ export const defaultThemeComponents = {
 	Header,
 	LastUpdated,
 	Link,
+	LocalSearch,
 	LocaleSelector,
 	ProjectSelector,
 	TableOfContents,

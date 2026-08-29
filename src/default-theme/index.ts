@@ -6,6 +6,7 @@ import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
 import type { DefaultThemeSidebarItem } from "./sidebar.js";
 import type { DefaultThemeTextConfig } from "./text.js";
+import localSearchPlugin from "./vite-local-search.js";
 
 export type {
 	DefaultThemeSidebarItem,
@@ -104,6 +105,7 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 		}
 
 		return [
+			localSearchPlugin(config),
 			{
 				name: "solidbase-default-theme-fonts",
 				resolveId(id) {
@@ -147,9 +149,9 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 });
 export default defaultTheme;
 
-export interface SearchConfig {
-	docsearch?: Omit<DocSearchProps, "container">;
-}
+export type SearchConfig =
+	| { local: true; docsearch?: never }
+	| { local?: false; docsearch?: Omit<DocSearchProps, "container"> };
 
 export interface NavItem {
 	text: string;

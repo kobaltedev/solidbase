@@ -1,0 +1,70 @@
+---
+title: Search
+---
+
+# Search
+
+The default theme supports built-in local search and hosted Algolia DocSearch.
+
+## Local Search
+
+Enable local search without an external service:
+
+```ts title="app.config.ts"
+themeConfig: {
+	search: {
+		local: true,
+	},
+},
+```
+
+SolidBase uses [Pagefind](https://pagefind.app/) to build the search index from page titles, descriptions, headings, and Markdown content. Results are limited to the current locale and configured route axes, such as project and version.
+
+Pagefind loads its search engine and only the required index chunks when search starts. It supports prefix matching and language-aware word stemming. Use `Command+K` or `Control+K` to open the dialog.
+
+Exclude a page from local search with frontmatter:
+
+```md
+---
+search: false
+---
+```
+
+## Algolia DocSearch
+
+Configure hosted DocSearch instead of local search:
+
+```ts title="app.config.ts"
+themeConfig: {
+	search: {
+		docsearch: {
+			appId: "YOUR_APP_ID",
+			apiKey: "YOUR_SEARCH_API_KEY",
+			indexName: "YOUR_INDEX_NAME",
+		},
+	},
+},
+```
+
+Local search and DocSearch are mutually exclusive.
+
+## Content Security Policy
+
+Pagefind uses WebAssembly and a web worker. A strict Content Security Policy must allow `script-src 'wasm-unsafe-eval'` and `worker-src 'self' blob:`. See [Pagefind's hosting guide](https://pagefind.app/docs/hosting/) for details.
+
+## Text
+
+Override search labels through `themeConfig.text`:
+
+```ts title="app.config.ts"
+themeConfig: {
+	text: {
+		search: "Search",
+		searchPlaceholder: "Search documentation",
+		searchClose: "Close search",
+		searchLoading: "Loading search…",
+		searchNoResults: "No results found",
+		searchUnavailable: "Search is unavailable",
+	},
+},
+```
