@@ -1,0 +1,47 @@
+.repl {
+	margin: 1.5rem 0;
+	height: 32rem;
+	display: flex;
+	flex-direction: column;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	border: 1px solid
+		color-mix(in hsl, var(--sb-decoration-color) 14%, transparent);
+}
+
+.repl > * {
+	flex: 1;
+	min-height: 0;
+}
+
+.loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.875rem;
+	opacity: 0.7;
+}
+
+/* solid-repl expects panda's preflight, which repl.ts strips out. Re-apply what it relies on, scoped to the REPL and the zag-js elements it portals to the body. */
+@layer panda-reset {
+	:is(.repl, [data-scope]) *,
+	:is(.repl, [data-scope]) ::before,
+	:is(.repl, [data-scope]) ::after {
+		margin: 0;
+		padding: 0;
+		border-width: 0;
+		border-style: solid;
+		border-color: currentcolor;
+		box-sizing: border-box;
+	}
+
+	:is(.repl, [data-scope]) :is(button, input, select, textarea) {
+		font: inherit;
+		background: transparent;
+		color: inherit;
+	}
+
+	:is(.repl, [data-scope]) :is(ol, ul, menu) {
+		list-style: none;
+	}
+}

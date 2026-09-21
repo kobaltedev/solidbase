@@ -151,7 +151,13 @@
     "@solidjs/vite-plugin": "^3.0.0-next.47",
     "@solidjs/web": "^2.0.0-rc.16",
     "solid-js": "^2.0.0-rc.16",
+    "solid-repl": "*",
     "vite": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "solid-repl": {
+      "optional": true
+    }
   },
   "packageManager": "pnpm@11.20.0",
   "dependencies": {
