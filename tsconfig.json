@@ -18,7 +18,12 @@
 		"declaration": true,
 		"sourceMap": true,
 		"lib": ["dom", "esnext"],
-		"types": ["solid-js", "vite/client", "unplugin-icons/types/solid"],
+		"types": [
+			"solid-js",
+			"vite/client",
+			"unplugin-icons/types/solid",
+			"solid-repl/dist/types"
+		],
 		"rootDir": "./src",
 		"outDir": "./dist"
 	},
