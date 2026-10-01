@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
-import { parseFrontmatter } from "./frontmatter.js";
+import { type FrontmatterOptions, parseFrontmatter } from "./frontmatter.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import {
 	buildSolidBaseRoutePath,
@@ -212,7 +212,10 @@ export function isDefaultLocaleRoute(
 	);
 }
 
-export async function getRoutesIndex(root: string): Promise<RouteIndexEntry[]> {
+export async function getRoutesIndex(
+	root: string,
+	frontmatterOptions?: FrontmatterOptions,
+): Promise<RouteIndexEntry[]> {
 	const routesDir = getRoutesDir(root);
 	const markdownFiles = await collectMarkdownFiles(routesDir);
 
@@ -221,7 +224,7 @@ export async function getRoutesIndex(root: string): Promise<RouteIndexEntry[]> {
 			if (isNotFoundRoute(routesDir, filePath)) return null;
 
 			const source = await readFile(filePath, "utf8");
-			const frontmatter = parseFrontmatter(source);
+			const frontmatter = parseFrontmatter(source, frontmatterOptions);
 			const routePath = toRoutePath(routesDir, filePath);
 
 			return {

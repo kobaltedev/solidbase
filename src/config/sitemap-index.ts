@@ -115,6 +115,6 @@ export async function getSitemapEntries(
 	const hostname = getSitemapHostname(config);
 	if (!hostname) return [];
 
-	const routes = await getRoutesIndex(root);
+	const routes = await getRoutesIndex(root, config.markdown);
 	return buildSitemapEntries(hostname, config, routes);
 }
