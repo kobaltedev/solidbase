@@ -1,8 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
-import matter from "gray-matter";
-
+import { parseFrontmatter } from "./frontmatter.js";
 import type { SolidBaseResolvedConfig } from "./index.js";
 import {
 	buildSolidBaseRoutePath,
@@ -222,7 +221,7 @@ export async function getRoutesIndex(root: string): Promise<RouteIndexEntry[]> {
 			if (isNotFoundRoute(routesDir, filePath)) return null;
 
 			const source = await readFile(filePath, "utf8");
-			const { data } = matter(source);
+			const frontmatter = parseFrontmatter(source);
 			const routePath = toRoutePath(routesDir, filePath);
 
 			return {
@@ -230,7 +229,7 @@ export async function getRoutesIndex(root: string): Promise<RouteIndexEntry[]> {
 				routePath,
 				markdownPath: toMarkdownPath(routePath),
 				source,
-				frontmatter: data as Record<string, unknown>,
+				frontmatter,
 			} satisfies RouteIndexEntry;
 		}),
 	).then((routes) => routes.filter((route) => route !== null));

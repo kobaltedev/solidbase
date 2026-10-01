@@ -1,6 +1,7 @@
 import { lstatSync, readdirSync } from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+
+import { readFrontmatter } from "./frontmatter.js";
 
 export type SidebarConfig<Item = SidebarItem> =
 	| Item[]
@@ -137,7 +138,7 @@ function stripExtension(filePath: string): string {
 function getMatterData(
 	filePath: string,
 ): { sidebarTitle?: string; title?: string } & {} {
-	return matter.read(filePath).data;
+	return readFrontmatter(filePath);
 }
 
 function formatTitle(filePath: string): string {
