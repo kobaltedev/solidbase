@@ -1,6 +1,7 @@
 import { lstatSync, readdirSync } from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+
+import { type FrontmatterOptions, readFrontmatter } from "./frontmatter.js";
 
 export type SidebarConfig<Item = SidebarItem> =
 	| Item[]
@@ -28,6 +29,8 @@ export type SidebarItemWithMeta<T = {}> = SidebarItem<T> & {
 };
 
 export interface FilesystemSidebarOptions {
+	/** Match the site's markdown frontmatter configuration. */
+	frontmatter?: FrontmatterOptions;
 	filter?: (item: SidebarItemWithMeta) => boolean;
 	sort?: (a: SidebarItemWithMeta, b: SidebarItemWithMeta) => number;
 	transform?: (item: SidebarItemWithMeta) => SidebarItemWithMeta;
@@ -42,6 +45,7 @@ export function createFilesystemSidebar<Item = SidebarItem>(
 	const collator = new Intl.Collator(undefined, { numeric: true });
 
 	const resolvedOptions: Required<FilesystemSidebarOptions> = {
+		frontmatter: {},
 		filter: (item) => {
 			return (
 				item.matterData?.excludeFromSidebar !== true &&
@@ -101,7 +105,7 @@ function traverse(
 	if (title.includes("[...")) return;
 
 	if (lstatSync(filePath).isFile()) {
-		const matterData = getMatterData(filePath);
+		const matterData = getMatterData(filePath, options.frontmatter);
 
 		return {
 			title: matterData.sidebarTitle ?? matterData.title ?? title,
@@ -136,8 +140,9 @@ function stripExtension(filePath: string): string {
 
 function getMatterData(
 	filePath: string,
+	options: FrontmatterOptions,
 ): { sidebarTitle?: string; title?: string } & {} {
-	return matter.read(filePath).data;
+	return readFrontmatter(filePath, options);
 }
 
 function formatTitle(filePath: string): string {

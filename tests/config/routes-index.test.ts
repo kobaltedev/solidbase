@@ -1,17 +1,67 @@
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 
+import remarkFrontmatter from "remark-frontmatter";
 import { describe, expect, it } from "vitest";
 
+import { getLlmDocuments } from "../../src/config/llms-index.ts";
 import {
 	getRoutesIndex,
 	isDefaultLocaleRoute,
 } from "../../src/config/routes-index.ts";
+import { createFilesystemSidebar } from "../../src/config/sidebar.ts";
+import { getSitemapEntries } from "../../src/config/sitemap-index.ts";
 
 import { fixtureSiteRoot } from "../helpers/fixtures.ts";
 
 describe("getRoutesIndex", () => {
+	it("honors configured TOML metadata across indexing, sidebars, and generated documents", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-toml-"));
+		const routesDir = join(root, "src", "routes");
+		const markdown = {
+			remarkPlugins: [{ plugins: [[remarkFrontmatter, ["yaml", "toml"]]] }],
+		};
+		const config = {
+			markdown,
+			llms: true,
+			sitemap: true,
+			siteUrl: "https://example.com",
+			lang: "en",
+		} as any;
+		try {
+			await mkdir(routesDir, { recursive: true });
+			await writeFile(
+				join(routesDir, "index.mdx"),
+				'+++\ntitle = "Home"\n+++\n\nWelcome to {frontmatter.title}.',
+			);
+			await writeFile(
+				join(routesDir, "hidden.mdx"),
+				'+++\ntitle = "Hidden"\nexcludeFromSidebar = true\nsitemap = false\nllms = false\n+++\n\nHidden body.',
+			);
+			const routes = await getRoutesIndex(root, config.markdown);
+			expect(
+				routes.find((route) => route.routePath === "/")?.frontmatter,
+			).toEqual({ title: "Home" });
+			expect(
+				createFilesystemSidebar(relative(process.cwd(), routesDir), {
+					frontmatter: config.markdown,
+				}).map(({ title, link }: any) => ({ title, link })),
+			).toEqual([{ title: "Home", link: "/" }]);
+			expect(
+				(await getSitemapEntries(root, config)).map((entry) => entry.routePath),
+			).toEqual(["/"]);
+			const documents = await getLlmDocuments(root, config, async () => null);
+			expect(documents).toHaveLength(1);
+			expect(documents[0]).toMatchObject({
+				title: "Home",
+				content: "Welcome to Home.",
+			});
+		} finally {
+			await rm(root, { recursive: true, force: true });
+		}
+	});
+
 	it("indexes markdown routes with normalized paths and frontmatter", async () => {
 		const routes = await getRoutesIndex(fixtureSiteRoot);
 

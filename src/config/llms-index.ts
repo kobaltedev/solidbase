@@ -103,7 +103,7 @@ export async function getLlmDocuments(
 ): Promise<LlmDocument[]> {
 	if (!config.llms) return [];
 
-	const routes = await getRoutesIndex(root);
+	const routes = await getRoutesIndex(root, config.markdown);
 
 	return Promise.all(
 		routes.map(async (route): Promise<LlmDocument | null> => {
