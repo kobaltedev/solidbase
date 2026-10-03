@@ -1,5 +1,9 @@
-import { useWindowScrollPosition } from "@solid-primitives/scroll";
-import { createEffect, createSignal, For, type JSX, Show } from "solid-js";
+import {
+	type Position,
+	useWindowScrollPosition,
+} from "@solid-primitives/scroll";
+import type { JSX } from "@solidjs/web";
+import { createEffect, createSignal, For, Show } from "solid-js";
 import {
 	type TableOfContentsItemData,
 	useCurrentPageData,
@@ -13,56 +17,61 @@ export default function TableOfContents(_props: {}) {
 		string | undefined
 	>();
 
-	const scroll = useWindowScrollPosition();
+	// @solid-primitives/scroll@next loses the generic on `useWindowScrollPosition` (typed as `unknown`).
+	const scroll = useWindowScrollPosition() as Position;
 
 	const [headingPositions, setHeadingPositions] = createSignal<
 		Array<{ url: string; top: number | undefined }>
 	>([]);
 
-	createEffect(() => {
-		const t = toc();
-		if (!t) return [];
-		setHeadingPositions(
-			t.flatMap(flattenData).map((href) => {
-				const el = document.getElementById(href.slice(1));
+	createEffect(
+		() => toc(),
+		(t) => {
+			if (!t) return;
+			setHeadingPositions(
+				t.flatMap(flattenData).map((href: string) => {
+					const el = document.getElementById(href.slice(1));
 
-				if (!el) {
+					if (!el) {
+						return {
+							url: href,
+							top: undefined,
+						};
+					}
+
+					const style = window.getComputedStyle(el);
+					const scrollMt = Number.parseFloat(style.scrollMarginTop) + 1;
+
+					const top =
+						window.scrollY + el.getBoundingClientRect().top - scrollMt - 50;
+
 					return {
 						url: href,
-						top: undefined,
+						top,
 					};
+				}),
+			);
+		},
+	);
+
+	createEffect(
+		() => [scroll.y, headingPositions()] as const,
+		([top, positions]) => {
+			let current = positions[0]?.url;
+
+			for (const heading of positions) {
+				if (!heading.top) continue;
+
+				if (top >= heading.top) {
+					current = heading.url;
+				} else {
+					break;
 				}
-
-				const style = window.getComputedStyle(el);
-				const scrollMt = Number.parseFloat(style.scrollMarginTop) + 1;
-
-				const top =
-					window.scrollY + el.getBoundingClientRect().top - scrollMt - 50;
-
-				return {
-					url: href,
-					top,
-				};
-			}),
-		);
-	});
-
-	createEffect(() => {
-		const top = scroll.y;
-		let current = headingPositions()[0]?.url;
-
-		for (const heading of headingPositions()) {
-			if (!heading.top) continue;
-
-			if (top >= heading.top) {
-				current = heading.url;
-			} else {
-				break;
 			}
-		}
 
-		setCurrentSection(current);
-	});
+			setCurrentSection(current);
+		},
+	);
 
 	return (
 		<Show when={toc()}>
@@ -100,14 +109,19 @@ function TableOfContentsItem(props: {
 			?.scrollIntoView(true);
 	};
 
-	createEffect(() => {
-		const header = document.querySelector("header") as HTMLElement | undefined;
-		header?.setAttribute("data-scrolling-to-header", "");
-		if (props.data.href === props.current && !elementInViewport(ref()!)) {
-			ref()?.scrollIntoView({ behavior: "smooth" });
-		}
-		setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
-	});
+	createEffect(
+		() => [props.data.href === props.current, ref()] as const,
+		([isCurrent, el]) => {
+			const header = document.querySelector("header") as
+				| HTMLElement
+				| undefined;
+			header?.setAttribute("data-scrolling-to-header", "");
+			if (isCurrent && el && !elementInViewport(el)) {
+				el.scrollIntoView({ behavior: "smooth" });
+			}
+			setTimeout(() => header?.removeAttribute("data-scrolling-to-header"));
+		},
+	);
 
 	return (
 		<li class={styles.item}>

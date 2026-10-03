@@ -1,19 +1,19 @@
-import { Tabs } from "@kobalte/core";
+import { Tabs } from "@kobalte/core/tabs";
 import {
 	cookieStorage,
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
+import type { ComponentProps } from "@solidjs/web";
 import {
 	type Accessor,
-	type ComponentProps,
 	children,
 	createSignal,
 	For,
+	omit,
 	type ParentProps,
 	Show,
 	type Signal,
-	splitProps,
 } from "solid-js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
@@ -62,7 +62,7 @@ export function h6(props: ComponentProps<"h6">) {
 }
 
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
-	const outbound = () => (props.href ?? "").includes("//");
+	const outbound = () => String(props.href ?? "").includes("//");
 	const autoHeading = () => props["data-auto-heading"] === "";
 
 	return (
@@ -85,7 +85,7 @@ export function hr(props: ComponentProps<"hr">) {
 }
 
 export function table(props: ComponentProps<"table">) {
-	const [_local, others] = splitProps(props, ["class"]);
+	const others = omit(props, "class");
 
 	return (
 		<div class={styles.table}>
@@ -144,7 +144,7 @@ export function DirectiveContainer(
 		const [preferredLanguage] = usePreferredLanguage();
 
 		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
-			<Tabs.Root
+			<Tabs
 				value={value?.()}
 				onChange={onChange}
 				class={styles["tabs-container"]}
@@ -190,7 +190,7 @@ export function DirectiveContainer(
 						</Tabs.Content>
 					)}
 				</For>
-			</Tabs.Root>
+			</Tabs>
 		);
 
 		if (!props.title) return tabs();

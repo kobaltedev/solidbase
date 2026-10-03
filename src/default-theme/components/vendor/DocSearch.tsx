@@ -9,16 +9,19 @@ export default function DocSearch(props: {
 }) {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
-	createEffect(() => {
-		if (!ref()) return;
-		try {
-			//@ts-expect-error: docsearch not callable?
-			docsearch({
-				container: ref(),
-				...props.docsearch,
-			});
-		} catch {}
-	});
+	createEffect(
+		() => ref(),
+		(el) => {
+			if (!el) return;
+			try {
+				//@ts-expect-error: docsearch not callable?
+				docsearch({
+					container: el,
+					...props.docsearch,
+				});
+			} catch {}
+		},
+	);
 
 	return <div ref={setRef} class={styles.docsearch} />;
 }

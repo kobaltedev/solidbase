@@ -1,7 +1,7 @@
 import { usePrefersDark } from "@solid-primitives/media";
-import { useHead } from "@solidjs/meta";
-import { createEffect, createSignal, createUniqueId } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { Script } from "@solidjs/meta";
+import { getRequestEvent, isServer } from "@solidjs/web";
+import { createComponent, createEffect, createSignal } from "solid-js";
 
 export type ThemeType = "light" | "dark";
 export type RawThemeType = ThemeType | `s${ThemeType}`;
@@ -58,16 +58,20 @@ export const setTheme = _setTheme;
 import readThemeCookieScript from "./read-theme-cookie.js?raw";
 
 export function useThemeListener() {
-	createEffect(() => {
-		document.documentElement.setAttribute("data-theme", getRawTheme());
-		// biome-ignore lint/suspicious/noDocumentCookie: remove next major
-		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
-	});
+	createEffect(
+		() => getRawTheme(),
+		(raw) => {
+			document.documentElement.setAttribute("data-theme", raw);
+			// biome-ignore lint/suspicious/noDocumentCookie: remove next major
+			document.cookie = `theme=${raw}; max-age=31536000; path=/`;
+		},
+	);
+}
 
-	useHead({
-		tag: "script",
-		id: createUniqueId(),
-		props: { children: readThemeCookieScript },
-		setting: { close: true },
+/** Inline script that applies the theme cookie before hydration (prevents FOUC). Render once in the document head. */
+export function ThemeCookieScript() {
+	return createComponent(Script, {
+		id: "sb-theme-script",
+		children: readThemeCookieScript,
 	});
 }

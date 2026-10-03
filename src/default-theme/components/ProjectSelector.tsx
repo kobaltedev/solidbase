@@ -36,7 +36,7 @@ export default function ProjectSelector() {
 				>
 					<Popover.Trigger class={styles.trigger} aria-label="Change project">
 						<span class={styles.label}>{getOptionLabel(current())}</span>
-						<IconExpandUpDownLine class={styles.icon} aria-hidden />
+						<IconExpandUpDownLine class={styles.icon} aria-hidden="true" />
 					</Popover.Trigger>
 					<Popover.Portal>
 						<Popover.Content class={styles.content}>
@@ -49,7 +49,9 @@ export default function ProjectSelector() {
 											class={styles.item}
 											target={outbound() ? "_blank" : undefined}
 											rel={outbound() ? "noopener noreferrer" : undefined}
-											aria-current={option === currentOption() || undefined}
+											aria-current={
+												option === currentOption() ? "page" : undefined
+											}
 											href={option.href ?? option.path}
 											onMouseEnter={(e) => e.currentTarget.focus()}
 											onClick={() => setOpen(false)}

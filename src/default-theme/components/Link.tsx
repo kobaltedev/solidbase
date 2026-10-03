@@ -1,8 +1,8 @@
-import type { ComponentProps } from "solid-js";
+import type { ComponentProps } from "@solidjs/web";
 import styles from "./Link.module.css";
 
 export default function Link(props: ComponentProps<"a">) {
-	const outbound = () => (props.href ?? "").includes("://");
+	const outbound = () => String(props.href ?? "").includes("://");
 
 	return (
 		<a

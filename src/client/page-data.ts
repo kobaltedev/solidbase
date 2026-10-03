@@ -1,6 +1,6 @@
 import { createContextProvider } from "@solid-primitives/context";
-import { useCurrentMatches } from "@solidjs/router";
-import { createResource } from "solid-js";
+import { useRouteMatches } from "@solidjs/router";
+import { createMemo } from "solid-js";
 
 function getWindowPageData(path?: string) {
 	if (typeof window === "undefined" || !path) return;
@@ -30,11 +30,13 @@ interface CurrentPageData {
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] =
 	createContextProvider((props: { deferStream?: boolean }) => {
-		const matches = useCurrentMatches();
+		const matches = useRouteMatches();
 
-		const [pageData] = createResource(
-			matches,
-			async (m): Promise<CurrentPageData | undefined> => {
+		// Solid 2: async memos replace createResource; readers suspend via the nearest <Loading>.
+		// TODO(solid2): 1.x `deferStream` has no equivalent yet; prop kept for API compatibility.
+		const pageData = createMemo(
+			async (): Promise<CurrentPageData | undefined> => {
+				const m = matches();
 				const lastMatch = m[m.length - 1];
 				// if there's no matches that's not an us problem
 				if (!lastMatch) return;
@@ -53,11 +55,6 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;
-			},
-			{
-				get deferStream() {
-					return props.deferStream ?? true;
-				},
 			},
 		);
 

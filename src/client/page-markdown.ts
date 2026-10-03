@@ -3,7 +3,7 @@ import {
 	writeClipboard,
 } from "@solid-primitives/clipboard";
 import { useLocation } from "@solidjs/router";
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { createEffect, createSignal, onCleanup, onSettled } from "solid-js";
 
 import { useRouteSolidBaseConfig } from "./config.js";
 import { type BaseFrontmatter, useCurrentPageData } from "./page-data.js";
@@ -101,7 +101,7 @@ export function useCopyPageMarkdown() {
 		clearFeedbackTimeout();
 	}
 
-	onMount(() => {
+	onSettled(() => {
 		setIsClient(true);
 	});
 
@@ -109,10 +109,10 @@ export function useCopyPageMarkdown() {
 		clearFeedbackTimeout();
 	});
 
-	createEffect(() => {
-		location.pathname;
-		resetCopyFeedback();
-	});
+	createEffect(
+		() => location.pathname,
+		() => resetCopyFeedback(),
+	);
 
 	const canCopy = () =>
 		canCopyPageMarkdown(config().llms, pageData()?.frontmatter.llms);

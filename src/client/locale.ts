@@ -1,8 +1,8 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { createContextProvider } from "@solid-primitives/context";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
-import { createMemo, startTransition } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { getRequestEvent, isServer } from "@solidjs/web";
+import { createMemo } from "solid-js";
 
 import type { LocaleConfig } from "../config/index.js";
 import {
@@ -190,7 +190,7 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 
 				if (!routePath) return;
 
-				startTransition(() => navigate(routePath)).then(() => {
+				Promise.resolve(navigate(routePath)).then(() => {
 					document.documentElement.lang = locale.code;
 				});
 				return;
@@ -198,7 +198,7 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 
 			const searchValue = getLocaleLink(locale);
 
-			startTransition(() =>
+			Promise.resolve(
 				navigate(`${searchValue}${match()?.params.rest ?? ""}`),
 			).then(() => {
 				document.documentElement.lang = locale.code;

@@ -13,14 +13,17 @@ export function usePace(options?: Partial<BProgressOptions>) {
 
 	let paceTimeoutId: number | undefined;
 
-	createEffect(() => {
-		if (isRouting()) {
-			paceTimeoutId = window.setTimeout(() => BProgress.start(), 100);
-		} else {
-			clearTimeout(paceTimeoutId);
-			BProgress.done();
-		}
-	});
+	createEffect(
+		() => isRouting(),
+		(routing) => {
+			if (routing) {
+				paceTimeoutId = window.setTimeout(() => BProgress.start(), 100);
+			} else {
+				clearTimeout(paceTimeoutId);
+				BProgress.done();
+			}
+		},
+	);
 
 	onCleanup(() => {
 		clearTimeout(paceTimeoutId);

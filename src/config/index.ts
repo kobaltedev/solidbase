@@ -1,4 +1,4 @@
-import type { SolidStartOptions } from "@solidjs/start/config";
+import type { Options as SolidPluginOptions } from "@solidjs/vite-plugin";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
 import type { ComponentResolverOption } from "unplugin-icons/resolver";
 import type { Options as IconsOptions } from "unplugin-icons/types";
@@ -179,8 +179,13 @@ export function createSolidBase<ThemeConfig>(
 		];
 	};
 
-	const startConfig = (config: SolidStartOptions = {}) => {
+	/**
+	 * `@solidjs/vite-plugin` options with SolidBase defaults applied: start mode with SSR
+	 * (the serving layer that replaced SolidStart), and `.md`/`.mdx` registered as extensions.
+	 */
+	const startConfig = (config: Partial<SolidPluginOptions> = {}) => {
 		config.ssr ??= true;
+		config.start ??= true;
 		config.extensions = [
 			...new Set((config.extensions ?? []).concat(["md", "mdx"])),
 		];
