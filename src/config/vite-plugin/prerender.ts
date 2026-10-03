@@ -1,6 +1,6 @@
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { spawn } from "node:child_process";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import type { Plugin, ViteBuilder } from "vite";
 
@@ -18,52 +18,51 @@ export interface PrerenderOptions {
 	origin?: string;
 }
 
-type HandleRequest = (
-	request: Request,
-	options?: { renderMode?: "stream" | "async" },
-) => Promise<Response>;
+interface WorkerInput {
+	serverEntry: string;
+	outDir: string;
+	origin: string;
+	seeds: string[];
+	crawlLinks: boolean;
+	notFound: boolean;
+}
 
-const NOT_FOUND_PROBE = "/__solidbase_404__";
-const HREF_RE = /\shref=(?:"([^"]*)"|'([^']*)')/g;
-const STATIC_FILE_RE = /\.[a-z0-9]{1,8}$/i;
+interface WorkerResult {
+	written: string[];
+	failed: Array<{ path: string; status: number }>;
+}
 
-/** Render the final HTML for a path (all `<Loading>` boundaries settled, head tags inlined). */
-export async function renderPath(
-	handleRequest: HandleRequest,
-	origin: string,
-	path: string,
-) {
-	const response = await handleRequest(new Request(new URL(path, origin)), {
-		renderMode: "async",
+const WORKER = fileURLToPath(
+	new URL("./prerender-worker.mjs", import.meta.url),
+);
+
+function runWorker(input: WorkerInput): Promise<WorkerResult> {
+	return new Promise((resolvePromise, reject) => {
+		const child = spawn(process.execPath, [WORKER], {
+			stdio: ["pipe", "pipe", "inherit"],
+			env: process.env,
+		});
+		let stdout = "";
+		child.stdout.setEncoding("utf8");
+		child.stdout.on("data", (chunk) => {
+			stdout += chunk;
+		});
+		child.on("error", reject);
+		child.on("close", (code) => {
+			if (code !== 0) {
+				reject(
+					new Error(`[solidbase] prerender worker exited with code ${code}`),
+				);
+				return;
+			}
+			try {
+				resolvePromise(JSON.parse(stdout) as WorkerResult);
+			} catch (error) {
+				reject(error);
+			}
+		});
+		child.stdin.end(JSON.stringify(input));
 	});
-	return { status: response.status, html: await response.text() };
-}
-
-export function toOutputFile(outDir: string, path: string) {
-	const clean = path.split("?")[0]!.split("#")[0]!;
-	if (STATIC_FILE_RE.test(clean) && !clean.endsWith("/")) {
-		return join(outDir, clean);
-	}
-	return join(outDir, clean, "index.html");
-}
-
-export function extractLinks(html: string, origin: string) {
-	const links = new Set<string>();
-	for (const match of html.matchAll(HREF_RE)) {
-		const raw = match[1] ?? match[2] ?? "";
-		if (!raw || raw.startsWith("#") || raw.startsWith("mailto:")) continue;
-		let url: URL;
-		try {
-			url = new URL(raw, origin);
-		} catch {
-			continue;
-		}
-		if (url.origin !== origin) continue;
-		const path = url.pathname;
-		if (STATIC_FILE_RE.test(path) && !path.endsWith(".html")) continue;
-		links.add(path);
-	}
-	return links;
 }
 
 /**
@@ -105,61 +104,28 @@ export function solidBasePrerenderPlugin(
 				const serverOut = resolve(root, ssr.config.build.outDir);
 				const serverEntry = join(serverOut, "server.js");
 
-				const mod = await import(pathToFileURL(serverEntry).href);
-				const handleRequest: HandleRequest | undefined =
-					mod.handleRequest ?? mod.default?.fetch?.bind(mod.default);
-				if (!handleRequest) {
-					throw new Error(
-						`[solidbase] prerender: ${serverEntry} does not export handleRequest`,
-					);
-				}
-
 				const origin = new URL(
 					options.origin ?? sbConfig.siteUrl ?? "http://localhost",
 				).origin;
-				const crawl = options.crawlLinks ?? true;
-
 				const index = await getRoutesIndex(root);
-				const queue = [
-					"/",
-					...index.map((e) => e.routePath),
-					...(options.routes ?? []),
+				const seeds = [
+					...new Set([
+						"/",
+						...index.map((e) => e.routePath),
+						...(options.routes ?? []),
+					]),
 				];
-				const seen = new Set<string>();
-				const written: string[] = [];
-				const failed: Array<{ path: string; status: number }> = [];
 
-				while (queue.length) {
-					const path = queue.shift()!;
-					if (seen.has(path)) continue;
-					seen.add(path);
-
-					const { status, html } = await renderPath(
-						handleRequest,
-						origin,
-						path,
-					);
-					if (status !== 200) {
-						failed.push({ path, status });
-						continue;
-					}
-					const file = toOutputFile(clientOut, path);
-					await mkdir(dirname(file), { recursive: true });
-					await writeFile(file, html);
-					written.push(path);
-
-					if (crawl)
-						for (const link of extractLinks(html, origin)) queue.push(link);
-				}
-
-				if (options.notFound ?? true) {
-					const { html } = await renderPath(
-						handleRequest,
-						origin,
-						NOT_FOUND_PROBE,
-					);
-					await writeFile(join(clientOut, "404.html"), html);
-				}
+				// Rendering happens in a child process: the production server runtime keeps the
+				// event loop alive once imported, which would hang `vite build` after the hook.
+				const { written, failed } = await runWorker({
+					serverEntry,
+					outDir: clientOut,
+					origin,
+					seeds,
+					crawlLinks: options.crawlLinks ?? true,
+					notFound: options.notFound ?? true,
+				});
 
 				const log = client.logger;
 				log.info(
