@@ -2,6 +2,28 @@ import { createContextProvider } from "@solid-primitives/context";
 import { useRouteMatches } from "@solidjs/router";
 import { createMemo } from "solid-js";
 
+interface PageModuleRef {
+	src?: string;
+	import?: () => Promise<any>;
+}
+
+/**
+ * Locate the route's page module. `@solidjs/router/fs` wraps file routes in `lazy()`, which
+ * exposes `preload()` and `moduleUrl` (the manifest `src`). The 1.x SolidStart manifest shape
+ * (`route.key.$component`) is kept as a fallback for custom route trees.
+ */
+function getPageModuleRef(route: unknown): PageModuleRef | undefined {
+	const r = route as {
+		component?: { preload?: () => Promise<any>; moduleUrl?: string };
+		key?: { $component?: PageModuleRef };
+	};
+	if (typeof r?.component?.preload === "function") {
+		const component = r.component;
+		return { src: component.moduleUrl, import: () => component.preload!() };
+	}
+	return r?.key?.$component;
+}
+
 function getWindowPageData(path?: string) {
 	if (typeof window === "undefined" || !path) return;
 
@@ -41,17 +63,12 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				// if there's no matches that's not an us problem
 				if (!lastMatch) return;
 
-				const { $component } = lastMatch.route.key as {
-					$component: { import?: () => Promise<any>; src?: string };
-				};
-				const windowPageData = getWindowPageData($component?.src);
+				const ref = getPageModuleRef(lastMatch.route);
+				const windowPageData = getWindowPageData(ref?.src);
 
 				if (windowPageData) return windowPageData;
 
-				const mod =
-					typeof $component?.import === "function"
-						? await $component.import()
-						: undefined;
+				const mod = ref?.import ? await ref.import() : undefined;
 
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;

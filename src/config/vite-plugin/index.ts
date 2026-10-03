@@ -26,7 +26,18 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:pre",
 			enforce: "pre",
 			config() {
-				return { resolve: { noExternal: ["@kobalte/solidbase"] } };
+				return {
+					resolve: {
+						noExternal: ["@kobalte/solidbase"],
+						// Solid 2 context identity: the app and SolidBase must share one copy of these.
+						dedupe: [
+							"solid-js",
+							"@solidjs/web",
+							"@solidjs/router",
+							"@solidjs/meta",
+						],
+					},
+				};
 			},
 			configResolved(resolvedConfig) {
 				root = resolvedConfig.root;

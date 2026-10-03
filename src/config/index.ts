@@ -1,10 +1,12 @@
 import type { Options as SolidPluginOptions } from "@solidjs/vite-plugin";
+import type { FileRoutesOptions } from "filesystem-routing/vite";
 import type { Options as AutoImportOptions } from "unplugin-auto-import/dist/types.js";
 import type { ComponentResolverOption } from "unplugin-icons/resolver";
 import type { Options as IconsOptions } from "unplugin-icons/types";
 import type { PluginOption } from "vite";
 
 import defaultTheme from "../default-theme/index.js";
+import { solidBaseFileRoutes } from "./file-routes.js";
 import { type MdxOptions, solidBaseMdx } from "./mdx.js";
 import type { IssueAutoLinkConfig } from "./remark-plugins/issue-autolink.js";
 import type {
@@ -61,6 +63,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	editPath?: string | ((path: string) => string);
 	lastUpdated?: Intl.DateTimeFormatOptions | false;
 	markdown?: MdxOptions;
+	/** File-system routing (`virtual:file-routes`); `false` to wire `filesystem-routing` yourself. */
+	fileRoutes?: FileRoutesOptions | false;
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
@@ -175,6 +179,9 @@ export function createSolidBase<ThemeConfig>(
 		return [
 			solidBaseMdx(sbConfig),
 			solidBaseVitePlugin(theme, sbConfig),
+			...(sbConfig.fileRoutes === false
+				? []
+				: solidBaseFileRoutes(sbConfig.fileRoutes)),
 			...plugins,
 		];
 	};
@@ -186,8 +193,9 @@ export function createSolidBase<ThemeConfig>(
 	const startConfig = (config: Partial<SolidPluginOptions> = {}) => {
 		config.ssr ??= true;
 		config.start ??= true;
+		// @solidjs/vite-plugin matches extensions with their leading dot.
 		config.extensions = [
-			...new Set((config.extensions ?? []).concat(["md", "mdx"])),
+			...new Set((config.extensions ?? []).concat([".md", ".mdx"])),
 		];
 		return config;
 	};

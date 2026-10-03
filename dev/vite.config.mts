@@ -1,5 +1,4 @@
-import { solidStart } from "@solidjs/start/config";
-import { nitro } from "nitro/vite";
+import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vite";
 import Inspect from "vite-plugin-inspect";
 
@@ -163,9 +162,8 @@ export default defineConfig({
 				},
 			},
 		}),
-		solidStart(solidBase.startConfig()),
-		nitro({
-			prerender: { crawlLinks: true },
-		}),
+		// @solidjs/vite-plugin start mode (SSR) replaces SolidStart + Nitro.
+		// TODO(solid2): static prerender (was nitro prerender.crawlLinks) — see routes-index.
+		solid(solidBase.startConfig()),
 	],
 });
