@@ -7,6 +7,7 @@ import type { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig, ThemeDefinition } from "../index.js";
 import solidBaseLlmsPlugin from "./llms.js";
+import { solidBasePrerenderPlugin } from "./prerender.js";
 import solidBaseRobotsPlugin from "./robots.js";
 import solidBaseSitemapPlugin from "./sitemap.js";
 import {
@@ -125,6 +126,14 @@ export default function solidBaseVitePlugin(
 	plugins.push(solidBaseLlmsPlugin(solidBaseConfig));
 	plugins.push(solidBaseSitemapPlugin(solidBaseConfig));
 	plugins.push(solidBaseRobotsPlugin(solidBaseConfig));
+
+	if (solidBaseConfig.prerender !== false)
+		plugins.push(
+			solidBasePrerenderPlugin(
+				solidBaseConfig,
+				solidBaseConfig.prerender === true ? {} : solidBaseConfig.prerender,
+			),
+		);
 
 	return plugins;
 }

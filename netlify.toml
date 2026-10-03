@@ -1,6 +1,4 @@
 [build]
 command = "VITE_ORIGIN=$DEPLOY_URL pnpm build:docs"
-publish = "docs/dist/"
-
-[functions]
-directory = "docs/.netlify/functions-internal/"
+# @solidjs/vite-plugin start mode + SolidBase prerender: dist/client is a complete static site.
+publish = "docs/dist/client/"

@@ -10,7 +10,7 @@ SolidBase can generate an `llms.txt` index plus markdown versions of your routes
 
 Turn it on with the `llms` option in your SolidBase config:
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
@@ -56,7 +56,7 @@ Once enabled, the build emits:
 
 When you use the default theme, enabling `llms: true` also adds a page-level copy button that copies the generated markdown for the current page.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 solidBase.plugin({
   llms: true,
 });

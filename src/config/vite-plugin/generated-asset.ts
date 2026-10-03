@@ -1,5 +1,5 @@
-import { access, mkdir, readFile, rm, stat } from "node:fs/promises";
-import { join, normalize, relative } from "node:path";
+import { access, mkdir, readdir, readFile, rm, stat } from "node:fs/promises";
+import { join, normalize, relative, sep } from "node:path";
 
 import type { PluginOption } from "vite";
 
@@ -19,6 +19,22 @@ type GeneratedAssetPluginOptions = {
 export async function emptyDir(dir: string) {
 	await rm(dir, { recursive: true, force: true });
 	await mkdir(dir, { recursive: true });
+}
+
+async function listFiles(dir: string): Promise<string[]> {
+	let entries: import("node:fs").Dirent[];
+	try {
+		entries = await readdir(dir, { withFileTypes: true });
+	} catch {
+		return [];
+	}
+	const files = await Promise.all(
+		entries.map((entry) => {
+			const path = join(dir, entry.name);
+			return entry.isDirectory() ? listFiles(path) : [path];
+		}),
+	);
+	return files.flat();
 }
 
 export function createGeneratedAssetPlugin(
@@ -64,24 +80,6 @@ export function createGeneratedAssetPlugin(
 	return {
 		name: options.name,
 		apply: options.apply,
-		config(viteConfig) {
-			const nitroConfig = (viteConfig as any).nitro ?? {};
-
-			return {
-				nitro: {
-					...nitroConfig,
-					publicAssets: [
-						...(nitroConfig.publicAssets ?? []),
-						{
-							dir: options.assetDir,
-							baseURL: "/",
-							fallthrough: true,
-							ignore: false,
-						},
-					],
-				},
-			} as any;
-		},
 		configResolved(resolvedConfig) {
 			root = resolvedConfig.root;
 			assetRoot = join(root, options.assetDir);
@@ -97,6 +95,17 @@ export function createGeneratedAssetPlugin(
 			await options.write(root, (source: string, importer: string) =>
 				this.resolve(source, importer),
 			);
+		},
+		// Ship the generated files with the client bundle (previously Nitro `publicAssets`).
+		async generateBundle() {
+			if (this.environment?.name !== "client") return;
+			for (const file of await listFiles(assetRoot)) {
+				this.emitFile({
+					type: "asset",
+					fileName: relative(assetRoot, file).split(sep).join("/"),
+					source: await readFile(file),
+				});
+			}
 		},
 	};
 }

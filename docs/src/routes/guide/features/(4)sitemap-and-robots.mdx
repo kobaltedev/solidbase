@@ -10,7 +10,7 @@ SolidBase can generate both `/sitemap.xml` and `/robots.txt` during the build so
 
 Set a canonical `siteUrl`, then turn both features on in your SolidBase config:
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
@@ -57,7 +57,7 @@ If your site grows large enough, SolidBase automatically switches from a single 
 
 When you use `lang` and `locales`, SolidBase groups equivalent localized pages together in the sitemap.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 siteUrl: "https://docs.example.com",
 lang: "en-US",
@@ -91,7 +91,7 @@ You can also disable sitemap inclusion entirely for a page with `sitemap: false`
 
 The default setup is enough for most sites. If you need more control, you can pass config objects instead of booleans.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 siteUrl: "https://docs.example.com",
 sitemap: {

@@ -6,39 +6,34 @@ title: Project Structure
 
 ## SolidBase Entry
 
-The entry point for a SolidBase project is the `app.config.ts` file located in the root of your project.
+The entry point for a SolidBase project is the `vite.config.ts` file located in the root of your project.
 
-```ts title=app.config.ts
-import { defineConfig } from "@solidjs/start/config";
+```ts title=vite.config.ts
+import { createSolidBase } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
-import { createSolidBase } from "@kobalte/solidbase";
-
-const solidBase = createSolidBase(theme);
+const solidBase = createSolidBase(defaultTheme);
 
 export default defineConfig({
-	...solidBase.startConfig({
-		ssr: true,
-	}),
-	server: {
-		prerender: {
-			crawlLinks: true,
-		},
-	},
 	plugins: [
 		solidBase.plugin({
 			title: "SolidBase",
-			description: "Fully featured, fully customisable static site generation for SolidStart",
+			description: "Fully featured, fully customisable static site generation for Solid",
 		}),
+		solid(solidBase.startConfig()),
 	],
 });
-
 ```
+
+After `vite build`, SolidBase prerenders every page into `dist/client`, which deploys as a static site (set `prerender: false` to deploy the server bundle instead).
 
 ## Routing
 
-Since SolidBase is built on top of SolidStart, it uses the same file based routing system. Using file-based routing is recommended for both management and performance reasons.
+SolidBase uses file-system routing (the convention SolidStart established, now provided router-neutrally by `filesystem-routing`). Using file-based routing is recommended for both management and performance reasons.
 
-The `src/routes` directory is where you define your application's routes. Each file in this directory, corresponds to a route in your application. For example, `src/routes/index.mdx` corresponds to the root route `/`, and `src/routes/about.mdx` corresponds to the `/about` route.
+The `src/routes` directory is where you define your application's routes. Each file in this directory corresponds to a route in your application. For example, `src/routes/index.mdx` corresponds to the root route `/`, and `src/routes/about.mdx` corresponds to the `/about` route.
 
 ```
 ├─ src
@@ -46,9 +41,9 @@ The `src/routes` directory is where you define your application's routes. Each f
 │  │  ├─ index.mdx
 │  │  └─ about.mdx
 │  ├─ app.tsx
-│  ├─ entry-client.tsx
-│  └─ entry-server.tsx
-└─ app.config.ts
+│  └─ Document.tsx
+└─ vite.config.ts
 ```
 
-Full documentation and reference can be found in the [SolidStart docs](https://docs.solidjs.com/solid-start/building-your-application/routing).
+Full documentation and reference can be found in the [Solid Router docs](https://docs.solidjs.com/solid-router) and the [`filesystem-routing` README](https://github.com/solidjs/filesystem-routing).
+

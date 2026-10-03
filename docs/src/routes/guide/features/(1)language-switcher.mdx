@@ -14,36 +14,43 @@ To enable it, configure the `languageSwitcher` option in your SolidBase config:
 
 ### Basic Setup
 
-```ts title="app.config.ts"
-import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "@kobalte/solidbase/config";
+```ts title="vite.config.ts"
+import { createSolidBase } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
-export default defineConfig(
-	withSolidBase(
-		/* your SolidStart config */
-		{
+const solidBase = createSolidBase(defaultTheme);
+
+export default defineConfig({
+	plugins: [
+		solidBase.plugin({
 		  markdown: {
 		    expressiveCode: {
 		      languageSwitcher: true,
 		    },
 		  },
-		},
-	),
-);
+		}),
+		solid(solidBase.startConfig()),
+	],
+});
 ```
 
 ### Advanced Configuration
 
 For custom options, pass an object:
 
-```ts title="app.config.ts"
-import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "@kobalte/solidbase/config";
+```ts title="vite.config.ts"
+import { createSolidBase } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
-export default defineConfig(
-	withSolidBase(
-		/* your SolidStart config */
-		{
+const solidBase = createSolidBase(defaultTheme);
+
+export default defineConfig({
+	plugins: [
+		solidBase.plugin({
 		  markdown: {
 		    expressiveCode: {
 		      languageSwitcher: {
@@ -55,9 +62,10 @@ export default defineConfig(
 		      },
 		    },
 		  },
-		},
-	),
-);
+		}),
+		solid(solidBase.startConfig()),
+	],
+});
 ```
 
 ### Supported Languages

@@ -13,7 +13,7 @@ For example, the dev app [extends the default theme](https://github.com/kobalted
 To extend the default theme, you must define a custom theme using `defineTheme`, setting its extends property to the `defaultTheme`, imported from `@kobalte/solidbase/default-theme`, and configuring the `componentsPath` property to point to the folder housing your custom theme's components.
 
 ```ts
-<!-- app.config.ts -->
+<!-- vite.config.ts -->
 import { defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
@@ -26,8 +26,9 @@ const customTheme = defineTheme({
 Once the theme is defined, you can set it as the active theme in your SolidBase config with `createSolidBase`:
 
 ```ts
-<!-- app.config.ts -->
-import { defineConfig } from "@solidjs/start/config";
+<!-- vite.config.ts -->
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 import { createSolidBase, defineTheme } from "@kobalte/solidbase/config";
 import defaultTheme from "@kobalte/solidbase/default-theme";
 
@@ -39,10 +40,8 @@ const customTheme = defineTheme({
 const solidBase = createSolidBase(customTheme);
 
 export default defineConfig({
-	...solidBase.startConfig({
-		ssr: true,
-	}),
 	plugins: [
+		solid(solidBase.startConfig()),
 		solidBase.plugin({
 			// your solidbase configuration
 		}),
@@ -97,12 +96,10 @@ The default theme uses a few fonts:
 To disable these fonts, set the `fonts` option to `false` in your SolidBase config:
 
 ```ts
-<!-- app.config.ts -->
+<!-- vite.config.ts -->
 export default defineConfig({
-	...solidBase.startConfig({
-		...
-	}),
 	plugins: [
+		solid(solidBase.startConfig()),
 		solidBase.plugin({
 			themeConfig: {
 				fonts: false,

@@ -16,6 +16,7 @@ import type {
 } from "./route-config.js";
 import { validateSolidBaseRoutesConfig as validateRoutes } from "./route-config.js";
 import solidBaseVitePlugin from "./vite-plugin/index.js";
+import type { PrerenderOptions } from "./vite-plugin/prerender.js";
 
 export type {
 	SolidBaseRouteOption,
@@ -65,6 +66,8 @@ export interface SolidBaseConfig<ThemeConfig> {
 	markdown?: MdxOptions;
 	/** File-system routing (`virtual:file-routes`); `false` to wire `filesystem-routing` yourself. */
 	fileRoutes?: FileRoutesOptions | false;
+	/** Static site generation after `vite build` (into the client output dir). `false` to deploy as SSR. */
+	prerender?: boolean | PrerenderOptions;
 	icons?: Omit<IconsOptions, "compiler"> | false;
 	// disabled by default
 	autoImport?:
@@ -140,7 +143,7 @@ export function createSolidBase<ThemeConfig>(
 		const sbConfig: SolidBaseResolvedConfig<ThemeConfig> = {
 			title: "SolidBase",
 			description:
-				"Fully featured, fully customisable static site generation for SolidStart",
+				"Fully featured, fully customisable static site generation for Solid",
 			llms: false,
 			sitemap: false,
 			robots: false,

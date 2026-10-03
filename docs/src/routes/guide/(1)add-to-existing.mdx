@@ -4,7 +4,7 @@ title: Adding to Existing Project
 
 # {frontmatter.title}
 
-SolidBase can be added to an existing SolidStart project in a few simple steps.
+SolidBase can be added to an existing Solid + Vite project in a few simple steps.
 
 
 ## 1. Install `@kobalte/solidbase`
@@ -15,68 +15,75 @@ To install SolidBase, run the following command in your project's root directory
 @kobalte/solidbase
 ```
 
-## 2. Update `app.config`
+## 2. Configure Vite
 
-Since SolidBase is built on top of SolidStart, you'll need to update your `app.config` to include SolidBase's configuration. To do this, wrap the existing configuration with `withSolidBase`:
+SolidBase runs on [`@solidjs/vite-plugin`](https://github.com/solidjs/solid-vite-plugin) in **start mode** (the serving layer that replaced SolidStart). Create a `createSolidBase` instance and add its plugin next to the Solid plugin, using `startConfig()` for SolidBase's defaults (SSR start mode, `.md`/`.mdx` compiled as routes):
 
-```ts title=app.config.ts
-import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "@kobalte/solidbase/config";
+```ts title=vite.config.ts
+import { createSolidBase } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
-export default defineConfig(withSolidBase(/* your SolidStart config */));
+const solidBase = createSolidBase(defaultTheme);
+
+export default defineConfig({
+	plugins: [
+		solidBase.plugin({
+			// SolidBase options here
+		}),
+		solid(solidBase.startConfig()),
+	],
+});
 ```
+
+Pages are discovered from `src/routes` by SolidBase's file-system routing (built on `filesystem-routing`, the convention SolidStart used), and your pages are prerendered into `dist/client` after `vite build`. Pass `fileRoutes: false` or `prerender: false` to take over either.
 
 ## 3. Wrap Your App in `SolidBaseRoot`
 
 Once SolidBase is installed and configured, you'll need to wrap your application in the `SolidBaseRoot` component to provide the necessary context for SolidBase to function correctly.
 
-In your `app.tsx`, import `SolidBaseRoot` from `@kobalte/solidbase/client` and wrap it around `Router`:
+In `src/app.tsx` (the root component `@solidjs/vite-plugin` generates entries for), create the router from the file routes and wrap the matched content in `SolidBaseRoot`:
 
-```tsx {7} title="app.tsx"
+```tsx {9} title="src/app.tsx"
 import { SolidBaseRoot } from "@kobalte/solidbase/client";
-import { Router } from "@solidjs/router";
-import { FileRoutes } from "@solidjs/start/router";
+import { createRouter } from "@solidjs/router";
+import { fileRoutes } from "@solidjs/router/fs";
+import { pageRoutes } from "virtual:file-routes";
+
+const Router = createRouter({ routes: fileRoutes(pageRoutes) });
 
 export default function App() {
-	return (
-		<Router root={SolidBaseRoot}>
-			<FileRoutes />
-		</Router>
-	);
+	return <Router>{(props) => <SolidBaseRoot>{props.children}</SolidBaseRoot>}</Router>;
 }
 ```
 
-If your router already has a `root` component, you can wrap it with `SolidBaseRoot`:
-
-```tsx {3}
-<Router
-  root={(props) => {
-    return <SolidBaseRoot>{props.children}</SolidBaseRoot>;
-  }}
->
-  <FileRoutes />
-</Router>
-```
+If you already wrap the matched content in a layout of your own, put `SolidBaseRoot` around it.
 
 ## 4. Add HTML Attributes for SSR
 
 To provide the `lang` and `data-theme` attributes to the `html` element during SSR,
-spread `getHtmlProps()` onto it in `entry-server`:
+spread `getHtmlProps()` onto it in your document shell (`src/Document.tsx`, picked up automatically by start mode):
 
-```tsx {8} title=entry-server.tsx
-// @refresh reload
-import { StartServer, createHandler } from "@solidjs/start/server";
+```tsx {7} title=src/Document.tsx
 import { getHtmlProps } from "@kobalte/solidbase/server";
+import { HydrationScript } from "@solidjs/web";
+import type { ParentProps } from "solid-js";
 
-export default createHandler(() => (
-	<StartServer
-		document={({ assets, children, scripts }) => (
-			<html {...getHtmlProps()}>
-				...
-			</html>
-		)}
-	/>
-));
+export default function Document(props: ParentProps) {
+	return (
+		<html {...getHtmlProps()}>
+			<head>
+				<meta charset="utf-8" />
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<HydrationScript />
+			</head>
+			<body>
+				<div id="app">{props.children}</div>
+			</body>
+		</html>
+	);
+}
 ```
 
 :::note
