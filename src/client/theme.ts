@@ -21,7 +21,20 @@ function getThemeCookie(): RawThemeType {
 	return getCookie("theme", document.cookie) as RawThemeType;
 }
 
-const [theme, _setTheme] = createSignal<ThemeType | "system">();
+// Solid 2 forbids writing reactive state from inside a computation (the old code wrote the
+// cookie value into the signal during `getRawTheme()`, which runs in an effect's compute phase).
+// Seed the signal from the cookie on the client instead; the server reads the cookie per request.
+function initialTheme(): ThemeType | "system" | undefined {
+	if (isServer) return undefined;
+	const userTheme = getThemeCookie();
+	return userTheme && !userTheme.startsWith("s")
+		? (userTheme as ThemeType)
+		: undefined;
+}
+
+const [theme, _setTheme] = createSignal<ThemeType | "system" | undefined>(
+	initialTheme(),
+);
 
 export function getRawTheme(): RawThemeType {
 	if (isServer) return getThemeCookie() as RawThemeType;
@@ -29,16 +42,9 @@ export function getRawTheme(): RawThemeType {
 	const prefersDark = usePrefersDark();
 	const prefersTheme = () => (prefersDark() ? "sdark" : "slight");
 
-	if (theme())
-		return theme()!.startsWith("s")
-			? prefersTheme()
-			: (theme()! as RawThemeType);
-
-	const userTheme = getThemeCookie();
-	if (userTheme && !userTheme.startsWith("s")) {
-		setTheme(userTheme as ThemeType);
-		return userTheme;
-	}
+	const current = theme();
+	if (current)
+		return current.startsWith("s") ? prefersTheme() : (current as RawThemeType);
 
 	return prefersTheme();
 }

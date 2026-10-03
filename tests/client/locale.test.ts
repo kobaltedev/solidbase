@@ -2,6 +2,7 @@
 
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
 const navigate = vi.fn<(to: string) => Promise<void>>(() => Promise.resolve());
@@ -34,7 +35,7 @@ vi.mock("solid-js", async () => {
 	};
 });
 
-vi.mock("solid-js/web", () => ({
+vi.mock("@solidjs/web", () => ({
 	getRequestEvent: vi.fn(),
 	isServer: false,
 }));
@@ -71,16 +72,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			expect(value?.currentLocale().code).toBe("fr");
 			expect(value?.routePath()).toBe("/guide/install");
@@ -154,16 +157,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			expect(value?.currentLocale().code).toBe("fr-FR");
 			expect(value?.routePath()).toBe("/about");
@@ -235,16 +240,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			const rootLocales = value?.locales ?? [];
 			expect(rootLocales.map((locale) => locale.config.label)).toEqual([
@@ -259,16 +266,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			const routerLocales = value?.locales ?? [];
 			expect(routerLocales.map((locale) => locale.config.label)).toEqual([

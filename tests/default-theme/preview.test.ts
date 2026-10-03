@@ -25,7 +25,7 @@ async function loadPreviewComponents() {
 	const outdir = await mkdtemp(join(tmpdir(), "solidbase-preview-test-"));
 	tempDirs.push(outdir);
 
-	const [babelCore, solidPreset, typescriptPreset] = await Promise.all([
+	const [babelCore, solidBabelPlugin, esbuild] = await Promise.all([
 		import(
 			pathToFileURL(
 				await resolvePnpmPackagePath(
@@ -37,19 +37,12 @@ async function loadPreviewComponents() {
 		import(
 			pathToFileURL(
 				await resolvePnpmPackagePath(
-					"babel-preset-solid@",
-					"node_modules/babel-preset-solid/index.js",
+					"@solidjs+babel-plugin@",
+					"node_modules/@solidjs/babel-plugin/index.js",
 				),
 			).href
 		),
-		import(
-			pathToFileURL(
-				await resolvePnpmPackagePath(
-					"@babel+preset-typescript@",
-					"node_modules/@babel/preset-typescript/lib/index.js",
-				),
-			).href
-		),
+		import("esbuild"),
 	]);
 
 	const entryPath = resolve(
@@ -57,22 +50,24 @@ async function loadPreviewComponents() {
 		"../../src/default-theme/components/Preview.tsx",
 	);
 	const source = await readFile(entryPath, "utf8");
-	const transformed = await babelCore.transformAsync(
+	// esbuild strips the TypeScript (JSX preserved); the Solid babel plugin then compiles the JSX.
+	const stripped = await esbuild.transform(
 		source.replace(
 			'import styles from "../mdx-components.module.css";',
 			"const styles = new Proxy({}, { get: (_, key) => String(key) });",
 		),
-		{
-			filename: entryPath,
-			babelrc: false,
-			configFile: false,
-			sourceMaps: false,
-			presets: [
-				[typescriptPreset.default, { isTSX: true, allExtensions: true }],
-				[solidPreset.default, { generate: "ssr", hydratable: false }],
-			],
-		},
+		{ loader: "tsx", jsx: "preserve", format: "esm", target: "esnext" },
 	);
+	const transformed = await babelCore.transformAsync(stripped.code, {
+		filename: entryPath,
+		babelrc: false,
+		configFile: false,
+		sourceMaps: false,
+		parserOpts: { plugins: ["jsx"] },
+		plugins: [
+			[solidBabelPlugin.default, { generate: "ssr", hydratable: false }],
+		],
+	});
 
 	if (!transformed?.code) {
 		throw new Error("Failed to transform Preview.tsx for test runtime");
@@ -94,7 +89,7 @@ describe("default theme preview components", () => {
 	});
 
 	it("renders a preview-only shell with a stage", async () => {
-		const { renderToString } = await import("solid-js/web");
+		const { renderToString } = await import("@solidjs/web");
 		const { Preview, PreviewStage } = await loadPreviewComponents();
 
 		const html = renderToString(() =>
@@ -114,7 +109,7 @@ describe("default theme preview components", () => {
 	});
 
 	it("renders a two-panel shell without altering panel content", async () => {
-		const { renderToString } = await import("solid-js/web");
+		const { renderToString } = await import("@solidjs/web");
 		const { Preview, PreviewPanel, PreviewStage } =
 			await loadPreviewComponents();
 

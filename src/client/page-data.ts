@@ -29,7 +29,7 @@ interface CurrentPageData {
 }
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] =
-	createContextProvider((props: { deferStream?: boolean }) => {
+	createContextProvider((_props: { deferStream?: boolean }) => {
 		const matches = useRouteMatches();
 
 		// Solid 2: async memos replace createResource; readers suspend via the nearest <Loading>.

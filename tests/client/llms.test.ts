@@ -144,12 +144,14 @@ describe("llms client helpers", () => {
 			return dispose;
 		});
 
-		await flushMicrotasks();
-
+		// Not ready until the client settles (onSettled); copying is a no-op before that.
 		expect(api?.canCopy()).toBe(true);
 		expect(api?.isReady()).toBe(false);
 		await expect(api?.copy()).resolves.toBe(false);
 		expect((globalThis as any).fetch).not.toHaveBeenCalled();
+
+		await flushMicrotasks();
+		expect(api?.isReady()).toBe(true);
 
 		dispose();
 	});
@@ -180,13 +182,7 @@ describe("llms client helpers", () => {
 			},
 		};
 
-		vi.doMock("solid-js", async () =>
-			vi.importActual<typeof import("solid-js/dist/solid.cjs")>(
-				"solid-js/dist/solid.cjs",
-			),
-		);
-
-		const { render } = await import("solid-js/web/dist/web.cjs");
+		const { render } = await import("@solidjs/web");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
 			"../../src/client/page-markdown.ts"
 		);
@@ -216,12 +212,7 @@ describe("llms client helpers", () => {
 
 	it("resets copy feedback when navigation changes mid-copy", async () => {
 		setSolidBaseConfig({ llms: true, themeConfig: {} });
-		vi.doMock("solid-js", async () =>
-			vi.importActual<typeof import("solid-js/dist/solid.cjs")>(
-				"solid-js/dist/solid.cjs",
-			),
-		);
-		const { createSignal } = await import("solid-js");
+		const { createSignal, flush } = await import("solid-js");
 		const [pathname, setPathname] = createSignal("/guide/getting-started");
 		useLocation.mockReturnValue({
 			get pathname() {
@@ -254,7 +245,7 @@ describe("llms client helpers", () => {
 			},
 		};
 
-		const { render } = await import("solid-js/web/dist/web.cjs");
+		const { render } = await import("@solidjs/web");
 		const { clearPageMarkdownCache, useCopyPageMarkdown } = await import(
 			"../../src/client/page-markdown.ts"
 		);
@@ -276,6 +267,7 @@ describe("llms client helpers", () => {
 		expect(api?.isReady()).toBe(true);
 
 		const copyPromise = api?.copy();
+		flush(); // Solid 2 batches writes until the microtask flush
 		expect(api?.isCopying()).toBe(true);
 
 		setPathname("/guide/customization/extending-themes");

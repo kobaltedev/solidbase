@@ -1,5 +1,6 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/router/fr");
 
@@ -70,12 +71,14 @@ describe("solidbase route client helpers", () => {
 		createRoot((dispose) => {
 			let current: ReturnType<typeof useSolidBaseRoute> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					current = useSolidBaseRoute();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						current = useSolidBaseRoute();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(current?.()).toEqual({
 				project: "router",
@@ -96,12 +99,14 @@ describe("solidbase route client helpers", () => {
 		createRoot((dispose) => {
 			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					helpers = useSolidBaseRoutes();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						helpers = useSolidBaseRoutes();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(helpers?.options("locale").map((option) => option.name)).toEqual([
 				"en",
@@ -127,12 +132,14 @@ describe("solidbase route client helpers", () => {
 		createRoot((dispose) => {
 			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					helpers = useSolidBaseRoutes();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						helpers = useSolidBaseRoutes();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(helpers?.current()).toEqual({
 				project: "solid",
@@ -151,12 +158,14 @@ describe("solidbase route client helpers", () => {
 		createRoot((dispose) => {
 			let helpers: ReturnType<typeof useSolidBaseRoutes> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					helpers = useSolidBaseRoutes();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						helpers = useSolidBaseRoutes();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(helpers?.current()).toEqual({
 				project: "router",
