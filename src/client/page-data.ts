@@ -1,6 +1,6 @@
 import { createContextProvider } from "@solid-primitives/context";
 import { useRouteMatches } from "@solidjs/router";
-import { createMemo } from "solid-js";
+import { createMemo, type MemoOptions } from "solid-js";
 
 interface PageModuleRef {
 	src?: string;
@@ -51,11 +51,13 @@ interface CurrentPageData {
 }
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] =
-	createContextProvider((_props: { deferStream?: boolean }) => {
+	createContextProvider((props: { deferStream?: boolean }) => {
 		const matches = useRouteMatches();
 
 		// Solid 2: async memos replace createResource; readers suspend via the nearest <Loading>.
-		// TODO(solid2): 1.x `deferStream` has no equivalent yet; prop kept for API compatibility.
+		// `deferStream` keeps 1.x semantics: hold the first flush until page data settles, so the
+		// page (and e.g. its <HttpStatusCode>) renders before the response head is committed.
+		// The server memo honors it at runtime; it is not on the public MemoOptions type yet.
 		const pageData = createMemo(
 			async (): Promise<CurrentPageData | undefined> => {
 				const m = matches();
@@ -73,6 +75,9 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				if (!mod) throw new Error("Failed to get page data: module not found");
 				return mod.$$SolidBase_page_data;
 			},
+			{ deferStream: props.deferStream ?? true } as MemoOptions<
+				CurrentPageData | undefined
+			>,
 		);
 
 		return () => pageData();
