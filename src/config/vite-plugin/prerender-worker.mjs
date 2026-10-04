@@ -48,7 +48,7 @@ async function main() {
 		throw new Error(`${serverEntry} does not export handleRequest`);
 
 	const render = async (path) => {
-		const res = await handleRequest(new Request(new URL(path, origin)), {
+		const res = await handleRequest(new Request(new URL(base + path, origin)), {
 			renderMode: "async",
 		});
 		return { status: res.status, html: await res.text() };
@@ -72,7 +72,8 @@ async function main() {
 		await writeFile(file, html);
 		written.push(path);
 		if (crawlLinks)
-			for (const link of extractLinks(html, origin)) queue.push(link);
+			for (const link of extractLinks(html, origin))
+				queue.push(toAppPath(link));
 	}
 	if (notFound) {
 		const { html } = await render(NOT_FOUND_PROBE);

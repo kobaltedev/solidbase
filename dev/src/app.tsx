@@ -5,7 +5,10 @@ import { fileRoutes } from "@solidjs/router/fs";
 
 import "./app.css";
 
-const Router = createRouter({ routes: fileRoutes(pageRoutes) });
+const Router = createRouter({
+	routes: fileRoutes(pageRoutes),
+	base: import.meta.env.BASE_URL,
+});
 
 export default function App() {
 	return (

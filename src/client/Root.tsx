@@ -6,6 +6,8 @@ import { Layout, mdxComponents } from "virtual:solidbase/components";
 // and the MDX files sharing another (id `@kobalte/solidbase/mdx`).
 import { MDXProvider } from "virtual:solidbase/mdx";
 import { Meta, Title } from "@solidjs/meta";
+import { useRouteMatches } from "@solidjs/router";
+import { httpStatus, isServer } from "@solidjs/web";
 import { createMemo, Loading, onSettled, type ParentProps } from "solid-js";
 import { useRouteSolidBaseConfig } from "./config.js";
 import { SolidBaseContext } from "./context.jsx";
@@ -21,6 +23,13 @@ export function SolidBaseRoot(
 		};
 	},
 ) {
+	// SolidStart answered unmatched paths with a 404; Router 2 start mode renders an empty
+	// shell with 200 unless a route sets the status. Apps with a [...404] route still win.
+	if (isServer) {
+		const matches = useRouteMatches();
+		if (matches().length === 0) httpStatus(404);
+	}
+
 	onSettled(() => {
 		const { $$SolidBase } = window as {
 			$$SolidBase?: { initTwoslashPopups?(): void };
