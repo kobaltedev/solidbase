@@ -15,6 +15,7 @@ import {
 } from "./remark-plugins/inline-frontmatter.js";
 import { remarkAddClass } from "./remark-plugins/kbd.js";
 import { remarkPreview } from "./remark-plugins/preview.js";
+import { remarkRepl } from "./remark-plugins/repl.js";
 
 type DocumentMarkdownOptions = {
 	config?: RemarkPipelineConfig;
@@ -34,6 +35,7 @@ type MdxNode = {
 const DOCUMENT_ONLY_SKIPPED_PLUGINS = new Set([
 	remarkCodeTabs,
 	remarkPreview,
+	remarkRepl,
 	remarkAddClass,
 ]);
 

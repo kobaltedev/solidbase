@@ -4,6 +4,7 @@ import type { DocSearchProps } from "@docsearch/js";
 import type { Component, JSX } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
+import { solidReplVitePlugin } from "./repl.js";
 import type { DefaultThemeSidebarItem } from "./sidebar.js";
 import type { DefaultThemeTextConfig } from "./text.js";
 
@@ -104,6 +105,7 @@ const defaultTheme: ThemeDefinition<DefaultThemeConfig> = defineTheme({
 		}
 
 		return [
+			solidReplVitePlugin(),
 			{
 				name: "solidbase-default-theme-fonts",
 				resolveId(id) {

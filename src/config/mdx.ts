@@ -47,6 +47,7 @@ import type { PackageManagerConfig } from "./remark-plugins/package-manager-tabs
 import { remarkPackageManagerTabs } from "./remark-plugins/package-manager-tabs.js";
 import { remarkPreview } from "./remark-plugins/preview.js";
 import { remarkRelativeImports } from "./remark-plugins/relative-imports.js";
+import { remarkRepl } from "./remark-plugins/repl.js";
 import { remarkSteps } from "./remark-plugins/steps.js";
 import { remarkTabGroup } from "./remark-plugins/tab-group.js";
 import type { TOCOptions } from "./remark-plugins/toc.js";
@@ -211,7 +212,12 @@ export function getRemarkPlugins(sbConfig: RemarkPipelineConfig) {
 	if (sbConfig.markdown?.toc !== false)
 		remarkPlugins.push([remarkTOC, sbConfig.markdown?.toc]);
 
-	remarkPlugins.push(remarkPreview, remarkDirectiveContainers, remarkAddClass);
+	remarkPlugins.push(
+		remarkRepl,
+		remarkPreview,
+		remarkDirectiveContainers,
+		remarkAddClass,
+	);
 
 	if (sbConfig.issueAutolink !== false)
 		remarkPlugins.push([remarkIssueAutolink, sbConfig.issueAutolink]);

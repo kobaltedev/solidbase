@@ -18,3 +18,8 @@ declare module "virtual:solidbase/default-theme/fonts" {
 declare module "virtual:solidbase/mdx" {
 	export const MDXProvider: typeof import("./mdx.ts").MDXProvider;
 }
+
+declare module "virtual:solidbase/default-theme/repl-client" {
+	const ReplClient: typeof import("./default-theme/components/ReplClient.tsx").default;
+	export default ReplClient;
+}

@@ -148,6 +148,11 @@
     "solid-js": "^1.9.1",
     "vite": "^8.0.0"
   },
+  "peerDependenciesMeta": {
+    "solid-repl": {
+      "optional": true
+    }
+  },
   "packageManager": "pnpm@11.20.0",
   "dependencies": {
     "@alloc/quick-lru": "^5.2.0",

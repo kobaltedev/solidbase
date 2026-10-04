@@ -18,6 +18,7 @@ import {
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
 import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.jsx";
+import { Repl } from "./components/Repl.jsx";
 import { useDefaultThemeComponents } from "./context.jsx";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 import styles from "./mdx-components.module.css";
@@ -231,7 +232,7 @@ export function DirectiveContainer(
 	);
 }
 
-export { Preview, PreviewPanel, PreviewStage };
+export { Preview, PreviewPanel, PreviewStage, Repl };
 
 export function Steps(props: ParentProps) {
 	return <div class={styles.steps}>{props.children}</div>;
