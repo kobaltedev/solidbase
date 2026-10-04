@@ -29,6 +29,32 @@ const BASE_ROUTER = Symbol("solidbase.baseRouter");
  * const Router = createRouter({ routes: fileRoutes(pageRoutes) });
  * ```
  */
+/**
+ * The route convention SolidBase uses: the stock `filesystem-routing` page convention, with
+ * `$$SolidBase_page_data` added to the picked exports of markdown routes. Pass it as `toRoute`
+ * when wiring `fileRoutes()` yourself (`fileRoutes: false` in the SolidBase config).
+ */
+export const solidBaseToRoute: NonNullable<FileRoutesOptions["toRoute"]> = (
+	src,
+	router,
+) => {
+	const holder = router as unknown as Record<symbol, PageFileSystemRouter>;
+	const base = (holder[BASE_ROUTER] ??= new PageFileSystemRouter({
+		...(router.config as ConstructorParameters<typeof PageFileSystemRouter>[0]),
+		toRoute: undefined,
+	}));
+	const route: RouteManifestEntry | undefined = base.toRoute(src);
+	const component = route?.$component;
+	if (
+		component &&
+		MARKDOWN_RE.test(src) &&
+		!component.pick.includes(PAGE_DATA_EXPORT)
+	) {
+		component.pick = [...component.pick, PAGE_DATA_EXPORT];
+	}
+	return route;
+};
+
 export function solidBaseFileRoutes(
 	options: FileRoutesOptions = {},
 ): PluginOption[] {
@@ -42,25 +68,6 @@ export function solidBaseFileRoutes(
 	return fileRoutes({
 		...options,
 		extensions,
-		toRoute(src, router) {
-			// Delegate to the stock convention (a hook replaces it wholesale), then widen the pick.
-			const holder = router as unknown as Record<symbol, PageFileSystemRouter>;
-			const base = (holder[BASE_ROUTER] ??= new PageFileSystemRouter({
-				...(router.config as ConstructorParameters<
-					typeof PageFileSystemRouter
-				>[0]),
-				toRoute: undefined,
-			}));
-			const route: RouteManifestEntry | undefined = base.toRoute(src);
-			const component = route?.$component;
-			if (
-				component &&
-				MARKDOWN_RE.test(src) &&
-				!component.pick.includes(PAGE_DATA_EXPORT)
-			) {
-				component.pick = [...component.pick, PAGE_DATA_EXPORT];
-			}
-			return route;
-		},
+		toRoute: solidBaseToRoute,
 	});
 }

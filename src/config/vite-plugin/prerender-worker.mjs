@@ -37,6 +37,10 @@ function extractLinks(html, origin) {
 async function main() {
 	const input = JSON.parse(await readStdin());
 	const { serverEntry, outDir, origin, seeds, crawlLinks, notFound } = input;
+	const base = (input.base ?? "/").replace(/\/$/, "");
+	const toAppPath = (path) =>
+		(base && path.startsWith(base + "/") ? path.slice(base.length) : path) ||
+		"/";
 	const mod = await import(pathToFileURL(serverEntry).href);
 	const handleRequest =
 		mod.handleRequest ?? mod.default?.fetch?.bind(mod.default);

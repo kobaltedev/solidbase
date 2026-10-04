@@ -22,6 +22,8 @@ interface WorkerInput {
 	serverEntry: string;
 	outDir: string;
 	origin: string;
+	/** Vite `base`; pages are requested at `base + path` and written relative to `outDir`. */
+	base: string;
 	seeds: string[];
 	crawlLinks: boolean;
 	notFound: boolean;
@@ -76,12 +78,14 @@ export function solidBasePrerenderPlugin(
 	options: PrerenderOptions = {},
 ): Plugin {
 	let root = process.cwd();
+	let base = "/";
 
 	return {
 		name: "solidbase:prerender",
 		apply: "build",
 		configResolved(config) {
 			root = config.root;
+			base = config.base;
 		},
 		buildApp: {
 			order: "post",
@@ -122,6 +126,7 @@ export function solidBasePrerenderPlugin(
 					serverEntry,
 					outDir: clientOut,
 					origin,
+					base,
 					seeds,
 					crawlLinks: options.crawlLinks ?? true,
 					notFound: options.notFound ?? true,
