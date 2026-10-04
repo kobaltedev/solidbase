@@ -15,14 +15,15 @@ function toOutputFile(outDir, path) {
 	return join(outDir, clean, "index.html");
 }
 
-function extractLinks(html, origin) {
+function extractLinks(html, pageUrl) {
+	const origin = pageUrl.origin;
 	const links = new Set();
 	for (const match of html.matchAll(HREF_RE)) {
 		const raw = match[1] ?? match[2] ?? "";
 		if (!raw || raw.startsWith("#") || raw.startsWith("mailto:")) continue;
 		let url;
 		try {
-			url = new URL(raw, origin);
+			url = new URL(raw, pageUrl);
 		} catch {
 			continue;
 		}
@@ -38,9 +39,11 @@ async function main() {
 	const input = JSON.parse(await readStdin());
 	const { serverEntry, outDir, origin, seeds, crawlLinks, notFound } = input;
 	const base = (input.base ?? "/").replace(/\/$/, "");
-	const toAppPath = (path) =>
-		(base && path.startsWith(base + "/") ? path.slice(base.length) : path) ||
-		"/";
+	const toAppPath = (path) => {
+		if (!base) return path || "/";
+		if (path === base || path === `${base}/`) return "/";
+		return path.startsWith(`${base}/`) ? path.slice(base.length) : path;
+	};
 	const mod = await import(pathToFileURL(serverEntry).href);
 	const handleRequest =
 		mod.handleRequest ?? mod.default?.fetch?.bind(mod.default);
@@ -72,7 +75,7 @@ async function main() {
 		await writeFile(file, html);
 		written.push(path);
 		if (crawlLinks)
-			for (const link of extractLinks(html, origin))
+			for (const link of extractLinks(html, new URL(base + path, origin)))
 				queue.push(toAppPath(link));
 	}
 	if (notFound) {
