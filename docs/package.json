@@ -9,9 +9,9 @@
   "dependencies": {
     "@kobalte/solidbase": "workspace:*",
     "@solid-mediakit/og": "0.4.1",
-    "@solidjs/router": "2.0.0-next.35",
-    "@solidjs/web": "2.0.0-rc.13",
-    "solid-js": "2.0.0-rc.13",
+    "@solidjs/router": "2.0.0-next.37",
+    "@solidjs/web": "2.0.0-rc.14",
+    "solid-js": "2.0.0-rc.14",
     "vite": "8.0.0"
   },
   "engines": {

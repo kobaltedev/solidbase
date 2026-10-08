@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vite";
 import Inspect from "vite-plugin-inspect";
@@ -32,6 +33,11 @@ function createDevSidebar(route: string, hiddenFolders: string[] = []) {
 }
 
 export default defineConfig({
+	resolve: {
+		alias: {
+			"@dev": fileURLToPath(new URL("./src", import.meta.url)),
+		},
+	},
 	plugins: [
 		Inspect(),
 		solidBase.plugin({
@@ -163,7 +169,6 @@ export default defineConfig({
 			},
 		}),
 		// @solidjs/vite-plugin start mode (SSR) replaces SolidStart + Nitro.
-		// TODO(solid2): static prerender (was nitro prerender.crawlLinks) — see routes-index.
 		solid(solidBase.startConfig()),
 	],
 });

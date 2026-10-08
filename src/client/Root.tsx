@@ -17,10 +17,6 @@ import { ThemeCookieScript } from "./theme.js";
 export function SolidBaseRoot(
 	props: ParentProps & {
 		currentPageData?: { deferStream?: boolean };
-		meta?: {
-			/** @deprecated @solidjs/meta 1.0 is provider-less; this option is ignored. */
-			provider?: boolean;
-		};
 	},
 ) {
 	// SolidStart answered unmatched paths with a 404; Router 2 start mode renders an empty

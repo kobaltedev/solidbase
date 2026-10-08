@@ -1,38 +1,39 @@
 // Runs in a child process so the production server bundle never loads into Vite's process
 // (its runtime holds handles that keep the event loop alive and hang `vite build`).
-import { mkdir, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { extractLinks, normalizeRoute, runPrerender } from "prerender-crawler";
 
 const STATIC_FILE_RE = /\.[a-z0-9]{1,8}$/i;
-const HREF_RE = /\shref=(?:"([^"]*)"|'([^']*)')/g;
 const NOT_FOUND_PROBE = "/__solidbase_404__";
+const DISCOVERY_HEADER = "x-solidbase-prerender";
 
-function toOutputFile(outDir, path) {
-	const clean = path.split("?")[0].split("#")[0];
-	if (STATIC_FILE_RE.test(clean) && !clean.endsWith("/"))
-		return join(outDir, clean);
-	return join(outDir, clean, "index.html");
-}
-
-function extractLinks(html, pageUrl) {
-	const origin = pageUrl.origin;
-	const links = new Set();
-	for (const match of html.matchAll(HREF_RE)) {
-		const raw = match[1] ?? match[2] ?? "";
-		if (!raw || raw.startsWith("#") || raw.startsWith("mailto:")) continue;
-		let url;
-		try {
-			url = new URL(raw, pageUrl);
-		} catch {
-			continue;
-		}
-		if (url.origin !== origin) continue;
-		if (STATIC_FILE_RE.test(url.pathname) && !url.pathname.endsWith(".html"))
-			continue;
-		links.add(url.pathname);
+// v0.2 normalizes away trailing slashes. Keep the original URL spelling only
+// for requests and relative-link resolution; link discovery stays with the engine.
+function rememberLinkPaths(html, pageUrl, paths, toAppPath) {
+	const baseMatch = /<base\s[^>]*?href\s*=\s*(?:"([^"]*)"|'([^']*)')/is.exec(
+		html,
+	);
+	let linkBase = pageUrl;
+	try {
+		if (baseMatch)
+			linkBase = new URL(baseMatch[1] ?? baseMatch[2] ?? "", pageUrl);
+	} catch {
+		// Ignore invalid base URLs, as the engine does.
 	}
-	return links;
+	for (const match of html.matchAll(
+		/<a\s[^>]*?href\s*=\s*(?:"([^"]*)"|'([^']*)')/gis,
+	)) {
+		try {
+			const url = new URL(match[1] ?? match[2] ?? "", linkBase);
+			if (url.origin !== pageUrl.origin) continue;
+			const path = normalizeRoute(
+				new URL(toAppPath(url.pathname), pageUrl.origin),
+			);
+			if (!paths.has(path)) paths.set(path, toAppPath(url.pathname));
+		} catch {
+			// Invalid hrefs are not crawlable.
+		}
+	}
 }
 
 async function main() {
@@ -57,31 +58,67 @@ async function main() {
 		return { status: res.status, html: await res.text() };
 	};
 
-	const queue = [...seeds];
-	const seen = new Set();
-	const written = [];
 	const failed = [];
-	while (queue.length) {
-		const path = queue.shift();
-		if (seen.has(path)) continue;
-		seen.add(path);
-		const { status, html } = await render(path);
-		if (status !== 200) {
-			failed.push({ path, status });
-			continue;
-		}
-		const file = toOutputFile(outDir, path);
-		await mkdir(dirname(file), { recursive: true });
-		await writeFile(file, html);
-		written.push(path);
-		if (crawlLinks)
-			for (const link of extractLinks(html, new URL(base + path, origin)))
-				queue.push(toAppPath(link));
+	// The first spelling wins, matching the engine's seed deduplication.
+	const requestPaths = new Map();
+	for (const seed of seeds) {
+		const url = new URL(seed, origin);
+		const path = normalizeRoute(url);
+		if (!requestPaths.has(path)) requestPaths.set(path, url.pathname);
 	}
-	if (notFound) {
-		const { html } = await render(NOT_FOUND_PROBE);
-		await writeFile(join(outDir, "404.html"), html);
-	}
+	const result = await runPrerender({
+		origin,
+		outDir,
+		pages: seeds,
+		concurrency: 1,
+		retries: 0,
+		failOnError: false,
+		// There is no base-path mapping hook in the engine. Use its extractor at
+		// the public URL, then pass app-relative paths to its discovery queue.
+		crawlLinks: false,
+		hintHeader: DISCOVERY_HEADER,
+		filter: (path) => !STATIC_FILE_RE.test(path) || path.endsWith(".html"),
+		transport: {
+			async fetch(request) {
+				const path = new URL(request.url).pathname;
+				const requestPath = requestPaths.get(path) ?? path;
+				const { status, html } = await render(requestPath);
+				if (status !== 200) {
+					failed.push({ path, status });
+					// Keep the existing policy: report every non-200, without following
+					// redirects or writing their bodies as successful pages.
+					return new Response(null, { status: 400 });
+				}
+				const pageUrl = new URL(base + requestPath, origin);
+				if (crawlLinks)
+					rememberLinkPaths(html, pageUrl, requestPaths, toAppPath);
+				const links = crawlLinks
+					? extractLinks(html, pageUrl).map(toAppPath)
+					: [];
+				return new Response(html, {
+					headers: { [DISCOVERY_HEADER]: links.join(",") },
+				});
+			},
+		},
+		integrations: [
+			{
+				name: "solidbase",
+				async teardown(context) {
+					// HTTP failures are warnings; thrown handler errors must still fail
+					// the worker (and therefore the Vite build).
+					for (const skipped of context.skipped) {
+						if (!failed.some((entry) => entry.path === skipped.path))
+							throw skipped.error;
+					}
+					if (notFound) {
+						const { html } = await render(NOT_FOUND_PROBE);
+						context.emitFile({ filename: "404.html", contents: html });
+					}
+				},
+			},
+		],
+	});
+	const written = result.pages.map((page) => page.path);
 	process.stdout.write(JSON.stringify({ written, failed }));
 	// The server runtime keeps the loop alive; we are done.
 	process.exit(0);
