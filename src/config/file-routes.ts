@@ -18,7 +18,8 @@ const BASE_ROUTER = Symbol("solidbase.baseRouter");
 /**
  * File-system routes for a SolidBase site, on top of `filesystem-routing` (the convention
  * SolidStart used, now router-neutral). Markdown files are pages out of the box; SolidBase only
- * adds `$$SolidBase_page_data` to the picked exports so page data survives route code-splitting.
+ * adds `$$SolidBase_page_data` to the picked exports. `filesystem-routing` only tree-shakes picks
+ * for js/ts routes today, so markdown modules load whole; the pick keeps page data if that changes.
  *
  * Apps consume the manifest from `virtual:file-routes` and hand it to the router:
  *

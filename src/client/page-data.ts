@@ -75,10 +75,9 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				// stalls every later navigation back to the route, so yield before loading. `await`
 				// uses the intrinsic Promise; `await Promise.resolve()` would hit the stub instead.
 				await undefined;
+				// no page module (e.g. an eager or hand-written route): no page data, not an error
 				const mod = ref?.import ? await ref.import() : undefined;
-
-				if (!mod) throw new Error("Failed to get page data: module not found");
-				return mod.$$SolidBase_page_data;
+				return mod?.$$SolidBase_page_data;
 			},
 			{ deferStream: props.deferStream ?? true } as MemoOptions<
 				CurrentPageData | undefined

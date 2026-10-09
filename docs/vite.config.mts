@@ -57,10 +57,6 @@ export default defineConfig({
 								text: "Guide",
 								link: "/guide",
 							},
-							{
-								text: "Référence",
-								link: "/reference",
-							},
 						],
 						sidebar: {
 							"/guide": [
@@ -83,13 +79,6 @@ export default defineConfig({
 											link: "/markdown",
 										},
 									],
-								},
-							],
-							"/reference": [
-								{
-									title: "Référence",
-									collapsed: false,
-									items: [],
 								},
 							],
 						},
