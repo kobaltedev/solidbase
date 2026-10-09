@@ -72,7 +72,8 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 
 				// Hydration re-runs this compute with a stubbed global Promise until its first await.
 				// Preloading the lazy route under that stub caches a promise that never settles and
-				// stalls every later navigation back to the route, so yield before loading.
+				// stalls every later navigation back to the route, so yield before loading. `await`
+				// uses the intrinsic Promise; `await Promise.resolve()` would hit the stub instead.
 				await undefined;
 				const mod = ref?.import ? await ref.import() : undefined;
 

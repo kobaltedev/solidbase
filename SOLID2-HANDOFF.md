@@ -71,23 +71,26 @@ Baseline symptom, narrowed: history entries were always correct (no extra pushSt
 Root cause chain:
 
 1. During hydration, Solid 2 re-runs async memo computes inside subFetch (@solidjs/web), which replaces the global Promise with a MockPromise that never settles until the compute returns synchronously.
-2. The page-data memo's window cache lookup always missed: modules registered page data under their absolute file path, while the Solid 2 router's lazy moduleUrl is Vite-root-relative (src/routes/x.mdx). In 1.x the vinxi manifest src was absolute, so the fast path worked; the migration broke it.
+2. The page-data memo's window cache lookup always missed: modules registered page data under their absolute file path, while the Solid 2 router's lazy moduleUrl is Vite-root-relative (src/routes/x.mdx). In 1.x that lookup was dev-only (guarded by import.meta.env.DEV, see cfe8016:src/client/page-data.ts:40); production always imported the page module inside createResource, which Solid 1 never re-ran under a Promise stub. The migration dropped the DEV guard, so the lookup became the production path with mismatched keys, and the import fallback became hazardous.
 3. The memo therefore called the route component's lazy preload() synchronously inside the stubbed compute. In production, preload goes through Vite's __vitePreload, which builds its chain from the global Promise, so it returned a MockPromise.
-4. Solid's lazy() caches that promise forever. The next visit to the hydrated route awaited it, the navigation transition never settled, and the previous page stayed rendered. Dev mode skips __vitePreload, so it never saw the mock.
+4. Solid's lazy() caches that promise forever. The route component itself still renders on a return visit (lazy() took it from _$HY.modules during hydration, and the router's own preload() calls are fire-and-forget), but the page-data memo awaited the cached promise, so the navigation transition never settled and the previous page stayed rendered. Dev mode skips __vitePreload, so it never saw the mock.
 
 Fix (src/client/page-data.ts, src/config/vite-plugin/virtual.ts, src/config/vite-plugin/index.ts):
 
-- Register page data under the Vite-root-relative posix path, matching moduleUrl. This restores the fast path and stops absolute build paths leaking into client bundles.
+- Register page data under the Vite-root-relative posix path, matching moduleUrl, so the window lookup actually hits. This also stops absolute build paths leaking into client bundles.
 - Yield once (await undefined) before preloading in the page-data memo, so preload never runs under the hydration stub. This also covers non-markdown landing routes (verified with a temporary .tsx route), which have no window page data.
 - An extension check on moduleUrl was tried and rejected: on the server, moduleUrl is the client asset URL (/assets/x.js), so it broke SSR page data and titles.
 
-Tests: two cases added to tests/client/page-data.test.ts (window cache hit by moduleUrl; preload deferred past the synchronous compute, which fails without the fix) and the registration key asserted in tests/config/virtual.test.ts. No new test files.
+Tests: two cases added to tests/client/page-data.test.ts (window cache hit by moduleUrl; a hydration run under a stubbed global Promise followed by a return visit, which fails without the await) and the registration key asserted in tests/config/virtual.test.ts. No new test files.
+
+An independent review re-verified the chain from source and in Chromium with patched builds: either change alone fixes markdown routes (key fix only, await only), neither reproduces the bug, and only the await covers routes without window page data. SSR HTML for /about (200) and /nope (404) is byte-identical with and without the await.
 
 Verified after the fix: dev / -> /about -> Back/Forward; landing /about -> /dave -> Back -> / -> Back -> Forward; locale switches at /, /about, /router -> /router/fr -> /router/fr/about with Back/Forward; docs / -> /guide and /guide -> /fr/guide with Back/Forward (titles correct); dev mode; SSR titles and 200/404 statuses; 130 tests; library build with forced tsc; Biome; dev 15 pages and docs 41 pages prerendered.
 
 Follow-ups needing the user's direction:
 
-- Report upstream to Solid: lazy() caches a promise created while subFetch stubs the global Promise, so any preload() called synchronously in an async memo during hydration permanently breaks that lazy component.
+- Report upstream to solid-js: lazy().load() permanently caches the stub's never-settling promise when preload() is called in the synchronous part of a hydrating compute (production builds hit it via Vite's __vitePreload). Solid's own render path is unaffected; any caller that later awaits preload() stalls. Suggested fix: don't cache a load started under the stub. Not yet checked for an existing issue.
+- Pre-existing, not from this fix: page-data.ts throws when the matched route has no page module (could return undefined); the comment in file-routes.ts about picking $$SolidBase_page_data overstates it, since pick tree-shaking does not run for .md/.mdx.
 - Update #174 with this root cause; the verification comment there predates it.
 - Opus's selector guard and lang effect remain unapplied. Neither symptom reproduced in Chromium with the fix (no extra history writes, lang correct after Back/Forward). Revisit only if a browser reproduces them.
 

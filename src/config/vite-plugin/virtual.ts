@@ -117,7 +117,7 @@ export async function transformMdxModule(
 
 		if (typeof window !== "undefined") {
 			window.$$SolidBase_page_data ??= {};
-			window.$$SolidBase_page_data["${pageDataKey}"] = data;
+			window.$$SolidBase_page_data[${JSON.stringify(pageDataKey)}] = data;
 		}
 
 		export const $$SolidBase_page_data = data;
