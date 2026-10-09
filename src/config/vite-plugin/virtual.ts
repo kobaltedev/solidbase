@@ -1,5 +1,5 @@
 import { readdir } from "node:fs/promises";
-import { parse } from "node:path";
+import { parse, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import MagicString from "magic-string";
@@ -83,10 +83,13 @@ export async function transformMdxModule(
 	code: string,
 	id: string,
 	solidBaseConfig: Partial<SolidBaseConfig<any>>,
+	root: string,
 ) {
 	const rootPath = process.env.PWD!;
 
 	const modulePath = getMarkdownModulePath(id);
+	// Keyed like the route's `moduleUrl` (Vite-root-relative, posix) so the client finds it.
+	const pageDataKey = relative(root, modulePath).split(sep).join("/");
 
 	let modulePathLink = "";
 	if (solidBaseConfig.editPath && modulePath.startsWith(rootPath)) {
@@ -114,7 +117,7 @@ export async function transformMdxModule(
 
 		if (typeof window !== "undefined") {
 			window.$$SolidBase_page_data ??= {};
-			window.$$SolidBase_page_data["${modulePath}"] = data;
+			window.$$SolidBase_page_data["${pageDataKey}"] = data;
 		}
 
 		export const $$SolidBase_page_data = data;
