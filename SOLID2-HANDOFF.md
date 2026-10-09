@@ -1,6 +1,6 @@
 # Solid 2 Migration Handoff
 
-Updated: 2026-10-09. Work stopped at the user's request. This is a continuation guide, not a claim that the migration is ready to merge.
+Updated: 2026-10-09 (second session). The Back/Forward stale-content bug is root-caused and fixed; see "History Problem: Root Cause And Fix" below, which supersedes the earlier investigation sections. This is a continuation guide, not a claim that the migration is ready to merge.
 
 ## Immediate State
 
@@ -12,7 +12,7 @@ Updated: 2026-10-09. Work stopped at the user's request. This is a continuation 
 - The tracked worktree was clean before adding this document. No candidate history fix has been committed.
 - solid-js and @solidjs/web are pinned to 2.0.0-rc.14; @solidjs/router is pinned to 2.0.0-next.37.
 - The official web release fixes the previous hydration mismatch. No vendored runtime patch is present.
-- The remaining investigation concerns Back/Forward navigation and the locale selector. Opus found and fixed a concrete duplicate-history-write bug in jsdom. The exact stale-content browser symptom still needs verification.
+- The Back/Forward stale-content bug is fixed on solid2 (page-data commit after fee6165), verified in real Chromium against production builds of dev/ and docs/. Opus's jsdom duplicate-history-write finding did not reproduce in Chromium and was not the cause; its selector guard and lang effect were not applied.
 
 ## User Constraints
 
@@ -62,7 +62,36 @@ That comment predates Opus's finding. Its unresolved-cause wording remains appro
 
 These checks do NOT establish that browser history is correct. Earlier checks that compared only URL and lang were insufficient. Compare rendered content, title, history entries, and reactive route state too.
 
-## Remaining History Problem
+## History Problem: Root Cause And Fix
+
+Verified in headless Chromium (Playwright, cloud container) against minified production builds served statically, recording h1, title, lang, history depth and every pushState/replaceState.
+
+Baseline symptom, narrowed: history entries were always correct (no extra pushState), but returning to the route the document was hydrated on never re-rendered, whether by Back or by a link. Other routes navigated fine. Dev mode (vite dev) was unaffected.
+
+Root cause chain:
+
+1. During hydration, Solid 2 re-runs async memo computes inside subFetch (@solidjs/web), which replaces the global Promise with a MockPromise that never settles until the compute returns synchronously.
+2. The page-data memo's window cache lookup always missed: modules registered page data under their absolute file path, while the Solid 2 router's lazy moduleUrl is Vite-root-relative (src/routes/x.mdx). In 1.x the vinxi manifest src was absolute, so the fast path worked; the migration broke it.
+3. The memo therefore called the route component's lazy preload() synchronously inside the stubbed compute. In production, preload goes through Vite's __vitePreload, which builds its chain from the global Promise, so it returned a MockPromise.
+4. Solid's lazy() caches that promise forever. The next visit to the hydrated route awaited it, the navigation transition never settled, and the previous page stayed rendered. Dev mode skips __vitePreload, so it never saw the mock.
+
+Fix (src/client/page-data.ts, src/config/vite-plugin/virtual.ts, src/config/vite-plugin/index.ts):
+
+- Register page data under the Vite-root-relative posix path, matching moduleUrl. This restores the fast path and stops absolute build paths leaking into client bundles.
+- Yield once (await undefined) before preloading in the page-data memo, so preload never runs under the hydration stub. This also covers non-markdown landing routes (verified with a temporary .tsx route), which have no window page data.
+- An extension check on moduleUrl was tried and rejected: on the server, moduleUrl is the client asset URL (/assets/x.js), so it broke SSR page data and titles.
+
+Tests: two cases added to tests/client/page-data.test.ts (window cache hit by moduleUrl; preload deferred past the synchronous compute, which fails without the fix) and the registration key asserted in tests/config/virtual.test.ts. No new test files.
+
+Verified after the fix: dev / -> /about -> Back/Forward; landing /about -> /dave -> Back -> / -> Back -> Forward; locale switches at /, /about, /router -> /router/fr -> /router/fr/about with Back/Forward; docs / -> /guide and /guide -> /fr/guide with Back/Forward (titles correct); dev mode; SSR titles and 200/404 statuses; 130 tests; library build with forced tsc; Biome; dev 15 pages and docs 41 pages prerendered.
+
+Follow-ups needing the user's direction:
+
+- Report upstream to Solid: lazy() caches a promise created while subFetch stubs the global Promise, so any preload() called synchronously in an async memo during hydration permanently breaks that lazy component.
+- Update #174 with this root cause; the verification comment there predates it.
+- Opus's selector guard and lang effect remain unapplied. Neither symptom reproduced in Chromium with the fix (no extra history writes, lang correct after Back/Forward). Revisit only if a browser reproduces them.
+
+## Remaining History Problem (superseded)
 
 Reported browser symptom:
 
@@ -75,7 +104,7 @@ A locale flow also showed /about -> /fr/about -> Back changing the URL without r
 
 Astra's independent investigation reported stale rendering too. A later Opus investigation found a specific, independently testable history corruption in SolidBase, described below. Opus could not run a real browser in its native sandbox, so it did not prove that the duplicate write is the cause of the exact production-browser symptom.
 
-## Opus Investigation
+## Opus Investigation (superseded: jsdom-only, not the browser cause)
 
 Agent: Claude Opus, driver claude, native harness.
 
@@ -178,7 +207,7 @@ FIX=guardlang START=/about TARGET=locale ../node_modules/.bin/vitest run --confi
 
 The fixture writes diagnostics to /tmp/claude-501/bb/real/out.txt by default; use OUT to keep runs separate. The fixture logs rather than providing a complete assertive regression suite. Review the actual trace, including history depth and extra pushState calls.
 
-## Exact Stop Point
+## Exact Stop Point (first session; superseded)
 
 - No tracked implementation changes after cff3c8d; this document is the only new tracked deliverable.
 - The main agent reinstalled playwright in /tmp/sb-pw because its package files were missing. That did not touch repository dependencies.
@@ -189,7 +218,7 @@ The fixture writes diagnostics to /tmp/claude-501/bb/real/out.txt by default; us
 - A static server on port 4198 was started by the main agent for browser verification and is being stopped during handoff cleanup. Port 4174 was already occupied; it was not killed because its ownership was unclear. Do not assume any previous server is still running.
 - Multiple OC++ server restarts interrupted this conversation. Re-read git status and verify actual installed/built versions before continuing.
 
-## Next Agent Workflow
+## Next Agent Workflow (first session; steps 1-7 done)
 
 1. Read this handoff, inspect git status, and confirm the branch and runtime versions. Do not assume generated dist matches tracked source.
 2. Reproduce Opus's baseline, guard, and guardlang runs in jsdom and inspect the history-write trace.
