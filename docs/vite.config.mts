@@ -1,6 +1,5 @@
-import { vitePlugin as OGPlugin } from "@solid-mediakit/og/unplugin";
-import { solidStart } from "@solidjs/start/config";
-import { nitro } from "nitro/vite";
+// TODO(solid2): @solid-mediakit/og has no Solid 2 release; OG image generation is disabled for now.
+import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vite";
 import arraybuffer from "vite-plugin-arraybuffer";
 import { version as SBVersion } from "../package.json";
@@ -17,7 +16,6 @@ const solidBase = createSolidBase(theme);
 
 export default defineConfig({
 	plugins: [
-		OGPlugin(),
 		arraybuffer(),
 		solidBase.plugin({
 			title: "SolidBase",
@@ -59,10 +57,6 @@ export default defineConfig({
 								text: "Guide",
 								link: "/guide",
 							},
-							{
-								text: "Référence",
-								link: "/reference",
-							},
 						],
 						sidebar: {
 							"/guide": [
@@ -85,13 +79,6 @@ export default defineConfig({
 											link: "/markdown",
 										},
 									],
-								},
-							],
-							"/reference": [
-								{
-									title: "Référence",
-									collapsed: false,
-									items: [],
 								},
 							],
 						},
@@ -133,10 +120,8 @@ export default defineConfig({
 				},
 			},
 		}),
-		solidStart(solidBase.startConfig()),
-		nitro({
-			preset: "netlify",
-			prerender: { crawlLinks: true },
-		}),
+		// @solidjs/vite-plugin start mode (SSR) replaces SolidStart + Nitro.
+		// TODO(solid2): Netlify deploy + static prerender (was nitro preset/prerender.crawlLinks).
+		solid(solidBase.startConfig()),
 	],
 });

@@ -1,7 +1,7 @@
 import { usePrefersDark } from "@solid-primitives/media";
-import { useHead } from "@solidjs/meta";
-import { createEffect, createSignal, createUniqueId } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { Script } from "@solidjs/meta";
+import { getRequestEvent, isServer } from "@solidjs/web";
+import { createComponent, createEffect, createSignal } from "solid-js";
 
 export type ThemeType = "light" | "dark";
 export type RawThemeType = ThemeType | `s${ThemeType}`;
@@ -21,7 +21,20 @@ function getThemeCookie(): RawThemeType {
 	return getCookie("theme", document.cookie) as RawThemeType;
 }
 
-const [theme, _setTheme] = createSignal<ThemeType | "system">();
+// Solid 2 forbids writing reactive state from inside a computation (the old code wrote the
+// cookie value into the signal during `getRawTheme()`, which runs in an effect's compute phase).
+// Seed the signal from the cookie on the client instead; the server reads the cookie per request.
+function initialTheme(): ThemeType | "system" | undefined {
+	if (isServer) return undefined;
+	const userTheme = getThemeCookie();
+	return userTheme && !userTheme.startsWith("s")
+		? (userTheme as ThemeType)
+		: undefined;
+}
+
+const [theme, _setTheme] = createSignal<ThemeType | "system" | undefined>(
+	initialTheme(),
+);
 
 export function getRawTheme(): RawThemeType {
 	if (isServer) return getThemeCookie() as RawThemeType;
@@ -29,16 +42,9 @@ export function getRawTheme(): RawThemeType {
 	const prefersDark = usePrefersDark();
 	const prefersTheme = () => (prefersDark() ? "sdark" : "slight");
 
-	if (theme())
-		return theme()!.startsWith("s")
-			? prefersTheme()
-			: (theme()! as RawThemeType);
-
-	const userTheme = getThemeCookie();
-	if (userTheme && !userTheme.startsWith("s")) {
-		setTheme(userTheme as ThemeType);
-		return userTheme;
-	}
+	const current = theme();
+	if (current)
+		return current.startsWith("s") ? prefersTheme() : (current as RawThemeType);
 
 	return prefersTheme();
 }
@@ -58,16 +64,20 @@ export const setTheme = _setTheme;
 import readThemeCookieScript from "./read-theme-cookie.js?raw";
 
 export function useThemeListener() {
-	createEffect(() => {
-		document.documentElement.setAttribute("data-theme", getRawTheme());
-		// biome-ignore lint/suspicious/noDocumentCookie: remove next major
-		document.cookie = `theme=${getRawTheme()}; max-age=31536000; path=/`;
-	});
+	createEffect(
+		() => getRawTheme(),
+		(raw) => {
+			document.documentElement.setAttribute("data-theme", raw);
+			// biome-ignore lint/suspicious/noDocumentCookie: remove next major
+			document.cookie = `theme=${raw}; max-age=31536000; path=/`;
+		},
+	);
+}
 
-	useHead({
-		tag: "script",
-		id: createUniqueId(),
-		props: { children: readThemeCookieScript },
-		setting: { close: true },
+/** Inline script that applies the theme cookie before hydration (prevents FOUC). Render once in the document head. */
+export function ThemeCookieScript() {
+	return createComponent(Script, {
+		id: "sb-theme-script",
+		children: readThemeCookieScript,
 	});
 }

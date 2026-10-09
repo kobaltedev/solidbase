@@ -1,6 +1,11 @@
-import { useHead } from "@solidjs/meta";
-import { createEffect, createSignal, createUniqueId, onMount } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { Script } from "@solidjs/meta";
+import { getRequestEvent, isServer } from "@solidjs/web";
+import {
+	createComponent,
+	createEffect,
+	createSignal,
+	onSettled,
+} from "solid-js";
 import readPreferredLanguageCookieScript from "./read-preferred-language-cookie.js?raw";
 
 type SupportedLanguage = "ts" | "js";
@@ -38,34 +43,38 @@ const [preferredLanguage, setPreferredLanguage] =
 	createSignal<SupportedLanguage>(DEFAULT_LANGUAGE);
 
 export function usePreferredLanguage() {
-	onMount(() => {
+	onSettled(() => {
 		setPreferredLanguage(getPreferredLanguageCookie());
 	});
 
-	createEffect(() => {
-		const preferredLanguageStr = String(preferredLanguage());
-		document.documentElement.setAttribute(
-			"data-preferred-language",
-			preferredLanguageStr,
-		);
-		// biome-ignore lint/suspicious/noDocumentCookie: remove next major
-		document.cookie = `${COOKIE_NAME}=${preferredLanguageStr}; max-age=31536000; path=/`;
+	createEffect(
+		() => preferredLanguage(),
+		(lang) => {
+			const preferredLanguageStr = String(lang);
+			document.documentElement.setAttribute(
+				"data-preferred-language",
+				preferredLanguageStr,
+			);
+			// biome-ignore lint/suspicious/noDocumentCookie: remove next major
+			document.cookie = `${COOKIE_NAME}=${preferredLanguageStr}; max-age=31536000; path=/`;
 
-		const toggles = document.querySelectorAll<HTMLInputElement>(
-			'input[type="checkbox"].sb-ts-js-toggle',
-		);
+			const toggles = document.querySelectorAll<HTMLInputElement>(
+				'input[type="checkbox"].sb-ts-js-toggle',
+			);
 
-		for (const toggle of Array.from(toggles)) {
-			toggle.checked = preferredLanguage() === "ts";
-		}
-	});
-
-	useHead({
-		tag: "script",
-		id: createUniqueId(),
-		props: { children: readPreferredLanguageCookieScript },
-		setting: { close: true },
-	});
+			for (const toggle of Array.from(toggles)) {
+				toggle.checked = lang === "ts";
+			}
+		},
+	);
 
 	return [preferredLanguage, setPreferredLanguage] as const;
+}
+
+/** Inline script that applies the preferred-language cookie before hydration (prevents FOUC). Render once in the document head. */
+export function PreferredLanguageCookieScript() {
+	return createComponent(Script, {
+		id: "sb-preferred-language-script",
+		children: readPreferredLanguageCookieScript,
+	});
 }

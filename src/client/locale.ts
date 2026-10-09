@@ -1,8 +1,8 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { createContextProvider } from "@solid-primitives/context";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
-import { createMemo, startTransition } from "solid-js";
-import { getRequestEvent, isServer } from "solid-js/web";
+import { getRequestEvent, isServer } from "@solidjs/web";
+import { action, createMemo, onSettled } from "solid-js";
 
 import type { LocaleConfig } from "../config/index.js";
 import {
@@ -177,7 +177,10 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 			return locales();
 		},
 		currentLocale,
-		setLocale: (locale: ResolvedLocale<any>) => {
+		// A Solid action (generator transaction): the navigation runs as a transition, and
+		// onSettled queues the lang update behind its effects — i.e. after the new route commits,
+		// the timing 1.x got from startTransition(() => navigate()).then(...).
+		setLocale: action(function* (locale: ResolvedLocale<any>) {
 			if (locale.option) {
 				const routePath = getSolidBaseRoutePathWithRest(
 					solidBaseConfig.routes,
@@ -190,7 +193,8 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 
 				if (!routePath) return;
 
-				startTransition(() => navigate(routePath)).then(() => {
+				navigate(routePath);
+				onSettled(() => {
 					document.documentElement.lang = locale.code;
 				});
 				return;
@@ -198,12 +202,11 @@ const [LocaleContextProvider, useLocaleContext] = createContextProvider(() => {
 
 			const searchValue = getLocaleLink(locale);
 
-			startTransition(() =>
-				navigate(`${searchValue}${match()?.params.rest ?? ""}`),
-			).then(() => {
+			navigate(`${searchValue}${match()?.params.rest ?? ""}`);
+			onSettled(() => {
 				document.documentElement.lang = locale.code;
 			});
-		},
+		}),
 		applyPathPrefix: (_path: string): `/${string}` => {
 			if (solidBaseConfig.routes && !isExternalPath(_path)) {
 				const path = normalizeClientPath(_path);

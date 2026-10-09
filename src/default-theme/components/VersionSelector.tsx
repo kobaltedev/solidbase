@@ -41,7 +41,7 @@ export default function VersionSelector() {
 						<span class={styles.label}>{getOptionLabel(current())}</span>
 
 						<Show when={options().length > 1}>
-							<IconExpandUpDownLine class={styles.icon} aria-hidden />
+							<IconExpandUpDownLine class={styles.icon} aria-hidden="true" />
 						</Show>
 					</Popover.Trigger>
 					<Popover.Portal>
@@ -55,7 +55,9 @@ export default function VersionSelector() {
 											class={styles.item}
 											target={outbound() ? "_blank" : undefined}
 											rel={outbound() ? "noopener noreferrer" : undefined}
-											aria-current={option === currentOption() || undefined}
+											aria-current={
+												option === currentOption() ? "page" : undefined
+											}
 											href={option.href ?? option.path}
 											onMouseEnter={(e) => e.currentTarget.focus()}
 											onClick={() => setOpen(false)}

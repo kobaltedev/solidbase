@@ -66,7 +66,7 @@ export function useSidebar<T = {}>() {
 	const s = useSidebarRaw();
 	if (!s)
 		throw new Error("useSidebar must be called underneath a SidebarProvider");
-	return s as Accessor<{ prefix: string; items: SidebarItem<T>[] }>;
+	return s as unknown as Accessor<{ prefix: string; items: SidebarItem<T>[] }>;
 }
 
 function flattenSidebarItems<T = {}>(

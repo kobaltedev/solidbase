@@ -1,6 +1,7 @@
 export { mdxComponents } from "virtual:solidbase/components";
 export { useRouteSolidBaseConfig } from "./config.js";
 export { useSolidBaseContext } from "./context.jsx";
+export { HttpStatusCode } from "./http.jsx";
 export {
 	getLocale,
 	getLocaleLink,

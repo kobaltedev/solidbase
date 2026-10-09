@@ -8,18 +8,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@kobalte/core": "2.0.0-alpha.2",
     "@kobalte/solidbase": "workspace:*",
-    "@kobalte/core": "0.13.11",
-    "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "https://pkg.pr.new/solidjs/solid-start/@solidjs/start@2080",
-    "nitro": "3.0.260311-beta",
-    "solid-js": "^1.9.9"
+    "@solidjs/router": "2.0.0-next.37",
+    "@solidjs/web": "2.0.0-rc.14",
+    "solid-js": "2.0.0-rc.14"
   },
   "engines": {
     "node": ">=22.12"
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.2.5",
+    "@solidjs/vite-plugin": "3.0.0-next.47",
     "cross-env": "^7.0.3",
     "vite": "^8.0.0"
   }

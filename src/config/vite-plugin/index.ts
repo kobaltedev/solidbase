@@ -7,6 +7,7 @@ import type { PluginOption } from "vite";
 
 import type { SolidBaseResolvedConfig, ThemeDefinition } from "../index.js";
 import solidBaseLlmsPlugin from "./llms.js";
+import { solidBasePrerenderPlugin } from "./prerender.js";
 import solidBaseRobotsPlugin from "./robots.js";
 import solidBaseSitemapPlugin from "./sitemap.js";
 import {
@@ -26,7 +27,18 @@ export default function solidBaseVitePlugin(
 			name: "solidbase:pre",
 			enforce: "pre",
 			config() {
-				return { resolve: { noExternal: ["@kobalte/solidbase"] } };
+				return {
+					resolve: {
+						noExternal: ["@kobalte/solidbase"],
+						// Solid 2 context identity: the app and SolidBase must share one copy of these.
+						dedupe: [
+							"solid-js",
+							"@solidjs/web",
+							"@solidjs/router",
+							"@solidjs/meta",
+						],
+					},
+				};
 			},
 			configResolved(resolvedConfig) {
 				root = resolvedConfig.root;
@@ -65,7 +77,7 @@ export default function solidBaseVitePlugin(
 			enforce: "post",
 			transform(code, id) {
 				if (isMarkdown(id))
-					return transformMdxModule(code, id, solidBaseConfig);
+					return transformMdxModule(code, id, solidBaseConfig, root);
 			},
 		},
 	];
@@ -114,6 +126,14 @@ export default function solidBaseVitePlugin(
 	plugins.push(solidBaseLlmsPlugin(solidBaseConfig));
 	plugins.push(solidBaseSitemapPlugin(solidBaseConfig));
 	plugins.push(solidBaseRobotsPlugin(solidBaseConfig));
+
+	if (solidBaseConfig.prerender !== false)
+		plugins.push(
+			solidBasePrerenderPlugin(
+				solidBaseConfig,
+				solidBaseConfig.prerender === true ? {} : solidBaseConfig.prerender,
+			),
+		);
 
 	return plugins;
 }

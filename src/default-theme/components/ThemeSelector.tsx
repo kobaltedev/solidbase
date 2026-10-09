@@ -1,12 +1,6 @@
 import { Select } from "@kobalte/core/select";
-import {
-	type ComponentProps,
-	children,
-	createSignal,
-	type JSX,
-	onMount,
-	Show,
-} from "solid-js";
+import type { ComponentProps, JSX } from "@solidjs/web";
+import { children, createSignal, onSettled, Show } from "solid-js";
 import IconMoonFill from "~icons/ri/moon-fill";
 import IconMoonLine from "~icons/ri/moon-line";
 import IconSunFill from "~icons/ri/sun-fill";
@@ -28,12 +22,12 @@ const THEME_OPTIONS: ThemeOption[] = [
 	{
 		value: "light",
 		label: "Light",
-		icon: () => <IconSunFill class={styles.icon} aria-hidden />,
+		icon: () => <IconSunFill class={styles.icon} aria-hidden="true" />,
 	},
 	{
 		value: "dark",
 		label: "Dark",
-		icon: () => <IconMoonFill class={styles.icon} aria-hidden />,
+		icon: () => <IconMoonFill class={styles.icon} aria-hidden="true" />,
 	},
 	{
 		value: "system",
@@ -42,11 +36,11 @@ const THEME_OPTIONS: ThemeOption[] = [
 			<div>
 				<IconSunLine
 					class={`${styles["system-light"]} ${styles["force-light"]}`}
-					aria-hidden
+					aria-hidden="true"
 				/>
 				<IconMoonLine
 					class={`${styles["system-dark"]} ${styles["force-dark"]}`}
-					aria-hidden
+					aria-hidden="true"
 				/>
 			</div>
 		),
@@ -80,10 +74,10 @@ export default function ThemeSelector() {
 				<Select.Value<ThemeOption>>
 					{(state) => (
 						<RefreshOnMount aria-label={state.selectedOption().label}>
-							<IconSunLine class={styles["system-light"]} aria-hidden />
-							<IconMoonLine class={styles["system-dark"]} aria-hidden />
-							<IconSunFill class={styles["force-light"]} aria-hidden />
-							<IconMoonFill class={styles["force-dark"]} aria-hidden />
+							<IconSunLine class={styles["system-light"]} aria-hidden="true" />
+							<IconMoonLine class={styles["system-dark"]} aria-hidden="true" />
+							<IconSunFill class={styles["force-light"]} aria-hidden="true" />
+							<IconMoonFill class={styles["force-dark"]} aria-hidden="true" />
 						</RefreshOnMount>
 					)}
 				</Select.Value>
@@ -102,7 +96,7 @@ function RefreshOnMount(props: ComponentProps<"div">) {
 
 	// incorrect value on server with no runtime, refresh on mount to update possibly incorrect label
 	const [refresh, setRefresh] = createSignal(false);
-	onMount(() => {
+	onSettled(() => {
 		setRefresh(true);
 	});
 

@@ -3,7 +3,7 @@ import { glob } from "node:fs/promises";
 import * as path from "node:path";
 
 const files = await Array.fromAsync(
-	glob("**/*.{js,css}", { cwd: `${process.cwd()}/src` }),
+	glob("**/*.{js,mjs,css}", { cwd: `${process.cwd()}/src` }),
 );
 
 await Promise.all(

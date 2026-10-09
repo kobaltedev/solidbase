@@ -1,5 +1,6 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/guide/install");
 const routePath = vi.fn<() => string>(() => "/guide/install");
@@ -34,16 +35,18 @@ describe("client sidebar helpers", () => {
 
 		createRoot((dispose) => {
 			let value: ReturnType<ReturnType<typeof useSidebar>> | undefined;
-			SidebarProvider({
-				config: {
-					"/guide": [{ title: "Guide", link: "/intro" }],
-					"/guide/install": [{ title: "Install", link: "/" }],
-				},
-				get children() {
-					value = useSidebar()();
-					return null;
-				},
-			} as any);
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [{ title: "Guide", link: "/intro" }],
+						"/guide/install": [{ title: "Install", link: "/" }],
+					},
+					get children() {
+						value = useSidebar()();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toEqual({
 				prefix: "/guide/install",
@@ -63,25 +66,27 @@ describe("client sidebar helpers", () => {
 
 		createRoot((dispose) => {
 			let value: ReturnType<typeof usePrevNext> | undefined;
-			SidebarProvider({
-				config: {
-					"/guide": [
-						{ title: "Intro", link: "/intro" },
-						{
-							title: "Section",
-							base: "/nested",
-							items: [
-								{ title: "Install", link: "/install" },
-								{ title: "External", link: "https://example.com" },
-							],
-						},
-					],
-				},
-				get children() {
-					value = usePrevNext() as any;
-					return null;
-				},
-			} as any);
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [
+							{ title: "Intro", link: "/intro" },
+							{
+								title: "Section",
+								base: "/nested",
+								items: [
+									{ title: "Install", link: "/install" },
+									{ title: "External", link: "https://example.com" },
+								],
+							},
+						],
+					},
+					get children() {
+						value = usePrevNext() as any;
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toBeDefined();
 			expect(value!.prevLink()).toMatchObject({
@@ -108,18 +113,20 @@ describe("client sidebar helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<ReturnType<typeof useSidebar>> | undefined;
 
-			SidebarProvider({
-				config: {
-					"/guide": {
-						title: "Guide",
-						items: [{ title: "Intro", link: "/intro" }],
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": {
+							title: "Guide",
+							items: [{ title: "Intro", link: "/intro" }],
+						},
 					},
-				},
-				get children() {
-					value = useSidebar()();
-					return null;
-				},
-			} as any);
+					get children() {
+						value = useSidebar()();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toEqual({
 				prefix: "/guide",

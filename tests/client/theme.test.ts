@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 
-import { createRoot } from "solid-js";
+import { createRoot, flush } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const prefersDarkValue = vi.fn<() => boolean>(() => false);
-const useHead = vi.fn();
+const Script = vi.fn(() => null);
 
 vi.mock("@solid-primitives/media", () => ({
 	usePrefersDark: () => prefersDarkValue,
@@ -14,16 +15,17 @@ vi.mock("solid-js", async () => {
 	const actual = await vi.importActual<typeof import("solid-js")>("solid-js");
 	return {
 		...actual,
-		createEffect: (fn: () => void) => fn(),
-		createUniqueId: () => "theme-script",
+		// Solid 2 effects are split: compute -> apply. Run both synchronously for the test.
+		createEffect: (compute: () => unknown, apply: (value: unknown) => void) =>
+			apply(compute()),
 	};
 });
 
 vi.mock("@solidjs/meta", () => ({
-	useHead,
+	Script,
 }));
 
-vi.mock("solid-js/web", () => ({
+vi.mock("@solidjs/web", () => ({
 	getRequestEvent: vi.fn(),
 	isServer: false,
 }));
@@ -36,7 +38,7 @@ describe("theme client helpers", () => {
 	afterEach(async () => {
 		prefersDarkValue.mockReset();
 		prefersDarkValue.mockReturnValue(false);
-		useHead.mockReset();
+		Script.mockClear();
 		vi.resetModules();
 		// biome-ignore lint/suspicious/noDocumentCookie: test
 		document.cookie = "";
@@ -56,6 +58,7 @@ describe("theme client helpers", () => {
 		expect(getThemeVariant()).toBe("system");
 
 		setTheme("light");
+		flush(); // Solid 2 batches writes until the microtask flush
 		expect(getRawTheme()).toBe("light");
 		expect(getThemeVariant()).toBe("light");
 	});
@@ -65,13 +68,16 @@ describe("theme client helpers", () => {
 		// biome-ignore lint/suspicious/noDocumentCookie: test
 		document.cookie = "theme=dark";
 
-		const { setTheme, useThemeListener } = await import(
+		const { setTheme, ThemeCookieScript, useThemeListener } = await import(
 			"../../src/client/theme.ts"
 		);
 
+		// Solid 2: reactive writes are not allowed inside an owned scope (createRoot), so set first.
+		setTheme("dark");
+		flush();
 		const dispose = createRoot((dispose) => {
-			setTheme("dark");
 			useThemeListener();
+			mount(ThemeCookieScript());
 			return dispose;
 		});
 
@@ -80,12 +86,9 @@ describe("theme client helpers", () => {
 
 		expect(setAttribute).toHaveBeenCalledWith("data-theme", "dark");
 		expect(document.cookie).toContain("theme=dark");
-		expect(useHead).toHaveBeenCalledWith(
+		expect(Script).toHaveBeenCalledWith(
 			expect.objectContaining({
-				tag: "script",
-				props: expect.objectContaining({
-					children: "window.__theme = document.cookie",
-				}),
+				children: "window.__theme = document.cookie",
 			}),
 		);
 		setAttribute.mockRestore();

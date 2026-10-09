@@ -1,16 +1,25 @@
-import { createContextProvider } from "@solid-primitives/context";
+import {
+	createContextProvider,
+	createLayeredContext,
+} from "@solid-primitives/context";
 import { createSignal } from "solid-js";
 
 import type { ThemeComponents } from "./default-components.js";
 import { useDefaultThemeFrontmatter } from "./frontmatter.js";
 
+// Nested providers merge over their parent. Solid 2's context read throws without a provider,
+// so the outermost layer starts from this sentinel instead of reading its own (absent) context.
+const ROOT_COMPONENTS = {
+	$$SolidBase_force: false,
+} as unknown as ThemeComponents;
+
 const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
-	createContextProvider(
-		(props: { components?: Partial<ThemeComponents>; force?: boolean }) => {
-			const parent = (useDefaultThemeComponentsContext() ?? {
-				$$SolidBase_force: false,
-			}) as any;
-			if (parent.$$SolidBase_force)
+	createLayeredContext(
+		(
+			props: { components?: Partial<ThemeComponents>; force?: boolean },
+			parent: ThemeComponents,
+		) => {
+			if ((parent as any).$$SolidBase_force)
 				return {
 					...props.components,
 					...parent,
@@ -23,17 +32,17 @@ const [DefaultThemeComponentsProvider, useDefaultThemeComponentsContext] =
 				$$SolidBase_force: props.force,
 			} as ThemeComponents;
 		},
+		ROOT_COMPONENTS,
 	);
 
 export function useDefaultThemeComponents() {
-	return (
-		useDefaultThemeComponentsContext() ??
-		(() => {
-			throw new Error(
-				"useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider",
-			);
-		})()
-	);
+	const components = useDefaultThemeComponentsContext();
+	if (components === ROOT_COMPONENTS) {
+		throw new Error(
+			"useDefaultThemeComponents must be used within a DefaultThemeComponentsContextProvider",
+		);
+	}
+	return components;
 }
 
 const [DefaultThemeStateProvider, useDefaultThemeStateContext] =

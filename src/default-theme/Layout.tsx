@@ -1,18 +1,17 @@
 // @refresh reload
 import { Collapsible } from "@kobalte/core/collapsible";
 import { Dialog } from "@kobalte/core/dialog";
-import { A } from "@solidjs/router";
+import { useLinkState } from "@solidjs/router";
+import { Dynamic } from "@solidjs/web";
 import {
 	createEffect,
 	For,
 	Match,
-	onCleanup,
-	onMount,
+	onSettled,
 	type ParentProps,
 	Show,
 	Switch,
 } from "solid-js";
-import { Dynamic } from "solid-js/web";
 
 import { useLocale, useThemeListener } from "../client/index.jsx";
 import { usePreferredLanguage } from "../client/preferred-language.js";
@@ -70,10 +69,11 @@ function Layout(props: ParentProps) {
 
 	const [preferredLanguage, setPreferredLanguage] = usePreferredLanguage();
 
-	onMount(() => {
+	onSettled(() => {
 		const toggles = document.querySelectorAll<HTMLInputElement>(
 			'input[type="checkbox"].sb-ts-js-toggle',
 		);
+		const cleanups: Array<() => void> = [];
 		for (const toggle of Array.from(toggles)) {
 			toggle.checked = preferredLanguage() === "ts";
 
@@ -82,21 +82,24 @@ function Layout(props: ParentProps) {
 			}
 
 			toggle.addEventListener("click", handleToggle);
-
-			onCleanup(() => {
-				toggle.removeEventListener("click", handleToggle);
-			});
+			cleanups.push(() => toggle.removeEventListener("click", handleToggle));
 		}
+		return () => {
+			for (const cleanup of cleanups) cleanup();
+		};
 	});
 
-	createEffect(() => {
-		const toggles = document.querySelectorAll<HTMLInputElement>(
-			'input[type="checkbox"].sb-ts-js-toggle',
-		);
-		for (const toggle of Array.from(toggles)) {
-			toggle.checked = preferredLanguage() === "ts";
-		}
-	});
+	createEffect(
+		() => preferredLanguage(),
+		(lang) => {
+			const toggles = document.querySelectorAll<HTMLInputElement>(
+				'input[type="checkbox"].sb-ts-js-toggle',
+			);
+			for (const toggle of Array.from(toggles)) {
+				toggle.checked = lang === "ts";
+			}
+		},
+	);
 
 	return (
 		<>
@@ -217,16 +220,23 @@ function NavigationItem(props: NavigationItemProps) {
 				{(item) => {
 					const link = () => item().link;
 					const prefix = () => props.prefix;
+					const href = () =>
+						locale.applyPathPrefix(
+							`${prefix() === "/" ? "" : prefix()}${link() === "/" ? "" : link()}`,
+						);
+					// Solid Router 2 has no <A>: native anchors are claimed by the router.
+					const linkState = useLinkState(href, { end: true });
+					const isActive = () => linkState.active();
 
 					return (
 						<li>
-							<A
-								class={`${styles["sidenav-link"]}`}
-								activeClass={styles.active}
-								href={locale.applyPathPrefix(
-									`${prefix() === "/" ? "" : prefix()}${link() === "/" ? "" : link()}`,
-								)}
-								end
+							<a
+								class={[
+									styles["sidenav-link"],
+									{ [styles.active!]: isActive() },
+								]}
+								href={href()}
+								aria-current={isActive() ? "page" : undefined}
 								onClick={() => setSidebarOpen(false)}
 							>
 								<span>{item().title}</span>
@@ -257,7 +267,7 @@ function NavigationItem(props: NavigationItemProps) {
 										)}
 									</Match>
 								</Switch>
-							</A>
+							</a>
 						</li>
 					);
 				}}

@@ -76,7 +76,7 @@ export function solidBaseMdx(
 		viteAliasCodeImports(),
 		mdx.withImports({})({
 			jsx: true,
-			jsxImportSource: "solid-js",
+			jsxImportSource: "@solidjs/web",
 			providerImportSource: "@kobalte/solidbase/mdx",
 			stylePropertyNameCase: "css",
 			rehypePlugins: getRehypePlugins(sbConfig),
@@ -112,7 +112,7 @@ function getRehypePlugins(sbConfig: SolidBaseResolvedConfig<any>) {
 									target: "ESNext",
 									module: "ESNext",
 									lib: ["dom", "esnext"],
-									jsxImportSource: "solid-js",
+									jsxImportSource: "@solidjs/web",
 									jsx: "preserve",
 									...twoSlash.tsconfig,
 								},
