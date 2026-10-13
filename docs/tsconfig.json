@@ -15,5 +15,7 @@
 		"paths": {
 			"~/*": ["./src/*"]
 		}
-	}
+	},
+	"include": ["src", "vite.config.mts", "../src/**/*.d.ts"],
+	"exclude": ["dist", "node_modules"]
 }

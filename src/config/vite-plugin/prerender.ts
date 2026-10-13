@@ -111,7 +111,10 @@ export function solidBasePrerenderPlugin(
 				const origin = new URL(
 					options.origin ?? sbConfig.siteUrl ?? "http://localhost",
 				).origin;
-				const index = await getRoutesIndex(root);
+				const index =
+					sbConfig.fileRoutes === false
+						? []
+						: await getRoutesIndex(root, sbConfig.fileRoutes?.dir);
 				const seeds = [
 					...new Set([
 						"/",

@@ -1,4 +1,4 @@
-import { createContextProvider } from "@solid-primitives/context";
+import { createOptionalContextProvider } from "@solid-primitives/context";
 import { useRouteMatches } from "@solidjs/router";
 import { createMemo, type MemoOptions } from "solid-js";
 
@@ -51,7 +51,7 @@ interface CurrentPageData {
 }
 
 const [CurrentPageDataProvider, useCurrentPageDataContext] =
-	createContextProvider((props: { deferStream?: boolean }) => {
+	createOptionalContextProvider((props: { deferStream?: boolean }) => {
 		const matches = useRouteMatches();
 
 		// Solid 2: async memos replace createResource; readers suspend via the nearest <Loading>.

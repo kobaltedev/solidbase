@@ -12,6 +12,33 @@ import {
 import { fixtureSiteRoot } from "../helpers/fixtures.ts";
 
 describe("getRoutesIndex", () => {
+	it("indexes relative and absolute custom route directories", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-routes-custom-"));
+		const dir = join(root, "pages");
+		await mkdir(dir);
+		await writeFile(join(dir, "index.md"), "Home");
+		await writeFile(join(dir, "guide.mdx"), "Guide");
+
+		for (const routesDir of ["pages", dir]) {
+			const routes = await getRoutesIndex(root, routesDir);
+			expect(routes.map((route) => route.routePath)).toEqual(["/guide", "/"]);
+		}
+	});
+
+	it("returns no routes when the routes directory is missing", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-routes-missing-"));
+		expect(await getRoutesIndex(root)).toEqual([]);
+		expect(await getRoutesIndex(root, "pages")).toEqual([]);
+	});
+
+	it("preserves errors other than a missing directory", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-routes-error-"));
+		await writeFile(join(root, "pages"), "Not a directory");
+		await expect(getRoutesIndex(root, "pages")).rejects.toMatchObject({
+			code: "ENOTDIR",
+		});
+	});
+
 	it("indexes markdown routes with normalized paths and frontmatter", async () => {
 		const routes = await getRoutesIndex(fixtureSiteRoot);
 

@@ -20,7 +20,7 @@ export default defineConfig({
 		solidBase.plugin({
 			title: "SolidBase",
 			description:
-				"Fully featured, fully customisable static site generation for SolidStart",
+				"Fully featured, fully customisable static site generation for Solid",
 			siteUrl: "https://solidbase.dev",
 			llms: true,
 			sitemap: true,

@@ -14,8 +14,8 @@ export default function DocSearch(props: {
 		(el) => {
 			if (!el) return;
 			try {
-				//@ts-expect-error: docsearch not callable?
-				docsearch({
+				// DocSearch is callable at runtime; Node16 resolution types its default as a module.
+				(docsearch as unknown as (options: DocSearchProps) => void)({
 					container: el,
 					...props.docsearch,
 				});

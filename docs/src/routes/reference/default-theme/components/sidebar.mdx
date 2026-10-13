@@ -10,13 +10,13 @@ badges:
 
 # {frontmatter.title}
 
-The sidebar for the default theme is configured in the app config:
+The sidebar for the default theme is configured in `vite.config.ts`:
 
 ```ts title="vite.config.ts"
 import solid from "@solidjs/vite-plugin";
 import { defineConfig } from "vite";
 
-import { createSolidBase } from "@kobalte/solidbase";
+import { createSolidBase } from "@kobalte/solidbase/config";
 
 
 const solidBase = createSolidBase(theme);

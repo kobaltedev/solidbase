@@ -1,14 +1,53 @@
+import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { buildSitemapEntries } from "../../src/config/sitemap-index.ts";
+import {
+	buildSitemapEntries,
+	getSitemapEntries,
+} from "../../src/config/sitemap-index.ts";
+import { fixtureSiteRoot } from "../helpers/fixtures.ts";
 
 const config = {
+	sitemap: true,
 	lang: "en-US",
 	locales: {
 		root: { label: "English", lang: "en-US" },
 		fr: { label: "Francais", lang: "fr-FR" },
 	},
 } as any;
+
+describe("getSitemapEntries", () => {
+	it("uses configured route directories", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-sitemap-custom-"));
+		const dir = join(root, "pages");
+		await mkdir(dir);
+		await writeFile(join(dir, "guide.md"), "Custom content.");
+		for (const routesDir of ["pages", dir]) {
+			const entries = await getSitemapEntries(root, {
+				...config,
+				siteUrl: "https://example.com",
+				fileRoutes: { dir: routesDir },
+			});
+			expect(entries).toHaveLength(1);
+			expect(entries[0]).toMatchObject({
+				routePath: "/guide",
+				url: "https://example.com/guide",
+			});
+		}
+	});
+
+	it("does not index default markdown when file routes are disabled", async () => {
+		expect(
+			await getSitemapEntries(fixtureSiteRoot, {
+				...config,
+				siteUrl: "https://example.com",
+				fileRoutes: false,
+			}),
+		).toEqual([]);
+	});
+});
 
 describe("buildSitemapEntries", () => {
 	it("emits absolute canonical URLs and localized alternates", () => {

@@ -1,6 +1,6 @@
 import {
-	createContextProvider,
 	createLayeredContext,
+	createOptionalContextProvider,
 } from "@solid-primitives/context";
 import { createSignal } from "solid-js";
 
@@ -46,7 +46,7 @@ export function useDefaultThemeComponents() {
 }
 
 const [DefaultThemeStateProvider, useDefaultThemeStateContext] =
-	createContextProvider(() => {
+	createOptionalContextProvider(() => {
 		const [sidebarOpen, setSidebarOpen] = createSignal(false);
 		const [tocOpen, setTocOpen] = createSignal(false);
 		const [navOpen, setNavOpen] = createSignal(false);

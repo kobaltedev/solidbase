@@ -119,9 +119,11 @@ async function main() {
 		],
 	});
 	const written = result.pages.map((page) => page.path);
-	process.stdout.write(JSON.stringify({ written, failed }));
-	// The server runtime keeps the loop alive; we are done.
-	process.exit(0);
+	// The server runtime keeps the loop alive, so exit explicitly, but only once the
+	// result is flushed: piped stdout is async on macOS and would truncate at 64 KiB.
+	process.stdout.write(JSON.stringify({ written, failed }), () =>
+		process.exit(0),
+	);
 }
 
 function readStdin() {

@@ -66,6 +66,7 @@ export function usePreferredLanguage() {
 				toggle.checked = lang === "ts";
 			}
 		},
+		{ defer: true },
 	);
 
 	return [preferredLanguage, setPreferredLanguage] as const;

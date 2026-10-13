@@ -1,4 +1,4 @@
-import { createContextProvider } from "@solid-primitives/context";
+import { createOptionalContextProvider } from "@solid-primitives/context";
 import { useLocation } from "@solidjs/router";
 import { type Accessor, createMemo } from "solid-js";
 
@@ -11,7 +11,7 @@ import { useLocale } from "./locale.js";
 
 export type * from "../config/sidebar.js";
 
-const [SidebarProvider, useSidebarRaw] = createContextProvider(
+const [SidebarProvider, useSidebarRaw] = createOptionalContextProvider(
 	(props: { config?: SidebarConfig }) => {
 		const locale = useLocale();
 

@@ -22,129 +22,140 @@ Route for reviewing `:::preview` blocks in the dev app.
 ---
 
 ```tsx tab title="index.tsx"
-import { Accordion } from "@kobalte/core/accordion";
-import { ChevronDownIcon } from "some-icon-library";
-import "./style.css";
-function App() {
-  return (
-    <Accordion class="accordion" defaultValue={["item-1"]}>
-      <Accordion.Item class="accordion__item" value="item-1">
-        <Accordion.Header class="accordion__item-header">
-          <Accordion.Trigger class="accordion__item-trigger">
-            <span>Is it accessible?</span>
-            <ChevronDownIcon class="accordion__item-trigger-icon" aria-hidden />
-          </Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Content class="accordion__item-content">
-          <p class="accordion__item-content-text">
-            Yes. It adheres to the WAI-ARIA design pattern.
-          </p>
-        </Accordion.Content>
-      </Accordion.Item>
-      <Accordion.Item class="accordion__item" value="item-2">
-        <Accordion.Header class="accordion__item-header">
-          <Accordion.Trigger class="accordion__item-trigger">
-            <span>Is it unstyled?</span>
-            <ChevronDownIcon class="accordion__item-trigger-icon" aria-hidden />
-          </Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Content class="accordion__item-content">
-          <p class="accordion__item-content-text">
-            Yes. It's unstyled by default, giving you freedom over the look and feel.
-          </p>
-        </Accordion.Content>
-      </Accordion.Item>
-      <Accordion.Item class="accordion__item" value="item-3">
-        <Accordion.Header class="accordion__item-header">
-          <Accordion.Trigger class="accordion__item-trigger">
-            <span>Can it be animated?</span>
-            <ChevronDownIcon class="accordion__item-trigger-icon" aria-hidden />
-          </Accordion.Trigger>
-        </Accordion.Header>
-        <Accordion.Content class="accordion__item-content">
-          <p class="accordion__item-content-text">
-            Yes! You can animate the Accordion with CSS or JavaScript.
-          </p>
-        </Accordion.Content>
-      </Accordion.Item>
-    </Accordion>
-  );
+import { For, createUniqueId } from "solid-js";
+
+function ChevronDownIcon(props: { class?: string }) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			class={props.class}
+			aria-hidden="true"
+		>
+			<path
+				fill="currentColor"
+				d="m12 13.171 4.95-4.95 1.414 1.415L12 16 5.636 9.636 7.05 8.222z"
+			/>
+		</svg>
+	);
+}
+
+const accordionItems = [
+	{
+		value: "item-1",
+		title: "Is it accessible?",
+		body: "Yes. Native disclosure elements support keyboard and screen reader navigation.",
+	},
+	{
+		value: "item-2",
+		title: "Is it unstyled?",
+		body: "Yes. The example styling is local to the dev app so theme authors can review the shell in isolation.",
+	},
+	{
+		value: "item-3",
+		title: "Does it hold up on mobile?",
+		body: "The trigger rows keep their tap targets and the stage allows horizontal overflow when a demo needs it.",
+	},
+];
+
+export function App() {
+	const name = createUniqueId();
+	return (
+		<div class="sb-preview-demo-accordion-wrap">
+			<style>{`.sb-preview-demo-trigger::-webkit-details-marker { display: none; }
+.sb-preview-demo-trigger .sb-preview-demo-header { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1rem; margin: 0; font: inherit; }
+.sb-preview-demo-item[open] > .sb-preview-demo-trigger .chevron-icon { transform: rotate(180deg); }`}</style>
+			<div class="sb-preview-demo-accordion">
+				<For each={accordionItems}>
+					{(item) => (
+						<details class="sb-preview-demo-item" name={name} open={item.value === "item-1"}>
+							<summary class="sb-preview-demo-trigger">
+								<h3 class="sb-preview-demo-header">
+									<span>{item.title}</span>
+									<ChevronDownIcon class="chevron-icon" />
+								</h3>
+							</summary>
+							<div class="sb-preview-demo-content">
+								<p>{item.body}</p>
+							</div>
+						</details>
+					)}
+				</For>
+			</div>
+		</div>
+	);
 }
 ```
 
 ```css tab title="app.css"
-.accordion {
-  border-radius: 6px;
-  width: 300px;
-  border: 1px solid hsl(240 5% 84%);
-  color: hsl(240 4% 16%);
+.sb-preview-demo-accordion-wrap {
+	width: 100%;
+	display: flex;
+	justify-content: center;
 }
-.accordion__item:first-child {
-  margin-top: 0;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+
+.sb-preview-demo-accordion {
+	width: min(100%, 27rem);
+	border-radius: 0.75rem;
+	border: 1px solid rgb(20 20 20 / 0.12);
+	background: rgb(255 255 255 / 0.92);
+	overflow: hidden;
 }
-.accordion__item:last-child {
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
+
+.sb-preview-demo-item + .sb-preview-demo-item {
+	border-top: 1px solid rgb(15 23 42 / 0.08);
 }
-.accordion__item-header {
-  display: flex;
+
+.sb-preview-demo-header {
+	display: block;
 }
-.accordion__item-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 14px;
-  border-bottom: 1px solid hsl(240 5% 84%);
-  font-weight: 600;
-  text-align: left;
-  outline: none;
+
+.sb-preview-demo-trigger {
+  list-style: none;
+  cursor: pointer;
+	width: 100%;
+	min-height: 3.25rem;
+	padding: 0.95rem 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	border: none;
+	background: transparent;
+	color: rgb(15 23 42 / 0.92);
+	font: inherit;
+	font-weight: 600;
+	text-align: left;
+	cursor: pointer;
 }
-.accordion__item:last-child .accordion__item-trigger {
-  border-bottom: none;
+
+.sb-preview-demo-trigger:focus-visible {
+	outline: 2px solid rgb(59 130 246 / 0.9);
+	outline-offset: -2px;
 }
-.accordion__item-trigger:focus-visible {
-  z-index: 1;
-  outline: 2px solid hsl(200 98% 39%);
-  outline-offset: 2px;
+
+.chevron-icon {
+	font-size: 0.95rem;
+	line-height: 1;
+	transition: transform 180ms ease;
 }
-.accordion__item-trigger-icon {
-  width: 24px;
-  height: 24px;
-  transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+
+.sb-preview-demo-item[open] .chevron-icon {
+	transform: rotate(180deg);
 }
-.accordion__item-trigger[data-expanded] > .accordion__item-trigger-icon {
-  transform: rotate(180deg);
+
+.sb-preview-demo-content {
+	padding: 0 1rem 1rem;
+	color: rgb(51 65 85 / 0.9);
 }
-.accordion__item-content {
-  overflow: hidden;
-  font-size: 16px;
-  animation: slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1);
+
+.sb-preview-demo-content p {
+	margin: 0;
+	line-height: 1.65;
 }
-.accordion__item-content[data-expanded] {
-  animation: slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1);
-}
-.accordion__item-content-text {
-  padding: 16px;
-}
-@keyframes slideDown {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--kb-accordion-content-height);
-  }
-}
-@keyframes slideUp {
-  from {
-    height: var(--kb-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
-}
+.sb-preview-demo-trigger::-webkit-details-marker { display: none; }
 ```
 :::
 

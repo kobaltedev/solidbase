@@ -1,5 +1,5 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
-import { createContextProvider } from "@solid-primitives/context";
+import { createOptionalContextProvider } from "@solid-primitives/context";
 import { useLocation } from "@solidjs/router";
 import { createMemo } from "solid-js";
 
@@ -16,7 +16,7 @@ import {
 import { useRouteSolidBaseConfig } from "./config.js";
 
 const [SolidBaseRoutesContextProvider, useSolidBaseRoutesContext] =
-	createContextProvider(() => {
+	createOptionalContextProvider(() => {
 		const location = useLocation();
 		const current = createMemo(
 			() =>

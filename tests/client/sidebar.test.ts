@@ -28,6 +28,17 @@ describe("client sidebar helpers", () => {
 		vi.resetModules();
 	});
 
+	it("reports a missing SidebarProvider with its own message", async () => {
+		const { useSidebar } = await import("../../src/client/sidebar.ts");
+
+		createRoot((dispose) => {
+			expect(() => useSidebar()).toThrow(
+				"useSidebar must be called underneath a SidebarProvider",
+			);
+			dispose();
+		});
+	});
+
 	it("selects the longest matching sidebar prefix", async () => {
 		const { SidebarProvider, useSidebar } = await import(
 			"../../src/client/sidebar.ts"

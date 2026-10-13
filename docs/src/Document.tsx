@@ -1,3 +1,4 @@
+import { getFontPreloadLinkAttrs } from "@kobalte/solidbase/default-theme/fonts.js";
 import { getHtmlProps } from "@kobalte/solidbase/server";
 import { HydrationScript } from "@solidjs/web";
 import type { ParentProps } from "solid-js";
@@ -10,6 +11,9 @@ export default function Document(props: ParentProps) {
 			<head>
 				<meta charset="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				{getFontPreloadLinkAttrs().map((attrs) => (
+					<link {...attrs} />
+				))}
 				<link rel="icon" href="/favicon.ico" />
 				<HydrationScript />
 			</head>
