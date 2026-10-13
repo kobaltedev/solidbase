@@ -4,6 +4,7 @@ import {
 	messageSync,
 } from "@solid-primitives/storage";
 import type { ComponentProps } from "@solidjs/web";
+import { isServer } from "@solidjs/web";
 import {
 	children,
 	createEffect,
@@ -11,6 +12,7 @@ import {
 	createUniqueId,
 	For,
 	omit,
+	onCleanup,
 	type ParentProps,
 	Show,
 	type Signal,
@@ -146,9 +148,12 @@ export function DirectiveContainer(
 		const state = createSignal(tabNames[0] ?? "");
 		const [openTab, setOpenTab] = state;
 		if (props.title) {
+			// Sync across tabs on the client only; close the channel with the group.
+			const channel = isServer ? undefined : new BroadcastChannel("tab-group");
+			if (channel) onCleanup(() => channel.close());
 			const [, persistTab] = makePersisted<string, Signal<string>>(state, {
 				name: `tab-group:${props.title}`,
-				sync: messageSync(new BroadcastChannel("tab-group")),
+				sync: channel && messageSync(channel),
 				storage: cookieStorage.withOptions({
 					expires: new Date(Date.now() + 3e10),
 				}),

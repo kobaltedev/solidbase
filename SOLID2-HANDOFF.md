@@ -14,6 +14,7 @@ Updated 2026-10-13. Remove before #174 leaves draft.
 - Existing Back/Forward fix preserved: register page data using Vite-root-relative module paths and await undefined before lazy preload. Promise.resolve still hits the hydration Promise stub. Missing page modules return undefined.
 - Native tabs replace Kobalte tabs, avoiding unreleased event-listener/resize-observer owner-count bugs. Preserve selected-tab styling, linked ARIA IDs, roving focus, Home/End, wrapping arrows (including RTL), force-mounted panels and persisted named groups.
 - Persist named selection in the effect's apply phase after the signal commits, deferring initial writes so hydration does not overwrite a saved cookie. BroadcastChannel synchronization and reload persistence verified.
+- The tab-group BroadcastChannel is created only on the client and closed on cleanup (SSR previously leaked one per named group).
 - Native details/summary replaces the dev-only Kobalte accordion preview, with matching displayed snippet. Kobalte's demo used the same server/client ownership mismatch; this does not claim to fix arbitrary consumer Kobalte widgets.
 - Prerender, sitemap and llms respect fileRoutes.dir. Missing directories yield no markdown seeds; other errors propagate. fileRoutes:false does not index default markdown files.
 - Prerender worker exits only after stdout is flushed; child-process isolation retained.
