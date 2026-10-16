@@ -1,6 +1,6 @@
 import { lstatSync, readdirSync } from "node:fs";
 import path from "node:path";
-import matter from "gray-matter";
+import matter from "@11ty/gray-matter";
 
 export type SidebarConfig<Item = SidebarItem> =
 	| Item[]

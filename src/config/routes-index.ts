@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
 
-import matter from "gray-matter";
+import matter from "@11ty/gray-matter";
 
 import type { SolidBaseResolvedConfig } from "./index.js";
 import {
