@@ -17,7 +17,7 @@ import {
 	Show,
 	type Signal,
 } from "solid-js";
-import { useResolvedHref } from "../client/base-path.js";
+import { fragmentAriaCurrent, useResolvedHref } from "../client/base-path.js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
 import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.jsx";
@@ -74,6 +74,7 @@ export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
 			class={autoHeading() ? styles["a-auto"] : styles.a}
+			aria-current={fragmentAriaCurrent(props.href)}
 			{...props}
 			href={href()}
 		/>

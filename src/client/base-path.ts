@@ -52,3 +52,14 @@ export function useResolvedHref<T>(
 		) as `/${string}`;
 	};
 }
+
+/**
+ * `aria-current` for a plain anchor. Solid Router 2 marks every anchor it manages
+ * whose path and query match the location with `aria-current="page"`, ignoring the
+ * hash, so in-page links (`#heading`, the skip link) would all claim to be the
+ * current page. A link with a fragment points at a section, never at the page, so
+ * it gets an explicit `"false"`, which the router leaves untouched.
+ */
+export function fragmentAriaCurrent(href: unknown): "false" | undefined {
+	return typeof href === "string" && href.includes("#") ? "false" : undefined;
+}

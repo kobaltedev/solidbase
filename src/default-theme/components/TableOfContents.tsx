@@ -4,6 +4,7 @@ import {
 } from "@solid-primitives/scroll";
 import type { JSX } from "@solidjs/web";
 import { createEffect, createSignal, For, Show } from "solid-js";
+import { fragmentAriaCurrent } from "../../client/base-path.js";
 import {
 	type TableOfContentsItemData,
 	useCurrentPageData,
@@ -130,6 +131,7 @@ function TableOfContentsItem(props: {
 				onClick={handleClick}
 				href={props.data.href}
 				class={props.data.href === props.current ? styles.active : undefined}
+				aria-current={fragmentAriaCurrent(props.data.href)}
 			>
 				{props.data.title}
 			</a>
