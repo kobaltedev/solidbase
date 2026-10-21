@@ -16,6 +16,6 @@
 			"~/*": ["./src/*"]
 		}
 	},
-	"include": ["src", "vite.config.mts", "../src/**/*.d.ts"],
+	"include": ["src", "vite.config.mts"],
 	"exclude": ["dist", "node_modules"]
 }

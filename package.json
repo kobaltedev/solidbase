@@ -73,6 +73,9 @@
       "solid": "./src/mdx.ts",
       "import": "./src/mdx.ts",
       "types": "./src/mdx.ts"
+    },
+    "./types": {
+      "types": "./src/types.d.ts"
     }
   },
   "publishConfig": {
@@ -117,6 +120,9 @@
         "solid": "./dist/mdx.js",
         "import": "./dist/mdx.js",
         "types": "./dist/mdx.d.ts"
+      },
+      "./types": {
+        "types": "./dist/types.d.ts"
       }
     }
   },

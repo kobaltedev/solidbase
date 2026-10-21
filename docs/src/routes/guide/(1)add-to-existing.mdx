@@ -6,14 +6,21 @@ title: Adding to Existing Project
 
 SolidBase can be added to an existing Solid + Vite project in a few simple steps.
 
+SolidBase runs on Solid 2. If your project is still on Solid 1 or SolidStart, the steps below move it over. Also remove `@solidjs/start`, `vinxi`, `vite-plugin-solid` and `app.config.ts`, and delete `src/entry-client.tsx` and `src/entry-server.tsx`: start mode generates both entries from `src/app.tsx`, but it uses those files instead if they exist. Your `dev` and `build` scripts become `vite dev` and `vite build`.
 
 ## 1. Install `@kobalte/solidbase`
 
-To install SolidBase, run the following command in your project's root directory:
+Install SolidBase and the Solid 2 packages it is built on by running the following commands in your project's root directory:
 
 ```package-install
-@kobalte/solidbase
+@kobalte/solidbase solid-js@2.0.0-rc.16 @solidjs/web@2.0.0-rc.16 @solidjs/router@2.0.0-next.37
 ```
+
+```package-install-dev
+@solidjs/vite-plugin@3.0.0-next.47 vite
+```
+
+Keep `@solidjs/router` on the same version SolidBase uses, so your app and SolidBase share one router. The same applies to `@solidjs/meta@1.0.0-next.2` if you use it yourself.
 
 ## 2. Configure Vite
 
@@ -39,7 +46,31 @@ export default defineConfig({
 
 Pages are discovered from `src/routes` by SolidBase's file-system routing (built on `filesystem-routing`, the convention SolidStart used), and your pages are prerendered into `dist/client` after `vite build`. Pass `fileRoutes: false` or `prerender: false` to take over either.
 
-## 3. Wrap Your App in `SolidBaseRoot`
+## 3. Configure TypeScript
+
+Solid 2's JSX types live in `@solidjs/web`, so point `jsxImportSource` at it:
+
+```json title=tsconfig.json
+{
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"jsx": "preserve",
+		"jsxImportSource": "@solidjs/web",
+		"strict": true,
+		"skipLibCheck": true
+	}
+}
+```
+
+Then reference SolidBase's types once, for example in `src/global.d.ts`. They declare the virtual modules your app imports: `virtual:file-routes`, `virtual:solidbase/*` and the `~icons/*` icon components:
+
+```ts title=src/global.d.ts
+/// <reference types="vite/client" />
+/// <reference types="@kobalte/solidbase/types" />
+```
+
+## 4. Wrap Your App in `SolidBaseRoot`
 
 Once SolidBase is installed and configured, you'll need to wrap your application in the `SolidBaseRoot` component to provide the necessary context for SolidBase to function correctly.
 
@@ -60,7 +91,7 @@ export default function App() {
 
 If you already wrap the matched content in a layout of your own, put `SolidBaseRoot` around it.
 
-## 4. Add HTML Attributes for SSR
+## 5. Add HTML Attributes for SSR
 
 To provide the `lang` and `data-theme` attributes to the `html` element during SSR,
 spread `getHtmlProps()` onto it in your document shell (`src/Document.tsx`, picked up automatically by start mode):
