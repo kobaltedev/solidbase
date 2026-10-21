@@ -2,3 +2,26 @@
 command = "VITE_ORIGIN=$DEPLOY_URL pnpm build:docs"
 # @solidjs/vite-plugin start mode + SolidBase prerender: dist/client is a complete static site.
 publish = "docs/dist/client/"
+
+# Netlify only falls back to the root 404.html. Serve the per-directory 404 pages the
+# prerender emits (see the build log) so missing URLs hydrate with their locale/sidebar.
+# Unforced rules: existing files still win. Most specific first.
+[[redirects]]
+from = "/fr/guide/*"
+to = "/fr/guide/404.html"
+status = 404
+
+[[redirects]]
+from = "/fr/*"
+to = "/fr/404.html"
+status = 404
+
+[[redirects]]
+from = "/guide/*"
+to = "/guide/404.html"
+status = 404
+
+[[redirects]]
+from = "/reference/*"
+to = "/reference/404.html"
+status = 404

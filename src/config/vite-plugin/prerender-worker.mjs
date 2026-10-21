@@ -59,6 +59,7 @@ async function main() {
 	};
 
 	const failed = [];
+	const notFoundPages = [];
 	// The first spelling wins, matching the engine's seed deduplication.
 	const requestPaths = new Map();
 	for (const seed of seeds) {
@@ -111,17 +112,49 @@ async function main() {
 							throw skipped.error;
 					}
 					if (notFound) {
-						const { html } = await render(NOT_FOUND_PROBE);
-						context.emitFile({ filename: "404.html", contents: html });
+						await emitNotFoundPages(context);
 					}
 				},
 			},
 		],
 	});
+
+	// Static hosts answer a missing URL with a prerendered 404 page, but the client then
+	// hydrates it against the real URL: `/fr/nope` matches `fr/[...404]` in French and
+	// `/guide/nope` gets the guide sidebar, so a single root 404.html rendered for
+	// `/__solidbase_404__` mismatches. Render the probe inside every directory that has
+	// pages and keep each `<dir>/404.html` whose markup differs from its nearest
+	// ancestor's, so hosts that serve the closest 404.html hydrate the same tree.
+	async function emitNotFoundPages(context) {
+		const dirs = new Set([""]);
+		for (const page of context.pages) {
+			const segments = page.path.split("/").filter(Boolean);
+			for (let i = 1; i < segments.length; i++)
+				dirs.add(`/${segments.slice(0, i).join("/")}`);
+		}
+		const emitted = new Map();
+		for (const dir of [...dirs].sort()) {
+			const probe = dir + NOT_FOUND_PROBE;
+			const { status, html } = await render(probe);
+			if (dir) {
+				// A catch-all page route owns this directory; there is nothing to fall back to.
+				if (status !== 404) continue;
+				let parent = dir;
+				do parent = parent.slice(0, parent.lastIndexOf("/"));
+				while (!emitted.has(parent));
+				if (html.replaceAll(probe, "") === emitted.get(parent)) continue;
+			}
+			emitted.set(dir, html.replaceAll(probe, ""));
+			const filename = `${dir.slice(1)}${dir ? "/" : ""}404.html`;
+			context.emitFile({ filename, contents: html });
+			notFoundPages.push(filename);
+		}
+	}
+
 	const written = result.pages.map((page) => page.path);
 	// The server runtime keeps the loop alive, so exit explicitly, but only once the
 	// result is flushed: piped stdout is async on macOS and would truncate at 64 KiB.
-	process.stdout.write(JSON.stringify({ written, failed }), () =>
+	process.stdout.write(JSON.stringify({ written, failed, notFoundPages }), () =>
 		process.exit(0),
 	);
 }

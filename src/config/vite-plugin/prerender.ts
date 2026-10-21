@@ -12,7 +12,11 @@ export interface PrerenderOptions {
 	routes?: string[];
 	/** Follow same-origin links found in rendered pages. @default true */
 	crawlLinks?: boolean;
-	/** Also render a never-matching path and write it as `404.html`. @default true */
+	/**
+	 * Also render a never-matching path and write it as `404.html`, plus `<dir>/404.html`
+	 * for directories whose not-found page differs (e.g. another locale's `[...404]` route
+	 * or section sidebar), for hosts that serve the closest 404 page. @default true
+	 */
 	notFound?: boolean;
 	/** Origin used for the synthetic requests. Defaults to `siteUrl`, else `http://localhost`. */
 	origin?: string;
@@ -32,6 +36,7 @@ interface WorkerInput {
 interface WorkerResult {
 	written: string[];
 	failed: Array<{ path: string; status: number }>;
+	notFoundPages: string[];
 }
 
 const WORKER = fileURLToPath(
@@ -125,7 +130,7 @@ export function solidBasePrerenderPlugin(
 
 				// Rendering happens in a child process: the production server runtime keeps the
 				// event loop alive once imported, which would hang `vite build` after the hook.
-				const { written, failed } = await runWorker({
+				const { written, failed, notFoundPages } = await runWorker({
 					serverEntry,
 					outDir: clientOut,
 					origin,
@@ -137,7 +142,7 @@ export function solidBasePrerenderPlugin(
 
 				const log = client.logger;
 				log.info(
-					`[solidbase] prerendered ${written.length} page${written.length === 1 ? "" : "s"} into ${client.config.build.outDir}${(options.notFound ?? true) ? " (+ 404.html)" : ""}`,
+					`[solidbase] prerendered ${written.length} page${written.length === 1 ? "" : "s"} into ${client.config.build.outDir}${notFoundPages.length ? ` (+ ${notFoundPages.join(", ")})` : ""}`,
 				);
 				for (const { path, status } of failed) {
 					log.warn(`[solidbase] prerender skipped ${path} (HTTP ${status})`);
