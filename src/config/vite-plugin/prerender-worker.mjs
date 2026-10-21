@@ -37,7 +37,9 @@ function rememberLinkPaths(html, pageUrl, paths, toAppPath) {
 }
 
 async function main() {
-	const input = JSON.parse(await readStdin());
+	const input = await new Promise((resolve) =>
+		process.once("message", resolve),
+	);
 	const { serverEntry, outDir, origin, seeds, crawlLinks, notFound } = input;
 	const base = (input.base ?? "/").replace(/\/$/, "");
 	const toAppPath = (path) => {
@@ -153,20 +155,8 @@ async function main() {
 
 	const written = result.pages.map((page) => page.path);
 	// The server runtime keeps the loop alive, so exit explicitly, but only once the
-	// result is flushed: piped stdout is async on macOS and would truncate at 64 KiB.
-	process.stdout.write(JSON.stringify({ written, failed, notFoundPages }), () =>
-		process.exit(0),
-	);
-}
-
-function readStdin() {
-	return new Promise((resolve, reject) => {
-		let data = "";
-		process.stdin.setEncoding("utf8");
-		process.stdin.on("data", (c) => (data += c));
-		process.stdin.on("end", () => resolve(data));
-		process.stdin.on("error", reject);
-	});
+	// result has been handed to the IPC channel.
+	process.send({ written, failed, notFoundPages }, () => process.exit(0));
 }
 
 main().catch((error) => {

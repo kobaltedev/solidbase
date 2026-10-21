@@ -45,14 +45,15 @@ const WORKER = fileURLToPath(
 
 function runWorker(input: WorkerInput): Promise<WorkerResult> {
 	return new Promise((resolvePromise, reject) => {
+		// The worker runs consumer code that may log, so its stdout/stderr pass through
+		// to the user and the input/result travel over the IPC channel instead.
 		const child = spawn(process.execPath, [WORKER], {
-			stdio: ["pipe", "pipe", "inherit"],
+			stdio: ["ignore", "inherit", "inherit", "ipc"],
 			env: process.env,
 		});
-		let stdout = "";
-		child.stdout.setEncoding("utf8");
-		child.stdout.on("data", (chunk) => {
-			stdout += chunk;
+		let result: WorkerResult | undefined;
+		child.on("message", (message) => {
+			result = message as WorkerResult;
 		});
 		child.on("error", reject);
 		child.on("close", (code) => {
@@ -62,13 +63,13 @@ function runWorker(input: WorkerInput): Promise<WorkerResult> {
 				);
 				return;
 			}
-			try {
-				resolvePromise(JSON.parse(stdout) as WorkerResult);
-			} catch (error) {
-				reject(error);
+			if (!result) {
+				reject(new Error("[solidbase] prerender worker sent no result"));
+				return;
 			}
+			resolvePromise(result);
 		});
-		child.stdin.end(JSON.stringify(input));
+		child.send(input);
 	});
 }
 
