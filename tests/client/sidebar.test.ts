@@ -117,6 +117,41 @@ describe("client sidebar helpers", () => {
 		});
 	});
 
+	it("finds the current page when the URL has a trailing slash", async () => {
+		// Static hosts serve /guide/ for the page the sidebar links as /guide.
+		pathname.mockReturnValue("/guide/");
+		routePath.mockReturnValue("/guide/");
+
+		const { SidebarProvider, usePrevNext } = await import(
+			"../../src/client/sidebar.ts"
+		);
+
+		createRoot((dispose) => {
+			let value: ReturnType<typeof usePrevNext> | undefined;
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [
+							{ title: "About", link: "/" },
+							{ title: "Quick Start", link: "/quickstart" },
+						],
+					},
+					get children() {
+						value = usePrevNext() as any;
+						return null;
+					},
+				} as any),
+			);
+
+			expect(value!.prevLink()).toBeUndefined();
+			expect(value!.nextLink()).toMatchObject({
+				title: "Quick Start",
+				link: "/guide/quickstart",
+			});
+			dispose();
+		});
+	});
+
 	it("supports legacy section-shaped sidebar config objects", async () => {
 		const { SidebarProvider, useSidebar } = await import(
 			"../../src/client/sidebar.ts"

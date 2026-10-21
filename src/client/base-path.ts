@@ -8,21 +8,33 @@ function isAppPath(href: unknown): href is `/${string}` {
 }
 
 /**
- * Removes a deployment base (eg. Vite's `base`) from a URL pathname. Paths outside
- * the base are returned unchanged.
+ * Removes trailing slashes (`/guide/` -> `/guide`), keeping the root `/`.
+ * Static hosts (eg. Netlify pretty URLs) serve pages at `/guide/`, while
+ * SolidBase routes, locales and sidebar links are written without one.
+ */
+export function trimTrailingSlash(pathname: string): string {
+	return pathname.replace(/\/+$/, "") || "/";
+}
+
+/**
+ * Removes a deployment base (eg. Vite's `base`) and any trailing slash from a URL
+ * pathname, giving the path SolidBase matches routes, locales and sidebars against.
+ * Paths outside the base only lose the trailing slash.
  */
 export function stripBasePath(pathname: string, base: string): string {
 	const prefix = base.replace(/\/+$/, "");
-	if (!prefix) return pathname;
+	if (!prefix) return trimTrailingSlash(pathname);
 	if (pathname.toLowerCase() === prefix.toLowerCase()) return "/";
-	return pathname.toLowerCase().startsWith(`${prefix.toLowerCase()}/`)
-		? pathname.slice(prefix.length)
-		: pathname;
+	return trimTrailingSlash(
+		pathname.toLowerCase().startsWith(`${prefix.toLowerCase()}/`)
+			? pathname.slice(prefix.length)
+			: pathname,
+	);
 }
 
 /**
  * The current pathname relative to the router base, ie. the path SolidBase routes,
- * locales and sidebars are defined against.
+ * locales and sidebars are defined against, without a trailing slash.
  */
 export function useAppPathname(): Accessor<string> {
 	const location = useLocation();

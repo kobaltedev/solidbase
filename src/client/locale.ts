@@ -14,7 +14,11 @@ import {
 	resolveSolidBaseRouteValueOverrides,
 	type SolidBaseRouteOption,
 } from "../config/route-config.js";
-import { stripBasePath, useAppPathname } from "./base-path.js";
+import {
+	stripBasePath,
+	trimTrailingSlash,
+	useAppPathname,
+} from "./base-path.js";
 import { useSolidBaseRoutes } from "./routes.js";
 
 export const DEFAULT_LANG_CODE = "en-US";
@@ -101,7 +105,9 @@ function getLegacyLocaleForPath(path: string) {
 	for (const locale of legacyLocales) {
 		if (locale.isRoot) continue;
 
-		if (path.startsWith(locale.config.link ?? `/${locale.code}`)) return locale;
+		// Paths have no trailing slash (see stripBasePath), links usually do (/fr/).
+		const prefix = trimTrailingSlash(locale.config.link ?? `/${locale.code}`);
+		if (isPathWithinPrefix(path, prefix)) return locale;
 	}
 
 	return legacyLocales.find((l) => l.isRoot)!;
