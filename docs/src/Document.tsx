@@ -14,7 +14,7 @@ export default function Document(props: ParentProps) {
 				{getFontPreloadLinkAttrs().map((attrs) => (
 					<link {...attrs} />
 				))}
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
 				<HydrationScript />
 			</head>
 			<body>
