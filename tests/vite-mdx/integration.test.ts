@@ -4,6 +4,7 @@ import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
+import { solidBaseMdx } from "../../src/config/mdx.ts";
 import viteMdx from "../../src/vite-mdx/index.ts";
 import { createTransformer } from "../../src/vite-mdx/transform.ts";
 import { ImportMap } from "../../src/vite-mdx/viteMdxTransclusion/ImportMap.ts";
@@ -64,6 +65,26 @@ describe("vite-mdx integration", () => {
 
 		expect(result.code).toContain('"global"');
 		expect(result.code).toContain('"local"');
+	});
+
+	it("solidBaseMdx emits HTML class attributes for Solid, not React className", async () => {
+		const [, [plugin]] = solidBaseMdx({} as any) as any[];
+
+		plugin.configResolved({
+			root: process.cwd(),
+			plugins: [],
+		} as any);
+
+		const result = await plugin.transform.call(
+			{},
+			"- [x] done\n\n```ts\nconst a = 1;\n```",
+			pagePath,
+			false,
+		);
+
+		expect(result.code).not.toContain("className");
+		expect(result.code).toContain('class="task-list-item"');
+		expect(result.code).toContain('class="expressive-code"');
 	});
 
 	it("remarkTransclusion inlines imported mdx, caches ASTs, and tracks imports", async () => {

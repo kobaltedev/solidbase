@@ -79,6 +79,10 @@ export function solidBaseMdx(
 			jsxImportSource: "@solidjs/web",
 			providerImportSource: "@kobalte/solidbase/mdx",
 			stylePropertyNameCase: "css",
+			// Emit HTML attribute names (`class`, `for`, …) instead of React's
+			// (`className`, `htmlFor`, …). Solid 2's compiler no longer aliases
+			// `className` to `class`, so React-cased names render verbatim.
+			elementAttributeNameCase: "html",
 			rehypePlugins: getRehypePlugins(sbConfig),
 			remarkPlugins: getRemarkPlugins(sbConfig),
 		}),
