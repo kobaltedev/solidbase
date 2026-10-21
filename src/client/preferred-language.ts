@@ -75,6 +75,8 @@ export function usePreferredLanguage() {
 /** Inline script that applies the preferred-language cookie before hydration (prevents FOUC). Render once in the document head. */
 export function PreferredLanguageCookieScript() {
 	return createComponent(Script, {
+		// Stable key so hydration adopts the prerendered tag instead of appending a copy (see ThemeCookieScript).
+		key: "sb-preferred-language-script",
 		id: "sb-preferred-language-script",
 		children: readPreferredLanguageCookieScript,
 	});

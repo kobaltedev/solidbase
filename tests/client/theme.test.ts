@@ -88,6 +88,8 @@ describe("theme client helpers", () => {
 		expect(document.cookie).toContain("theme=dark");
 		expect(Script).toHaveBeenCalledWith(
 			expect.objectContaining({
+				// Stable key so hydration adopts the prerendered tag instead of appending a duplicate.
+				key: "sb-theme-script",
 				children: "window.__theme = document.cookie",
 			}),
 		);

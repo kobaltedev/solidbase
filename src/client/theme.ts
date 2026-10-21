@@ -77,6 +77,11 @@ export function useThemeListener() {
 /** Inline script that applies the theme cookie before hydration (prevents FOUC). Render once in the document head. */
 export function ThemeCookieScript() {
 	return createComponent(Script, {
+		// Keyless inline head scripts get a per-runtime identity ("u:N" on the server,
+		// "u:cN:i" on the client), so the client can't adopt the prerendered tag and
+		// appends (and re-executes) a second copy. A stable key gives both runtimes the
+		// same identity, letting hydration claim the server-rendered element.
+		key: "sb-theme-script",
 		id: "sb-theme-script",
 		children: readThemeCookieScript,
 	});
