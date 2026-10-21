@@ -38,12 +38,17 @@ describe("vite-mdx integration", () => {
 	const pagePath = "tests/fixtures/page.mdx";
 	const sharedPath = "tests/fixtures/shared.mdx";
 
-	it("createTransformer prepends imports and transpiles JSX output", async () => {
-		const transform = createTransformer(process.cwd(), {});
+	it("createTransformer prepends imports to the MDX output", async () => {
+		const transform = createTransformer(process.cwd(), {
+			"solid-js": ["createSignal"],
+		});
 
 		const code = await transform("# Hello");
 
-		expect(code).toContain("export default MDXContent; function MDXContent");
+		expect(code.startsWith("import { createSignal } from 'solid-js'\n")).toBe(
+			true,
+		);
+		expect(code).toContain("export default function MDXContent");
 		expect(code).toContain('"Hello"');
 	});
 
