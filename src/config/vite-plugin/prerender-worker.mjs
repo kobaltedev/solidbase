@@ -125,13 +125,14 @@ async function main() {
 	// hydrates it against the real URL: `/fr/nope` matches `fr/[...404]` in French and
 	// `/guide/nope` gets the guide sidebar, so a single root 404.html rendered for
 	// `/__solidbase_404__` mismatches. Render the probe inside every directory that has
-	// pages and keep each `<dir>/404.html` whose markup differs from its nearest
-	// ancestor's, so hosts that serve the closest 404.html hydrate the same tree.
+	// pages (a page's own path included, since `fr/index.mdx` alone makes `/fr` one) and
+	// keep each `<dir>/404.html` whose markup differs from its nearest ancestor's, so
+	// hosts that serve the closest 404.html hydrate the same tree.
 	async function emitNotFoundPages(context) {
 		const dirs = new Set([""]);
 		for (const page of context.pages) {
 			const segments = page.path.split("/").filter(Boolean);
-			for (let i = 1; i < segments.length; i++)
+			for (let i = 1; i <= segments.length; i++)
 				dirs.add(`/${segments.slice(0, i).join("/")}`);
 		}
 		const emitted = new Map();
