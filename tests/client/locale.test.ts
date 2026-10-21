@@ -1,12 +1,22 @@
 // @vitest-environment jsdom
 
-import { createRoot, flush } from "solid-js";
+import { createRoot, createSignal, flush } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
 const navigate = vi.fn<(to: string) => Promise<void>>(() => Promise.resolve());
 const matchRest = vi.fn<() => string | undefined>(() => "guide/install");
+
+// Back the mocked location with a signal that navigate() moves, like the router does.
+function trackNavigation(initialPath: string) {
+	const [path, setPath] = createSignal(initialPath);
+	pathname.mockImplementation(path);
+	navigate.mockImplementation((to) => {
+		setPath(to);
+		return Promise.resolve();
+	});
+}
 
 function setSolidBaseConfig(value: Record<string, unknown>) {
 	const store = ((globalThis as any).__solidBaseConfig ??= {}) as Record<
@@ -60,6 +70,7 @@ describe("locale client helpers", () => {
 				fr: { label: "Francais" },
 			},
 		});
+		trackNavigation("/fr/guide/install");
 
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
@@ -95,10 +106,12 @@ describe("locale client helpers", () => {
 			localeApi = value;
 			disposeRoot = dispose;
 		});
+		flush();
+		expect(document.documentElement.lang).toBe("fr");
 
-		// Actions must be called from an imperative scope (an event handler in the app), not inside the root.
-		await localeApi?.setLocale(localeApi!.locales[0]!);
-		flush(); // onSettled queues the <html lang> write behind the action's effects
+		// Called from an imperative scope (an event handler in the app), not inside the root.
+		localeApi?.setLocale(localeApi!.locales[0]!);
+		flush(); // <html lang> follows the new location once its effects run
 		disposeRoot?.();
 		expect(navigate).toHaveBeenCalledWith("/guide/install");
 		expect(document.documentElement.lang).toBe("en-US");
@@ -149,7 +162,7 @@ describe("locale client helpers", () => {
 				],
 			},
 		});
-		pathname.mockReturnValue("/router/fr/about");
+		trackNavigation("/router/fr/about");
 
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
@@ -191,10 +204,12 @@ describe("locale client helpers", () => {
 			localeApi = value;
 			disposeRoot = dispose;
 		});
+		flush();
+		expect(document.documentElement.lang).toBe("fr-FR");
 
-		// Actions must be called from an imperative scope (an event handler in the app), not inside the root.
-		await localeApi?.setLocale(localeApi!.locales[0]!);
-		flush(); // onSettled queues the <html lang> write behind the action's effects
+		// Called from an imperative scope (an event handler in the app), not inside the root.
+		localeApi?.setLocale(localeApi!.locales[0]!);
+		flush(); // <html lang> follows the new location once its effects run
 		disposeRoot?.();
 		expect(navigate).toHaveBeenCalledWith("/router/about");
 		expect(document.documentElement.lang).toBe("en-US");

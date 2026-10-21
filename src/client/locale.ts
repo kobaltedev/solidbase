@@ -2,7 +2,7 @@ import { solidBaseConfig } from "virtual:solidbase/config";
 import { createOptionalContextProvider } from "@solid-primitives/context";
 import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { getRequestEvent, isServer } from "@solidjs/web";
-import { action, createMemo, onSettled } from "solid-js";
+import { createEffect, createMemo } from "solid-js";
 
 import type { LocaleConfig } from "../config/index.js";
 import {
@@ -173,15 +173,23 @@ const [LocaleContextProvider, useLocaleContext] = createOptionalContextProvider(
 
 		const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);
 
+		// The document language follows the location, however it changed (locale
+		// switcher, plain links, Back/Forward). Effects run once the navigation
+		// commits, i.e. after the new route renders. Unguarded so server and client
+		// owner trees (hydration ids) match; effects never run on the server.
+		createEffect(
+			() => currentLocale().code,
+			(code) => {
+				document.documentElement.lang = code;
+			},
+		);
+
 		return {
 			get locales() {
 				return locales();
 			},
 			currentLocale,
-			// A Solid action (generator transaction): the navigation runs as a transition, and
-			// onSettled queues the lang update behind its effects — i.e. after the new route commits,
-			// the timing 1.x got from startTransition(() => navigate()).then(...).
-			setLocale: action(function* (locale: ResolvedLocale<any>) {
+			setLocale: (locale: ResolvedLocale<any>) => {
 				if (locale.option) {
 					const routePath = getSolidBaseRoutePathWithRest(
 						solidBaseConfig.routes,
@@ -195,19 +203,13 @@ const [LocaleContextProvider, useLocaleContext] = createOptionalContextProvider(
 					if (!routePath) return;
 
 					navigate(routePath);
-					onSettled(() => {
-						document.documentElement.lang = locale.code;
-					});
 					return;
 				}
 
 				const searchValue = getLocaleLink(locale);
 
 				navigate(`${searchValue}${match()?.params.rest ?? ""}`);
-				onSettled(() => {
-					document.documentElement.lang = locale.code;
-				});
-			}),
+			},
 			applyPathPrefix: (_path: string): `/${string}` => {
 				if (solidBaseConfig.routes && !isExternalPath(_path)) {
 					const path = normalizeClientPath(_path);
