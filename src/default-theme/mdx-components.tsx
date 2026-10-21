@@ -1,3 +1,4 @@
+import { Tabs } from "@kobalte/core/tabs";
 import {
 	cookieStorage,
 	makePersisted,
@@ -6,10 +7,9 @@ import {
 import type { ComponentProps } from "@solidjs/web";
 import { isServer } from "@solidjs/web";
 import {
+	type Accessor,
 	children,
-	createEffect,
 	createSignal,
-	createUniqueId,
 	For,
 	omit,
 	onCleanup,
@@ -142,76 +142,17 @@ export function DirectiveContainer(
 	}
 
 	if (props.type === "tab-group") {
-		const tabNames = props.tabNames?.split("\0") ?? [];
+		const tabNames = props.tabNames?.split("\0");
 		const [preferredLanguage] = usePreferredLanguage();
-		const id = createUniqueId();
-		const state = createSignal(tabNames[0] ?? "");
-		const [openTab, setOpenTab] = state;
-		if (props.title) {
-			// Sync across tabs on the client only; close the channel with the group.
-			const channel = isServer ? undefined : new BroadcastChannel("tab-group");
-			if (channel) onCleanup(() => channel.close());
-			const [, persistTab] = makePersisted<string, Signal<string>>(state, {
-				name: `tab-group:${props.title}`,
-				sync: channel && messageSync(channel),
-				storage: cookieStorage.withOptions({
-					expires: new Date(Date.now() + 3e10),
-				}),
-			});
-			// Persist the committed selection, not the old value visible in its event frame.
-			createEffect(
-				openTab,
-				(value) => {
-					persistTab(value);
-				},
-				{ defer: true },
-			);
-		}
-		const selected = () =>
-			tabNames.includes(openTab()) ? openTab() : tabNames[0];
 
-		return (
-			<div class={styles["tabs-container"]}>
-				<div
-					role="tablist"
-					aria-label={props.title || "Tabs"}
-					aria-orientation="horizontal"
-					class={styles["tabs-list"]}
-					onKeyDown={(event) => {
-						const triggers = Array.from(
-							event.currentTarget.querySelectorAll<HTMLButtonElement>(
-								'[role="tab"]',
-							),
-						);
-						const index = triggers.indexOf(event.target as HTMLButtonElement);
-						if (index === -1 || event.altKey || event.ctrlKey || event.metaKey)
-							return;
-						const rtl =
-							getComputedStyle(event.currentTarget).direction === "rtl";
-						let next: number;
-						switch (event.key) {
-							case "ArrowRight":
-								next = index + (rtl ? -1 : 1);
-								break;
-							case "ArrowLeft":
-								next = index + (rtl ? 1 : -1);
-								break;
-							case "Home":
-								next = 0;
-								break;
-							case "End":
-								next = triggers.length - 1;
-								break;
-							default:
-								return;
-						}
-						event.preventDefault();
-						next = (next + triggers.length) % triggers.length;
-						setOpenTab(tabNames[next]!);
-						triggers[next]!.focus();
-					}}
-				>
-					{tabNames.map((title, index) => {
+		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
+			<Tabs
+				value={value?.()}
+				onChange={onChange}
+				class={styles["tabs-container"]}
+			>
+				<Tabs.List class={styles["tabs-list"]}>
+					{tabNames?.map((title) => {
 						const jsTitle = title.replace(/\.tsx?$/, (ext) => {
 							if (ext === ".tsx") {
 								return ".jsx";
@@ -223,29 +164,12 @@ export function DirectiveContainer(
 						});
 
 						return (
-							<button
-								type="button"
-								role="tab"
-								id={`${id}-tab-${index}`}
-								aria-controls={`${id}-panel-${index}`}
-								aria-selected={selected() === title ? "true" : "false"}
-								tabindex={selected() === title ? 0 : -1}
-								data-selected={selected() === title ? "" : undefined}
-								class={styles["tabs-trigger"]}
-								onClick={() => setOpenTab(title)}
-							>
+							<Tabs.Trigger class={styles["tabs-trigger"]} value={title}>
 								{preferredLanguage() === "ts" ? title : jsTitle}
-								<span
-									aria-hidden="true"
-									class={styles["tabs-indicator"]}
-									style={{
-										width: "100%",
-										display: selected() === title ? "block" : "none",
-									}}
-								/>
-							</button>
+							</Tabs.Trigger>
 						);
 					})}
+					<Tabs.Indicator class={styles["tabs-indicator"]} />
 					{props.withTsJsToggle === "true" && (
 						<input
 							type="checkbox"
@@ -255,25 +179,48 @@ export function DirectiveContainer(
 							class="sb-ts-js-toggle"
 						/>
 					)}
-				</div>
+				</Tabs.List>
 
 				<For each={tabNames}>
 					{(title, i) => (
-						<div
-							role="tabpanel"
-							id={`${id}-panel-${i()}`}
-							aria-labelledby={`${id}-tab-${i()}`}
-							tabindex={0}
-							hidden={selected() !== title}
-							data-selected={selected() === title ? "" : undefined}
+						<Tabs.Content
+							value={title}
+							forceMount={true}
 							class={styles["tabs-content"]}
 						>
 							<div>{_children[i()]}</div>
-						</div>
+						</Tabs.Content>
 					)}
 				</For>
-			</div>
+			</Tabs>
 		);
+
+		if (!props.title) return tabs();
+
+		// Sync named groups across groups and browser tabs; the channel is client-only.
+		const channel = isServer ? undefined : new BroadcastChannel("tab-group");
+		const [openTab, setOpenTab, , dispose] = makePersisted<
+			string,
+			Signal<string>
+		>(createSignal(tabNames![0]!), {
+			name: `tab-group:${props.title}`,
+			sync: channel && messageSync(channel),
+			storage: cookieStorage.withOptions({
+				expires: new Date(Date.now() + 3e10),
+			}),
+			// Restore the saved tab after hydration so server and client markup match.
+			hydrated: true,
+		});
+		onCleanup(() => {
+			dispose();
+			channel?.close();
+		});
+
+		// The key is shared across pages; fall back when this group lacks the saved tab.
+		const selected = () =>
+			tabNames!.includes(openTab()) ? openTab() : tabNames![0]!;
+
+		return tabs(selected, setOpenTab);
 	}
 
 	if (props.type === "details") {

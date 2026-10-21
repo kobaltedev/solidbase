@@ -1,4 +1,5 @@
-import { createUniqueId, For } from "solid-js";
+import { Accordion } from "@kobalte/core/accordion";
+import { For } from "solid-js";
 
 function ChevronDownIcon(props: { class?: string }) {
 	return (
@@ -22,7 +23,7 @@ const accordionItems = [
 	{
 		value: "item-1",
 		title: "Is it accessible?",
-		body: "Yes. Native disclosure elements support keyboard and screen reader navigation.",
+		body: "Yes. It follows the WAI-ARIA accordion pattern and supports keyboard navigation.",
 	},
 	{
 		value: "item-2",
@@ -37,33 +38,29 @@ const accordionItems = [
 ];
 
 export function PreviewAccordionExample() {
-	const name = createUniqueId();
 	return (
 		<div class="sb-preview-demo-accordion-wrap">
-			<style>{`.sb-preview-demo-trigger::-webkit-details-marker { display: none; }
-.sb-preview-demo-trigger .sb-preview-demo-header { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 1rem; margin: 0; font: inherit; }
-.sb-preview-demo-item[open] > .sb-preview-demo-trigger .chevron-icon { transform: rotate(180deg); }`}</style>
-			<div class="sb-preview-demo-accordion">
+			<Accordion
+				class="sb-preview-demo-accordion"
+				defaultValue={["item-1"]}
+				collapsible
+			>
 				<For each={accordionItems}>
 					{(item) => (
-						<details
-							class="sb-preview-demo-item"
-							name={name}
-							open={item.value === "item-1"}
-						>
-							<summary class="sb-preview-demo-trigger">
-								<h3 class="sb-preview-demo-header">
+						<Accordion.Item class="sb-preview-demo-item" value={item.value}>
+							<Accordion.Header class="sb-preview-demo-header">
+								<Accordion.Trigger class="sb-preview-demo-trigger">
 									<span>{item.title}</span>
 									<ChevronDownIcon class="chevron-icon" />
-								</h3>
-							</summary>
-							<div class="sb-preview-demo-content">
+								</Accordion.Trigger>
+							</Accordion.Header>
+							<Accordion.Content class="sb-preview-demo-content">
 								<p>{item.body}</p>
-							</div>
-						</details>
+							</Accordion.Content>
+						</Accordion.Item>
 					)}
 				</For>
-			</div>
+			</Accordion>
 		</div>
 	);
 }
