@@ -15,8 +15,9 @@ vi.mock("solid-js", async () => {
 	const actual = await vi.importActual<typeof import("solid-js")>("solid-js");
 	return {
 		...actual,
-		// Solid 2 replaces createResource with async memos; the server build used under vitest
-		// computes memos once, so shim the async case to resolve into a plain accessor.
+		// Solid 2 replaces createResource with async memos. This file runs in the jsdom project
+		// (browser build), where reading a pending async memo outside a <Loading> boundary throws,
+		// so shim the async case to resolve into a plain accessor the tests can read directly.
 		createMemo: (compute: () => unknown) => {
 			let value: unknown;
 			const result = compute();
