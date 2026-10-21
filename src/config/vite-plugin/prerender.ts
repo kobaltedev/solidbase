@@ -36,6 +36,8 @@ interface WorkerInput {
 interface WorkerResult {
 	written: string[];
 	failed: Array<{ path: string; status: number }>;
+	/** Same-origin links that resolve outside `base`; they are not crawled. */
+	outsideBase: Array<{ path: string; link: string }>;
 	notFoundPages: string[];
 }
 
@@ -131,15 +133,17 @@ export function solidBasePrerenderPlugin(
 
 				// Rendering happens in a child process: the production server runtime keeps the
 				// event loop alive once imported, which would hang `vite build` after the hook.
-				const { written, failed, notFoundPages } = await runWorker({
-					serverEntry,
-					outDir: clientOut,
-					origin,
-					base,
-					seeds,
-					crawlLinks: options.crawlLinks ?? true,
-					notFound: options.notFound ?? true,
-				});
+				const { written, failed, outsideBase, notFoundPages } = await runWorker(
+					{
+						serverEntry,
+						outDir: clientOut,
+						origin,
+						base,
+						seeds,
+						crawlLinks: options.crawlLinks ?? true,
+						notFound: options.notFound ?? true,
+					},
+				);
 
 				const log = client.logger;
 				log.info(
@@ -147,6 +151,11 @@ export function solidBasePrerenderPlugin(
 				);
 				for (const { path, status } of failed) {
 					log.warn(`[solidbase] prerender skipped ${path} (HTTP ${status})`);
+				}
+				for (const { path, link } of outsideBase) {
+					log.warn(
+						`[solidbase] prerender found a broken link on ${path}: ${link} is outside base ${base}`,
+					);
 				}
 			},
 		},

@@ -26,10 +26,10 @@ function rememberLinkPaths(html, pageUrl, paths, toAppPath) {
 		try {
 			const url = new URL(match[1] ?? match[2] ?? "", linkBase);
 			if (url.origin !== pageUrl.origin) continue;
-			const path = normalizeRoute(
-				new URL(toAppPath(url.pathname), pageUrl.origin),
-			);
-			if (!paths.has(path)) paths.set(path, toAppPath(url.pathname));
+			const appPath = toAppPath(url.pathname);
+			if (appPath === undefined) continue;
+			const path = normalizeRoute(new URL(appPath, pageUrl.origin));
+			if (!paths.has(path)) paths.set(path, appPath);
 		} catch {
 			// Invalid hrefs are not crawlable.
 		}
@@ -42,10 +42,11 @@ async function main() {
 	);
 	const { serverEntry, outDir, origin, seeds, crawlLinks, notFound } = input;
 	const base = (input.base ?? "/").replace(/\/$/, "");
+	// Undefined for paths outside the base: those links leave the deployment.
 	const toAppPath = (path) => {
 		if (!base) return path || "/";
 		if (path === base || path === `${base}/`) return "/";
-		return path.startsWith(`${base}/`) ? path.slice(base.length) : path;
+		return path.startsWith(`${base}/`) ? path.slice(base.length) : undefined;
 	};
 	const mod = await import(pathToFileURL(serverEntry).href);
 	const handleRequest =
@@ -61,6 +62,8 @@ async function main() {
 	};
 
 	const failed = [];
+	// Link -> first page linking to it, so each escaping link is reported once.
+	const outsideBase = new Map();
 	const notFoundPages = [];
 	// The first spelling wins, matching the engine's seed deduplication.
 	const requestPaths = new Map();
@@ -95,9 +98,12 @@ async function main() {
 				const pageUrl = new URL(base + requestPath, origin);
 				if (crawlLinks)
 					rememberLinkPaths(html, pageUrl, requestPaths, toAppPath);
-				const links = crawlLinks
-					? extractLinks(html, pageUrl).map(toAppPath)
-					: [];
+				const links = [];
+				for (const link of crawlLinks ? extractLinks(html, pageUrl) : []) {
+					const appPath = toAppPath(link);
+					if (appPath !== undefined) links.push(appPath);
+					else if (!outsideBase.has(link)) outsideBase.set(link, requestPath);
+				}
 				return new Response(html, {
 					headers: { [DISCOVERY_HEADER]: links.join(",") },
 				});
@@ -157,7 +163,15 @@ async function main() {
 	const written = result.pages.map((page) => page.path);
 	// The server runtime keeps the loop alive, so exit explicitly, but only once the
 	// result has been handed to the IPC channel.
-	process.send({ written, failed, notFoundPages }, () => process.exit(0));
+	process.send(
+		{
+			written,
+			failed,
+			outsideBase: [...outsideBase].map(([link, path]) => ({ path, link })),
+			notFoundPages,
+		},
+		() => process.exit(0),
+	);
 }
 
 main().catch((error) => {
