@@ -1,6 +1,7 @@
 import { Popover } from "@kobalte/core/popover";
 import { createMemo, createSignal, For, Show } from "solid-js";
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
+import { useResolvedHref } from "../../client/base-path.js";
 import { useSolidBaseRoute } from "../../client/index.jsx";
 import { useSolidBaseRouteFallbackOptions } from "../../client/routes.js";
 import type { SolidBaseRouteOption } from "../../config/route-config.js";
@@ -49,6 +50,9 @@ export default function VersionSelector() {
 							<For each={options()}>
 								{(option) => {
 									const outbound = () => !!option.href;
+									const href = useResolvedHref(
+										() => option.href ?? option.path,
+									);
 
 									return (
 										<a
@@ -58,7 +62,7 @@ export default function VersionSelector() {
 											aria-current={
 												option === currentOption() ? "page" : undefined
 											}
-											href={option.href ?? option.path}
+											href={href()}
 											onMouseEnter={(e) => e.currentTarget.focus()}
 											onClick={() => setOpen(false)}
 										>

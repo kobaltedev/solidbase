@@ -19,6 +19,7 @@ vi.mock("@solidjs/router", () => ({
 			return pathname();
 		},
 	}),
+	useResolvedPath: (path: () => string) => path,
 }));
 
 const routes = {

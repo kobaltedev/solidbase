@@ -20,6 +20,7 @@ vi.mock("@solidjs/router", () => ({
 			return pathname();
 		},
 	}),
+	useResolvedPath: (path: () => string) => path,
 }));
 
 vi.mock("../../src/client/locale.ts", () => ({

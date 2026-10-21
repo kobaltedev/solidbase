@@ -7,6 +7,7 @@ import { mount } from "../helpers/solid.js";
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
 const navigate = vi.fn<(to: string) => Promise<void>>(() => Promise.resolve());
 const matchRest = vi.fn<() => string | undefined>(() => "guide/install");
+let routerBase = "";
 
 // Back the mocked location with a signal that navigate() moves, like the router does.
 function trackNavigation(initialPath: string) {
@@ -35,6 +36,7 @@ vi.mock("@solidjs/router", () => ({
 	}),
 	useNavigate: () => navigate,
 	useMatch: () => () => ({ params: { rest: matchRest() } }),
+	useResolvedPath: (path: () => string) => () => `${routerBase}${path()}`,
 }));
 
 vi.mock("solid-js", async () => {
@@ -58,6 +60,7 @@ describe("locale client helpers", () => {
 		matchRest.mockReset();
 		matchRest.mockReturnValue("guide/install");
 		setSolidBaseConfig({});
+		routerBase = "";
 		vi.resetModules();
 	});
 
@@ -133,6 +136,40 @@ describe("locale client helpers", () => {
 		expect(getLocale("/de/docs/setup").code).toBe("de");
 		expect(getLocale("/docs/setup").code).toBe("en-US");
 		expect(getLocaleLink(getLocale("/de/docs/setup"))).toBe("/de/docs/");
+	});
+
+	it("matches locales below the router base", async () => {
+		setSolidBaseConfig({
+			lang: "en-US",
+			locales: { root: { label: "English" }, fr: { label: "Francais" } },
+		});
+		routerBase = "/docs";
+		trackNavigation("/docs/fr/guide/install");
+
+		const { LocaleContextProvider, useLocale } = await import(
+			"../../src/client/locale.ts"
+		);
+		const { SolidBaseRoutesContextProvider } = await import(
+			"../../src/client/routes.ts"
+		);
+
+		createRoot((dispose) => {
+			let value: ReturnType<typeof useLocale> | undefined;
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
+			expect(value?.currentLocale().code).toBe("fr");
+			dispose();
+		});
 	});
 
 	it("uses routes.locale options and navigation when routes are configured", async () => {

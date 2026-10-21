@@ -12,7 +12,7 @@ import {
 	Show,
 	Switch,
 } from "solid-js";
-
+import { useResolvedHref } from "../client/base-path.js";
 import { useLocale, useThemeListener } from "../client/index.jsx";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import {
@@ -61,6 +61,7 @@ function Layout(props: ParentProps) {
 		useDefaultThemeComponents();
 	const { sidebarOpen, setSidebarOpen, frontmatter } = useDefaultThemeState();
 	const config = useRouteConfig();
+	const homeHref = useResolvedHref(() => config().siteUrl || "/");
 
 	const sidebar = useSidebar<DefaultThemeSidebarItemOptions>();
 
@@ -150,10 +151,7 @@ function Layout(props: ParentProps) {
 									<Dialog.Content class={styles.sidenav}>
 										<div class={styles["sidenav-content"]}>
 											<div class={styles["sidenav-header"]}>
-												<a
-													href={config().siteUrl || "/"}
-													class={styles["logo-link"]}
-												>
+												<a href={homeHref()} class={styles["logo-link"]}>
 													<Show
 														when={config().logo}
 														fallback={<span>{config().title}</span>}
@@ -227,6 +225,7 @@ function NavigationItem(props: NavigationItemProps) {
 					// Solid Router 2 has no <A>: native anchors are claimed by the router.
 					const linkState = useLinkState(href, { end: true });
 					const isActive = () => linkState.active();
+					const resolvedHref = useResolvedHref(href);
 
 					return (
 						<li>
@@ -235,7 +234,7 @@ function NavigationItem(props: NavigationItemProps) {
 									styles["sidenav-link"],
 									{ [styles.active!]: isActive() },
 								]}
-								href={href()}
+								href={resolvedHref()}
 								aria-current={isActive() ? "page" : undefined}
 								onClick={() => setSidebarOpen(false)}
 							>

@@ -1,6 +1,6 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
 import { createOptionalContextProvider } from "@solid-primitives/context";
-import { useLocation, useMatch, useNavigate } from "@solidjs/router";
+import { useMatch, useNavigate, useResolvedPath } from "@solidjs/router";
 import { getRequestEvent, isServer } from "@solidjs/web";
 import { createEffect, createMemo } from "solid-js";
 
@@ -14,6 +14,7 @@ import {
 	resolveSolidBaseRouteValueOverrides,
 	type SolidBaseRouteOption,
 } from "../config/route-config.js";
+import { stripBasePath, useAppPathname } from "./base-path.js";
 import { useSolidBaseRoutes } from "./routes.js";
 
 export const DEFAULT_LANG_CODE = "en-US";
@@ -152,13 +153,13 @@ function isPathWithinPrefix(path: string, prefix: string) {
 
 const [LocaleContextProvider, useLocaleContext] = createOptionalContextProvider(
 	() => {
-		const location = useLocation();
+		const pathname = useAppPathname();
 		const navigate = useNavigate();
 		const routes = useSolidBaseRoutes();
 
-		const currentLocale = createMemo(() => getLocaleForPath(location.pathname));
+		const currentLocale = createMemo(() => getLocaleForPath(pathname()));
 		const currentRouteMatch = createMemo(() =>
-			getSolidBaseRouteMatchForPath(solidBaseConfig.routes, location.pathname),
+			getSolidBaseRouteMatchForPath(solidBaseConfig.routes, pathname()),
 		);
 		const locales = createMemo(() => {
 			if (!solidBaseConfig.routes) return legacyLocales;
@@ -171,7 +172,11 @@ const [LocaleContextProvider, useLocaleContext] = createOptionalContextProvider(
 				.map(routeOptionToLocale);
 		});
 
-		const match = useMatch(() => `${getLocaleLink(currentLocale())}*rest`);
+		// The location includes the router base, so match against a resolved pattern.
+		const localePattern = useResolvedPath(
+			() => `${getLocaleLink(currentLocale())}*rest`,
+		);
+		const match = useMatch(() => localePattern() ?? "");
 
 		// The document language follows the location, however it changed (locale
 		// switcher, plain links, Back/Forward). Effects run once the navigation
@@ -294,6 +299,9 @@ export function getLocale(_path?: string) {
 		} else {
 			path = location.pathname;
 		}
+		// Called outside the router (eg. the document shell), so strip Vite's base,
+		// which is what apps configure as the router base.
+		path = stripBasePath(path, import.meta.env.BASE_URL);
 	}
 
 	return getLocaleForPath(path);

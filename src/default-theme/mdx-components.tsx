@@ -17,6 +17,7 @@ import {
 	Show,
 	type Signal,
 } from "solid-js";
+import { useResolvedHref } from "../client/base-path.js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
 import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.jsx";
@@ -66,14 +67,15 @@ export function h6(props: ComponentProps<"h6">) {
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
 	const outbound = () => String(props.href ?? "").includes("//");
 	const autoHeading = () => props["data-auto-heading"] === "";
+	const href = useResolvedHref(() => props.href ?? "");
 
 	return (
 		<a
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
 			class={autoHeading() ? styles["a-auto"] : styles.a}
-			href={props.href ?? ""}
 			{...props}
+			href={href()}
 		/>
 	);
 }

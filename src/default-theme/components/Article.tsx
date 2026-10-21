@@ -3,6 +3,7 @@ import { createShortcut } from "@solid-primitives/keyboard";
 import { isAppleDevice } from "@solid-primitives/platform";
 import { createSignal, type ParentProps, Show } from "solid-js";
 
+import { useResolvedHref } from "../../client/base-path.js";
 import { useCurrentPageData } from "../../client/index.jsx";
 import { usePrevNext } from "../../client/sidebar.js";
 import {
@@ -87,6 +88,12 @@ export default function Article(props: ParentProps) {
 		typeof r === "string" ? r : typeof r === "object" ? r.text : undefined;
 	const customLink = (r?: RelativePageConfig) =>
 		typeof r === "object" ? r.link : undefined;
+	const prevHref = useResolvedHref(
+		() => customLink(frontmatter()?.prev) ?? prevNext.prevLink()?.link,
+	);
+	const nextHref = useResolvedHref(
+		() => customLink(frontmatter()?.next) ?? prevNext.nextLink()?.link,
+	);
 
 	return (
 		<>
@@ -119,13 +126,7 @@ export default function Article(props: ParentProps) {
 						<nav class={styles.related}>
 							<div>
 								<Show when={hasPrev()}>
-									<a
-										class={styles.prev}
-										href={
-											customLink(frontmatter()?.prev) ??
-											prevNext.prevLink().link
-										}
-									>
+									<a class={styles.prev} href={prevHref()}>
 										<span>Previous</span>
 										{customTitle(frontmatter()?.prev) ??
 											prevNext.prevLink().title}
@@ -134,13 +135,7 @@ export default function Article(props: ParentProps) {
 							</div>
 							<div>
 								<Show when={hasNext()}>
-									<a
-										class={styles.next}
-										href={
-											customLink(frontmatter()?.next) ??
-											prevNext.nextLink().link
-										}
-									>
+									<a class={styles.next} href={nextHref()}>
 										<span>Next</span>
 										{customLink(frontmatter()?.next) ??
 											prevNext.nextLink().title}

@@ -1,5 +1,4 @@
 import { createOptionalContextProvider } from "@solid-primitives/context";
-import { useLocation } from "@solidjs/router";
 import { type Accessor, createMemo } from "solid-js";
 
 import type {
@@ -7,6 +6,7 @@ import type {
 	SidebarItem,
 	SidebarItemLink,
 } from "../config/sidebar.js";
+import { useAppPathname } from "./base-path.js";
 import { useLocale } from "./locale.js";
 
 export type * from "../config/sidebar.js";
@@ -114,14 +114,14 @@ export function usePrevNext<T = {}>() {
 		return flattenSidebarItems<T>(s);
 	});
 
-	const location = useLocation();
+	const pathname = useAppPathname();
 
 	const index = createMemo(() => {
 		const s = sidebar();
 		if (!s) return -1;
 
 		return links().findIndex(
-			(item) => "link" in item && location.pathname === item.link,
+			(item) => "link" in item && pathname() === item.link,
 		);
 	});
 

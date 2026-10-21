@@ -1,8 +1,10 @@
 import type { ComponentProps } from "@solidjs/web";
+import { useResolvedHref } from "../../client/base-path.js";
 import styles from "./Link.module.css";
 
 export default function Link(props: ComponentProps<"a">) {
 	const outbound = () => String(props.href ?? "").includes("://");
+	const href = useResolvedHref(() => props.href);
 
 	return (
 		<a
@@ -10,6 +12,7 @@ export default function Link(props: ComponentProps<"a">) {
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
 			{...props}
+			href={href()}
 		/>
 	);
 }
