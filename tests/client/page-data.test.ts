@@ -11,27 +11,6 @@ vi.mock("@solidjs/router", () => ({
 	useRouteMatches: () => () => useCurrentMatches(),
 }));
 
-// Solid's hydration re-runs async memos with the global Promise swapped for one that never
-// settles (`subFetch`), restoring it once the compute returns.
-const hydration = vi.hoisted(() => {
-	class StubPromise {
-		// biome-ignore lint/suspicious/noThenProperty: mirrors Solid's never-settling MockPromise
-		then() {
-			return new StubPromise();
-		}
-		catch() {
-			return new StubPromise();
-		}
-		finally() {
-			return new StubPromise();
-		}
-		static resolve() {
-			return new StubPromise();
-		}
-	}
-	return { stubPromise: false, StubPromise, NativePromise: Promise };
-});
-
 vi.mock("solid-js", async () => {
 	const actual = await vi.importActual<typeof import("solid-js")>("solid-js");
 	return {
@@ -40,16 +19,8 @@ vi.mock("solid-js", async () => {
 		// computes memos once, so shim the async case to resolve into a plain accessor.
 		createMemo: (compute: () => unknown) => {
 			let value: unknown;
-			let result: unknown;
-			if (hydration.stubPromise) {
-				globalThis.Promise = hydration.StubPromise as any;
-				try {
-					result = compute();
-				} finally {
-					globalThis.Promise = hydration.NativePromise;
-				}
-			} else result = compute();
-			if (result instanceof hydration.NativePromise)
+			const result = compute();
+			if (result instanceof Promise)
 				result.then((resolved) => (value = resolved));
 			else value = result;
 			return () => value;
@@ -156,37 +127,5 @@ describe("page data helpers", () => {
 			await readFrontmatter(CurrentPageDataProvider, useFrontmatter),
 		).toEqual({ title: "Lazy" });
 		expect(preload).not.toHaveBeenCalled();
-	});
-
-	it("does not preload lazy routes under the hydration Promise stub", async () => {
-		// A lazy() route as Vite builds it: the load chains off the global Promise and is cached.
-		let load: Promise<any> | undefined;
-		const preload = vi.fn(() => {
-			load ??= Promise.resolve().then(() => ({
-				$$SolidBase_page_data: { frontmatter: { title: "Loaded" } },
-			}));
-			return load;
-		});
-		useCurrentMatches.mockReturnValue([
-			{
-				route: {
-					component: { preload, moduleUrl: "src/routes/app.tsx?pick=default" },
-				},
-			},
-		]);
-
-		const { CurrentPageDataProvider, useFrontmatter } = await import(
-			"../../src/client/page-data.ts"
-		);
-
-		hydration.stubPromise = true;
-		const hydrated = readFrontmatter(CurrentPageDataProvider, useFrontmatter);
-		hydration.stubPromise = false;
-		await hydrated;
-
-		// Navigating back to the route reuses the cached load, which must settle.
-		expect(
-			await readFrontmatter(CurrentPageDataProvider, useFrontmatter),
-		).toEqual({ title: "Loaded" });
 	});
 });

@@ -70,11 +70,6 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 
 				if (windowPageData) return windowPageData;
 
-				// Hydration re-runs this compute with a stubbed global Promise until its first await.
-				// Preloading the lazy route under that stub caches a promise that never settles and
-				// stalls every later navigation back to the route, so yield before loading. `await`
-				// uses the intrinsic Promise; `await Promise.resolve()` would hit the stub instead.
-				await undefined;
 				// no page module (e.g. an eager or hand-written route): no page data, not an error
 				const mod = ref?.import ? await ref.import() : undefined;
 				return mod?.$$SolidBase_page_data;
