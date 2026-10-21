@@ -1,6 +1,6 @@
 import { createOptionalContextProvider } from "@solid-primitives/context";
 import { useRouteMatches } from "@solidjs/router";
-import { createMemo, type MemoOptions } from "solid-js";
+import { createMemo, type MemoOptions, untrack } from "solid-js";
 
 interface PageModuleRef {
 	src?: string;
@@ -74,7 +74,8 @@ const [CurrentPageDataProvider, useCurrentPageDataContext] =
 				const mod = ref?.import ? await ref.import() : undefined;
 				return mod?.$$SolidBase_page_data;
 			},
-			{ deferStream: props.deferStream ?? true } as MemoOptions<
+			// Read once: memo options are fixed at creation.
+			{ deferStream: untrack(() => props.deferStream) ?? true } as MemoOptions<
 				CurrentPageData | undefined
 			>,
 		);

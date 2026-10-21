@@ -10,15 +10,17 @@ export default function DocSearch(props: {
 	const [ref, setRef] = createSignal<HTMLElement>();
 
 	createEffect(
-		() => ref(),
-		(el) => {
+		() => ({ el: ref(), options: props.docsearch }),
+		({ el, options }) => {
 			if (!el) return;
 			try {
 				// DocSearch is callable at runtime; Node16 resolution types its default as a module.
-				(docsearch as unknown as (options: DocSearchProps) => void)({
-					container: el,
-					...props.docsearch,
-				});
+				const instance = (
+					docsearch as unknown as (options: DocSearchProps) => {
+						destroy(): void;
+					}
+				)({ container: el, ...options });
+				return () => instance.destroy();
 			} catch {}
 		},
 	);

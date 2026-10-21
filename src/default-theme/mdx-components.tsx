@@ -137,10 +137,10 @@ export function DirectiveContainer(
 		withTsJsToggle?: string;
 	} & ParentProps,
 ) {
-	const _children = children(() => props.children).toArray();
+	const resolved = children(() => props.children);
 
 	if (props.type === "tab") {
-		return _children;
+		return <>{resolved()}</>;
 	}
 
 	if (props.type === "tab-group") {
@@ -190,7 +190,7 @@ export function DirectiveContainer(
 							forceMount={true}
 							class={styles["tabs-content"]}
 						>
-							<div>{_children[i()]}</div>
+							<div>{resolved.toArray()[i()]}</div>
 						</Tabs.Content>
 					)}
 				</For>
@@ -232,7 +232,7 @@ export function DirectiveContainer(
 				data-custom-container="details"
 			>
 				<summary>{props.title ?? props.type}</summary>
-				{_children}
+				{resolved()}
 			</details>
 		);
 	}
@@ -242,7 +242,7 @@ export function DirectiveContainer(
 			<Show when={props.title !== " "}>
 				<span>{props.title ?? props.type}</span>
 			</Show>
-			{_children}
+			{resolved()}
 		</div>
 	);
 }
