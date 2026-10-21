@@ -10,6 +10,7 @@
   "dependencies": {
     "@kobalte/core": "2.0.0-alpha.4",
     "@kobalte/solidbase": "workspace:*",
+    "@solidjs/meta": "1.0.0-next.2",
     "@solidjs/router": "2.0.0-next.37",
     "@solidjs/web": "2.0.0-rc.16",
     "solid-js": "2.0.0-rc.16"
