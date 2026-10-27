@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
-import { extname, join, relative } from "node:path";
+import { extname, join, relative, resolve } from "node:path";
 
 import matter from "gray-matter";
 
@@ -23,8 +23,8 @@ export type RouteIndexEntry = {
 	frontmatter: Record<string, unknown>;
 };
 
-export function getRoutesDir(root: string) {
-	return join(root, "src/routes");
+export function getRoutesDir(root: string, dir = "src/routes") {
+	return resolve(root, dir);
 }
 
 export function isNotFoundRoute(routesDir: string, filePath: string) {
@@ -39,7 +39,10 @@ export function stripOrderingSegment(segment: string) {
 }
 
 export async function collectMarkdownFiles(dir: string): Promise<string[]> {
-	const entries = await readdir(dir, { withFileTypes: true });
+	const entries = await readdir(dir, { withFileTypes: true }).catch((error) => {
+		if (error.code === "ENOENT") return [];
+		throw error;
+	});
 	const files = await Promise.all(
 		entries.map(async (entry) => {
 			const fullPath = join(dir, entry.name);
@@ -213,8 +216,11 @@ export function isDefaultLocaleRoute(
 	);
 }
 
-export async function getRoutesIndex(root: string): Promise<RouteIndexEntry[]> {
-	const routesDir = getRoutesDir(root);
+export async function getRoutesIndex(
+	root: string,
+	dir?: string,
+): Promise<RouteIndexEntry[]> {
+	const routesDir = getRoutesDir(root, dir);
 	const markdownFiles = await collectMarkdownFiles(routesDir);
 
 	return Promise.all(

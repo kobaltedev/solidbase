@@ -5,21 +5,28 @@ import { Layout, mdxComponents } from "virtual:solidbase/components";
 // as different modules, resulting in this file getting its own MDXContext (id `file://.../mdx.js),
 // and the MDX files sharing another (id `@kobalte/solidbase/mdx`).
 import { MDXProvider } from "virtual:solidbase/mdx";
-import { Meta, MetaProvider, Title } from "@solidjs/meta";
-import { createMemo, onMount, type ParentProps, Suspense } from "solid-js";
+import { Meta, Title } from "@solidjs/meta";
+import { useRouteMatches } from "@solidjs/router";
+import { httpStatus, isServer } from "@solidjs/web";
+import { createMemo, Loading, onSettled, type ParentProps } from "solid-js";
 import { useRouteSolidBaseConfig } from "./config.js";
 import { SolidBaseContext } from "./context.jsx";
+import { PreferredLanguageCookieScript } from "./preferred-language.js";
+import { ThemeCookieScript } from "./theme.js";
 
 export function SolidBaseRoot(
 	props: ParentProps & {
 		currentPageData?: { deferStream?: boolean };
-		meta?: {
-			// allows diabling MetaProvider for cases where you've already got one
-			provider?: boolean;
-		};
 	},
 ) {
-	onMount(() => {
+	// SolidStart answered unmatched paths with a 404; Router 2 start mode renders an empty
+	// shell with 200 unless a route sets the status. Apps with a [...404] route still win.
+	if (isServer) {
+		const matches = useRouteMatches();
+		if (matches().length === 0) httpStatus(404);
+	}
+
+	onSettled(() => {
 		const { $$SolidBase } = window as {
 			$$SolidBase?: { initTwoslashPopups?(): void };
 		};
@@ -27,7 +34,9 @@ export function SolidBaseRoot(
 	});
 
 	const base = () => (
-		<Suspense>
+		<Loading>
+			<ThemeCookieScript />
+			<PreferredLanguageCookieScript />
 			<SolidBaseRoutesContextProvider>
 				<LocaleContextProvider>
 					<CurrentPageDataProvider {...props.currentPageData}>
@@ -37,17 +46,10 @@ export function SolidBaseRoot(
 					</CurrentPageDataProvider>
 				</LocaleContextProvider>
 			</SolidBaseRoutesContextProvider>
-		</Suspense>
+		</Loading>
 	);
 
-	const withMeta = () =>
-		(props.meta?.provider ?? true) ? (
-			<MetaProvider>{base()}</MetaProvider>
-		) : (
-			base()
-		);
-
-	return <>{withMeta()}</>;
+	return <>{base()}</>;
 }
 
 import { LocaleContextProvider } from "./locale.js";
@@ -73,10 +75,10 @@ export function Inner(props: ParentProps) {
 		pageData()?.frontmatter?.description ?? config().description;
 
 	return (
-		<SolidBaseContext.Provider value={{ config, metaTitle }}>
+		<SolidBaseContext value={{ config, metaTitle }}>
 			<Title>{metaTitle()}</Title>
 			{description() && <Meta name="description" content={description()} />}
 			<Layout>{props.children}</Layout>
-		</SolidBaseContext.Provider>
+		</SolidBaseContext>
 	);
 }

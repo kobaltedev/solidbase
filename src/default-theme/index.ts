@@ -1,7 +1,8 @@
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { DocSearchProps } from "@docsearch/js";
-import type { Component, JSX } from "solid-js";
+import type { JSX } from "@solidjs/web";
+import type { Component } from "solid-js";
 import { defineTheme, type ThemeDefinition } from "../config/index.js";
 import type { SidebarConfig } from "../config/sidebar.js";
 import type { DefaultThemeSidebarItem } from "./sidebar.js";

@@ -1,11 +1,12 @@
 import { Dialog } from "@kobalte/core/dialog";
-import { useMatch } from "@solidjs/router";
+import { useMatch, useResolvedPath } from "@solidjs/router";
 import { createSignal, For, Show } from "solid-js";
 
 import IconArrowDownLine from "~icons/ri/arrow-down-s-line";
 import IconCloseFill from "~icons/ri/close-large-fill";
 import IconMenuLeftLine from "~icons/ri/menu-2-line";
 import IconMenuFill from "~icons/ri/menu-fill";
+import { useResolvedHref } from "../../client/base-path.js";
 import {
 	getLocaleLink,
 	useCurrentPageData,
@@ -38,6 +39,7 @@ export default function Header() {
 
 	const config = useRouteConfig();
 	const locale = useLocale();
+	const logoHref = useResolvedHref(() => getLocaleLink(locale.currentLocale()));
 	const sidebar = useSidebar();
 	const tocContent = () => useCurrentPageData()()?.toc;
 
@@ -52,10 +54,7 @@ export default function Header() {
 		<header class={styles.header}>
 			<div>
 				<div class={styles["logo-cluster"]}>
-					<a
-						href={getLocaleLink(locale.currentLocale())}
-						class={styles["logo-link"]}
-					>
+					<a href={logoHref()} class={styles["logo-link"]}>
 						<Show when={config().logo} fallback={<span>{config().title}</span>}>
 							<img
 								src={config().logo}
@@ -86,16 +85,20 @@ export default function Header() {
 									{(nav) => (
 										<For each={nav()}>
 											{(item) => {
-												const match = useMatch(() =>
+												const pattern = useResolvedPath(() =>
 													locale.applyPathPrefix(
 														`${item.activeMatch ?? item.link}/*rest`,
 													),
+												);
+												const match = useMatch(() => pattern() ?? "");
+												const href = useResolvedHref(() =>
+													locale.applyPathPrefix(item.link),
 												);
 
 												return (
 													<a
 														class={styles.navLink}
-														href={locale.applyPathPrefix(item.link)}
+														href={href()}
 														data-matched={
 															match() !== undefined ? true : undefined
 														}
@@ -125,16 +128,20 @@ export default function Header() {
 						{(nav) => (
 							<For each={nav()}>
 								{(item) => {
-									const match = useMatch(() =>
+									const pattern = useResolvedPath(() =>
 										locale.applyPathPrefix(
 											`${item.activeMatch ?? item.link}/*rest`,
 										),
+									);
+									const match = useMatch(() => pattern() ?? "");
+									const href = useResolvedHref(() =>
+										locale.applyPathPrefix(item.link),
 									);
 
 									return (
 										<a
 											class={styles.navLink}
-											href={locale.applyPathPrefix(item.link)}
+											href={href()}
 											data-matched={match() !== undefined ? true : undefined}
 										>
 											{item.text}

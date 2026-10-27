@@ -1,11 +1,23 @@
 // @vitest-environment jsdom
 
-import { createRoot } from "solid-js";
+import { createRoot, createSignal, flush } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/fr/guide/install");
 const navigate = vi.fn<(to: string) => Promise<void>>(() => Promise.resolve());
 const matchRest = vi.fn<() => string | undefined>(() => "guide/install");
+let routerBase = "";
+
+// Back the mocked location with a signal that navigate() moves, like the router does.
+function trackNavigation(initialPath: string) {
+	const [path, setPath] = createSignal(initialPath);
+	pathname.mockImplementation(path);
+	navigate.mockImplementation((to) => {
+		setPath(to);
+		return Promise.resolve();
+	});
+}
 
 function setSolidBaseConfig(value: Record<string, unknown>) {
 	const store = ((globalThis as any).__solidBaseConfig ??= {}) as Record<
@@ -24,17 +36,17 @@ vi.mock("@solidjs/router", () => ({
 	}),
 	useNavigate: () => navigate,
 	useMatch: () => () => ({ params: { rest: matchRest() } }),
+	useResolvedPath: (path: () => string) => () => `${routerBase}${path()}`,
 }));
 
 vi.mock("solid-js", async () => {
 	const actual = await vi.importActual<typeof import("solid-js")>("solid-js");
 	return {
 		...actual,
-		startTransition: (fn: () => void) => Promise.resolve(fn()),
 	};
 });
 
-vi.mock("solid-js/web", () => ({
+vi.mock("@solidjs/web", () => ({
 	getRequestEvent: vi.fn(),
 	isServer: false,
 }));
@@ -48,6 +60,7 @@ describe("locale client helpers", () => {
 		matchRest.mockReset();
 		matchRest.mockReturnValue("guide/install");
 		setSolidBaseConfig({});
+		routerBase = "";
 		vi.resetModules();
 	});
 
@@ -60,6 +73,7 @@ describe("locale client helpers", () => {
 				fr: { label: "Francais" },
 			},
 		});
+		trackNavigation("/fr/guide/install");
 
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
@@ -68,19 +82,23 @@ describe("locale client helpers", () => {
 			"../../src/client/routes.ts"
 		);
 
+		let localeApi: ReturnType<typeof useLocale> | undefined;
+		let disposeRoot: (() => void) | undefined;
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			expect(value?.currentLocale().code).toBe("fr");
 			expect(value?.routePath()).toBe("/guide/install");
@@ -88,11 +106,16 @@ describe("locale client helpers", () => {
 			expect(getLocaleLink(value!.locales[0]!)).toBe("/");
 			expect(getLocaleLink(value!.locales[1]!)).toBe("/fr/");
 
-			void value?.setLocale(value!.locales[0]!);
-			dispose();
+			localeApi = value;
+			disposeRoot = dispose;
 		});
+		flush();
+		expect(document.documentElement.lang).toBe("fr");
 
-		await Promise.resolve();
+		// Called from an imperative scope (an event handler in the app), not inside the root.
+		localeApi?.setLocale(localeApi!.locales[0]!);
+		flush(); // <html lang> follows the new location once its effects run
+		disposeRoot?.();
 		expect(navigate).toHaveBeenCalledWith("/guide/install");
 		expect(document.documentElement.lang).toBe("en-US");
 	});
@@ -113,6 +136,40 @@ describe("locale client helpers", () => {
 		expect(getLocale("/de/docs/setup").code).toBe("de");
 		expect(getLocale("/docs/setup").code).toBe("en-US");
 		expect(getLocaleLink(getLocale("/de/docs/setup"))).toBe("/de/docs/");
+	});
+
+	it("matches locales below the router base", async () => {
+		setSolidBaseConfig({
+			lang: "en-US",
+			locales: { root: { label: "English" }, fr: { label: "Francais" } },
+		});
+		routerBase = "/docs";
+		trackNavigation("/docs/fr/guide/install");
+
+		const { LocaleContextProvider, useLocale } = await import(
+			"../../src/client/locale.ts"
+		);
+		const { SolidBaseRoutesContextProvider } = await import(
+			"../../src/client/routes.ts"
+		);
+
+		createRoot((dispose) => {
+			let value: ReturnType<typeof useLocale> | undefined;
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
+			expect(value?.currentLocale().code).toBe("fr");
+			dispose();
+		});
 	});
 
 	it("uses routes.locale options and navigation when routes are configured", async () => {
@@ -142,7 +199,7 @@ describe("locale client helpers", () => {
 				],
 			},
 		});
-		pathname.mockReturnValue("/router/fr/about");
+		trackNavigation("/router/fr/about");
 
 		const { LocaleContextProvider, getLocaleLink, useLocale } = await import(
 			"../../src/client/locale.ts"
@@ -151,19 +208,23 @@ describe("locale client helpers", () => {
 			"../../src/client/routes.ts"
 		);
 
+		let localeApi: ReturnType<typeof useLocale> | undefined;
+		let disposeRoot: (() => void) | undefined;
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			expect(value?.currentLocale().code).toBe("fr-FR");
 			expect(value?.routePath()).toBe("/about");
@@ -177,11 +238,16 @@ describe("locale client helpers", () => {
 			expect(value?.applyPathPrefix("/about")).toBe("/router/fr/about");
 			expect(value?.applyPathPrefix("/router/fr")).toBe("/router/fr");
 
-			void value?.setLocale(value!.locales[0]!);
-			dispose();
+			localeApi = value;
+			disposeRoot = dispose;
 		});
+		flush();
+		expect(document.documentElement.lang).toBe("fr-FR");
 
-		await Promise.resolve();
+		// Called from an imperative scope (an event handler in the app), not inside the root.
+		localeApi?.setLocale(localeApi!.locales[0]!);
+		flush(); // <html lang> follows the new location once its effects run
+		disposeRoot?.();
 		expect(navigate).toHaveBeenCalledWith("/router/about");
 		expect(document.documentElement.lang).toBe("en-US");
 	});
@@ -235,16 +301,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			const rootLocales = value?.locales ?? [];
 			expect(rootLocales.map((locale) => locale.config.label)).toEqual([
@@ -259,16 +327,18 @@ describe("locale client helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<typeof useLocale> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					return LocaleContextProvider({
-						get children() {
-							value = useLocale();
-							return null;
-						},
-					} as any);
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						return LocaleContextProvider({
+							get children() {
+								value = useLocale();
+								return null;
+							},
+						} as any);
+					},
+				} as any),
+			);
 
 			const routerLocales = value?.locales ?? [];
 			expect(routerLocales.map((locale) => locale.config.label)).toEqual([

@@ -1,3 +1,4 @@
+import { merge } from "solid-js";
 import {
 	useRouteSolidBaseConfig as _useRouteConfig,
 	useSolidBaseContext as _useSolidBaseContext,
@@ -16,8 +17,6 @@ export function useRouteConfig() {
 export function useThemeText() {
 	const config = useRouteConfig();
 
-	return {
-		...defaultThemeTextConfig,
-		...config().themeConfig?.text,
-	};
+	// A live view: the route config (e.g. its locale's text) can change under a mounted page.
+	return merge(defaultThemeTextConfig, () => config().themeConfig?.text ?? {});
 }

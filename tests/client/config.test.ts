@@ -1,5 +1,6 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const NpmIcon = () => null;
 const pathname = vi.fn<() => string>(() => "/");
@@ -19,6 +20,7 @@ vi.mock("@solidjs/router", () => ({
 			return pathname();
 		},
 	}),
+	useResolvedPath: (path: () => string) => path,
 }));
 
 vi.mock("../../src/client/locale.ts", () => ({
@@ -66,12 +68,14 @@ describe("route config helper", () => {
 		createRoot((dispose) => {
 			let config: ReturnType<typeof useRouteSolidBaseConfig<any>> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					config = useRouteSolidBaseConfig<any>();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						config = useRouteSolidBaseConfig<any>();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(config?.()).toMatchObject({
 				title: "Docs",
@@ -136,12 +140,14 @@ describe("route config helper", () => {
 		createRoot((dispose) => {
 			let config: ReturnType<typeof useRouteSolidBaseConfig<any>> | undefined;
 
-			SolidBaseRoutesContextProvider({
-				get children() {
-					config = useRouteSolidBaseConfig<any>();
-					return null;
-				},
-			} as any);
+			mount(
+				SolidBaseRoutesContextProvider({
+					get children() {
+						config = useRouteSolidBaseConfig<any>();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(config?.()).toMatchObject({
 				title: "Docs v1",

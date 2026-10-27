@@ -4,4 +4,8 @@ title: Deploy
 
 # {frontmatter.title}
 
-A SolidBase app can be deployed anywhere a SolidStart app can be deployed. You can use [Nitro](https://nitro.build/deploy) in your `app.config.ts` to add presets to deploy your app to various platforms.
+After `vite build`, `dist/client` is a complete static site that can be hosted on any static hosting service. Set the build command to `vite build` (or your package's build script) and the publish directory to `dist/client`.
+
+SolidBase uses `@solidjs/vite-plugin` in start mode, configured in `vite.config.ts`. Nitro presets in `app.config.ts` are no longer used. If you set `prerender: false`, the build produces a server bundle in `dist/server` instead of prerendered pages; deploying that bundle requires a server setup suited to your host.
+
+The prerender also writes a `404.html`, plus a `<dir>/404.html` for each directory whose not-found page differs (another locale's `[...404]` route, a section sidebar). The build log lists them. Missing URLs should be answered with the closest one so the page hydrates with the right locale and layout. Some hosts do this automatically. On Netlify, add a rule per directory, such as `/fr/* /fr/404.html 404`.

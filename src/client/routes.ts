@@ -1,6 +1,5 @@
 import { solidBaseConfig } from "virtual:solidbase/config";
-import { createContextProvider } from "@solid-primitives/context";
-import { useLocation } from "@solidjs/router";
+import { createOptionalContextProvider } from "@solid-primitives/context";
 import { createMemo } from "solid-js";
 
 import {
@@ -13,17 +12,15 @@ import {
 	type SolidBaseRouteOption,
 	type SolidBaseRouteSelection,
 } from "../config/route-config.js";
+import { useAppPathname } from "./base-path.js";
 import { useRouteSolidBaseConfig } from "./config.js";
 
 const [SolidBaseRoutesContextProvider, useSolidBaseRoutesContext] =
-	createContextProvider(() => {
-		const location = useLocation();
+	createOptionalContextProvider(() => {
+		const pathname = useAppPathname();
 		const current = createMemo(
 			() =>
-				getSolidBaseRouteSelectionForPath(
-					solidBaseConfig.routes,
-					location.pathname,
-				) ??
+				getSolidBaseRouteSelectionForPath(solidBaseConfig.routes, pathname()) ??
 				normalizeSolidBaseRouteSelection(solidBaseConfig.routes) ??
 				{},
 		);

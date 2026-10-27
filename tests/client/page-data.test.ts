@@ -2,25 +2,29 @@
 
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const useCurrentMatches = vi.fn();
 
 vi.mock("@solidjs/router", () => ({
-	useCurrentMatches,
+	// Solid Router 2: useRouteMatches() returns an accessor of the current matches
+	useRouteMatches: () => () => useCurrentMatches(),
 }));
 
 vi.mock("solid-js", async () => {
 	const actual = await vi.importActual<typeof import("solid-js")>("solid-js");
 	return {
 		...actual,
-		createResource: (source: any, fetcher: (value: any) => Promise<any>) => {
-			let value: any;
-			Promise.resolve(typeof source === "function" ? source() : source)
-				.then((resolved) => fetcher(resolved))
-				.then((resolved) => {
-					value = resolved;
-				});
-			return [() => value] as const;
+		// Solid 2 replaces createResource with async memos. This file runs in the jsdom project
+		// (browser build), where reading a pending async memo outside a <Loading> boundary throws,
+		// so shim the async case to resolve into a plain accessor the tests can read directly.
+		createMemo: (compute: () => unknown) => {
+			let value: unknown;
+			const result = compute();
+			if (result instanceof Promise)
+				result.then((resolved) => (value = resolved));
+			else value = result;
+			return () => value;
 		},
 	};
 });
@@ -53,13 +57,15 @@ describe("page data helpers", () => {
 		let frontmatter: ReturnType<typeof useFrontmatter<any>> | undefined;
 
 		const dispose = createRoot((dispose) => {
-			CurrentPageDataProvider({
-				get children() {
-					_pageData = useCurrentPageData();
-					frontmatter = useFrontmatter();
-					return null;
-				},
-			} as any);
+			mount(
+				CurrentPageDataProvider({
+					get children() {
+						_pageData = useCurrentPageData();
+						frontmatter = useFrontmatter();
+						return null;
+					},
+				} as any),
+			);
 			return dispose;
 		});
 
@@ -73,5 +79,54 @@ describe("page data helpers", () => {
 			description: "World",
 		});
 		dispose();
+	});
+
+	const readFrontmatter = async (
+		CurrentPageDataProvider: any,
+		useFrontmatter: () => () => any,
+	) => {
+		let frontmatter: (() => any) | undefined;
+		const dispose = createRoot((dispose) => {
+			mount(
+				CurrentPageDataProvider({
+					get children() {
+						frontmatter = useFrontmatter();
+						return null;
+					},
+				}),
+			);
+			return dispose;
+		});
+		for (let i = 0; i < 4; i++) await Promise.resolve();
+		const value = frontmatter?.();
+		dispose();
+		return value;
+	};
+
+	it("reads lazy routes from the window cache by moduleUrl", async () => {
+		const preload = vi.fn();
+		useCurrentMatches.mockReturnValue([
+			{
+				route: {
+					component: {
+						preload,
+						moduleUrl:
+							"src/routes/page.mdx?pick=$css&pick=$$SolidBase_page_data",
+					},
+				},
+			},
+		]);
+		(window as any).$$SolidBase_page_data = {
+			"src/routes/page.mdx": { frontmatter: { title: "Lazy" } },
+		};
+
+		const { CurrentPageDataProvider, useFrontmatter } = await import(
+			"../../src/client/page-data.ts"
+		);
+
+		expect(
+			await readFrontmatter(CurrentPageDataProvider, useFrontmatter),
+		).toEqual({ title: "Lazy" });
+		expect(preload).not.toHaveBeenCalled();
 	});
 });

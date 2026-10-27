@@ -1,6 +1,6 @@
 import { Badge as KBBadge } from "@kobalte/core/badge";
+import { Dynamic } from "@solidjs/web";
 import { For, type ParentProps, Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
 
 import type { BadgeConfig } from "../frontmatter.js";
 import type {

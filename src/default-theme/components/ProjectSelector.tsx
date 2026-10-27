@@ -2,6 +2,7 @@ import { Popover } from "@kobalte/core/popover";
 import { createMemo, createSignal, For, Show } from "solid-js";
 
 import IconExpandUpDownLine from "~icons/ri/expand-up-down-line";
+import { useResolvedHref } from "../../client/base-path.js";
 import { useSolidBaseRoute } from "../../client/index.jsx";
 import { useSolidBaseRouteFallbackOptions } from "../../client/routes.js";
 import type { SolidBaseRouteOption } from "../../config/route-config.js";
@@ -36,21 +37,26 @@ export default function ProjectSelector() {
 				>
 					<Popover.Trigger class={styles.trigger} aria-label="Change project">
 						<span class={styles.label}>{getOptionLabel(current())}</span>
-						<IconExpandUpDownLine class={styles.icon} aria-hidden />
+						<IconExpandUpDownLine class={styles.icon} aria-hidden="true" />
 					</Popover.Trigger>
 					<Popover.Portal>
 						<Popover.Content class={styles.content}>
 							<For each={options()}>
 								{(option) => {
 									const outbound = () => !!option.href;
+									const href = useResolvedHref(
+										() => option.href ?? option.path,
+									);
 
 									return (
 										<a
 											class={styles.item}
 											target={outbound() ? "_blank" : undefined}
 											rel={outbound() ? "noopener noreferrer" : undefined}
-											aria-current={option === currentOption() || undefined}
-											href={option.href ?? option.path}
+											aria-current={
+												option === currentOption() ? "page" : undefined
+											}
+											href={href()}
 											onMouseEnter={(e) => e.currentTarget.focus()}
 											onClick={() => setOpen(false)}
 										>

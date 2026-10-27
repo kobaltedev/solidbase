@@ -57,7 +57,7 @@ describe("createSolidBase", () => {
 		});
 		const plugins = solidBase.plugin({ title: "Docs", llms: true });
 
-		expect(config.extensions).toEqual(["tsx", "md", "mdx"]);
+		expect(config.extensions).toEqual(["tsx", "md", ".md", ".mdx"]);
 		expect(config.ssr).toBe(true);
 		expect(theme.config).toHaveBeenCalledWith(
 			expect.objectContaining({
@@ -69,7 +69,15 @@ describe("createSolidBase", () => {
 				issueAutolink: false,
 			}),
 		);
-		expect(plugins).toEqual(["mdx-plugin", "solidbase-plugin", "theme-plugin"]);
+		// File-system routing plugins (filesystem-routing) sit between core and theme plugins.
+		expect(plugins.filter((p: unknown) => typeof p === "string")).toEqual([
+			"mdx-plugin",
+			"solidbase-plugin",
+			"theme-plugin",
+		]);
+		expect(
+			plugins.some((p: any) => p?.name?.startsWith("filesystem-routing")),
+		).toBe(true);
 		expect(solidBaseMdx).toHaveBeenCalledWith(
 			expect.objectContaining({
 				title: "Docs",

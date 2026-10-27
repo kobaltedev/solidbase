@@ -15,8 +15,9 @@ The footer has multiple options available.
 ## Social Links
 
 ```ts
-<!-- app.config.ts -->
-import { defineConfig } from "@solidjs/start/config";
+<!-- vite.config.ts -->
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
 import { createSolidBase } from "@kobalte/solidbase";
 
@@ -24,10 +25,8 @@ import { createSolidBase } from "@kobalte/solidbase";
 const solidBase = createSolidBase(theme);
 
 export default defineConfig({
-	...solidBase.startConfig({
-		...
-	}),
 	plugins: [
+		solid(solidBase.startConfig()),
 		solidBase.plugin({
 			...
 			themeConfig: {

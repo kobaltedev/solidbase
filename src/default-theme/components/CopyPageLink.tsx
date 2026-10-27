@@ -1,5 +1,5 @@
+import { dynamic } from "@solidjs/web";
 import { Show } from "solid-js";
-import { Dynamic } from "solid-js/web";
 import Check from "~icons/ri/check-fill";
 import CrossIcon from "~icons/ri/close-circle-line";
 import CopyIcon from "~icons/ri/file-copy-line";
@@ -24,38 +24,38 @@ function getStateIcon(state: CopyPageState) {
 export default function CopyPageLink() {
 	const text = useThemeText();
 	const { canCopy, copy, isCopying, isReady, state } = useCopyPageMarkdown();
+	const StateIcon = dynamic(() => getStateIcon(state()));
 
 	return (
 		<Show when={canCopy()}>
 			<button
 				type="button"
-				class={styles.button}
-				classList={{
-					[styles.success]: state() === "success",
-					[styles.error]: state() === "error",
-				}}
+				class={[
+					styles.button,
+					{
+						[styles.success!]: state() === "success",
+						[styles.error!]: state() === "error",
+					},
+				]}
 				onClick={copy}
 				disabled={!isReady() || import.meta.env.DEV}
-				aria-busy={isCopying() || undefined}
+				aria-busy={isCopying() ? "true" : undefined}
 				aria-live="polite"
 			>
-				<Dynamic component={getStateIcon(state())} class={styles.icon} />
+				<StateIcon class={styles.icon} />
 				<span class={styles.labelWrap}>
 					<span
-						class={styles.label}
-						classList={{ [styles.active]: state() === "idle" }}
+						class={[styles.label, { [styles.active!]: state() === "idle" }]}
 					>
 						{text.copyPage}
 					</span>
 					<span
-						class={styles.label}
-						classList={{ [styles.active]: state() === "success" }}
+						class={[styles.label, { [styles.active!]: state() === "success" }]}
 					>
 						{text.copiedPage}
 					</span>
 					<span
-						class={styles.label}
-						classList={{ [styles.active]: state() === "error" }}
+						class={[styles.label, { [styles.active!]: state() === "error" }]}
 					>
 						{text.copyFailedPage}
 					</span>

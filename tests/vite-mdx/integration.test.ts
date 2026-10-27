@@ -4,6 +4,7 @@ import { unified } from "unified";
 import { VFile } from "vfile";
 import { describe, expect, it } from "vitest";
 
+import { solidBaseMdx } from "../../src/config/mdx.ts";
 import viteMdx from "../../src/vite-mdx/index.ts";
 import { createTransformer } from "../../src/vite-mdx/transform.ts";
 import { ImportMap } from "../../src/vite-mdx/viteMdxTransclusion/ImportMap.ts";
@@ -37,12 +38,17 @@ describe("vite-mdx integration", () => {
 	const pagePath = "tests/fixtures/page.mdx";
 	const sharedPath = "tests/fixtures/shared.mdx";
 
-	it("createTransformer prepends imports and transpiles JSX output", async () => {
-		const transform = createTransformer(process.cwd(), {});
+	it("createTransformer prepends imports to the MDX output", async () => {
+		const transform = createTransformer(process.cwd(), {
+			"solid-js": ["createSignal"],
+		});
 
 		const code = await transform("# Hello");
 
-		expect(code).toContain("export default MDXContent; function MDXContent");
+		expect(code.startsWith("import { createSignal } from 'solid-js'\n")).toBe(
+			true,
+		);
+		expect(code).toContain("export default function MDXContent");
 		expect(code).toContain('"Hello"');
 	});
 
@@ -64,6 +70,26 @@ describe("vite-mdx integration", () => {
 
 		expect(result.code).toContain('"global"');
 		expect(result.code).toContain('"local"');
+	});
+
+	it("solidBaseMdx emits HTML class attributes for Solid, not React className", async () => {
+		const [, [plugin]] = solidBaseMdx({} as any) as any[];
+
+		plugin.configResolved({
+			root: process.cwd(),
+			plugins: [],
+		} as any);
+
+		const result = await plugin.transform.call(
+			{},
+			"- [x] done\n\n```ts\nconst a = 1;\n```",
+			pagePath,
+			false,
+		);
+
+		expect(result.code).not.toContain("className");
+		expect(result.code).toContain('class="task-list-item"');
+		expect(result.code).toContain('class="expressive-code"');
 	});
 
 	it("remarkTransclusion inlines imported mdx, caches ASTs, and tracks imports", async () => {

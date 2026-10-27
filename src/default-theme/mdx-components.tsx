@@ -1,20 +1,23 @@
-import { Tabs } from "@kobalte/core";
+import { Tabs } from "@kobalte/core/tabs";
 import {
 	cookieStorage,
 	makePersisted,
 	messageSync,
 } from "@solid-primitives/storage";
+import type { ComponentProps } from "@solidjs/web";
+import { isServer } from "@solidjs/web";
 import {
 	type Accessor,
-	type ComponentProps,
 	children,
 	createSignal,
 	For,
+	omit,
+	onCleanup,
 	type ParentProps,
 	Show,
 	type Signal,
-	splitProps,
 } from "solid-js";
+import { fragmentAriaCurrent, useResolvedHref } from "../client/base-path.js";
 import { usePreferredLanguage } from "../client/preferred-language.js";
 import CopyPageLink from "../default-theme/components/CopyPageLink.jsx";
 import { Preview, PreviewPanel, PreviewStage } from "./components/Preview.jsx";
@@ -62,16 +65,18 @@ export function h6(props: ComponentProps<"h6">) {
 }
 
 export function a(props: ComponentProps<"a"> & { "data-auto-heading"?: "" }) {
-	const outbound = () => (props.href ?? "").includes("//");
+	const outbound = () => String(props.href ?? "").includes("//");
 	const autoHeading = () => props["data-auto-heading"] === "";
+	const href = useResolvedHref(() => props.href ?? "");
 
 	return (
 		<a
 			target={outbound() ? "_blank" : undefined}
 			rel={outbound() ? "noopener noreferrer" : undefined}
 			class={autoHeading() ? styles["a-auto"] : styles.a}
-			href={props.href ?? ""}
+			aria-current={fragmentAriaCurrent(props.href)}
 			{...props}
+			href={href()}
 		/>
 	);
 }
@@ -85,7 +90,7 @@ export function hr(props: ComponentProps<"hr">) {
 }
 
 export function table(props: ComponentProps<"table">) {
-	const [_local, others] = splitProps(props, ["class"]);
+	const others = omit(props, "class");
 
 	return (
 		<div class={styles.table}>
@@ -133,10 +138,10 @@ export function DirectiveContainer(
 		withTsJsToggle?: string;
 	} & ParentProps,
 ) {
-	const _children = children(() => props.children).toArray();
+	const resolved = children(() => props.children);
 
 	if (props.type === "tab") {
-		return _children;
+		return <>{resolved()}</>;
 	}
 
 	if (props.type === "tab-group") {
@@ -144,7 +149,7 @@ export function DirectiveContainer(
 		const [preferredLanguage] = usePreferredLanguage();
 
 		const tabs = (value?: Accessor<string>, onChange?: (s: string) => void) => (
-			<Tabs.Root
+			<Tabs
 				value={value?.()}
 				onChange={onChange}
 				class={styles["tabs-container"]}
@@ -186,27 +191,39 @@ export function DirectiveContainer(
 							forceMount={true}
 							class={styles["tabs-content"]}
 						>
-							<div>{_children[i()]}</div>
+							<div>{resolved.toArray()[i()]}</div>
 						</Tabs.Content>
 					)}
 				</For>
-			</Tabs.Root>
+			</Tabs>
 		);
 
 		if (!props.title) return tabs();
 
-		const [openTab, setOpenTab] = makePersisted<string, Signal<string>>(
-			createSignal(tabNames![0]!),
-			{
-				name: `tab-group:${props.title}`,
-				sync: messageSync(new BroadcastChannel("tab-group")),
-				storage: cookieStorage.withOptions({
-					expires: new Date(Date.now() + 3e10),
-				}),
-			},
-		);
+		// Sync named groups across groups and browser tabs; the channel is client-only.
+		const channel = isServer ? undefined : new BroadcastChannel("tab-group");
+		const [openTab, setOpenTab, , dispose] = makePersisted<
+			string,
+			Signal<string>
+		>(createSignal(tabNames![0]!), {
+			name: `tab-group:${props.title}`,
+			sync: channel && messageSync(channel),
+			storage: cookieStorage.withOptions({
+				expires: new Date(Date.now() + 3e10),
+			}),
+			// Restore the saved tab after hydration so server and client markup match.
+			hydrated: true,
+		});
+		onCleanup(() => {
+			dispose();
+			channel?.close();
+		});
 
-		return tabs(openTab, setOpenTab);
+		// The key is shared across pages; fall back when this group lacks the saved tab.
+		const selected = () =>
+			tabNames!.includes(openTab()) ? openTab() : tabNames![0]!;
+
+		return tabs(selected, setOpenTab);
 	}
 
 	if (props.type === "details") {
@@ -216,7 +233,7 @@ export function DirectiveContainer(
 				data-custom-container="details"
 			>
 				<summary>{props.title ?? props.type}</summary>
-				{_children}
+				{resolved()}
 			</details>
 		);
 	}
@@ -226,7 +243,7 @@ export function DirectiveContainer(
 			<Show when={props.title !== " "}>
 				<span>{props.title ?? props.type}</span>
 			</Show>
-			{_children}
+			{resolved()}
 		</div>
 	);
 }

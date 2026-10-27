@@ -27,6 +27,36 @@ const config = {
 } as any;
 
 describe("getLlmDocuments", () => {
+	it("uses configured route directories", async () => {
+		const root = await mkdtemp(join(tmpdir(), "solidbase-llms-custom-"));
+		const dir = join(root, "pages");
+		await mkdir(dir);
+		await writeFile(
+			join(dir, "guide.md"),
+			"---\ntitle: Custom Guide\n---\nCustom content.",
+		);
+		for (const routesDir of ["pages", dir]) {
+			const documents = await getLlmDocuments(root, {
+				...config,
+				fileRoutes: { dir: routesDir },
+			});
+			expect(documents).toHaveLength(1);
+			expect(documents[0]).toMatchObject({
+				routePath: "/guide",
+				title: "Custom Guide",
+			});
+		}
+	});
+
+	it("does not index default markdown when file routes are disabled", async () => {
+		expect(
+			await getLlmDocuments(fixtureSiteRoot, {
+				...config,
+				fileRoutes: false,
+			}),
+		).toEqual([]);
+	});
+
 	it("collects transformed markdown documents and skips excluded files", async () => {
 		const documents = await getLlmDocuments(fixtureSiteRoot, config);
 

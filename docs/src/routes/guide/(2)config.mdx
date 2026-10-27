@@ -6,37 +6,45 @@ title: Configure Your App
 
 SolidBase provides a flexible configuration system that allows you to customize various aspects of your project. This guide will walk you through the different configuration options available.
 
-This includes configuration options for both SolidStart and SolidBase.
+This includes configuration options for both `@solidjs/vite-plugin` (start mode) and SolidBase.
 
-```ts
-import { defineConfig } from "@solidjs/start/config";
-import { withSolidBase } from "@kobalte/solidbase/config";
+```ts title="vite.config.ts"
+import { createSolidBase } from "@kobalte/solidbase/config";
+import defaultTheme from "@kobalte/solidbase/default-theme";
+import solid from "@solidjs/vite-plugin";
+import { defineConfig } from "vite";
 
-export default defineConfig(
-    withSolidBase({
-        // SolidStart options here
-    }, {
-        // SolidBase options here
-    })
-);
+const solidBase = createSolidBase(defaultTheme);
+
+export default defineConfig({
+	plugins: [
+		solidBase.plugin({
+			// SolidBase options here
+		}),
+		solid(
+			solidBase.startConfig({
+				// @solidjs/vite-plugin options here
+			}),
+		),
+	],
+});
 ```
 
-## SolidStart Config
+## Solid Plugin Config
 
-Since SolidBase is built on top of SolidStart, you can leverage existing SolidStart configuration options. This includes settings for SSR, vite plugins, and more.
+SolidBase is a set of Vite plugins on top of `@solidjs/vite-plugin`, so every option of the Solid plugin is available. `solidBase.startConfig()` applies SolidBase's defaults (`ssr: true`, `start: true`, and `.md`/`.mdx` in `extensions`) over whatever you pass in:
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
-{
-    ssr: false,
-    vite: {
-        // Vite configuration options
-    },
-}
+solid(
+	solidBase.startConfig({
+		start: { renderMode: "async" },
+	}),
+),
 // ..
 ```
 
-You can find more information about these options in the [SolidStart documentation](https://docs.solidjs.com/solid-start/reference/config/define-config).
+You can find more information about these options in the [`@solidjs/vite-plugin` documentation](https://github.com/solidjs/solid-vite-plugin#optionsstart).
 
 ## SolidBase Config
 
@@ -72,7 +80,7 @@ interface SolidBaseConfig<ThemeConfig> {
 
 There are several options for setting site-wide metadata and behavior. These options help define the overall structure and presentation of your documentation site. This includes the site title, description, logo, and language settings.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 {
     title: "My Documentation Site",
@@ -94,7 +102,7 @@ For multilingual support, use the `routes.locale` option. More details can be fo
 
 Use `routes` when a site has route dimensions such as project, version, or locale.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 routes: {
     path: "/{project}/{version}/{locale}",
@@ -150,7 +158,7 @@ Each route axis has:
 
 Use `overrides` to change SolidBase config for matching route selections:
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 overrides: [
     {
@@ -193,7 +201,7 @@ In addition to setting the site title and description, you can also configure ot
 - `sitemap`: Set to `true` to emit `/sitemap.xml`. You can also pass an object to override the hostname or control sitemap chunking for very large sites.
 - `robots`: Set to `true` to emit a simple Google-friendly `/robots.txt` file that allows crawling and points to your sitemap.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 siteUrl: "https://docs.example.com"
 editPath: "https://github.com/[USERNAME]/[REPO]/edit/main/docs/:path"
@@ -211,7 +219,7 @@ See the [LLMs.txt guide](/guide/features/llms) for page-level exclusion and outp
 
 SolidBase can generate both `/sitemap.xml` and `/robots.txt` during the build.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 siteUrl: "https://docs.example.com",
 sitemap: true,
@@ -227,7 +235,7 @@ This emits:
 
 If you need more control, `sitemap` also accepts an object:
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 siteUrl: "https://docs.example.com",
 sitemap: {
@@ -253,7 +261,7 @@ See the [Sitemap and robots guide](/guide/features/sitemap-and-robots) for a ful
 
 In addition to the default markdown support provided by SolidBase, you can include additional markdown plugins, configurations, and other options through the `markdown` option.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 markdown: {
     expressiveCode: {
@@ -280,7 +288,7 @@ markdown: {
 
 The `expressiveCode` option allows you to configure the [Rehype Expressive Code](https://github.com/rehypejs/rehype-expressive-code) plugin, which adds support for expressive code blocks in your markdown.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 expressiveCode: {
     // Rehype expressive code options
@@ -307,7 +315,7 @@ To see the available options, refer to the [Package Manager plugin's source code
 
 You can also customize theme-specific settings using the `themeConfig` option. The structure of this object will depend on the theme you are using. Refer to the theme's documentation for available options.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
     themeConfig: {
         footer: // see Footer below;
@@ -331,7 +339,7 @@ You can also customize theme-specific settings using the `themeConfig` option. T
 
 By default, SolidBase includes a footer section that can be customized or disabled. You can set the `footer` option to `false` to remove the footer entirely, or provide an object with `message` and `copyright`.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
     footer: false // or true
 // ..
@@ -348,7 +356,7 @@ There are 4 built-in social link types available:
 
 Each option can be configured with a link, optional logo, and label.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 //..
     socialLinks: {
         github: "https://github.com/your-repo",
@@ -367,7 +375,7 @@ Each option can be configured with a link, optional logo, and label.
 
 The `nav` option allows you to define the main navigation links for your site. These links will appear in the header and provide easy access to important sections of your documentation.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 nav: [
     {
@@ -389,7 +397,7 @@ The sidebar configuration allows you to create a structured sidebar navigation f
 :::note
 While there are preset statuses available, you can create your own custom status styles.
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 status: {
     text: "custom",
@@ -400,7 +408,7 @@ status: {
 ```
 :::
 
-```ts title="app.config.ts"
+```ts title="vite.config.ts"
 // ..
 sidebar: {
     "/guide": [

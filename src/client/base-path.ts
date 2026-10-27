@@ -1,0 +1,77 @@
+import { useLocation, useResolvedPath } from "@solidjs/router";
+import { type Accessor, createMemo } from "solid-js";
+
+function isAppPath(href: unknown): href is `/${string}` {
+	return (
+		typeof href === "string" && href.startsWith("/") && !href.startsWith("//")
+	);
+}
+
+/**
+ * Removes trailing slashes (`/guide/` -> `/guide`), keeping the root `/`.
+ * Static hosts (eg. Netlify pretty URLs) serve pages at `/guide/`, while
+ * SolidBase routes, locales and sidebar links are written without one.
+ */
+export function trimTrailingSlash(pathname: string): string {
+	return pathname.replace(/\/+$/, "") || "/";
+}
+
+/**
+ * Removes a deployment base (eg. Vite's `base`) and any trailing slash from a URL
+ * pathname, giving the path SolidBase matches routes, locales and sidebars against.
+ * Paths outside the base only lose the trailing slash.
+ */
+export function stripBasePath(pathname: string, base: string): string {
+	const prefix = base.replace(/\/+$/, "");
+	if (!prefix) return trimTrailingSlash(pathname);
+	if (pathname.toLowerCase() === prefix.toLowerCase()) return "/";
+	return trimTrailingSlash(
+		pathname.toLowerCase().startsWith(`${prefix.toLowerCase()}/`)
+			? pathname.slice(prefix.length)
+			: pathname,
+	);
+}
+
+/**
+ * The current pathname relative to the router base, ie. the path SolidBase routes,
+ * locales and sidebars are defined against, without a trailing slash.
+ */
+export function useAppPathname(): Accessor<string> {
+	const location = useLocation();
+	const base = useResolvedPath(() => "/");
+	return createMemo(() => stripBasePath(location.pathname, base() ?? "/"));
+}
+
+/**
+ * Resolves an app-absolute href (`/guide`) against the router base, like router
+ * navigation does, for use on plain anchors. Relative, hash and external hrefs
+ * are returned unchanged.
+ */
+export function useResolvedHref<T>(
+	href: Accessor<T>,
+): Accessor<T | `/${string}`> {
+	const resolved = useResolvedPath(() => {
+		const path = href();
+		return isAppPath(path) ? path : "/";
+	});
+	return () => {
+		const path = href();
+		if (!isAppPath(path)) return path;
+		const result = resolved() ?? path;
+		// Keep a trailing slash so links to the base root don't redirect on static hosts.
+		return (
+			path.endsWith("/") && !result.endsWith("/") ? `${result}/` : result
+		) as `/${string}`;
+	};
+}
+
+/**
+ * `aria-current` for a plain anchor. Solid Router 2 marks every anchor it manages
+ * whose path and query match the location with `aria-current="page"`, ignoring the
+ * hash, so in-page links (`#heading`, the skip link) would all claim to be the
+ * current page. A link with a fragment points at a section, never at the page, so
+ * it gets an explicit `"false"`, which the router leaves untouched.
+ */
+export function fragmentAriaCurrent(href: unknown): "false" | undefined {
+	return typeof href === "string" && href.includes("#") ? "false" : undefined;
+}

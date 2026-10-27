@@ -1,5 +1,6 @@
 import { createRoot } from "solid-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { mount } from "../helpers/solid.js";
 
 const pathname = vi.fn<() => string>(() => "/guide/install");
 const routePath = vi.fn<() => string>(() => "/guide/install");
@@ -10,6 +11,7 @@ vi.mock("@solidjs/router", () => ({
 			return pathname();
 		},
 	}),
+	useResolvedPath: (path: () => string) => path,
 }));
 
 vi.mock("../../src/client/locale.ts", () => ({
@@ -27,6 +29,17 @@ describe("client sidebar helpers", () => {
 		vi.resetModules();
 	});
 
+	it("reports a missing SidebarProvider with its own message", async () => {
+		const { useSidebar } = await import("../../src/client/sidebar.ts");
+
+		createRoot((dispose) => {
+			expect(() => useSidebar()).toThrow(
+				"useSidebar must be called underneath a SidebarProvider",
+			);
+			dispose();
+		});
+	});
+
 	it("selects the longest matching sidebar prefix", async () => {
 		const { SidebarProvider, useSidebar } = await import(
 			"../../src/client/sidebar.ts"
@@ -34,16 +47,18 @@ describe("client sidebar helpers", () => {
 
 		createRoot((dispose) => {
 			let value: ReturnType<ReturnType<typeof useSidebar>> | undefined;
-			SidebarProvider({
-				config: {
-					"/guide": [{ title: "Guide", link: "/intro" }],
-					"/guide/install": [{ title: "Install", link: "/" }],
-				},
-				get children() {
-					value = useSidebar()();
-					return null;
-				},
-			} as any);
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [{ title: "Guide", link: "/intro" }],
+						"/guide/install": [{ title: "Install", link: "/" }],
+					},
+					get children() {
+						value = useSidebar()();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toEqual({
 				prefix: "/guide/install",
@@ -63,25 +78,27 @@ describe("client sidebar helpers", () => {
 
 		createRoot((dispose) => {
 			let value: ReturnType<typeof usePrevNext> | undefined;
-			SidebarProvider({
-				config: {
-					"/guide": [
-						{ title: "Intro", link: "/intro" },
-						{
-							title: "Section",
-							base: "/nested",
-							items: [
-								{ title: "Install", link: "/install" },
-								{ title: "External", link: "https://example.com" },
-							],
-						},
-					],
-				},
-				get children() {
-					value = usePrevNext() as any;
-					return null;
-				},
-			} as any);
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [
+							{ title: "Intro", link: "/intro" },
+							{
+								title: "Section",
+								base: "/nested",
+								items: [
+									{ title: "Install", link: "/install" },
+									{ title: "External", link: "https://example.com" },
+								],
+							},
+						],
+					},
+					get children() {
+						value = usePrevNext() as any;
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toBeDefined();
 			expect(value!.prevLink()).toMatchObject({
@@ -100,6 +117,41 @@ describe("client sidebar helpers", () => {
 		});
 	});
 
+	it("finds the current page when the URL has a trailing slash", async () => {
+		// Static hosts serve /guide/ for the page the sidebar links as /guide.
+		pathname.mockReturnValue("/guide/");
+		routePath.mockReturnValue("/guide/");
+
+		const { SidebarProvider, usePrevNext } = await import(
+			"../../src/client/sidebar.ts"
+		);
+
+		createRoot((dispose) => {
+			let value: ReturnType<typeof usePrevNext> | undefined;
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": [
+							{ title: "About", link: "/" },
+							{ title: "Quick Start", link: "/quickstart" },
+						],
+					},
+					get children() {
+						value = usePrevNext() as any;
+						return null;
+					},
+				} as any),
+			);
+
+			expect(value!.prevLink()).toBeUndefined();
+			expect(value!.nextLink()).toMatchObject({
+				title: "Quick Start",
+				link: "/guide/quickstart",
+			});
+			dispose();
+		});
+	});
+
 	it("supports legacy section-shaped sidebar config objects", async () => {
 		const { SidebarProvider, useSidebar } = await import(
 			"../../src/client/sidebar.ts"
@@ -108,18 +160,20 @@ describe("client sidebar helpers", () => {
 		createRoot((dispose) => {
 			let value: ReturnType<ReturnType<typeof useSidebar>> | undefined;
 
-			SidebarProvider({
-				config: {
-					"/guide": {
-						title: "Guide",
-						items: [{ title: "Intro", link: "/intro" }],
+			mount(
+				SidebarProvider({
+					config: {
+						"/guide": {
+							title: "Guide",
+							items: [{ title: "Intro", link: "/intro" }],
+						},
 					},
-				},
-				get children() {
-					value = useSidebar()();
-					return null;
-				},
-			} as any);
+					get children() {
+						value = useSidebar()();
+						return null;
+					},
+				} as any),
+			);
 
 			expect(value).toEqual({
 				prefix: "/guide",

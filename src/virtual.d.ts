@@ -16,5 +16,5 @@ declare module "virtual:solidbase/default-theme/fonts" {
 }
 
 declare module "virtual:solidbase/mdx" {
-	export const MDXProvider: typeof import("./mdx.ts").MDXProvider;
+	export const MDXProvider: typeof import("./mdx.js").MDXProvider;
 }

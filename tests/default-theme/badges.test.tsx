@@ -47,7 +47,7 @@ describe("PageBadges", () => {
 				>,
 		}));
 
-		const { renderToString } = await import("solid-js/web");
+		const { renderToString } = await import("@solidjs/web");
 		const { default: Badges } = await import(
 			"../../src/default-theme/components/Badges.tsx"
 		);
@@ -84,7 +84,7 @@ describe("PageBadges", () => {
 				>,
 		}));
 
-		const { renderToString } = await import("solid-js/web");
+		const { renderToString } = await import("@solidjs/web");
 		const { default: Badges } = await import(
 			"../../src/default-theme/components/Badges.tsx"
 		);

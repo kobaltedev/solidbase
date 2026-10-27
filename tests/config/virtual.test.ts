@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 
 import { transformMdxModule } from "../../src/config/vite-plugin/virtual.ts";
-import { routeFixturePath } from "../helpers/fixtures.ts";
+import { fixtureSiteRoot, routeFixturePath } from "../helpers/fixtures.ts";
 
 describe("transformMdxModule", () => {
 	const previousPwd = process.env.PWD;
@@ -20,11 +20,16 @@ describe("transformMdxModule", () => {
 				markdown: {},
 				editPath: (file: string) => `https://example.com/edit/${file}`,
 			},
+			fixtureSiteRoot,
 		);
 
 		expect(code).toContain("https://example.com/edit/");
 		expect(code).toContain(
 			"/tests/fixtures/src/routes/guide/getting-started.mdx",
+		);
+		// keyed like the route's moduleUrl: relative to the Vite root
+		expect(code).toContain(
+			'window.$$SolidBase_page_data["src/routes/guide/getting-started.mdx"]',
 		);
 		expect(code).not.toContain("llmText:");
 	});
@@ -35,6 +40,7 @@ describe("transformMdxModule", () => {
 			"export default function Page() {}",
 			markdownPath,
 			{ markdown: {} },
+			fixtureSiteRoot,
 		);
 
 		expect(code).toContain("frontmatter:");

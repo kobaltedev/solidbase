@@ -101,9 +101,9 @@ export async function getLlmDocuments(
 		importer: string,
 	) => Promise<{ id: string } | null>,
 ): Promise<LlmDocument[]> {
-	if (!config.llms) return [];
+	if (!config.llms || config.fileRoutes === false) return [];
 
-	const routes = await getRoutesIndex(root);
+	const routes = await getRoutesIndex(root, config.fileRoutes?.dir);
 
 	return Promise.all(
 		routes.map(async (route): Promise<LlmDocument | null> => {

@@ -1,7 +1,6 @@
 import { For, Show } from "solid-js";
-
+import { useResolvedHref } from "../../client/base-path.js";
 import { type HeroConfig, useDefaultThemeFrontmatter } from "../frontmatter.js";
-
 import styles from "./Hero.module.css";
 
 export default function Hero(props: { data: HeroConfig }) {
@@ -22,17 +21,20 @@ export default function Hero(props: { data: HeroConfig }) {
 					{(actions) => (
 						<div class={styles.actions}>
 							<For each={actions()}>
-								{(action) => (
-									<a
-										class={`${styles.action} ${action.theme ?? "brand"}`}
-										href={action.link}
-										target={
-											action.link!.startsWith("http") ? "_blank" : undefined
-										}
-									>
-										{action.text}
-									</a>
-								)}
+								{(action) => {
+									const href = useResolvedHref(() => action.link);
+									return (
+										<a
+											class={`${styles.action} ${action.theme ?? "brand"}`}
+											href={href()}
+											target={
+												action.link!.startsWith("http") ? "_blank" : undefined
+											}
+										>
+											{action.text}
+										</a>
+									);
+								}}
 							</For>
 						</div>
 					)}

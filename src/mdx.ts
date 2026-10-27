@@ -1,12 +1,12 @@
+import type { JSX } from "@solidjs/web";
+import { Dynamic } from "@solidjs/web";
 import {
 	createComponent,
 	createContext,
-	type JSX,
-	mergeProps,
+	merge,
 	type ParentProps,
 	useContext,
 } from "solid-js";
-import { Dynamic } from "solid-js/web";
 
 const HTMLElements = [
 	"html",
@@ -378,7 +378,7 @@ export const MDXContext = createContext(
 		[...HTMLElements, ...SVGElements.keys()].map((el) => [
 			el,
 			(_props: any) => {
-				const props = mergeProps(_props, {
+				const props = merge(_props, {
 					component: el,
 				});
 				return createComponent(Dynamic, props);
@@ -395,7 +395,7 @@ export const MDXProvider = (
 	}>,
 ) => {
 	const context = useContext(MDXContext);
-	return createComponent(MDXContext.Provider, {
+	return createComponent(MDXContext, {
 		get value() {
 			return {
 				...context,

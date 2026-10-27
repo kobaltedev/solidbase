@@ -1,5 +1,4 @@
-import { createContextProvider } from "@solid-primitives/context";
-import { useLocation } from "@solidjs/router";
+import { createOptionalContextProvider } from "@solid-primitives/context";
 import { type Accessor, createMemo } from "solid-js";
 
 import type {
@@ -7,11 +6,12 @@ import type {
 	SidebarItem,
 	SidebarItemLink,
 } from "../config/sidebar.js";
+import { useAppPathname } from "./base-path.js";
 import { useLocale } from "./locale.js";
 
 export type * from "../config/sidebar.js";
 
-const [SidebarProvider, useSidebarRaw] = createContextProvider(
+const [SidebarProvider, useSidebarRaw] = createOptionalContextProvider(
 	(props: { config?: SidebarConfig }) => {
 		const locale = useLocale();
 
@@ -66,7 +66,7 @@ export function useSidebar<T = {}>() {
 	const s = useSidebarRaw();
 	if (!s)
 		throw new Error("useSidebar must be called underneath a SidebarProvider");
-	return s as Accessor<{ prefix: string; items: SidebarItem<T>[] }>;
+	return s as unknown as Accessor<{ prefix: string; items: SidebarItem<T>[] }>;
 }
 
 function flattenSidebarItems<T = {}>(
@@ -114,14 +114,14 @@ export function usePrevNext<T = {}>() {
 		return flattenSidebarItems<T>(s);
 	});
 
-	const location = useLocation();
+	const pathname = useAppPathname();
 
 	const index = createMemo(() => {
 		const s = sidebar();
 		if (!s) return -1;
 
 		return links().findIndex(
-			(item) => "link" in item && location.pathname === item.link,
+			(item) => "link" in item && pathname() === item.link,
 		);
 	});
 
