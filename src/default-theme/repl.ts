@@ -7,7 +7,6 @@ import { SOLID_REPL_ROOT_CLASS } from "./repl-constants.js";
 const RESET_LAYER = "@layer panda-reset {";
 
 const REPL_CLIENT_ID = "virtual:solidbase/default-theme/repl-client";
-const RESOLVED_REPL_CLIENT_STUB_ID = `\0${REPL_CLIENT_ID}`;
 
 // solid-repl's stylesheet is written for a full-page app: a global preflight reset,
 // dockview theming keyed on `#app` and dark mode keyed on a `.dark` ancestor.
@@ -78,15 +77,12 @@ export function solidReplVitePlugin(): Plugin {
 		},
 		resolveId(id, importer) {
 			if (id !== REPL_CLIENT_ID) return;
-			if (!solidReplRoot) return RESOLVED_REPL_CLIENT_STUB_ID;
-			return this.resolve("./ReplClient.jsx", importer, { skipSelf: true });
-		},
-		load(id) {
-			if (id !== RESOLVED_REPL_CLIENT_STUB_ID) return;
-
-			return `export default function ReplClient() {
-	throw new Error("Install \`solid-repl\` to use the REPL component.");
-}`;
+			// A real module lets Solid's asset manifest find the client-only fallback too.
+			return this.resolve(
+				solidReplRoot ? "./ReplClient.jsx" : "./ReplUnavailable.js",
+				importer,
+				{ skipSelf: true },
+			);
 		},
 		transform(code, id) {
 			if (!isSolidReplStylesheet(id)) return;
