@@ -3,6 +3,8 @@ export type DefaultThemeTextConfig = {
 	copyPage: string;
 	copiedPage: string;
 	copyFailedPage: string;
+	replLoading: string;
+	replError: string;
 };
 
 export const defaultThemeTextConfig: DefaultThemeTextConfig = {
@@ -10,4 +12,7 @@ export const defaultThemeTextConfig: DefaultThemeTextConfig = {
 	copyPage: "Copy page",
 	copiedPage: "Copied!",
 	copyFailedPage: "Copy failed",
+	replLoading: "Loading playground…",
+	replError:
+		"The playground failed to load. Your browser may not support Web Workers.",
 };
