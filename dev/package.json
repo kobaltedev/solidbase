@@ -12,8 +12,9 @@
     "@kobalte/solidbase": "workspace:*",
     "@solidjs/meta": "1.0.0-next.2",
     "@solidjs/router": "2.0.0-next.37",
-    "@solidjs/web": "2.0.0-rc.16",
-    "solid-js": "2.0.0-rc.16"
+    "@solidjs/web": "2.0.0-rc.19",
+    "solid-js": "2.0.0-rc.19",
+    "solid-repl": "^1.0.1"
   },
   "engines": {
     "node": ">=22.12"
@@ -22,6 +23,8 @@
     "@iconify-json/ri": "^1.2.5",
     "@solidjs/vite-plugin": "3.0.0-next.47",
     "cross-env": "^7.0.3",
+    "csstype": "^3.2.3",
+    "typescript": "^5.9.3",
     "vite": "^8.0.0"
   }
 }

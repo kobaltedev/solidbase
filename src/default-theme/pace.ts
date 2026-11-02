@@ -1,6 +1,6 @@
 import { BProgress, type BProgressOptions } from "@bprogress/core";
 import { useIsRouting } from "@solidjs/router";
-import { createEffect, onCleanup } from "solid-js";
+import { createEffect } from "solid-js";
 import "@bprogress/core/css";
 
 export function usePace(options?: Partial<BProgressOptions>) {
@@ -13,19 +13,21 @@ export function usePace(options?: Partial<BProgressOptions>) {
 
 	let paceTimeoutId: number | undefined;
 
+	const dispose = () => {
+		clearTimeout(paceTimeoutId);
+		BProgress.done();
+	};
+
 	createEffect(
 		() => isRouting(),
 		(routing) => {
 			if (routing) {
 				paceTimeoutId = window.setTimeout(() => BProgress.start(), 100);
 			} else {
-				clearTimeout(paceTimeoutId);
-				BProgress.done();
+				dispose();
 			}
+
+			return dispose;
 		},
 	);
-
-	onCleanup(() => {
-		clearTimeout(paceTimeoutId);
-	});
 }

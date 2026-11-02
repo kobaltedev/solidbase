@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 
 import { createComponent } from "solid-js";
 import { afterEach, describe, expect, it } from "vitest";
+import { scopeSolidReplCss } from "../../src/default-theme/repl.ts";
 
 const tempDirs: string[] = [];
 
@@ -133,5 +134,30 @@ describe("default theme preview components", () => {
 		expect(html).toContain("data-preview-panel");
 		expect(html).toContain("Stage content");
 		expect(html).toContain("Panel body");
+	});
+});
+
+describe("embedded REPL styles", () => {
+	it("scopes the theme and app selectors without leaking the nested preflight reset", () => {
+		expect(
+			scopeSolidReplCss(
+				"outside {} @layer panda-reset { * { margin: 0 } @media print { p {} } } .dark .editor, #app .dockview { color: red }",
+			),
+		).toBe(
+			'outside {}  [data-theme*="dark"] .editor, .sb-repl .dockview { color: red }',
+		);
+	});
+
+	it("scopes the stylesheet shipped by the published REPL", async () => {
+		const css = await readFile(
+			new URL(import.meta.resolve("solid-repl/dist/bundle.css")),
+			"utf8",
+		);
+		const scoped = scopeSolidReplCss(css);
+		expect(scoped).not.toContain("@layer panda-reset {");
+		expect(scoped).not.toMatch(/(^|[\s,])#app(?=\s)/m);
+		expect(scoped).not.toMatch(/(^|[\s,])\.dark(?=\s)/m);
+		expect(scoped).toContain(".sb-repl");
+		expect(scoped).toContain('[data-theme*="dark"]');
 	});
 });
