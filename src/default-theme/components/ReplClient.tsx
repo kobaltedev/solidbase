@@ -5,12 +5,14 @@ import SolidRepl from "solid-repl/dist/repl.jsx";
 
 import "solid-repl/dist/bundle.css";
 
+import { createMediaQuery } from "@solid-primitives/media";
 import {
 	createEffect,
 	createMemo,
 	createSignal,
 	createUniqueId,
 	onCleanup,
+	Show,
 } from "solid-js";
 import ExitFullscreenIcon from "~icons/ri/fullscreen-exit-line";
 import FullscreenIcon from "~icons/ri/fullscreen-line";
@@ -86,12 +88,19 @@ export default function ReplClient(props: ReplProps) {
 		(typeof props.devtools === "string" && props.devtools !== "false");
 
 	const [fullscreen, setFullscreen] = createSignal(false);
+	// Narrow viewports use solid-repl's tabbed mobile layout, which ignores `vertical`.
+	const staysStacked = createMediaQuery(
+		"(orientation: portrait), (max-width: 767px)",
+	);
+	const stacked = () =>
+		props.layout !== "horizontal" && (!fullscreen() || staysStacked());
 	let frame!: HTMLDivElement;
 	let toggle!: HTMLButtonElement;
 
 	const toggleFullscreen = (active: boolean) => {
 		setFullscreen(active);
-		toggle.focus();
+		// Changing the layout remounts the editor, which takes focus as it mounts.
+		requestAnimationFrame(() => toggle.focus());
 	};
 
 	createEffect(fullscreen, (active) => {
@@ -112,6 +121,20 @@ export default function ReplClient(props: ReplProps) {
 		};
 	});
 
+	const repl = () => (
+		<SolidRepl
+			id={id}
+			compiler={compiler}
+			formatter={formatter}
+			dark={dark()}
+			tabs={tabs()}
+			setTabs={setTabs}
+			reset={() => setTabs(initialTabs())}
+			hideDevtools={!devtools()}
+			vertical={stacked()}
+		/>
+	);
+
 	return (
 		<div
 			ref={frame}
@@ -131,17 +154,10 @@ export default function ReplClient(props: ReplProps) {
 					{text.replFullscreen}
 				</button>
 			</div>
-			<SolidRepl
-				id={id}
-				compiler={compiler}
-				formatter={formatter}
-				dark={dark()}
-				tabs={tabs()}
-				setTabs={setTabs}
-				reset={() => setTabs(initialTabs())}
-				hideDevtools={!devtools()}
-				vertical={props.layout !== "horizontal"}
-			/>
+			{/* solid-repl only reads `vertical` on mount, so changing it takes a new instance */}
+			<Show when={stacked()} fallback={repl()}>
+				{repl()}
+			</Show>
 		</div>
 	);
 }
