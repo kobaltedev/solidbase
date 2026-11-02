@@ -22,6 +22,52 @@
 	opacity: 0.7;
 }
 
+/* Fills .repl, which keeps the REPL's place in the page while this is fixed to the viewport. Moving it in the DOM instead would reload the preview iframe. */
+.frame {
+	display: flex;
+	flex-direction: column;
+
+	&[data-fullscreen] {
+		position: fixed;
+		inset: 0 0 auto;
+		height: 100dvh;
+		/* Above the header and sidebars, below the menus solid-repl portals to the body */
+		z-index: 60;
+		background: var(--sb-background-color);
+	}
+}
+
+.toolbar {
+	flex: none;
+	display: flex;
+	justify-content: flex-end;
+	padding: 0.25rem 0.5rem;
+	border-bottom: 1px solid
+		color-mix(in hsl, var(--sb-decoration-color) 14%, transparent);
+}
+
+.fullscreenToggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.125rem 0.375rem;
+	border-radius: 0.25rem;
+	font-size: 0.75rem;
+	line-height: 1.25rem;
+	cursor: pointer;
+	color: var(--sb-text-color);
+
+	&:hover,
+	&[aria-pressed="true"] {
+		background: color-mix(in hsl, var(--sb-decoration-color) 14%, transparent);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--sb-active-link-color);
+		outline-offset: 1px;
+	}
+}
+
 /* solid-repl expects panda's preflight, which repl.ts strips out. Re-apply what it relies on, scoped to the REPL and the zag-js elements it portals to the body. */
 @layer panda-reset {
 	:is(.repl, [data-scope]) *,
