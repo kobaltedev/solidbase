@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { createComponent } from "solid-js";
 import { afterEach, describe, expect, it } from "vitest";
 import { scopeSolidReplCss } from "../../src/default-theme/repl.ts";
+import { createReplLayout } from "../../src/default-theme/repl-layout.ts";
 
 const tempDirs: string[] = [];
 
@@ -159,5 +160,47 @@ describe("embedded REPL styles", () => {
 		expect(scoped).not.toMatch(/(^|[\s,])\.dark(?=\s)/m);
 		expect(scoped).toContain(".sb-repl");
 		expect(scoped).toContain('[data-theme*="dark"]');
+	});
+});
+
+describe("embedded REPL layout", () => {
+	const leaves = (layout: ReturnType<typeof createReplLayout>) =>
+		(layout.grid.root as any).data.map((leaf: any) => leaf.data);
+
+	it("opens every file as a tab with the entry file active", () => {
+		const layout = createReplLayout(
+			[
+				{ name: "styles.css", source: "" },
+				{ name: "main.tsx", source: "" },
+				{ name: "other.tsx", source: "", id: "custom" },
+				{ name: "import_map.json", source: "{}" },
+			],
+			true,
+		);
+
+		const [files, panes] = leaves(layout);
+		expect(files.views).toEqual(["name:styles.css", "name:main.tsx", "custom"]);
+		expect(files.activeView).toBe("name:main.tsx");
+		expect(panes.views).toEqual(["Preview", "Output"]);
+		expect(layout.panels["name:styles.css"]).toMatchObject({
+			title: "styles.css",
+			contentComponent: "editor",
+		});
+		expect(layout.panels.custom).toMatchObject({ title: "other.tsx" });
+		expect(layout.panels["name:import_map.json"]).toBeUndefined();
+		expect(layout.grid.orientation).toBe("VERTICAL");
+	});
+
+	it("falls back to the first file and follows the orientation", () => {
+		const layout = createReplLayout(
+			[
+				{ name: "main.jsx", source: "" },
+				{ name: "card.jsx", source: "" },
+			],
+			false,
+		);
+
+		expect(leaves(layout)[0].activeView).toBe("name:main.jsx");
+		expect(layout.grid.orientation).toBe("HORIZONTAL");
 	});
 });
