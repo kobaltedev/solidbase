@@ -13,11 +13,13 @@ import {
 	createUniqueId,
 	onCleanup,
 	Show,
+	untrack,
 } from "solid-js";
 import ExitFullscreenIcon from "~icons/ri/fullscreen-exit-line";
 import FullscreenIcon from "~icons/ri/fullscreen-line";
 
 import { getTheme } from "../../client/theme.js";
+import { createReplLayout } from "../repl-layout.js";
 import { useThemeText } from "../utils.js";
 import type { ReplProps } from "./Repl.jsx";
 import styles from "./Repl.module.css";
@@ -130,6 +132,9 @@ export default function ReplClient(props: ReplProps) {
 			tabs={tabs()}
 			setTabs={setTabs}
 			reset={() => setTabs(initialTabs())}
+			storage={{
+				getLayout: () => createReplLayout(untrack(tabs), stacked()),
+			}}
 			hideDevtools={!devtools()}
 			vertical={stacked()}
 		/>
