@@ -1,5 +1,5 @@
 import { clientOnly } from "@solidjs/web";
-import { Errored } from "solid-js";
+import { Errored, Loading, Show } from "solid-js";
 import type { ReplTab } from "../../config/remark-plugins/repl.js";
 import { SOLID_REPL_ROOT_CLASS } from "../repl-constants.js";
 import { useThemeText } from "../utils.js";
@@ -20,6 +20,7 @@ const ReplClient = clientOnly(
 
 export function Repl(props: ReplProps) {
 	const text = useThemeText();
+	const loading = () => <div class={styles.loading}>{text.replLoading}</div>;
 
 	return (
 		<div
@@ -32,10 +33,14 @@ export function Repl(props: ReplProps) {
 					return <div class={styles.loading}>{text.replError}</div>;
 				}}
 			>
-				<ReplClient
-					{...props}
-					fallback={<div class={styles.loading}>{text.replLoading}</div>}
-				/>
+				<Loading fallback={loading()}>
+					{/* ReplClient takes its tabs once at setup, so mount it with resolved tabs and remount when they change. */}
+					<Show when={props.tabs} keyed>
+						{(tabs) => (
+							<ReplClient {...props} tabs={tabs} fallback={loading()} />
+						)}
+					</Show>
+				</Loading>
 			</Errored>
 		</div>
 	);
