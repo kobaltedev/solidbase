@@ -49,9 +49,9 @@ export function Greeting(props: { name: string }) {
 
 ## Options
 
-`:::repl{layout=horizontal height="20rem" devtools}` places the editor next to the preview, sets the height and shows the devtools tab.
+`:::repl{layout=horizontal height="20rem"}` places the editor next to the preview and sets the height.
 
-:::repl{layout=horizontal height="20rem" devtools}
+:::repl{layout=horizontal height="20rem"}
 ```tsx
 import { render } from "@solidjs/web";
 
@@ -61,7 +61,7 @@ render(() => <p>Horizontal layout</p>, document.getElementById("app")!);
 
 ## Full Screen
 
-Every REPL has a **Full screen** button above it. Full screen covers the viewport and, on landscape screens, moves the editor beside the preview. Edits are kept, but this layout change restarts the preview and resets the open tabs, so blocks using `layout=horizontal` and narrow or portrait screens skip it and keep their state.
+Every REPL has a **Full screen** button above it. Full screen enlarges the existing editor and preview without restarting them, keeping edits, open tabs, and preview state. The layout stays the same: stacked by default, or side by side with `layout=horizontal`. Phones keep the file/preview switcher.
 
 Press the button again or `Esc` to exit. `Esc` can't be detected while focus is inside the preview, so use the button there.
 
