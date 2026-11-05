@@ -7,6 +7,8 @@ export type DefaultThemeTextConfig = {
 	replError: string;
 	replFullscreen: string;
 	replExitFullscreen: string;
+	replViewSource: string;
+	replHideSource: string;
 };
 
 export const defaultThemeTextConfig: DefaultThemeTextConfig = {
@@ -19,4 +21,6 @@ export const defaultThemeTextConfig: DefaultThemeTextConfig = {
 		"The playground failed to load. Your browser may not support Web Workers.",
 	replFullscreen: "Full screen",
 	replExitFullscreen: "Exit full screen (Esc)",
+	replViewSource: "View source",
+	replHideSource: "Hide source",
 };

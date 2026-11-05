@@ -1,12 +1,90 @@
+/* biome-ignore-all lint/complexity/noImportantStyles: Override Dockview's inline sizes and inactive pointer handling without replacing the running iframe. */
 .repl {
 	margin: 1.5rem 0;
-	height: 32rem;
+	height: var(--sb-repl-height, 32rem);
 	display: flex;
 	flex-direction: column;
 	border-radius: 0.5rem;
 	overflow: hidden;
 	border: 1px solid
 		color-mix(in hsl, var(--sb-decoration-color) 14%, transparent);
+}
+
+.repl[data-mode="preview"] {
+	height: var(--sb-repl-height, 14rem);
+
+	&:has(.frame[data-source]) {
+		height: max(32rem, var(--sb-repl-height, 32rem));
+	}
+}
+
+.surface {
+	display: flex;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+/* Keep the editor and iframe mounted. solid-repl 1.0 has no public layout API;
+   Dockview renders panel content in overlays beside its grid. Only expand the
+   preview overlay, not the splitview inside it (which may contain devtools). */
+.surface[data-preview] {
+	:global(.dv-shell)
+		> :not(:global(.dv-render-overlay):has(iframe[title="Solid REPL"])) {
+		display: none !important;
+	}
+
+	:global(.dv-shell)
+		> :global(.dv-render-overlay):has(iframe[title="Solid REPL"]) {
+		display: block !important;
+		left: 0 !important;
+		top: 0 !important;
+		width: 100% !important;
+		height: 100% !important;
+	}
+
+	/* An inactive preview normally ignores input, including in the mobile layout. */
+	iframe {
+		pointer-events: auto !important;
+	}
+}
+
+@media (max-width: 767px) {
+	/* MobileRepl: host > mobile root > stage > stack > view shells. Leave
+	   these nodes in place; moving a sandboxed iframe reloads its document. */
+	.surface[data-preview] > div > div {
+		> div:last-child {
+			display: none;
+		}
+
+		> div:first-child > div > div {
+			&:not(:has(iframe[title="Solid REPL"])) {
+				display: none;
+			}
+
+			&:has(iframe[title="Solid REPL"]) {
+				visibility: visible !important;
+				width: 100% !important;
+				height: 100% !important;
+				transform: none !important;
+				transition: none;
+				border: 0;
+				border-radius: 0;
+				box-shadow: none;
+
+				> div:first-child {
+					width: 100% !important;
+					height: 100% !important;
+					transform: none !important;
+					pointer-events: auto !important;
+				}
+
+				> :not(:first-child) {
+					display: none;
+				}
+			}
+		}
+	}
 }
 
 .repl > * {

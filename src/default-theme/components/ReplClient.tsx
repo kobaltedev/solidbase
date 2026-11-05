@@ -11,6 +11,7 @@ import {
 	createSignal,
 	createUniqueId,
 	onCleanup,
+	Show,
 	untrack,
 } from "solid-js";
 import ExitFullscreenIcon from "~icons/ri/fullscreen-exit-line";
@@ -88,6 +89,8 @@ export default function ReplClient(props: ReplProps) {
 		(typeof props.devtools === "string" && props.devtools !== "false");
 
 	const [fullscreen, setFullscreen] = createSignal(false);
+	const [source, setSource] = createSignal(false);
+	const previewOnly = () => props.mode === "preview" && !source();
 	// Keep the layout fixed until solid-repl can change orientation without remounting.
 	// Narrow viewports still use solid-repl's tabbed mobile layout.
 	const stacked = () => props.layout !== "horizontal";
@@ -123,34 +126,57 @@ export default function ReplClient(props: ReplProps) {
 			ref={frame}
 			class={styles.frame}
 			data-fullscreen={fullscreen() ? "" : undefined}
+			data-source={props.mode === "preview" && source() ? "" : undefined}
 		>
 			<div class={styles.toolbar}>
-				<button
-					ref={toggle}
-					type="button"
-					class={styles.fullscreenToggle}
-					aria-pressed={fullscreen() ? "true" : "false"}
-					title={fullscreen() ? text.replExitFullscreen : undefined}
-					onClick={() => toggleFullscreen(!fullscreen())}
-				>
-					{fullscreen() ? <ExitFullscreenIcon /> : <FullscreenIcon />}
-					{text.replFullscreen}
-				</button>
+				<Show when={props.mode === "preview"}>
+					<button
+						type="button"
+						class={styles.fullscreenToggle}
+						aria-expanded={source() ? "true" : "false"}
+						aria-controls={`${id}-source`}
+						onClick={() => {
+							if (fullscreen()) toggleFullscreen(false);
+							setSource(!source());
+						}}
+					>
+						{source() ? text.replHideSource : text.replViewSource}
+					</button>
+				</Show>
+				<Show when={!previewOnly()}>
+					<button
+						ref={toggle}
+						type="button"
+						class={styles.fullscreenToggle}
+						aria-pressed={fullscreen() ? "true" : "false"}
+						title={fullscreen() ? text.replExitFullscreen : undefined}
+						onClick={() => toggleFullscreen(!fullscreen())}
+					>
+						{fullscreen() ? <ExitFullscreenIcon /> : <FullscreenIcon />}
+						{text.replFullscreen}
+					</button>
+				</Show>
 			</div>
-			<SolidRepl
-				id={id}
-				compiler={compiler}
-				formatter={formatter}
-				dark={dark()}
-				tabs={tabs()}
-				setTabs={setTabs}
-				reset={() => setTabs(initialTabs())}
-				storage={{
-					getLayout: () => createReplLayout(untrack(tabs), stacked()),
-				}}
-				hideDevtools={!devtools()}
-				vertical={stacked()}
-			/>
+			<div
+				id={`${id}-source`}
+				class={styles.surface}
+				data-preview={previewOnly() ? "" : undefined}
+			>
+				<SolidRepl
+					id={id}
+					compiler={compiler}
+					formatter={formatter}
+					dark={dark()}
+					tabs={tabs()}
+					setTabs={setTabs}
+					reset={() => setTabs(initialTabs())}
+					storage={{
+						getLayout: () => createReplLayout(untrack(tabs), stacked()),
+					}}
+					hideDevtools={!devtools()}
+					vertical={stacked()}
+				/>
+			</div>
 		</div>
 	);
 }

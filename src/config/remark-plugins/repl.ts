@@ -53,6 +53,24 @@ function createReplElement(
 	attributes: Record<string, unknown>,
 	file?: VFile,
 ) {
+	if (
+		attributes.mode !== undefined &&
+		!["full", "preview"].includes(String(attributes.mode))
+	) {
+		fail(file, codes[0], 'repl mode must be "full" or "preview"');
+	}
+	if (
+		attributes.lazy !== undefined &&
+		attributes.lazy !== null &&
+		attributes.lazy !== "" &&
+		!["true", "false"].includes(String(attributes.lazy))
+	) {
+		fail(
+			file,
+			codes[0],
+			'repl lazy must be "true" or "false" (or a bare flag)',
+		);
+	}
 	const tabs = createTabs(codes, file);
 
 	return {
@@ -129,7 +147,17 @@ export function remarkRepl(): Transformer<Root, Root> {
 				const meta = new MetaOptions(node.meta ?? "");
 				if (!meta.getBoolean("repl")) return;
 
-				parent.children[index] = createReplElement([node], {}, file);
+				parent.children[index] = createReplElement(
+					[node],
+					{
+						mode: meta.getString("mode") ?? meta.getBoolean("mode"),
+						lazy: meta.getString("lazy") ?? meta.getBoolean("lazy"),
+						height: meta.getString("height"),
+						layout: meta.getString("layout"),
+						devtools: meta.getString("devtools") ?? meta.getBoolean("devtools"),
+					},
+					file,
+				);
 				return SKIP;
 			}
 		});
