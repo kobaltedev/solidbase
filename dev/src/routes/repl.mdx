@@ -61,7 +61,7 @@ render(() => <p>Horizontal layout</p>, document.getElementById("app")!);
 
 ## Full Screen
 
-Every REPL has a **Full screen** button above it. Full screen covers the viewport and, on landscape screens, moves the editor beside the preview. Edits are kept, but this layout change restarts the preview and resets the open tabs, so blocks using `layout=horizontal` and narrow or portrait screens skip it and keep their state.
+Every REPL has a **Full screen** button above it. Full screen enlarges the existing editor and preview without restarting them, keeping edits, open tabs, and preview state. The layout stays the same: stacked by default, or side by side with `layout=horizontal`. Phones keep the file/preview switcher.
 
 Press the button again or `Esc` to exit. `Esc` can't be detected while focus is inside the preview, so use the button there.
 
