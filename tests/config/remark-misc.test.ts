@@ -90,6 +90,44 @@ function replTabs(element: any) {
 }
 
 describe("remarkRepl", () => {
+	it.each([
+		"```tsx repl mode=preview lazy=false height=16rem\nx\n```",
+		':::repl{mode=preview lazy=false height="16rem"}\n```tsx\nx\n```\n:::',
+	])("passes preview options through fences and directives", async (source) => {
+		const tree: any = await run(source, remarkDirective, remarkRepl);
+		expect(tree.children[0].attributes).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ name: "mode", value: "preview" }),
+				expect.objectContaining({ name: "lazy", value: "false" }),
+				expect.objectContaining({ name: "height", value: "16rem" }),
+			]),
+		);
+	});
+
+	it("keeps absent options unset and accepts a bare lazy flag", async () => {
+		const tree: any = await run(
+			"```tsx repl\nx\n```\n\n```tsx repl lazy\nx\n```",
+			remarkRepl,
+		);
+		expect(
+			tree.children[0].attributes.map((attribute: any) => attribute.name),
+		).toEqual(["tabs"]);
+		expect(tree.children[1].attributes).toContainEqual(
+			expect.objectContaining({ name: "lazy", value: "true" }),
+		);
+	});
+
+	it.each([
+		["```tsx repl mode=other\nx\n```", "repl mode"],
+		[":::repl{mode=other}\n```tsx\nx\n```\n:::", "repl mode"],
+		["```tsx repl lazy=other\nx\n```", "repl lazy"],
+		[":::repl{lazy=other}\n```tsx\nx\n```\n:::", "repl lazy"],
+	])("rejects invalid preview options: %s", async (source, message) => {
+		await expect(run(source, remarkDirective, remarkRepl)).rejects.toThrow(
+			message,
+		);
+	});
+
 	it("preserves named files and directive options in the Repl props", async () => {
 		const tree: any = await run(
 			[

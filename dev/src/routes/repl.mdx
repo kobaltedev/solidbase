@@ -6,6 +6,44 @@ title: REPL
 
 Route for reviewing `:::repl` blocks in the dev app.
 
+## Preview Mode
+
+Use `mode=preview` for a small running example. **View source** opens the editor and preview; **Hide source** returns to the example without restarting it. On phones, source uses the usual file/preview switcher instead of squeezing two panes side by side. Full screen is available after opening source.
+
+:::repl{mode=preview}
+```tsx
+import { render } from "@solidjs/web";
+import { Counter } from "./Counter";
+
+render(() => <Counter />, document.getElementById("app")!);
+```
+
+```tsx title="Counter.tsx"
+import { createSignal } from "solid-js";
+
+export function Counter() {
+  const [count, setCount] = createSignal(0);
+  return <button onClick={() => setCount(count => count + 1)}>Count: {count()}</button>;
+}
+```
+:::
+
+### Height and Loading
+
+Preview mode defaults to **14rem**, enough for a small example without a large editor box. `height` changes the embed height. Opening source uses the larger of that height and **32rem**, so short examples still have a usable editor. Hiding source restores the embed height.
+
+Preview mode loads only within **300px** of the viewport by default. `lazy=false` loads immediately; `lazy` also enables this for a full REPL. Before loading, a placeholder reserves the embed height. Once loaded, the REPL stays mounted until you leave the page.
+
+```tsx repl mode=preview height="16rem" lazy=false
+import { render } from "@solidjs/web";
+
+render(() => <p>A 16rem preview, loaded immediately.</p>, document.getElementById("app")!);
+```
+
+The component accepts the same options: `<Repl tabs={tabs} mode="preview" height="16rem" lazy={false} />`. Omit `mode` (or use `mode="full"`) for the usual editor and preview. Full mode is not lazy by default.
+
+Set site-wide defaults with `themeConfig: { repl: { mode: "preview", lazy: true } }`. Each REPL can override these. Button labels use `replViewSource` and `replHideSource` in `themeConfig.text`. The `devtools` option still applies; the compiled Output tab is hidden while source is hidden.
+
 ## Single File
 
 :::repl
@@ -49,9 +87,9 @@ export function Greeting(props: { name: string }) {
 
 ## Options
 
-`:::repl{layout=horizontal height="20rem" devtools}` places the editor next to the preview, sets the height and shows the devtools tab.
+`:::repl{layout=horizontal height="20rem"}` places the editor next to the preview and sets the height.
 
-:::repl{layout=horizontal height="20rem" devtools}
+:::repl{layout=horizontal height="20rem"}
 ```tsx
 import { render } from "@solidjs/web";
 
@@ -61,7 +99,7 @@ render(() => <p>Horizontal layout</p>, document.getElementById("app")!);
 
 ## Full Screen
 
-Every REPL has a **Full screen** button above it. Full screen covers the viewport and, on landscape screens, moves the editor beside the preview. Edits are kept, but this layout change restarts the preview and resets the open tabs, so blocks using `layout=horizontal` and narrow or portrait screens skip it and keep their state.
+REPLs with source open have a **Full screen** button above them. Full screen enlarges the existing editor and preview without restarting them, keeping edits, open tabs, and preview state. The layout stays the same: stacked by default, or side by side with `layout=horizontal`. Phones keep the file/preview switcher.
 
 Press the button again or `Esc` to exit. `Esc` can't be detected while focus is inside the preview, so use the button there.
 

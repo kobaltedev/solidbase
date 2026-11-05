@@ -58,6 +58,10 @@ export type DefaultThemeConfig = {
 	search?: SearchConfig;
 	fonts?: { [K in keyof typeof allFonts]?: false } | false;
 	text?: Partial<DefaultThemeTextConfig>;
+	repl?: {
+		mode?: "full" | "preview";
+		lazy?: boolean;
+	};
 };
 
 type Font = { cssPath: string; preloadFontPath: string; fontType: string };

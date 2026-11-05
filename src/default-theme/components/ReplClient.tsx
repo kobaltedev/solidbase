@@ -5,7 +5,6 @@ import SolidRepl from "solid-repl/dist/repl.jsx";
 
 import "solid-repl/dist/bundle.css";
 
-import { createMediaQuery } from "@solid-primitives/media";
 import {
 	createEffect,
 	createMemo,
@@ -13,11 +12,13 @@ import {
 	createUniqueId,
 	onCleanup,
 	Show,
+	untrack,
 } from "solid-js";
 import ExitFullscreenIcon from "~icons/ri/fullscreen-exit-line";
 import FullscreenIcon from "~icons/ri/fullscreen-line";
 
 import { getTheme } from "../../client/theme.js";
+import { createReplLayout } from "../repl-layout.js";
 import { useThemeText } from "../utils.js";
 import type { ReplProps } from "./Repl.jsx";
 import styles from "./Repl.module.css";
@@ -88,18 +89,17 @@ export default function ReplClient(props: ReplProps) {
 		(typeof props.devtools === "string" && props.devtools !== "false");
 
 	const [fullscreen, setFullscreen] = createSignal(false);
-	// Narrow viewports use solid-repl's tabbed mobile layout, which ignores `vertical`.
-	const staysStacked = createMediaQuery(
-		"(orientation: portrait), (max-width: 767px)",
-	);
-	const stacked = () =>
-		props.layout !== "horizontal" && (!fullscreen() || staysStacked());
+	const [source, setSource] = createSignal(false);
+	const previewOnly = () => props.mode === "preview" && !source();
+	// Keep the layout fixed until solid-repl can change orientation without remounting.
+	// Narrow viewports still use solid-repl's tabbed mobile layout.
+	const stacked = () => props.layout !== "horizontal";
 	let frame!: HTMLDivElement;
 	let toggle!: HTMLButtonElement;
 
 	const toggleFullscreen = (active: boolean) => {
 		setFullscreen(active);
-		// Changing the layout remounts the editor, which takes focus as it mounts.
+		// Keep focus on the control when entering or leaving full screen, including via Escape.
 		requestAnimationFrame(() => toggle.focus());
 	};
 
@@ -121,43 +121,62 @@ export default function ReplClient(props: ReplProps) {
 		};
 	});
 
-	const repl = () => (
-		<SolidRepl
-			id={id}
-			compiler={compiler}
-			formatter={formatter}
-			dark={dark()}
-			tabs={tabs()}
-			setTabs={setTabs}
-			reset={() => setTabs(initialTabs())}
-			hideDevtools={!devtools()}
-			vertical={stacked()}
-		/>
-	);
-
 	return (
 		<div
 			ref={frame}
 			class={styles.frame}
 			data-fullscreen={fullscreen() ? "" : undefined}
+			data-source={props.mode === "preview" && source() ? "" : undefined}
 		>
 			<div class={styles.toolbar}>
-				<button
-					ref={toggle}
-					type="button"
-					class={styles.fullscreenToggle}
-					aria-pressed={fullscreen() ? "true" : "false"}
-					title={fullscreen() ? text.replExitFullscreen : undefined}
-					onClick={() => toggleFullscreen(!fullscreen())}
-				>
-					{fullscreen() ? <ExitFullscreenIcon /> : <FullscreenIcon />}
-					{text.replFullscreen}
-				</button>
+				<Show when={props.mode === "preview"}>
+					<button
+						type="button"
+						class={styles.fullscreenToggle}
+						aria-expanded={source() ? "true" : "false"}
+						aria-controls={`${id}-source`}
+						onClick={() => {
+							if (fullscreen()) toggleFullscreen(false);
+							setSource(!source());
+						}}
+					>
+						{source() ? text.replHideSource : text.replViewSource}
+					</button>
+				</Show>
+				<Show when={!previewOnly()}>
+					<button
+						ref={toggle}
+						type="button"
+						class={styles.fullscreenToggle}
+						aria-pressed={fullscreen() ? "true" : "false"}
+						title={fullscreen() ? text.replExitFullscreen : undefined}
+						onClick={() => toggleFullscreen(!fullscreen())}
+					>
+						{fullscreen() ? <ExitFullscreenIcon /> : <FullscreenIcon />}
+						{text.replFullscreen}
+					</button>
+				</Show>
 			</div>
-			{/* solid-repl only reads `vertical` on mount, so changing it takes a new instance */}
-			<Show when={stacked()} fallback={repl()}>
-				{repl()}
-			</Show>
+			<div
+				id={`${id}-source`}
+				class={styles.surface}
+				data-preview={previewOnly() ? "" : undefined}
+			>
+				<SolidRepl
+					id={id}
+					compiler={compiler}
+					formatter={formatter}
+					dark={dark()}
+					tabs={tabs()}
+					setTabs={setTabs}
+					reset={() => setTabs(initialTabs())}
+					storage={{
+						getLayout: () => createReplLayout(untrack(tabs), stacked()),
+					}}
+					hideDevtools={!devtools()}
+					vertical={stacked()}
+				/>
+			</div>
 		</div>
 	);
 }
